@@ -256,7 +256,6 @@ export default {
     uploadSuccess: 'アップロード成功',
     partUploadFailed: '一部のファイルのアップロードに失敗しました',
     inviteFriends: '友達を招待して一緒に使用',
-    shareTitle: '友達を招待して自分がプレイヤーかどうかテストしよう',
     chatScreenshot: 'チャットスクリーンショット',
     socialScreenshot: 'ソーシャルプラットフォームスクリーンショット',
     physicalPhoto: '物理/シーンの写真',

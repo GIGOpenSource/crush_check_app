@@ -15,14 +15,18 @@
           <text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
         </view>
       </view>
-
-      <button open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed"
-        hover-class="none">
+      <button open-type="getUserInfo" @getuserinfo="onGetUserInfo" class="login-button-wrapper" v-if="isAgreed">
         <view class="login-button">
-          <text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
+          <text class="login-button-text">一键登录</text>
         </view>
       </button>
 
+      <!-- <button open-type="getPhoneNumber" @getPhoneNumber="onGetPhoneNumber" class="login-button-wrapper"
+        v-if="isAgreed && !show">
+        <view class="login-button">
+          <text class="login-button-text">抖音手机号快捷登录</text>
+        </view>
+      </button> -->
       <!-- 协议同意区域 -->
       <view class="agreement-section">
         <view class="agreement-checkbox" @click="toggleAgreement">
@@ -46,7 +50,7 @@
 </template>
 
 <script>
-import { wechatLogin, getUserInfo, getUserPhone } from "@/api/login.js";
+import { wechatLogin, douyinLogin, getUserInfo, getUserPhone } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import {
   share
@@ -56,6 +60,8 @@ export default {
   mixins: [pageStayMixin],
   data() {
     return {
+      show: true,
+      userInfo: {},
       pageName: '',
       isAgreed: false,
       phoneCode: "", // 保存手机号授权的code
@@ -63,6 +69,9 @@ export default {
   },
   onLoad() {
     this.pageName = this.$t('login.title');
+
+
+
   },
   methods: {
     toggleAgreement() {
@@ -85,31 +94,69 @@ export default {
         icon: "none",
       });
     },
+    onGetUserInfo(e) {
+      console.log("获取用户信息:", e.detail);
+      // 保存用户信息
+      this.userInfo = e.detail.userInfo || {};
+      this.show = false;
+      // 调用登录流程
+      this.clickLogin();
+    },
     onGetPhoneNumber(e) {
-      console.log("获取手机号授权", e);
+      console.log("获取手机号授权:", e);
 
+      // 抖音小程序：检查授权结果
       if (e.detail.errMsg == "getPhoneNumber:ok" && e.detail.code) {
         // 保存手机号授权的code
         this.phoneCode = e.detail.code;
+        console.log("手机号授权code已保存:", this.phoneCode);
+        // 调用登录流程
         this.clickLogin();
       } else if (e.detail.errMsg == "getPhoneNumber:fail user deny") {
+        // 用户拒绝授权
         uni.showToast({
-          title: this.$t('common.needPhoneAuth'),
+          title: this.$t('common.needPhoneAuth') || '需要手机号授权',
           icon: "none",
         });
       } else {
-        console.log(e);
+        // 其他错误
+        console.error("获取手机号授权失败:", e);
         uni.showToast({
-          title: this.$t('common.authFailed'),
+          title: this.$t('common.authFailed') || '授权失败',
           icon: "none",
         });
       }
     },
 
     clickLogin() {
+      // 抖音小程序使用 tt.login
+      // #ifdef MP-TOUTIAO
+      tt.login({
+        success: (res) => {
+          if (res.code) {
+            // 调用登录接口，传递用户信息
+            this.loginWithCode(res.code);
+          } else {
+            uni.showToast({
+              title: this.$t('common.getLoginCodeFailed'),
+              icon: "none",
+            });
+          }
+        },
+        fail: (err) => {
+          console.error("获取code失败:", err);
+          uni.showToast({
+            title: this.$t('common.getLoginCodeFailedRetry'),
+            icon: "none",
+          });
+        },
+      });
+      // #endif
+
+      // 微信小程序使用 uni.login
+      // #ifdef MP-WEIXIN
       uni.login({
         success: (res) => {
-          console.log("获取code成功:", res);
           if (res.code) {
             // 调用登录接口
             this.loginWithCode(res.code);
@@ -128,22 +175,26 @@ export default {
           });
         },
       });
+      // #endif
     },
 
     async loginWithCode(code) {
       try {
         const inviterOpenId = uni.getStorageSync("inviter_openid");
-        // 第一步：调用登录接口，必须等待完成
-        const res = await wechatLogin(code, inviterOpenId);
-        // 检查登录是否成功
-        if (res.code !== 200 && res.code !== 201) {
-          uni.showToast({
-            title: res.msg || res.message || this.$t('common.loginFailed'),
-            icon: "none",
-          });
-          return;
-        }
+        let res;
+        const username = this.userInfo?.nickName || this.userInfo?.nickname || '';
+        const avatarUrl = this.userInfo?.avatarUrl || this.userInfo?.avatar || '';
+        const gender = this.userInfo?.gender || 0; // 0:未知, 1:男, 2:女
 
+        console.log("抖音登录参数:", {
+          code,
+          username,
+          avatarUrl,
+          gender,
+          inviterOpenId
+        });
+        res = await douyinLogin(code, username, avatarUrl, gender, inviterOpenId);
+       console.log(res.data,'resss')
         // 第二步：登录成功，保存token和openId
         const openId = res.data?.openId || res.data?.openid;
         let tokenSaved = false;
@@ -159,9 +210,6 @@ export default {
         if (openId) {
           uni.setStorageSync("openId", openId);
         }
-          if(inviterOpenId){
-          const result = await share({shareId:inviterOpenId})
-        }
 
         // 第三步：确保token保存成功后，才进行其他接口请求
         if (!tokenSaved) {
@@ -170,6 +218,9 @@ export default {
             icon: "none",
           });
           return;
+        }
+        if (inviterOpenId) {
+          const result = await share({ shareId: inviterOpenId })
         }
 
         // 等待一小段时间，确保存储操作完成
@@ -182,16 +233,38 @@ export default {
         // 第四步：如果有手机号授权code，调用获取手机号接口
         if (this.phoneCode && openId) {
           try {
-            console.log("开始调用获取手机号接口");
+            console.log("开始调用获取手机号接口，phoneCode:", this.phoneCode, "openId:", openId);
             const phoneRes = await getUserPhone(this.phoneCode, openId);
             console.log("获取手机号接口返回:", phoneRes);
 
             if (phoneRes.code === 200 || phoneRes.code === 201) {
-              console.log("获取手机号成功");
+              const phoneNumber = phoneRes.data?.phoneNumber || phoneRes.data?.phone || phoneRes.data?.mobile;
+              console.log("获取手机号成功，手机号:", phoneNumber);
+
+              // 如果获取到手机号，保存到用户信息中
+              if (phoneNumber) {
+                try {
+                  const userInfoStr = uni.getStorageSync("userInfo");
+                  if (userInfoStr) {
+                    const userInfo = typeof userInfoStr === 'string' ? JSON.parse(userInfoStr) : userInfoStr;
+                    userInfo.phone = phoneNumber;
+                    userInfo.phoneNumber = phoneNumber;
+                    uni.setStorageSync("userInfo", JSON.stringify(userInfo));
+                    console.log("手机号已保存到用户信息:", phoneNumber);
+                  }
+                } catch (saveError) {
+                  console.error("保存手机号到用户信息失败:", saveError);
+                }
+              }
+            } else {
+              console.warn("获取手机号接口返回错误:", phoneRes);
             }
           } catch (phoneError) {
             console.error("获取手机号失败:", phoneError);
             // 获取手机号失败不影响后续流程
+          } finally {
+            // 清除手机号授权code，避免重复使用
+            this.phoneCode = "";
           }
         }
 
@@ -235,7 +308,7 @@ export default {
               // uni.switchTab({
               //   url: "/pages/my/my",
               // });
-			  uni.navigateBack()
+              uni.navigateBack()
             },
           });
         }, 1000);

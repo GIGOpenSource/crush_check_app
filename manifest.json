@@ -75,7 +75,16 @@
         "appid" : "tt8cd9fa6413db00e601",
         "setting" : {
             "postcss" : true
-        }
+        },
+        "requiredPrivateInfos" : [
+            "chooseImage",
+            "chooseMedia"
+        ],
+		"permission": {
+		    "scope.album": {
+		      "desc": "需要访问相册以选择图片"
+		    }
+		  }
     },
     "uniStatistics" : {
         "enable" : false

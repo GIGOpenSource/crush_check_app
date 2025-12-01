@@ -256,7 +256,6 @@ export default {
     uploadSuccess: '上传成功',
     partUploadFailed: '部分文件上传失败',
     inviteFriends: '邀请好友一起使用',
-    shareTitle: '邀请好友一起来测测自己渣不渣',
     chatScreenshot: '聊天记录截图',
     socialScreenshot: '社交平台截图',
     physicalPhoto: '实物/场景照片',

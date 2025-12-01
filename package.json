@@ -12,6 +12,7 @@
   "dependencies": {
     "lime-painter": "^11.11.11",
     "scss": "^0.2.4",
+    "umtrack-tt": "^2.8.0",
     "umtrack-wx": "^2.8.0",
     "uview-plus": "^3.6.4",
     "vue-i18n": "^9.8.0"

@@ -17,9 +17,15 @@ const formatDateTime = (date = new Date()) => {
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+// 获取应用版本
+const getAppVersion = () => {
+	let appVersion = '1.0.0'
+	return appVersion
+}
+
 const params = ref({
 	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
-	appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	appVersion: getAppVersion(),
 	eventTime: formatDateTime(),
 	pageName: '检测'
 })

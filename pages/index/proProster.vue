@@ -7,15 +7,15 @@
 			<view class="lookbtn" v-if="status == 1" @click="getDeepReport">{{ $t('proPoster.viewDeepReport') }}</view>
 			<view class="bottomtitle" v-if="status == 1">{{ $t('proPoster.aiGeneratedTip') }}</view>
 			<!-- 深度报告蒙层 -->
-			<view class="mengceng" v-if="show">
+			<view class="mengceng" v-if="show" @touchmove.stop.prevent catchtouchmove>
 				<view>{{ $t('proPoster.openMember') }}</view>
 				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view>
 				<view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.openMember') }}</view>
 				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
-				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'" hover-class="none"
-					@click="invitefriend">{{
+				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
+					hover-class="none" @click="invitefriend">{{
 						$t('proPoster.inviteFiveFree') }}</button>
 				<view style="height: 60rpx;"></view>
 				<view v-for="(item, index) in moretitle" :key="index" class="moretitle">
@@ -32,10 +32,12 @@
 				<image :src="$getImg('index/save')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.savePoster') }}</view>
 			</view>
-			<view class="btn1" @click="share">
+			<view class="btn1">
+				<button class="share-btn" open-type="share" hover-class="none"></button>
 				<image :src="$getImg('index/share')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.sharePoster') }}</view>
 			</view>
+
 		</view>
 		<view v-if="status == 2" class="lookPoster" @click="viewPoster">
 			{{ $t('proPoster.viewPoster') }}
@@ -59,7 +61,7 @@
 				<view class="title">{{ $t('proPoster.unlockThisReport') }}</view>
 				<view class="num">{{ $t('proPoster.reportRemainingTimes') }}: {{ userinfo.allow_count }}{{
 					$t('proPoster.times')
-					}}</view>
+				}}</view>
 				<view class="del-popup-actions">
 					<view @click="lock">{{ $t('proPoster.unlockThis') }}</view>
 					<view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view>
@@ -81,7 +83,7 @@ import {
 	getPosterDetails,
 	getDeepPoster,
 	getProducts,
-	createOrder,
+	douyinOrder,
 	freeReport
 } from '@/api/index.js'
 import {
@@ -122,9 +124,26 @@ const formatDateTime = (date = new Date()) => {
 	const seconds = String(date.getSeconds()).padStart(2, '0')
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
+
+// 获取应用版本
+const getAppVersion = () => {
+	let appVersion = '1.0.0'
+	// #ifdef MP-WEIXIN
+	try {
+		if (typeof uni.getAccountInfoSync === 'function') {
+			const accountInfo = uni.getAccountInfoSync()
+			appVersion = accountInfo?.miniProgram?.version || '1.0.0'
+		}
+	} catch (e) {
+		console.warn('获取应用版本失败', e)
+	}
+	// #endif
+	return appVersion
+}
+
 const params = ref({
 	userId: JSON.parse(uni.getStorageSync('userInfo')).id || '',
-	appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	appVersion: getAppVersion(),
 	eventTime: formatDateTime(),
 	pageName: ''
 })
@@ -152,18 +171,16 @@ onLoad((e) => {
 		mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
 	})
 })
-// #ifdef MP-WEIXIN
 onShareAppMessage((res) => {
-	click_invite()
 	const inviterOpenId = uni.getStorageSync("openId") || "";
 	const query = `?scene=${inviterOpenId}`
-	return {
-		title: t('index.shareTitle'), // 分享标题
-		path: `/pages/index/index${query}`, // 分享路径携带个人ID
-		imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
+	const shareConfig = {
+		title: t('index.inviteFriends'),
+		path: `/pages/index/index${query}`,
 	};
+	shareConfig.imageUrl = details.value.file_url;
+	return shareConfig;
 })
-// #endif
 
 // 下拉刷新
 onPullDownRefresh(() => {
@@ -173,7 +190,7 @@ onPullDownRefresh(() => {
 // 刷新用户信息
 const refreshUserInfo = () => {
 	const openId = uni.getStorageSync('openId')
-	
+
 	getUserInfo(openId).then(res => {
 		userinfo.value = res.data
 		uni.setStorageSync('userInfo', JSON.stringify(res.data))
@@ -183,9 +200,9 @@ const refreshUserInfo = () => {
 			uni.stopPullDownRefresh()
 		}, 500)
 	}).catch(err => {
-	
+
 		uni.stopPullDownRefresh()
-	
+
 	})
 }
 
@@ -282,19 +299,18 @@ const pay = (type) => {
 		object = once.value
 		click_oncepay()
 	}
-	createOrder({
-		description: object.description,
+	douyinOrder({
 		productId: object.id,
-		openId: uni.getStorageSync('openId'),
 		posterId: details.value.id
 	}).then(res => {
-		uni.requestPayment({
-			"provider": "wxpay",
-			...res.data,
-			"signType": "RSA",
-			"package": `${res.data.prepayid}`,
-			"nonceStr": res.data.noncestr,
+		tt.pay({
+			orderInfo: {
+				order_id: res.data.order_id,
+				order_token:res.data.order_token,
+			},
+			service: 5,
 			success(res) {
+				 if(res.code !== 0) return
 				uni.showToast({
 					title: t('proPoster.paySuccess'),
 					icon: 'success'
@@ -342,17 +358,67 @@ const share = () => {
 		url: details.value.file_url,
 		success: (res) => {
 			if (res.statusCode === 200) {
-				wx.showShareImageMenu({
-					path: res.tempFilePath,
-					complete: (res) => {
-						if (res.errMsg == 'showShareImageMenu:fail cancel') {
-							share_fail()
-						} else {
-							share_success()
+				// 抖音小程序：使用分享图片菜单
+				// #ifdef MP-TOUTIAO
+				if (typeof tt !== 'undefined' && tt.showShareImageMenu) {
+					tt.showShareImageMenu({
+						path: res.tempFilePath,
+						complete: (res) => {
+							if (res.errMsg == 'showShareImageMenu:fail cancel') {
+								share_fail()
+							} else {
+								share_success()
+							}
 						}
+					})
+				} else {
+					// 如果API不可用，使用预览图片作为备选方案
+					uni.previewImage({
+						urls: [details.value.file_url],
+						current: details.value.file_url
+					})
+				}
+				// #endif
+
+				// 微信小程序：预览图片，用户可以通过右上角菜单分享
+				// #ifdef MP-WEIXIN
+				uni.previewImage({
+					urls: [details.value.file_url],
+					current: details.value.file_url,
+					success: () => {
+						share_success()
+						setTimeout(() => {
+							uni.showToast({
+								title: '点击右上角菜单可分享给微信好友',
+								icon: 'none',
+								duration: 2000
+							})
+						}, 500)
+					},
+					fail: () => {
+						share_fail()
 					}
 				})
+				// #endif
+
+				// 其他平台：预览图片
+				// #ifndef MP-TOUTIAO
+				// #ifndef MP-WEIXIN
+				uni.previewImage({
+					urls: [details.value.file_url],
+					current: details.value.file_url
+				})
+				// #endif
+				// #endif
 			}
+		},
+		fail: (err) => {
+			console.error('下载图片失败:', err)
+			share_fail()
+			uni.showToast({
+				title: '下载失败，请重试',
+				icon: 'none'
+			})
 		}
 	})
 
@@ -503,6 +569,7 @@ const click_invitecancel = () => {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
 }
 
 .kong {
@@ -550,15 +617,17 @@ const click_invitecancel = () => {
 	left: 0;
 	top: 150rpx;
 	color: #000;
-	background: linear-gradient(rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 1));
+	background: rgba(255, 255, 255, 0.95);
 	width: 100%;
-	min-height: calc(75vh - 150rpx);
-	overflow-y: auto;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	padding-top: 80rpx;
-	border-radius: 0 30rpx 0 0;
+	border-radius: 30rpx;
+	overflow-y: auto;
+	z-index: 999;
+	box-sizing: border-box;
 
 	.btn {
 		background: #B370FF;
@@ -612,6 +681,25 @@ const click_invitecancel = () => {
 		flex-wrap: wrap;
 		align-items: center;
 		font-size: 24rpx;
+		position: relative;
+	}
+
+	.share-btn {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: transparent;
+		border: none;
+		padding: 0;
+		margin: 0;
+		opacity: 0;
+		z-index: 1;
+	}
+
+	.share-btn::after {
+		border: none;
 	}
 }
 
@@ -637,15 +725,15 @@ const click_invitecancel = () => {
 .poster-container {
 	width: 95%;
 	border-radius: 30rpx;
-	// overflow: hidden;
 	height: 75vh;
 	overflow-y: auto;
 	margin-top: 40rpx;
 	margin-bottom: 20rpx;
 	position: relative;
-	
+
+	// 当蒙层显示时，禁止滚动
 	&.no-scroll {
-		overflow: hidden;
+		overflow: hidden !important;
 	}
 
 	image {

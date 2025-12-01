@@ -176,9 +176,25 @@ const formatDateTime = (date = new Date()) => {
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+// 获取应用版本
+const getAppVersion = () => {
+	let appVersion = '1.0.0'
+	// #ifdef MP-WEIXIN
+	try {
+		if (typeof uni.getAccountInfoSync === 'function') {
+			const accountInfo = uni.getAccountInfoSync()
+			appVersion = accountInfo?.miniProgram?.version || '1.0.0'
+		}
+	} catch (e) {
+		console.warn('获取应用版本失败', e)
+	}
+	// #endif
+	return appVersion
+}
+
 const params = ref({
-	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
-	appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	userId:111,
+	appVersion: getAppVersion(),
 	eventTime: formatDateTime(),
 	pageName: ''
 })
@@ -225,18 +241,16 @@ const iconsRef = ref(null)
 const scrollLeft = ref(0)
 const userinfo = ref({})
 const token = ref('')
-// #ifdef MP-WEIXIN
 onShareAppMessage((res) => {
 	click_invite()
 	const inviterOpenId = uni.getStorageSync("openId") || "";
 	const query = `?scene=${inviterOpenId}`
 	return {
-		title: t('index.shareTitle'), // 分享标题
+		title: t('index.inviteFriends'), // 分享标题
 		path: `/pages/index/index${query}`, // 分享路径携带个人ID
-		imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
+		imageUrl: "", // 分享图片，不设置则使用默认截图
 	};
 })
-// #endif
 
 const welcomeIndex = ref(0)
 const handleWelcomeNext = () => {
@@ -330,14 +344,6 @@ onLoad((e) => {
 	params.value.pageName = t('index.selectFileType')
 
 	getwelecome()
-	if (uma) {
-		console.log('友盟统计已初始化:', uma)
-		if (uma._inited) {
-			console.log('友盟统计初始化状态: 已初始化')
-		}
-	} else {
-		console.warn('友盟统计未初始化')
-	}
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);
 		if (!uni.getStorageSync('token')) {
@@ -515,9 +521,10 @@ const updateImages = () => {
 		return
 	}
 	click_upload_button()
-	uni.chooseImage({
+	tt.chooseImage({
 		count: 6 - imagesList.value.length,
-		type: 'file',
+		sizeType: ['compressed'],          // 压缩图省流量
+        sourceType: ['album', 'camera'],   // 相册或拍照
 		success: async (res) => {
 			uploading.value = true
 			uploadProgress.value = 0
@@ -534,7 +541,7 @@ const updateImages = () => {
 			// 使用 map 创建 Promise 数组
 			const uploadPromises = res.tempFilePaths.map((filePath, index) => {
 				return new Promise((resolve, reject) => {
-					uni.uploadFile({
+					tt.uploadFile({
 						url: host + '/upload/',
 						filePath: filePath,
 						name: 'file',

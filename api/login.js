@@ -3,15 +3,54 @@ import { postRequest, getRequest, deleteRequest, uploadFile_wpy } from "@/utils/
 /**
  * 微信登录
  * @param {string} code - 微信登录凭证
+ * @param {string} inviter_openid - 邀请人openId（可选）
+ * @param {object} userProfile - 用户信息（抖音小程序，可选）
  * @returns {Promise}
  */
-export function wechatLogin(code, inviter_openid) {
+export function wechatLogin(code, inviter_openid, userProfile = null) {
   const params = { code };
   if (inviter_openid) {
     params.inviter_openid = inviter_openid;
   }
+  // 抖音小程序传递用户信息
+  if (userProfile && userProfile.userInfo) {
+    params.userInfo = userProfile.userInfo;
+  }
   return postRequest(
     "/wechat/login",
+    params,
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "登录中...",
+    }
+  );
+}
+
+/**
+ * 抖音登录
+ * @param {string} code - 抖音登录凭证
+ * @param {string} username - 用户昵称
+ * @param {string} avatarUrl - 用户头像
+ * @param {number} gender - 用户性别（0:未知, 1:男, 2:女）
+ * @param {string} inviter_openid - 邀请人openId（可选）
+ * @returns {Promise}
+ */
+export function douyinLogin(code, username, avatarUrl, gender, inviter_openid = null) {
+  const params = {
+    code,
+    username,
+    avatarUrl,
+    gender
+  };
+  if (inviter_openid) {
+    params.inviter_openid = inviter_openid;
+  }
+  return postRequest(
+    "/douyin/login",
     params,
     {
       header: {

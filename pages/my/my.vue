@@ -20,8 +20,8 @@
               :placeholder="$t('my.nickname')" @blur="onNicknameBlur" @confirm="onNicknameConfirm" />
             <view class="gender-section">
               <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
-                :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')"
-                @change="handleGenderChange" @tap.stop @click.stop>
+                :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')" @change="handleGenderChange"
+                @tap.stop @click.stop>
                 <view class="gender-picker">
                   <text class="gender-text">{{
                     userInfo.user_gender !== null &&
@@ -71,14 +71,15 @@
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
         <text class="invite-subtitle">{{ inviteProgressText }}</text>
       </view>
-      <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''" @click="handleInviteClick">
+      <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''"
+        @click="handleInviteClick">
         {{ $t('my.invite') }}
       </button>
     </view>
 
     <!-- 历史海报模块 -->
     <view class="history-card">
-      <view class="card-header" @click="handleHistoryClick">
+      <view class="card-header" @click.stop="handleHistoryClick">
         <text class="card-title">{{ $t('my.historyPoster') }}</text>
         <text class="arrow-icon">›</text>
       </view>
@@ -87,7 +88,7 @@
       </view> -->
       <view class="poster-list" v-if="posterList.length > 0">
         <view class="poster-item" v-for="(item, index) in posterList" :key="item.id || index"
-          @click="handlePosterClick(item)">
+          @click.stop="handlePosterClick(item)">
           <view class="poster-image-wrapper">
             <image v-if="item.file_url" class="poster-image" :class="{
               'poster-image--blur':
@@ -121,17 +122,17 @@
       <text class="section-title">{{ $t('my.commonFunctions') }}</text>
       <view class="functions-card">
         <view class="function-list">
-          <template v-for="(item, index) in functionList" :key="index">
-            <button v-if="item.type === 'share'" class="function-item share-button" :open-type="isLoggedIn ? 'share' : ''" hover-class="none"
-              @click="ensureShare">
+          <block v-for="(item, index) in functionList" :key="index">
+            <view v-if="item.type === 'share'" class="function-item" hover-class="none">
+              <button class="share-btn" :open-type="isLoggedIn ? 'share' : ''" @click="ensureShare"></button>
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
-            </button>
+            </view>
             <view v-else class="function-item" @click="handleFunctionClick(item)">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
             </view>
-          </template>
+          </block>
         </view>
       </view>
     </view>
@@ -205,11 +206,13 @@ import {
   uploadAvatar,
   getPosterList,
   getProductsList,
-  getPrepayId,
   getUserInfo,
   reGeneratePoster,
   getSystemContent,
 } from "@/api/login.js";
+import {
+  douyinOrder,
+} from '@/api/index.js'
 import { trackUmengEvent } from "@/utils/umeng.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
@@ -256,10 +259,10 @@ export default {
     };
   },
   onLoad() {
-   
+
   },
   onShow() {
-     this.functionList = [
+    this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
       { label: this.$t('my.share'), type: "share" },
       { label: this.$t('my.settings'), type: "settings" },
@@ -337,18 +340,16 @@ export default {
     },
   },
   // 分享给好友
-  // #ifdef MP-WEIXIN
   onShareAppMessage(res) {
     const inviterOpenId =
       this.userInfo.open_id || uni.getStorageSync("openId") || "";
-      const query = `?scene=${inviterOpenId}`
-   return {
-		title: t('index.shareTitle'), // 分享标题
-		path: `/pages/index/index${query}`, // 分享路径携带个人ID
-		imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
-	};
+    const query = `?scene=${inviterOpenId}`
+    return {
+      title: this.$t('common.inviteFriends'), // 分享标题
+      path: `/pages/index/index${query}`, // 分享路径携带个人ID
+      imageUrl: "", // 分享图片，不设置则使用默认截图
+    };
   },
-  // #endif
   methods: {
     checkLoginStatus() {
       // 检查是否有token来判断登录状态
@@ -514,9 +515,9 @@ export default {
 
       if (!this.isLoggedIn) {
         // 跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
       } else {
         // 可以跳转到个人资料编辑页面
         // uni.navigateTo({
@@ -528,9 +529,9 @@ export default {
       // 处理解锁按钮点击
       if (!this.isLoggedIn) {
         // 未登录，跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
         return;
       }
 
@@ -579,56 +580,24 @@ export default {
 
             // 调用获取预支付ID接口
             try {
-              const prepayRes = await getPrepayId(
-                description,
-                productId,
-                openId
+              const prepayRes = await douyinOrder(
+               {productId}
               );
               console.log("获取预支付ID成功", prepayRes);
 
               if (prepayRes.code === 200 || prepayRes.code === 201) {
                 // 获取支付参数
-                const paymentData =
-                  prepayRes.data?.data || prepayRes.data || prepayRes;
+                const paymentData = prepayRes.data 
 
-                const {
-                  appId,
-                  noncestr,
-                  partnerid,
-                  prepayid,
-                  paySign,
-                  timeStamp,
-                } = paymentData;
-
-                // 检查必要的支付参数
-                if (
-                  !appId ||
-                  !noncestr ||
-                  !prepayid ||
-                  !paySign ||
-                  !timeStamp
-                ) {
-                  uni.showToast({
-                    title: this.$t('common.payParamsIncomplete'),
-                    icon: "none",
-                  });
-                  return;
-                }
-
-                // 调起微信支付（V3版本）
-                // #ifdef MP-WEIXIN
-                // 保存 this 引用，避免回调中 this 丢失
                 const _this = this;
-                uni.requestPayment({
-                  provider: "wxpay",
-                  appId: appId,
-                  timeStamp: String(timeStamp),
-                  nonceStr: noncestr,
-                  package: prepayid,
-                  signType: "RSA", // V3版本使用RSA签名
-                  paySign: paySign,
+                tt.pay({
+                  orderInfo: {
+                    order_id: paymentData.order_id,
+                    order_token: paymentData.order_token,
+                  },
+                  service: 5,
                   success: async (payRes) => {
-                    console.log("支付成功", payRes);
+                      if(payRes.code !== 0) return
                     // 获取用户ID
                     const userId = _this.userInfo?.id || "";
                     trackUmengEvent("pay_success", {
@@ -667,14 +636,10 @@ export default {
                     }
                   },
                 });
-                // #endif
-
-                // #ifndef MP-WEIXIN
                 uni.showToast({
                   title: this.$t('common.wechatPayNotSupported'),
                   icon: "none",
                 });
-                // #endif
               } else {
                 uni.showToast({
                   title:
@@ -713,7 +678,7 @@ export default {
     handleHistoryClick() {
       // 处理历史海报点击
       console.log("查看历史海报");
-      
+
       // 检查登录状态，如果未登录则跳转到登录页面
       if (!this.isLoggedIn) {
         uni.navigateTo({
@@ -721,7 +686,7 @@ export default {
         });
         return;
       }
-      
+
       uni.navigateTo({
         url: "/pages/my/poster",
       });
@@ -754,7 +719,7 @@ export default {
         });
         return;
       }
-      
+
       // 如果状态是已完成，跳转到详情页
       if (item.status === "done") {
         if (item.id) {
@@ -822,7 +787,7 @@ export default {
     handleFunctionClick(item) {
       // 处理功能项点击
       console.log("点击功能:", item);
-      
+
       switch (item.type) {
         case "language":
           // 跳转到语言设置页面（不需要登录）
@@ -882,7 +847,7 @@ export default {
         });
         return;
       }
-      
+
       // 调用友盟统计事件
       trackUmengEvent("click_invite", {
         userId: this.userInfo?.id || "",
@@ -921,9 +886,9 @@ export default {
       });
 
       if (!this.isLoggedIn) {
-      uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
         return;
       }
       // #ifdef MP-WEIXIN
@@ -1570,7 +1535,7 @@ page {
 }
 
 .vip-title-icon {
-width: 44rpx;
+  width: 44rpx;
   height: 36rpx;
   margin-left: 20rpx;
 }
@@ -1859,6 +1824,7 @@ width: 44rpx;
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.08);
   background: transparent;
   transition: background 0.2s;
+  position: relative;
 
   &:last-child {
     border-bottom: none;
@@ -1869,14 +1835,16 @@ width: 44rpx;
   }
 }
 
-.share-button {
+.share-btn {
+  background: transparent !important;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 28rpx 0;
-  line-height: normal;
-
-  &::after {
-    border: none;
-  }
+  height: 100%;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .function-text {
@@ -2109,7 +2077,7 @@ width: 44rpx;
   color: #a0a0a0;
   margin-top: 15rpx;
   width: 90%;
-		text-align: center;
+  text-align: center;
 }
 
 .qr-code-popup {

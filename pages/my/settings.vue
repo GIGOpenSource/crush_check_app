@@ -82,7 +82,7 @@ export default {
 
             // 延迟跳转到登录页面
             setTimeout(() => {
-               uni.navigateTo({ url: '/pages/login/login' })
+              uni.navigateTo({ url: '/pages/login/login' })
             }, 1500);
           }
         },

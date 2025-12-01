@@ -11,4 +11,3 @@ console.info = develop ? console.info : () => {};
 export {
 	host
 }
-

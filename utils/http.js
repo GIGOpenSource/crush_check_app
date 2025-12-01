@@ -97,7 +97,7 @@ function request(url, params, other) {
 							});
 						}
 						setTimeout(() => {
-						  uni.navigateTo({ url: '/pages/login/login' })
+							uni.navigateTo({ url: '/pages/login/login' })
 						}, 400);
 					}
 					reject(respData);
