@@ -274,6 +274,10 @@ export default {
     // 更新 tabBar 国际化
     this.updateTabBarI18n();
   },
+  onPullDownRefresh() {
+    // 下拉刷新
+    this.refreshUserInfoForPullDown();
+  },
   computed: {
     // 性别选项（使用计算属性，语言切换时自动更新）
     genderOptions() {
@@ -1173,6 +1177,23 @@ export default {
         }
       } catch (error) {
         console.error("更新用户信息失败:", error);
+      }
+    },
+    // 下拉刷新用户信息（从服务器获取最新信息）
+    async refreshUserInfoForPullDown() {
+      try {
+        await this.refreshUserInfo()
+        // 刷新海报列表
+        await this.fetchPosterList()
+        // 延迟一下再停止刷新，让动画更流畅
+        setTimeout(() => {
+          uni.hideLoading()
+          uni.stopPullDownRefresh()
+        }, 500)
+      } catch (err) {
+        // 即使获取用户信息失败，也刷新海报列表
+        await this.fetchPosterList()
+        uni.stopPullDownRefresh()
       }
     },
     // 刷新用户信息（从服务器获取最新信息）

@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { getPosterList, deletePosters, reGeneratePoster } from "@/api/login.js";
+import { getPosterList, deletePosters, reGeneratePoster, getUserInfo } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
@@ -242,13 +242,66 @@ export default {
   },
   onPullDownRefresh() {
     // 下拉刷新
-    this.fetchPosterList(true).finally(() => {
-      // 停止下拉刷新动画
-      uni.stopPullDownRefresh();
-    });
+    const openId = uni.getStorageSync('openId')
+    
+    if (!openId) {
+      uni.stopPullDownRefresh()
+      return
+    }
+    
+    getUserInfo(openId).then(res => {
+      if (res.code === 200 || res.code === 201) {
+        const userData = res.data?.data || res.data || {}
+        uni.setStorageSync('userInfo', JSON.stringify(userData))
+      }
+      // 刷新海报列表
+      this.fetchPosterList(true).finally(() => {
+        // 延迟一下再停止刷新，让动画更流畅
+        setTimeout(() => {
+          uni.hideLoading()
+          uni.stopPullDownRefresh()
+        }, 500)
+      })
+    }).catch(err => {
+      console.error('刷新用户信息失败:', err)
+      // 即使获取用户信息失败，也刷新海报列表
+      this.fetchPosterList(true).finally(() => {
+        uni.stopPullDownRefresh()
+      })
+    })
   },
 
   methods: {
+    // 刷新用户信息
+    refreshUserInfo() {
+      const openId = uni.getStorageSync('openId')
+      
+      if (!openId) {
+        uni.stopPullDownRefresh()
+        return
+      }
+      
+      getUserInfo(openId).then(res => {
+        if (res.code === 200 || res.code === 201) {
+          const userData = res.data?.data || res.data || {}
+          uni.setStorageSync('userInfo', JSON.stringify(userData))
+        }
+        // 刷新海报列表
+        this.fetchPosterList(true).finally(() => {
+          // 延迟一下再停止刷新，让动画更流畅
+          setTimeout(() => {
+            uni.hideLoading()
+            uni.stopPullDownRefresh()
+          }, 500)
+        })
+      }).catch(err => {
+        console.error('刷新用户信息失败:', err)
+        // 即使获取用户信息失败，也刷新海报列表
+        this.fetchPosterList(true).finally(() => {
+          uni.stopPullDownRefresh()
+        })
+      })
+    },
     // 获取海报列表
     async fetchPosterList(reset = false) {
       if (this.loading) return Promise.resolve();

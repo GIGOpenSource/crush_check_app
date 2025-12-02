@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getAcquireNewUsers } from "@/api/login.js";
+import { getAcquireNewUsers, getUserInfo } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 
 export default {
@@ -59,7 +59,33 @@ export default {
     this.pageName = this.$t('invite.title') || '邀请记录';
     this.fetchInviteList();
   },
+  onPullDownRefresh() {
+    // 下拉刷新
+    this.refreshUserInfo();
+  },
   methods: {
+    // 刷新用户信息
+    refreshUserInfo() {
+      const openId = uni.getStorageSync('openId')
+      
+      getUserInfo(openId).then(res => {
+        const userinfo = res.data
+        uni.setStorageSync('userInfo', JSON.stringify(userinfo))
+        // 刷新邀请记录列表
+        this.fetchInviteList().finally(() => {
+          // 延迟一下再停止刷新，让动画更流畅
+          setTimeout(() => {
+            uni.hideLoading()
+            uni.stopPullDownRefresh()
+          }, 500)
+        })
+      }).catch(err => {
+        // 即使获取用户信息失败，也刷新邀请记录列表
+        this.fetchInviteList().finally(() => {
+          uni.stopPullDownRefresh()
+        })
+      })
+    },
     // 获取邀请记录列表
     async fetchInviteList() {
       if (this.loading) return Promise.resolve();
