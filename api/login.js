@@ -230,6 +230,7 @@ export function getRechargeList(currentPage = 1, pageSize = 20) {
     {
       currentPage,
       pageSize,
+       trade_state:'SUCCESS'
     },
     {
       header: {
