@@ -92,6 +92,8 @@
         "router" : {
             "mode" : "hash",
             "base" : "/h5"
-        }
+        },
+        "title" : "CrushCheck",
+        "template" : ""
     }
 }

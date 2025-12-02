@@ -12,5 +12,5 @@ export {
 	host
 }
 // apk 签名：40fa8052a2655bbe8b1ec536e9dd276f  包名 crush.check 密钥：admin123
-//ios Bundle ID：com.gig.crushcheck 密钥：admin123
+//ios Bundle ID：com.gig.crushcheck 密钥：123456
  
