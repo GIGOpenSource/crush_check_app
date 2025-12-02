@@ -312,7 +312,7 @@ export default {
   login: {
     title: 'ログイン',
     appName: 'Crush Check',
-    appDesc: '—— AIクイックテスト：TAは浮気者？——',
+    appDesc: '—— クイックテスト：TAは浮気者？——',
     wechatLogin: 'ワンクリックログイン',
     loginFailedRetry: 'ログインに失敗しました。もう一度お試しください',
     agreeUserAgreement: '利用規約に同意',

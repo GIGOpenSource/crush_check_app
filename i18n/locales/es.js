@@ -312,7 +312,7 @@ export default {
   login: {
     title: 'Iniciar Sesión',
     appName: 'Crush Check',
-    appDesc: '—— Prueba Rápida de IA: ¿Es TA un Tramposo? ——',
+    appDesc: '—— Rápida de IA: ¿Es TA un Tramposo? ——',
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',
     agreeUserAgreement: 'Aceptar Acuerdo de Usuario',
