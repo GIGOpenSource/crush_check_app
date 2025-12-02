@@ -313,7 +313,7 @@ export default {
   login: {
     title: 'Login',
     appName: 'Crush Check',
-    appDesc: '—— AI Quick Test: Is TA a Cheater? ——',
+    appDesc: '—— Quick Test: Is TA a Cheater? ——',
     wechatLogin: 'One-Click Login',
     loginFailedRetry: 'Login failed, please try again',
     agreeUserAgreement: 'Agree to User Agreement',
