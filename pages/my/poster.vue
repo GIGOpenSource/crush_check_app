@@ -243,8 +243,11 @@ export default {
   onPullDownRefresh() {
     // 下拉刷新
     this.fetchPosterList(true).finally(() => {
-      // 停止下拉刷新动画
-      uni.stopPullDownRefresh();
+      // 延迟一下再停止刷新，让动画更流畅
+      setTimeout(() => {
+        uni.hideLoading()
+        uni.stopPullDownRefresh()
+      }, 500)
     });
   },
 

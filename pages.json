@@ -15,20 +15,29 @@
 				"backgroundColor": "#12111f",
 				"backgroundTextStyle": "light"
 			}
-		}, {
+		}, 		{
 			"path": "pages/my/my",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
 			}
 		}, {
 			"path": "pages/my/poster",
 			"style": {
-				"navigationBarTitleText": "历史海报"
+				"navigationBarTitleText": "历史海报",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
 			}
 		}, {
 			"path": "pages/my/recharge",
 			"style": {
-				"navigationBarTitleText": "历史充值记录"
+				"navigationBarTitleText": "历史充值记录",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
 			}
 		}, {
 			"path": "pages/my/settings",
@@ -50,7 +59,10 @@
 		{
 			"path": "pages/my/invite",
 			"style": {
-				"navigationBarTitleText": "邀请记录"
+				"navigationBarTitleText": "邀请记录",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
 			}
 		},
 		{
