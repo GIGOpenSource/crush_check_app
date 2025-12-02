@@ -178,7 +178,8 @@ const formatDateTime = (date = new Date()) => {
 
 const params = ref({
 	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
-	appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	// appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	appVersion:'1.0.0',
 	eventTime: formatDateTime(),
 	pageName: ''
 })
