@@ -170,6 +170,13 @@ export default {
     this.pageName = this.$t('recharge.title') || '历史充值记录';
     this.fetchRechargeList();
   },
+  onPullDownRefresh() {
+    // 下拉刷新
+    this.fetchRechargeList(true).finally(() => {
+      // 停止下拉刷新动画
+      uni.stopPullDownRefresh();
+    });
+  },
   onReachBottom() {
     // 页面触底事件（作为 scroll-view 的备选方案）
     console.log("========== 页面触底事件 ==========");

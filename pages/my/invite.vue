@@ -59,6 +59,13 @@ export default {
     this.pageName = this.$t('invite.title') || '邀请记录';
     this.fetchInviteList();
   },
+  onPullDownRefresh() {
+    // 下拉刷新
+    this.fetchInviteList().finally(() => {
+      // 停止下拉刷新动画
+      uni.stopPullDownRefresh();
+    });
+  },
   methods: {
     // 获取邀请记录列表
     async fetchInviteList() {
