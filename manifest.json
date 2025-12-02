@@ -1,5 +1,5 @@
 {
-    "name" : "noBad",
+    "name" : "CrushCheck",
     "appid" : "__UNI__52A3010",
     "description" : "",
     "versionName" : "1.0.0",
@@ -17,9 +17,7 @@
             "delay" : 0
         },
         /* 模块配置 */
-        "modules" : {
-            "OAuth" : {}
-        },
+        "modules" : {},
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -43,7 +41,9 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "dSYMs" : false
+            },
             /* SDK配置 */
             "sdkConfigs" : {
                 "share" : {},
@@ -87,5 +87,11 @@
     "uniStatistics" : {
         "enable" : false
     },
-    "vueVersion" : "3"
+    "vueVersion" : "3",
+    "h5" : {
+        "router" : {
+            "mode" : "hash",
+            "base" : "/h5"
+        }
+    }
 }
