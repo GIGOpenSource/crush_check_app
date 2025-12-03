@@ -155,7 +155,7 @@ import {
 	onShow,
 	onShareAppMessage
 } from '@dcloudio/uni-app'
-import uma from '@/uma.js'
+// import uma from '@/uma.js'
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
 import { getLocale } from '@/i18n/index.js'
@@ -331,14 +331,14 @@ onLoad((e) => {
 	params.value.pageName = t('index.selectFileType')
 
 	getwelecome()
-	if (uma) {
-		console.log('友盟统计已初始化:', uma)
-		if (uma._inited) {
-			console.log('友盟统计初始化状态: 已初始化')
-		}
-	} else {
-		console.warn('友盟统计未初始化')
-	}
+	// if (uma) {
+	// 	console.log('友盟统计已初始化:', uma)
+	// 	if (uma._inited) {
+	// 		console.log('友盟统计初始化状态: 已初始化')
+	// 	}
+	// } else {
+	// 	console.warn('友盟统计未初始化')
+	// }
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);
 		if (!uni.getStorageSync('token')) {
@@ -607,138 +607,138 @@ const getwelecome = () => {
 	})
 }
 
-// 点击 “上传照片” 按钮
+// 点击 "上传照片" 按钮
 const click_upload_button = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_upload_button', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_upload_button', params.value)
+	// }
 }
-// 点击 “从相册上传” 按钮
+// 点击 "从相册上传" 按钮
 const click_album = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_album', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_album', params.value)
+	// }
 }
 //点击拍照上传
 const click_camera = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_camera', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_camera', params.value)
+	// }
 }
 
 //取消上传操作
 const upload_cancel = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('upload_cancel', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('upload_cancel', params.value)
+	// }
 }
 
-//点击“聊天记录”按钮
+//点击"聊天记录"按钮
 const click_type1_button = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_type1_button', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_type1_button', params.value)
+	// }
 }
 
-//点击“社交平台”按钮
+//点击"社交平台"按钮
 const click_type2_button = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_type2_button', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_type2_button', params.value)
+	// }
 }
 
-//点击“实物场景”按钮
+//点击"实物场景"按钮
 const click_type3_button = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_type3_button', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_type3_button', params.value)
+	// }
 }
 
-//点击“消费凭证”按钮
+//点击"消费凭证"按钮
 const click_type4_button = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_type4_button', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_type4_button', params.value)
+	// }
 }
 
-//点击“开始分析”按钮
+//点击"开始分析"按钮
 const click_start = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_start', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_start', params.value)
+	// }
 }
 
 //开始上传照片
 const photo_upload_start = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('photo_upload_start', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('photo_upload_start', params.value)
+	// }
 }
 
 //照片上传成功
 const photo_upload_success = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('photo_upload_success', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('photo_upload_success', params.value)
+	// }
 }
 
 //照片上传失败
 const photo_upload_fail = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('photo_upload_fail', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('photo_upload_fail', params.value)
+	// }
 }
 
 //开始人品分析
 const character_start = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('character_start', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('character_start', params.value)
+	// }
 }
 
 //人品分析完成
 const character_success = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('character_success', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('character_success', params.value)
+	// }
 }
 
 //人品分析失败
 const character_fail = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('character_fail', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('character_fail', params.value)
+	// }
 }
 
-//点击 “邀请” 按钮
+//点击 "邀请" 按钮
 const click_invite = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_invite', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_invite', params.value)
+	// }
 }
 
-//点击 “取消邀请” 按钮
+//点击 "取消邀请" 按钮
 const click_invitecancel = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_invitecancel', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_invitecancel', params.value)
+	// }
 }
 
 // 更新 tabBar 国际化

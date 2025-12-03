@@ -1,5 +1,5 @@
 import { onShow, onHide } from '@dcloudio/uni-app'
-import uma from '@/uma.js'
+// import uma from '@/uma.js'
 
 /**
  * 页面停留时长统计组合式函数
@@ -49,29 +49,29 @@ export function usePageStay(pageName, options = {}) {
 
   // 发送页面停留时长事件
   const trackPageStay = (stayDuration) => {
-    if (!uma || !uma.trackEvent) {
-      console.warn('友盟统计未初始化')
-      return
-    }
+    // if (!uma || !uma.trackEvent) {
+    //   console.warn('友盟统计未初始化')
+    //   return
+    // }
 
-    try {
-      const params = {
-        userId: getUserId(),
-        appVersion: getAppVersion(),
-        eventTime: formatDateTime(),
-        pageName: pageName,
-        stayDuration: stayDuration // 停留时长（秒）
-      }
+    // try {
+    //   const params = {
+    //     userId: getUserId(),
+    //     appVersion: getAppVersion(),
+    //     eventTime: formatDateTime(),
+    //     pageName: pageName,
+    //     stayDuration: stayDuration // 停留时长（秒）
+    //   }
 
-      uma.trackEvent('page_stay', params)
-      console.log('页面停留时长统计已发送:', {
-        pageName: pageName,
-        stayDuration: stayDuration,
-        params: params
-      })
-    } catch (error) {
-      console.error('页面停留时长统计发送失败:', error)
-    }
+    //   uma.trackEvent('page_stay', params)
+    //   console.log('页面停留时长统计已发送:', {
+    //     pageName: pageName,
+    //     stayDuration: stayDuration,
+    //     params: params
+    //   })
+    // } catch (error) {
+    //   console.error('页面停留时长统计发送失败:', error)
+    // }
   }
 
   // 页面显示时记录开始时间

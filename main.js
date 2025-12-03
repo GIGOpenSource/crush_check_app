@@ -1,5 +1,5 @@
 import App from './App'
-import uma from './uma';
+// import uma from './uma';
 import uviewPlus from 'uview-plus'
 import { getImg } from '@/utils/http.js'
 // #ifndef VUE3
@@ -21,12 +21,12 @@ import i18n from './i18n/index.js'
 export function createApp() {
   const app = createSSRApp(App)
   app.use(uviewPlus);
-  app.use(uma)
+  // app.use(uma)
   app.use(i18n)
   // 将 getImg 挂载到全局属性上，全局可用
   app.config.globalProperties.$getImg = getImg
   // 将 uma 挂载到全局属性上，全局可用
-  app.config.globalProperties.$uma = uma
+  // app.config.globalProperties.$uma = uma
   return {
     app
   }

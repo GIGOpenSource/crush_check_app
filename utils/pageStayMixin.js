@@ -1,4 +1,4 @@
-import uma from '@/uma.js'
+// import uma from '@/uma.js'
 
 /**
  * 页面停留时长统计 Mixin（用于 Options API）
@@ -60,32 +60,32 @@ export const pageStayMixin = {
     },
     // 发送页面停留时长事件
     trackPageStay(stayDuration) {
-      if (!uma || !uma.trackEvent) {
-        console.warn('友盟统计未初始化')
-        return
-      }
+      // if (!uma || !uma.trackEvent) {
+      //   console.warn('友盟统计未初始化')
+      //   return
+      // }
 
-      try {
-        // 获取页面名称，优先使用组件中定义的 pageName，否则使用默认值
-        const pageName = this.pageName || '未知页面'
+      // try {
+      //   // 获取页面名称，优先使用组件中定义的 pageName，否则使用默认值
+      //   const pageName = this.pageName || '未知页面'
 
-        const params = {
-          userId: this.getUserId(),
-          appVersion: this.getAppVersion(),
-          eventTime: this.formatDateTime(),
-          pageName: pageName,
-          stayDuration: stayDuration // 停留时长（秒）
-        }
+      //   const params = {
+      //     userId: this.getUserId(),
+      //     appVersion: this.getAppVersion(),
+      //     eventTime: this.formatDateTime(),
+      //     pageName: pageName,
+      //     stayDuration: stayDuration // 停留时长（秒）
+      //   }
 
-        uma.trackEvent('page_stay', params)
-        console.log('页面停留时长统计已发送:', {
-          pageName: pageName,
-          stayDuration: stayDuration,
-          params: params
-        })
-      } catch (error) {
-        console.error('页面停留时长统计发送失败:', error)
-      }
+      //   uma.trackEvent('page_stay', params)
+      //   console.log('页面停留时长统计已发送:', {
+      //     pageName: pageName,
+      //     stayDuration: stayDuration,
+      //     params: params
+      //   })
+      // } catch (error) {
+      //   console.error('页面停留时长统计发送失败:', error)
+      // }
     }
   }
 }

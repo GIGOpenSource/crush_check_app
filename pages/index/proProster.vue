@@ -93,7 +93,7 @@ import {
 	onShareAppMessage,
 	onPullDownRefresh
 } from '@dcloudio/uni-app'
-import uma from '@/uma.js'
+// import uma from '@/uma.js'
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
@@ -379,38 +379,38 @@ const lock = () => {
 
 }
 
-//点击 “分享结果” 按钮
+//点击 "分享结果" 按钮
 const click_share = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('character_fail', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('character_fail', params.value)
+	// }
 }
 
 //点击 分享操作成功
 const share_success = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('share_success', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('share_success', params.value)
+	// }
 }
 
 //分享操作失败
 const share_fail = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('share_fail', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('share_fail', params.value)
+	// }
 }
-//点击 “保存海报” 按钮
+//点击 "保存海报" 按钮
 const click_save_poster = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_save_poster', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_save_poster', params.value)
+	// }
 }
 
-//点击 “保存报告” 按钮
+//点击 "保存报告" 按钮
 // const  click_save_report = () => {
 // 	params.value.eventTime = formatDateTime()
 // 	if (uma && uma.trackEvent) {
@@ -418,75 +418,75 @@ const click_save_poster = () => {
 // 	}
 // }
 
-//点击 “获得海报” 按钮
+//点击 "获得海报" 按钮
 const click_poster = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_poster', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_poster', params.value)
+	// }
 }
 
-//点击 “查看报告” 按钮
+//点击 "查看报告" 按钮
 const click_report = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_report', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_report', params.value)
+	// }
 }
-//点击 “公众号” 按钮
+//点击 "公众号" 按钮
 const click_focus = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_focus', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_focus', params.value)
+	// }
 }
 
-//点击 “月付” 按钮
+//点击 "月付" 按钮
 const click_monthpay = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
+	// if (uma && uma.trackEvent) {
 
-		uma.trackEvent('click_monthpay', params.value)
-	}
+	// 	uma.trackEvent('click_monthpay', params.value)
+	// }
 }
 
-//点击 “次付” 按钮
+//点击 "次付" 按钮
 const click_oncepay = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_oncepay', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_oncepay', params.value)
+	// }
 }
 
 //购买成功
 const pay_success = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('pay_success', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('pay_success', params.value)
+	// }
 }
 
 //购买失败
 const pay_fail = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('pay_fail', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('pay_fail', params.value)
+	// }
 }
-//点击 “邀请” 按钮
+//点击 "邀请" 按钮
 const click_invite = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_invite', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_invite', params.value)
+	// }
 }
 
-//点击 “取消邀请” 按钮
+//点击 "取消邀请" 按钮
 const click_invitecancel = () => {
 	params.value.eventTime = formatDateTime()
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('click_invitecancel', params.value)
-	}
+	// if (uma && uma.trackEvent) {
+	// 	uma.trackEvent('click_invitecancel', params.value)
+	// }
 }
 
 
