@@ -260,7 +260,16 @@ export default {
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociais',
     physicalPhoto: 'Fotos Físicas/Cenários',
-    consumeVoucher: 'Vales de Consumo/Viagem'
+    consumeVoucher: 'Vales de Consumo/Viagem',
+    becomeMember: 'Torne-se membro do CrushCheck',
+    enjoyPrivileges: 'Desfrute de muitos privilégios',
+    vipFeature1: 'Autenticação de materiais ilimitada',
+    vipFeature2: 'Livro de respostas ilimitado',
+    vipFeature3: 'MBTI Em Breve',
+    vipFeature4: 'Horóscopo Em Breve',
+    vipFeature5: 'Tarô Em Breve',
+    perMonth: 'yuan/mês',
+    openNow: 'Assinar Agora'
   },
   proPoster: {
     viewDeepReport: 'Ver Relatório de Análise Profunda',

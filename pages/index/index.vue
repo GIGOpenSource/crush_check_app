@@ -136,8 +136,8 @@
 				<image :src="$getImg('index/bg')" class="bg" />
 				<view class="content">
 					<view class="top-title">
-						<text class="t1">成为 <text class="name">CrushCheck</text> 会员</text>
-						<text class="t2">享受诸多特权</text>
+						<text class="t1">{{ $t('index.becomeMember') }}</text>
+						<text class="t2">{{ $t('index.enjoyPrivileges') }}</text>
 					</view>
 					<view class="btns">
 						<view v-for="(item, index) in viplist" :key="index">
@@ -145,7 +145,7 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-					<view class="bottom" @click="pay">{{ mouth.price }}元/月 立即开通</view>
+					<view class="bottom" @click="pay">{{ mouth.price }}{{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view>
 				</view>
 			</view>
 		</up-popup>
@@ -249,7 +249,13 @@ const scrollLeft = ref(0)
 const userinfo = ref({})
 const token = ref('')
 const mouth = ref({})
-const viplist = ['资料鉴定不限使用', '答案之书不限使用', 'MBTI 敬请期待', '星座运势 敬请期待', '塔罗牌 敬请期待']
+const viplist = computed(() => [
+	t('index.vipFeature1'),
+	t('index.vipFeature2'),
+	t('index.vipFeature3'),
+	t('index.vipFeature4'),
+	t('index.vipFeature5')
+])
 // #ifdef MP-WEIXIN
 onShareAppMessage((res) => {
 	click_invite()

@@ -260,7 +260,16 @@ export default {
     chatScreenshot: 'Chat Screenshots',
     socialScreenshot: 'Social Platform Screenshots',
     physicalPhoto: 'Physical/Scene Photos',
-    consumeVoucher: 'Consumption/Travel Vouchers'
+    consumeVoucher: 'Consumption/Travel Vouchers',
+    becomeMember: 'Become CrushCheck Member',
+    enjoyPrivileges: 'Enjoy Many Privileges',
+    vipFeature1: 'Unlimited Material Authentication',
+    vipFeature2: 'Unlimited Answer Book',
+    vipFeature3: 'MBTI Coming Soon',
+    vipFeature4: 'Horoscope Coming Soon',
+    vipFeature5: 'Tarot Cards Coming Soon',
+    perMonth: 'yuan/month',
+    openNow: 'Subscribe Now'
   },
   proPoster: {
     viewDeepReport: 'View Deep Analysis Report',

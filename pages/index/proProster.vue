@@ -8,8 +8,8 @@
 			<view class="bottomtitle" v-if="status == 1">{{ $t('proPoster.aiGeneratedTip') }}</view>
 			<!-- 深度报告蒙层 -->
 			<view class="mengceng" v-if="show">
-				<view>{{ $t('proPoster.openMember') }}</view>
-				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view>
+				<!-- <view>{{ $t('proPoster.openMember') }}</view>
+				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view> -->
 				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.openMember') }}</view> -->
 				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{

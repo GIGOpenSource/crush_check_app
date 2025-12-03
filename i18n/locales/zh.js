@@ -260,7 +260,16 @@ export default {
     chatScreenshot: '聊天记录截图',
     socialScreenshot: '社交平台截图',
     physicalPhoto: '实物/场景照片',
-    consumeVoucher: '消费/行程凭证'
+    consumeVoucher: '消费/行程凭证',
+    becomeMember: '成为 CrushCheck 会员',
+    enjoyPrivileges: '享受诸多特权',
+    vipFeature1: '资料鉴定不限使用',
+    vipFeature2: '答案之书不限使用',
+    vipFeature3: 'MBTI 敬请期待',
+    vipFeature4: '星座运势 敬请期待',
+    vipFeature5: '塔罗牌 敬请期待',
+    perMonth: '元/月',
+    openNow: '立即开通'
   },
   proPoster: {
     viewDeepReport: '查看深度解析报告',

@@ -260,7 +260,16 @@ export default {
     chatScreenshot: '채팅 스크린샷',
     socialScreenshot: '소셜 플랫폼 스크린샷',
     physicalPhoto: '물리/장면 사진',
-    consumeVoucher: '소비/여행 바우처'
+    consumeVoucher: '소비/여행 바우처',
+    becomeMember: 'CrushCheck 회원이 되기',
+    enjoyPrivileges: '다양한 특권 누리기',
+    vipFeature1: '자료 감정 무제한 사용',
+    vipFeature2: '답변의 책 무제한 사용',
+    vipFeature3: 'MBTI 곧 출시',
+    vipFeature4: '별자리 운세 곧 출시',
+    vipFeature5: '타로카드 곧 출시',
+    perMonth: '원/월',
+    openNow: '지금 바로 개통'
   },
   proPoster: {
     viewDeepReport: '심층 분석 보고서 보기',
