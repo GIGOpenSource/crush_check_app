@@ -263,7 +263,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: 'View Deep Analysis Report',
-    aiGeneratedTip: 'This poster is AI-generated, all risk indices and personality analysis are for entertainment reference only',
+    aiGeneratedTip: 'This poster is system-generated, all risk indices and personality analysis are for entertainment reference only',
     openMember: 'Open Membership',
     unlimitedDeepReport: 'Get unlimited deep analysis reports',
     openMemberPrice: '{price} yuan Open Membership',

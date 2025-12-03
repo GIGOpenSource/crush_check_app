@@ -263,7 +263,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: '查看深度解析报告',
-    aiGeneratedTip: '本海报由AI生成，所有风险指数、性格分析仅为趣味参考',
+    aiGeneratedTip: '本海报由系统生成，所有风险指数、性格分析仅为趣味参考',
     openMember: '开通会员',
     unlimitedDeepReport: '可以无限获得深度解析报告',
     openMemberPrice: '{price}元 开通会员',

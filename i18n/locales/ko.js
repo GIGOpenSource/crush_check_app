@@ -263,7 +263,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: '심층 분석 보고서 보기',
-    aiGeneratedTip: '이 포스터는 AI로 생성되었으며, 모든 위험 지수 및 성격 분석은 재미를 위한 참고용입니다',
+    aiGeneratedTip: '이 포스터는 시스템으로 생성되었으며, 모든 위험 지수 및 성격 분석은 재미를 위한 참고용입니다',
     openMember: '회원 가입',
     unlimitedDeepReport: '무제한 심층 분석 보고서 획득 가능',
     openMemberPrice: '{price}원 회원 가입',
