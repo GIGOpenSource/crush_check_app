@@ -10,8 +10,8 @@
 			<view class="mengceng" v-if="show">
 				<view>{{ $t('proPoster.openMember') }}</view>
 				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view>
-				<view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
-					$t('proPoster.openMember') }}</view>
+				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
+					$t('proPoster.openMember') }}</view> -->
 				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
 				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'" hover-class="none"
@@ -62,7 +62,7 @@
 					}}</view>
 				<view class="del-popup-actions">
 					<view @click="lock">{{ $t('proPoster.unlockThis') }}</view>
-					<view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view>
+					<!-- <view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view> -->
 				</view>
 				<view class="icon" @click="showDelPopup2 = false"> <up-icon name="close-circle" color="#ffffff"
 						size="30"></up-icon></view>

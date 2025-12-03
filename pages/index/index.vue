@@ -40,7 +40,8 @@
 								userinfo.share_success_count || 0 }}{{ $t('my.inviteProgressUnit') }}</view>
 						</view>
 					</view>
-					<button class="right" :open-type="token ? 'share' : ''"  hover-class="none" @click="handleInviteClick">{{ $t('my.invite') }}</button>
+					<button class="right" :open-type="token ? 'share' : ''" hover-class="none"
+						@click="handleInviteClick">{{ $t('my.invite') }}</button>
 				</view>
 			</view>
 			<view v-else class="no-empt">
@@ -129,6 +130,25 @@
 				</view>
 			</template>
 		</IndexProup>
+		<!-- 会员拦截 -->
+		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+			<view class="vipProup">
+				<image :src="$getImg('index/bg')" class="bg" />
+				<view class="content">
+					<view class="top-title">
+						<text class="t1">成为 <text class="name">CrushCheck</text> 会员</text>
+						<text class="t2">享受诸多特权</text>
+					</view>
+					<view class="btns">
+						<view v-for="(item, index) in viplist" :key="index">
+							<image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
+							<text>{{ item }}</text>
+						</view>
+					</view>
+					<view class="bottom" @click="pay">{{ mouth.price }}元/月 立即开通</view>
+				</view>
+			</view>
+		</up-popup>
 	</view>
 </template>
 
@@ -145,10 +165,13 @@ import {
 } from '@/config/config.js'
 import {
 	share,
-	getGuid
+	getGuid,
+	getProducts,
+	createOrder
 } from '@/api/index.js'
 import {
-	getSystemContent
+	getSystemContent,
+	getUserInfo
 } from '@/api/login.js'
 import {
 	onLoad,
@@ -161,7 +184,7 @@ import { useI18n } from 'vue-i18n'
 import { getLocale } from '@/i18n/index.js'
 
 const { t } = useI18n()
-
+const vipProup = ref(false)
 // 页面停留时长统计
 usePageStay(t('tabBar.index') || '检测')
 
@@ -225,6 +248,8 @@ const iconsRef = ref(null)
 const scrollLeft = ref(0)
 const userinfo = ref({})
 const token = ref('')
+const mouth = ref({})
+const viplist = ['资料鉴定不限使用', '答案之书不限使用', 'MBTI 敬请期待', '星座运势 敬请期待', '塔罗牌 敬请期待']
 // #ifdef MP-WEIXIN
 onShareAppMessage((res) => {
 	click_invite()
@@ -328,7 +353,7 @@ onLoad((e) => {
 		title: 'Crush Check'
 	});
 	params.value.pageName = t('index.selectFileType')
-
+	vipprice()
 	getwelecome()
 	if (uma) {
 		console.log('友盟统计已初始化:', uma)
@@ -370,22 +395,72 @@ const close = () => {
 	welecome.value = false
 }
 const handleInviteClick = () => {
-  console.log(1111)
 	if (!token.value) {
 		uni.navigateTo({
 			url: "/pages/login/login"
 		})
 	}
 }
+const vipprice = () => {
+	getProducts().then(res => {
+		mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+		console.log(mouth.value, 'mouthmouth')
+	})
+}
 const editimage = (index) => {
 	imagesList.value.splice(index, 1)
 }
+//支付
+const pay = () => {
+	click_monthpay()
+	createOrder({
+		description: mouth.value.description,
+        openId:uni.getStorageSync('openId'),
+		productId: mouth.value.id
+	}).then(res => {
+		uni.requestPayment({
+			"provider": "wxpay",
+			...res.data,
+			"signType": "RSA",
+			"package": `${res.data.prepayid}`,
+			"nonceStr": res.data.noncestr,
+			success(res) {
+				uni.showToast({
+					title: t('proPoster.paySuccess'),
+					icon: 'success'
+				})
+				pay_success()
+				const openId = uni.getStorageSync('openId')
+				getUserInfo(openId).then(userRes => {
+					if (userRes.code === 200 || userRes.code === 201) {
+						if (userRes.data) {
+							uni.setStorageSync('userInfo', JSON.stringify(userRes
+								.data))
+							console.log('用户信息更新成功', userRes.data)
+						}
+					}
+				}).catch(err => {
+					console.log('获取用户信息失败', err)
+				})
+			},
+			fail(e) {
+				pay_fail()
+				uni.showToast({
+					title: t('proPoster.payFailed'),
+					icon: 'none'
+				})
+			}
+		})
+
+	})
+}
 const btn = () => {
 	let token = uni.getStorageSync('token')
+	let userInfo = JSON.parse(uni.getStorageSync('userInfo'))
 	if (!token) return uni.navigateTo({
 		url: "/pages/login/login"
 	})
-	
+
 	if (!imagesList.value.length) {
 		uni.showToast({
 			title: t('index.pleaseUploadData'),
@@ -393,6 +468,7 @@ const btn = () => {
 		})
 		return
 	}
+	if (!userInfo.is_vip) return vipProup.value = true
 	show.value = true
 	flag.value = true
 	progress.value = 0
@@ -414,7 +490,7 @@ const btn = () => {
 		data: params,
 		header: {
 			token: uni.getStorageSync('token'),
-			"Accept-Language":uni.getStorageSync('currentLanguage')|| 'zh'
+			"Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
 		},
 		method: 'POST',
 		timeout: 1500000,
@@ -739,6 +815,29 @@ const click_invitecancel = () => {
 		uma.trackEvent('click_invitecancel', params.value)
 	}
 }
+//点击 “月付” 按钮
+const click_monthpay = () => {
+	params.value.eventTime = formatDateTime()
+	if (uma && uma.trackEvent) {
+
+		uma.trackEvent('click_monthpay', params.value)
+	}
+}
+//购买成功
+const pay_success = () => {
+	params.value.eventTime = formatDateTime()
+	if (uma && uma.trackEvent) {
+		uma.trackEvent('pay_success', params.value)
+	}
+}
+
+//购买失败
+const pay_fail = () => {
+	params.value.eventTime = formatDateTime()
+	if (uma && uma.trackEvent) {
+		uma.trackEvent('pay_fail', params.value)
+	}
+}
 
 // 更新 tabBar 国际化
 const updateTabBarI18n = () => {
@@ -768,6 +867,84 @@ const updateTabBarI18n = () => {
 	box-sizing: border-box;
 	position: relative;
 	padding-bottom: 40rpx;
+}
+
+.vipProup {
+	width: 100%;
+	height: 90vh;
+	position: relative;
+
+	.bg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.content {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+
+		.top-title {
+			width: 85%;
+			display: flex;
+			flex-direction: column;
+			margin-top: 160rpx;
+
+			.name {
+				margin: 0 10rpx;
+			}
+
+			.t1 {
+				font-weight: bold;
+				font-size: 42rpx;
+			}
+
+			.t2 {
+				margin-top: 10rpx;
+				font-size: 26rpx;
+				font-weight: 200;
+			}
+		}
+
+		.btns {
+			width: 85%;
+			margin-top: 80rpx;
+
+			view {
+				width: 100%;
+				background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 99%);
+				font-weight: 100;
+				height: 100rpx;
+				margin-bottom: 20rpx;
+				line-height: 100rpx;
+				border-radius: 100rpx;
+				padding-left: 45rpx;
+				box-sizing: border-box;
+				display: flex;
+				align-items: center;
+
+				image {
+					width: 60rpx;
+					height: 60rpx;
+					vertical-align: middle;
+					margin-right: 15rpx;
+					margin-left: -10rpx;
+				}
+			}
+		}
+
+		.bottom {
+			width: 92%;
+			background: linear-gradient(90deg, #6273FD 0%, #EE72FD 100%);
+			margin-top: 30rpx;
+			height: 95rpx;
+			border-radius: 30rpx;
+			line-height: 95rpx;
+			text-align: center;
+		}
+	}
 }
 
 .radio {
