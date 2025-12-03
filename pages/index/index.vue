@@ -462,7 +462,7 @@ const pay = () => {
 }
 const btn = () => {
 	let token = uni.getStorageSync('token')
-	let userInfo = JSON.parse(uni.getStorageSync('userInfo'))
+	
 	if (!token) return uni.navigateTo({
 		url: "/pages/login/login"
 	})
@@ -474,6 +474,7 @@ const btn = () => {
 		})
 		return
 	}
+	let userInfo = JSON.parse(uni.getStorageSync('userInfo'))
 	if (!userInfo.is_vip) return vipProup.value = true
 	show.value = true
 	flag.value = true
