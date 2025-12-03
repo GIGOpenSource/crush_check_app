@@ -264,7 +264,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: 'Ver Informe de Análisis Profundo',
-    aiGeneratedTip: 'Este póster es generado por IA, todos los índices de riesgo y análisis de personalidad son solo para referencia de entretenimiento',
+    aiGeneratedTip: 'Este póster es generado por sistema, todos los índices de riesgo y análisis de personalidad son solo para referencia de entretenimiento',
     openMember: 'Abrir Membresía',
     unlimitedDeepReport: 'Obtener informes de análisis profundo ilimitados',
     openMemberPrice: '{price} yuan Abrir Membresía',

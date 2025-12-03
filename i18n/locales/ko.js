@@ -264,7 +264,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: '심층 분석 보고서 보기',
-    aiGeneratedTip: '이 포스터는 AI로 생성되었으며, 모든 위험 지수 및 성격 분석은 재미를 위한 참고용입니다',
+    aiGeneratedTip: '이 포스터는 시스템으로 생성되었으며, 모든 위험 지수 및 성격 분석은 재미를 위한 참고용입니다',
     openMember: '회원 가입',
     unlimitedDeepReport: '무제한 심층 분석 보고서 획득 가능',
     openMemberPrice: '{price}원 회원 가입',
@@ -313,7 +313,7 @@ export default {
   login: {
     title: '로그인',
     appName: 'Crush Check',
-    appDesc: '—— 빠른 테스트: TA는 바람둥이인가? ——',
+    appDesc: '——  빠른 테스트: TA는 바람둥이인가? ——',
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',

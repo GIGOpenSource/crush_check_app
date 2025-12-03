@@ -264,7 +264,7 @@ export default {
   },
   proPoster: {
     viewDeepReport: '深度解析レポートを表示',
-    aiGeneratedTip: 'このポスターはAIによって生成され、すべてのリスク指数および性格分析は娯楽参考のみです',
+    aiGeneratedTip: 'このポスターはシステムによって生成され、すべてのリスク指数および性格分析は娯楽参考のみです',
     openMember: 'メンバーシップを開く',
     unlimitedDeepReport: '無制限の深度解析レポートを取得可能',
     openMemberPrice: '{price}元 メンバーシップを開く',
