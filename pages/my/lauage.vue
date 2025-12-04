@@ -109,28 +109,20 @@ export default {
     // 更新 tabBar 国际化
     updateTabBarI18n() {
       try {
-        const currentLocale = uni.getStorageSync('currentLanguage') || 'zh';
-        let tabBarTexts = { index: '检测', my: '我的' };
-        
-        if (currentLocale === 'en') {
-          tabBarTexts = { index: 'Check', my: 'My' };
-        } else if (currentLocale === 'es') {
-          tabBarTexts = { index: 'Verificar', my: 'Mi' };
-        } else if (currentLocale === 'pt') {
-          tabBarTexts = { index: 'Verificar', my: 'Meu' };
-        } else if (currentLocale === 'ja') {
-          tabBarTexts = { index: 'チェック', my: 'マイ' };
-        } else if (currentLocale === 'ko') {
-          tabBarTexts = { index: '확인', my: '내' };
-        }
-        
+        // index 0: 首页
         uni.setTabBarItem({
           index: 0,
-          text: tabBarTexts.index
+          text: t('tabBar.index') || '首页'
         });
+        // index 1: 测试记录
         uni.setTabBarItem({
           index: 1,
-          text: tabBarTexts.my
+          text: t('tabBar.test') || '测试记录'
+        });
+        // index 2: 我的
+        uni.setTabBarItem({
+          index: 2,
+          text: t('tabBar.my') || '我的'
         });
       } catch (error) {
         console.error('更新 tabBar 国际化失败:', error);

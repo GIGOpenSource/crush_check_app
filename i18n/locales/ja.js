@@ -108,7 +108,8 @@ export default {
     korean: '韓国語'
   },
   tabBar: {
-    index: 'チェック',
+    index: 'ホーム',
+    test: 'テスト記録',
     my: 'マイ'
   },
   my: {
