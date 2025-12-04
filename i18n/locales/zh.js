@@ -260,7 +260,16 @@ export default {
     chatScreenshot: '聊天记录截图',
     socialScreenshot: '社交平台截图',
     physicalPhoto: '实物/场景照片',
-    consumeVoucher: '消费/行程凭证'
+    consumeVoucher: '消费/行程凭证',
+    becomeMember: '成为会员',
+    enjoyPrivileges: '享受特权',
+    perMonth: '元/月',
+    openNow: '立即开通',
+    vipFeature1: '无限高级报告',
+    vipFeature2: '深度解析报告',
+    vipFeature3: '及时风险提醒',
+    vipFeature4: '专业分析报告',
+    vipFeature5: '优先客服支持'
   },
   proPoster: {
     viewDeepReport: '查看深度解析报告',

@@ -260,7 +260,16 @@ export default {
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociais',
     physicalPhoto: 'Fotos Físicas/Cenários',
-    consumeVoucher: 'Vales de Consumo/Viagem'
+    consumeVoucher: 'Vales de Consumo/Viagem',
+    becomeMember: 'Tornar-se Membro',
+    enjoyPrivileges: 'Desfrutar de Privilégios',
+    perMonth: '/mês',
+    openNow: 'Abrir Agora',
+    vipFeature1: 'Relatórios Premium Ilimitados',
+    vipFeature2: 'Relatórios de Análise Profunda',
+    vipFeature3: 'Alertas de Risco Oportunos',
+    vipFeature4: 'Relatórios de Análise Profissional',
+    vipFeature5: 'Suporte Prioritário ao Cliente'
   },
   proPoster: {
     viewDeepReport: 'Ver Relatório de Análise Profunda',

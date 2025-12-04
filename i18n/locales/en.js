@@ -260,7 +260,16 @@ export default {
     chatScreenshot: 'Chat Screenshots',
     socialScreenshot: 'Social Platform Screenshots',
     physicalPhoto: 'Physical/Scene Photos',
-    consumeVoucher: 'Consumption/Travel Vouchers'
+    consumeVoucher: 'Consumption/Travel Vouchers',
+    becomeMember: 'Become a Member',
+    enjoyPrivileges: 'Enjoy Privileges',
+    perMonth: '/month',
+    openNow: 'Open Now',
+    vipFeature1: 'Unlimited Premium Reports',
+    vipFeature2: 'Deep Analysis Reports',
+    vipFeature3: 'Timely Risk Alerts',
+    vipFeature4: 'Professional Analysis Reports',
+    vipFeature5: 'Priority Customer Support'
   },
   proPoster: {
     viewDeepReport: 'View Deep Analysis Report',

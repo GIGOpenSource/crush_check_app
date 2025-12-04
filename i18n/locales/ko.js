@@ -260,7 +260,16 @@ export default {
     chatScreenshot: '채팅 스크린샷',
     socialScreenshot: '소셜 플랫폼 스크린샷',
     physicalPhoto: '물리/장면 사진',
-    consumeVoucher: '소비/여행 바우처'
+    consumeVoucher: '소비/여행 바우처',
+    becomeMember: '회원이 되기',
+    enjoyPrivileges: '특권 누리기',
+    perMonth: '/월',
+    openNow: '지금 열기',
+    vipFeature1: '무제한 프리미엄 보고서',
+    vipFeature2: '심층 분석 보고서',
+    vipFeature3: '시기적절한 위험 알림',
+    vipFeature4: '전문 분석 보고서',
+    vipFeature5: '우선 고객 지원'
   },
   proPoster: {
     viewDeepReport: '심층 분석 보고서 보기',

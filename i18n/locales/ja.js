@@ -260,7 +260,16 @@ export default {
     chatScreenshot: 'チャットスクリーンショット',
     socialScreenshot: 'ソーシャルプラットフォームスクリーンショット',
     physicalPhoto: '物理/シーンの写真',
-    consumeVoucher: '消費/旅行バウチャー'
+    consumeVoucher: '消費/旅行バウチャー',
+    becomeMember: 'メンバーになる',
+    enjoyPrivileges: '特権を享受',
+    perMonth: '/月',
+    openNow: '今すぐ開く',
+    vipFeature1: '無制限プレミアムレポート',
+    vipFeature2: '深度解析レポート',
+    vipFeature3: 'タイムリーなリスクアラート',
+    vipFeature4: '専門分析レポート',
+    vipFeature5: '優先カスタマーサポート'
   },
   proPoster: {
     viewDeepReport: '深度解析レポートを表示',
