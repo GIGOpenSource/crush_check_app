@@ -129,6 +129,25 @@
 				</view>
 			</template>
 		</IndexProup>
+		<!-- 会员拦截 -->
+		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+			<view class="vipProup">
+				<image :src="$getImg('index/bg')" class="bg" />
+				<view class="content">
+					<view class="top-title">
+						<text class="t1">{{ $t('index.becomeMember') }}</text>
+						<text class="t2">{{ $t('index.enjoyPrivileges') }}</text>
+					</view>
+					<view class="btns">
+						<view v-for="(item, index) in viplist" :key="index">
+							<image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
+							<text>{{ item }}</text>
+						</view>
+					</view>
+					<view class="bottom" @click="pay">{{ mouth.price }}{{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view>
+				</view>
+			</view>
+		</up-popup>
 	</view>
 </template>
 
@@ -161,7 +180,7 @@ import { useI18n } from 'vue-i18n'
 import { getLocale } from '@/i18n/index.js'
 
 const { t } = useI18n()
-
+const vipProup = ref(false)
 // 页面停留时长统计
 usePageStay(t('tabBar.index') || '检测')
 
@@ -399,6 +418,8 @@ const btn = () => {
 		})
 		return
 	}
+	let userInfo = JSON.parse(uni.getStorageSync('userInfo'))
+	if (!userInfo.is_vip) return vipProup.value = true
 	show.value = true
 	flag.value = true
 	progress.value = 0
@@ -783,7 +804,83 @@ const updateTabBarI18n = () => {
 	position: relative;
 	padding-bottom: 40rpx;
 }
+.vipProup {
+	width: 100%;
+	height: 90vh;
+	position: relative;
 
+	.bg {
+		width: 100%;
+		height: 100%;
+	}
+
+	.content {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+
+		.top-title {
+			width: 85%;
+			display: flex;
+			flex-direction: column;
+			margin-top: 160rpx;
+
+			.name {
+				margin: 0 10rpx;
+			}
+
+			.t1 {
+				font-weight: bold;
+				font-size: 42rpx;
+			}
+
+			.t2 {
+				margin-top: 10rpx;
+				font-size: 26rpx;
+				font-weight: 200;
+			}
+		}
+
+		.btns {
+			width: 85%;
+			margin-top: 80rpx;
+
+			view {
+				width: 100%;
+				background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 99%);
+				font-weight: 100;
+				height: 100rpx;
+				margin-bottom: 20rpx;
+				line-height: 100rpx;
+				border-radius: 100rpx;
+				padding-left: 45rpx;
+				box-sizing: border-box;
+				display: flex;
+				align-items: center;
+
+				image {
+					width: 60rpx;
+					height: 60rpx;
+					vertical-align: middle;
+					margin-right: 15rpx;
+					margin-left: -10rpx;
+				}
+			}
+		}
+
+		.bottom {
+			width: 92%;
+			background: linear-gradient(90deg, #6273FD 0%, #EE72FD 100%);
+			margin-top: 30rpx;
+			height: 95rpx;
+			border-radius: 30rpx;
+			line-height: 95rpx;
+			text-align: center;
+		}
+	}
+}
 .radio {
 	margin-top: 20rpx;
 	display: flex;
