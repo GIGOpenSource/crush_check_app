@@ -26,43 +26,67 @@
         </view>
 
         <scroll-view class="poster-list-wrapper" scroll-y @scrolltolower="loadMore" :lower-threshold="100">
-            <view class="poster-grid">
-                <view v-for="(item, index) in posterList" :key="item.id || index" class="poster-card">
-                    <view class="poster-thumb" @click="
-                        isType ? handlePosterClick(item, index) : toggleSelect(item)
-                        ">
-                        <image v-if="!isType" class="select-icon" :src="item.isActive
-                            ? '/static/my/yixuan.png'
-                            : '/static/my/weixuan.png'
-                            " mode="aspectFit" @click.stop="toggleSelect(item)"></image>
-                        <image v-if="item.file_url" class="poster-image" :class="{
-                            'poster-image--blur':
-                                item.status === 'waiting' || item.status === 'error',
-                        }" :src="item.file_url" mode=""></image>
+            <view class="poster-list-container">
+                <view v-for="(item, index) in posterList" :key="item.id || index"
+                    :class="['poster', { 'answer': index == 1 }]"
+                    @click="isType ? handlePosterClick(item, index) : toggleSelect(item)">
+                    <!-- 选中图标 -->
+                    <image v-if="!isType" class="select-icon" :src="item.isActive
+                        ? '/static/my/yixuan.png'
+                        : '/static/my/weixuan.png'
+                        " mode="aspectFit" @click.stop="toggleSelect(item)"></image>
+
+                    <!-- 左侧图片 -->
+                    <view class="left">
+                        <image v-if="item.file_url" :src="item.file_url" mode="scaleToFill"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }">
+                        </image>
                         <view v-else class="poster-placeholder">
-                            <text class="poster-placeholder-text">{{
-                                getStatusText(item.status)
-                            }}</text>
-                        </view>
-                        <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-overlay">
-                            <text class="status-title">{{
-                                getStatusTitle(item.status)
-                            }}</text>
-                        </view>
-                        <view class="poster-date-overlay">
-                            <text class="poster-date">{{
-                                formatDate(item.created_time)
-                            }}</text>
+                            <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
                         </view>
                     </view>
-                    <view class="poster-info">
-                        <text class="poster-type">{{
-                            getPosterTypeLabel(item.prompt_template?.template_type)
-                        }}</text>
+
+                    <!-- 状态遮罩 - 铺满整个卡片区域 -->
+                    <!--  -->
+                    <view class="status-overlay" v-if="item.status === 'waiting' || item.status === 'error'">
+                        <!-- 右上角状态标签 -->
+                        <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
+                            @click.stop="index == 1 ? handleRetryClick(item) : null">
+                            <text class="status-badge-text">{{ getStatusTitle(item.status) }}</text>
+                        </view>
+                    </view>
+
+                    <!-- 右侧内容 -->
+                    <view class="right">
+                        <!-- 鉴渣类型 -->
+                        <template v-if="index == 0">
+                            <view class="num">含渣量：{{ item.crush_rate || '50%' }}</view>
+                            <view class="details">
+                                <text>"TA可能是一个提供情绪价值，但拒绝负责的暧昧体验家"</text>
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index)">查看海报 {{
+                                    '>>' }}</text>
+                            </view>
+                        </template>
+
+                        <!-- 答案之书类型 -->
+                        <template v-if="index == 1">
+                            <view class="num">{{ item.question || '答案之书的提问内容，具体用户可能舒服的字段' }}</view>
+                            <view class="details" style="margin-top: 10rpx;">
+                                <text style="font-weight: 100;">回答：</text>
+                                "{{ item.answer || '机会就在眼前' }}"
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index)">查看答案 {{
+                                    '>>' }}</text>
+                            </view>
+                        </template>
                     </view>
                 </view>
                 <view v-if="loading" class="loading-more">{{ $t('poster.loadingMore') }}</view>
                 <view v-if="!hasMore && posterList.length > 0" class="no-more">{{ $t('poster.noMore') }}</view>
+                <view class="no-empt" v-if="posterList.length == 0">
+                    <image :src="$getImg('index/no-empt')" mode="widthFix" />
+                    <view class="title">目前什么都没有，快去测试吧</view>
+                    <view class="btn" @click="path">去测试</view>
+                </view>
             </view>
         </scroll-view>
     </view>
@@ -107,7 +131,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -239,6 +263,9 @@ export default {
     },
 
     methods: {
+        path(){
+           uni.switchTab({ url: '/pages/index/index' })
+        },
         // 刷新用户信息
         refreshUserInfo() {
             const openId = uni.getStorageSync('openId')
@@ -704,6 +731,18 @@ export default {
                 this.exitManageMode();
             }
         },
+        // 点击重新生成按钮
+        handleRetryClick(item) {
+            if (!item.id) {
+                uni.showToast({
+                    title: this.$t('poster.posterIdNotExist'),
+                    icon: "none",
+                });
+                return;
+            }
+            this.currentPosterId = item.id;
+            this.handleRetryEdit();
+        },
         async handleRetryEdit() {
             if (!this.currentPosterId) {
                 uni.showToast({
@@ -804,6 +843,37 @@ export default {
     flex-direction: column;
 }
 
+.no-empt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 25vh;
+
+    image {
+        width: 200rpx;
+    }
+
+    .title {
+        margin: 50rpx 0;
+        font-size: 30rpx;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn {
+        width: 400rpx;
+        height: 90rpx;
+        margin: 40rpx auto;
+        text-align: center;
+        line-height: 90rpx;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.04);
+        border: 0.5px solid rgba(255, 255, 255, 0.17);
+        border-radius: 80rpx;
+        margin-top: 50rpx;
+    }
+}
+
 .top {
     display: flex;
 
@@ -853,109 +923,157 @@ export default {
     flex: 1;
 }
 
-.poster-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 24rpx;
+.poster-list-container {
+    padding: 20rpx;
     padding-bottom: 100rpx;
 }
 
-.poster-card {
-    width: calc((100% - 24rpx) / 2);
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.08),
-            rgba(255, 255, 255, 0.02));
-    border-radius: 26rpx;
+.poster {
+    background: rgba(255, 255, 255, 0.1);
+    border: 0.5px solid #FFFFFF;
+    display: flex;
+    align-items: center;
     padding: 20rpx;
+    border-radius: 20rpx;
+    height: 290rpx;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 18rpx;
-    border: 1rpx solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 16rpx 36rpx rgba(0, 0, 0, 0.35);
-}
-
-.poster-thumb {
     position: relative;
-    border-radius: 22rpx;
-    overflow: hidden;
-    height: 470rpx;
-    background: rgba(255, 255, 255, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    margin-bottom: 20rpx;
 
-.poster-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: filter 0.3s;
+    .left {
+        width: 30%;
+        height: 250rpx;
+        position: relative;
+        border-radius: 12rpx;
+        overflow: hidden;
 
-    &.poster-image--blur {
-        filter: blur(8rpx);
+        image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.3s;
+
+            &.poster-image--blur {
+                filter: blur(8rpx);
+            }
+        }
+
+        .poster-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 24rpx;
+            background: rgba(255, 255, 255, 0.05);
+        }
     }
-}
 
-.poster-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.55);
-    font-size: 28rpx;
-}
+    .status-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(18, 17, 31, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-size: 24rpx;
+        backdrop-filter: blur(12rpx);
+        z-index: 2;
+        border-radius: 20rpx;
+        overflow: hidden;
 
-.select-icon {
-    position: absolute;
-    top: 18rpx;
-    right: 18rpx;
-    width: 60rpx;
-    height: 60rpx;
-    z-index: 3;
-}
+        .status-badge {
+            position: absolute;
+            top: 50rpx;
+            right: 40rpx;
+            width: 250rpx;
+            padding: 16rpx 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.37);
+            transform: translate(40%, -20%) rotate(45deg);
+            transform-origin: center;
+            z-index: 3;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 
-.status-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(18, 17, 31, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 28rpx;
-    backdrop-filter: blur(12rpx);
-    z-index: 1;
-}
+            &--error {
+                background: rgba(255, 77, 77, 0.85);
+                cursor: pointer;
+            }
 
-.poster-date-overlay {
-    position: absolute;
-    bottom: 0rpx;
-    right: 0rpx;
-    z-index: 2;
-    padding: 8rpx 16rpx;
-    border-radius: 8rpx;
-    backdrop-filter: blur(4rpx);
-}
+            .status-badge-text {
+                color: #000;
+                font-size: 22rpx;
+                font-weight: 500;
+                transform: rotate(360deg);
+                display: block;
+                white-space: nowrap;
+                line-height: 1.2;
+            }
+        }
+    }
 
-.poster-date {
-    color: #ffffff;
-    font-size: 22rpx;
-    font-weight: 500;
-}
+    .right {
+        width: 70%;
+        font-size: 36rpx !important;
+        padding-left: 20rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
-.poster-info {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    font-size: 24rpx;
-    color: rgba(255, 255, 255, 0.65);
-}
+        .details {
+            margin-top: 50rpx;
+            font-weight: 500;
+            font-size: 36rpx;
+            line-height: 1.5;
 
-.poster-type {
-    font-weight: 600;
+            .look {
+                position: absolute;
+                right: 20rpx;
+                bottom: 20rpx;
+                font-weight: 100;
+                font-size: 28rpx;
+            }
+        }
+
+        .num {
+            margin-top: 10rpx;
+            line-height: 1.4;
+        }
+    }
+
+    .select-icon {
+        position: absolute;
+        left: 20rpx;
+        top: 20rpx;
+        width: 60rpx;
+        height: 60rpx;
+        z-index: 3;
+    }
+
+    &.answer {
+        .num {
+            // font-weight: bold;
+            color: #fff;
+        }
+
+        .left {
+            width: 30%;
+            height: 250rpx;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            image {
+                width: 70%;
+                height: 80%;
+                object-fit: contain;
+            }
+        }
+    }
 }
 
 .loading-more,
@@ -1085,11 +1203,12 @@ export default {
     align-items: center;
 }
 
-.num {
-    font-size: 26rpx;
-    margin: 20rpx 0;
-    color: #000;
-}
+// .num {
+//     font-size: 36rpx;
+//     margin: 20rpx 0;
+//     color: #000;
+//     font-weight: 100;
+// }
 
 .progress-wrapper {
     width: 70%;
