@@ -108,7 +108,8 @@ export default {
     korean: '韓国語'
   },
   tabBar: {
-    index: 'チェック',
+    index: 'ホーム',
+    test: 'テスト記録',
     my: 'マイ'
   },
   my: {
@@ -256,20 +257,10 @@ export default {
     uploadSuccess: 'アップロード成功',
     partUploadFailed: '一部のファイルのアップロードに失敗しました',
     inviteFriends: '友達を招待して一緒に使用',
-    shareTitle: '友達を招待して自分がプレイヤーかどうかテストしよう',
     chatScreenshot: 'チャットスクリーンショット',
     socialScreenshot: 'ソーシャルプラットフォームスクリーンショット',
     physicalPhoto: '物理/シーンの写真',
-    consumeVoucher: '消費/旅行バウチャー',
-    becomeMember: 'CrushCheck メンバーになる',
-    enjoyPrivileges: '多くの特権を享受',
-    vipFeature1: '資料鑑定無制限使用',
-    vipFeature2: '答えの本無制限使用',
-    vipFeature3: 'MBTI 近日公開',
-    vipFeature4: '星座運勢 近日公開',
-    vipFeature5: 'タロットカード 近日公開',
-    perMonth: '元/月',
-    openNow: '今すぐ開通'
+    consumeVoucher: '消費/旅行バウチャー'
   },
   proPoster: {
     viewDeepReport: '深度解析レポートを表示',

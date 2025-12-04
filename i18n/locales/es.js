@@ -108,7 +108,8 @@ export default {
     korean: 'Coreano'
   },
   tabBar: {
-    index: 'Verificar',
+    index: 'Inicio',
+    test: 'Registros de Prueba',
     my: 'Mi'
   },
   my: {
@@ -256,20 +257,10 @@ export default {
     uploadSuccess: 'Subida exitosa',
     partUploadFailed: 'Algunos archivos fallaron al subir',
     inviteFriends: 'Invitar amigos a usar juntos',
-    shareTitle: 'Invita a tus amigos a probar si eres un jugador',
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociales',
     physicalPhoto: 'Fotos Físicas/Escenas',
-    consumeVoucher: 'Vales de Consumo/Viaje',
-    becomeMember: 'Conviértete en miembro de CrushCheck',
-    enjoyPrivileges: 'Disfruta de muchos privilegios',
-    vipFeature1: 'Autenticación de materiales ilimitada',
-    vipFeature2: 'Libro de respuestas ilimitado',
-    vipFeature3: 'MBTI Próximamente',
-    vipFeature4: 'Horóscopo Próximamente',
-    vipFeature5: 'Tarot Próximamente',
-    perMonth: 'yuan/mes',
-    openNow: 'Suscribirse Ahora'
+    consumeVoucher: 'Vales de Consumo/Viaje'
   },
   proPoster: {
     viewDeepReport: 'Ver Informe de Análisis Profundo',

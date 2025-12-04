@@ -108,7 +108,8 @@ export default {
     korean: '한국어'
   },
   tabBar: {
-    index: '확인',
+    index: '홈',
+    test: '테스트 기록',
     my: '내'
   },
   my: {
@@ -256,20 +257,10 @@ export default {
     uploadSuccess: '업로드 성공',
     partUploadFailed: '일부 파일 업로드 실패',
     inviteFriends: '친구와 함께 사용하도록 초대',
-    shareTitle: '친구를 초대하여 자신이 플레이어인지 테스트해보세요',
     chatScreenshot: '채팅 스크린샷',
     socialScreenshot: '소셜 플랫폼 스크린샷',
     physicalPhoto: '물리/장면 사진',
-    consumeVoucher: '소비/여행 바우처',
-    becomeMember: 'CrushCheck 회원이 되기',
-    enjoyPrivileges: '다양한 특권 누리기',
-    vipFeature1: '자료 감정 무제한 사용',
-    vipFeature2: '답변의 책 무제한 사용',
-    vipFeature3: 'MBTI 곧 출시',
-    vipFeature4: '별자리 운세 곧 출시',
-    vipFeature5: '타로카드 곧 출시',
-    perMonth: '원/월',
-    openNow: '지금 바로 개통'
+    consumeVoucher: '소비/여행 바우처'
   },
   proPoster: {
     viewDeepReport: '심층 분석 보고서 보기',
@@ -322,7 +313,7 @@ export default {
   login: {
     title: '로그인',
     appName: 'Crush Check',
-    appDesc: '——  빠른 테스트: TA는 바람둥이인가? ——',
+    appDesc: '—— 빠른 테스트: TA는 바람둥이인가? ——',
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',

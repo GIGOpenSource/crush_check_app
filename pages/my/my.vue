@@ -77,14 +77,12 @@
     </view>
 
     <!-- 历史海报模块 -->
-    <view class="history-card">
+    <!-- <view class="history-card">
       <view class="card-header" @click="handleHistoryClick">
         <text class="card-title">{{ $t('my.historyPoster') }}</text>
         <text class="arrow-icon">›</text>
       </view>
-      <!-- <view class="date-text" v-if="posterList.length > 0">
-        {{ formatDate(posterList[0].created_time) }}
-      </view> -->
+      
       <view class="poster-list" v-if="posterList.length > 0">
         <view class="poster-item" v-for="(item, index) in posterList" :key="item.id || index"
           @click="handlePosterClick(item)">
@@ -114,7 +112,7 @@
           }}</text>
         </view>
       </view>
-    </view>
+    </view> -->
 
     <!-- 常用功能 -->
     <view class="functions-section">
