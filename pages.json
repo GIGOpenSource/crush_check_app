@@ -11,16 +11,36 @@
 			"path": "pages/test/test",
 			"style": {
 				"navigationBarTitleText": "CrushCheck",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"disableScroll": false
 			}
 		},  {
 			"path": "pages/index/opeare",
 			"style": {
 				"navigationBarTitleText": "CrushCheck",
-				"enablePullDownRefresh": true,
-				"backgroundColor": "#12111f",
-				"backgroundTextStyle": "light"
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
+		},  {
+			"path": "pages/index/answer",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
+		},  {
+			"path": "pages/index/answer-result",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
+		}, {
+			"path": "pages/index/choosebook",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
 			}
 		}, {
 			"path": "pages/index/proProster",

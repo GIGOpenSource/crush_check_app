@@ -1,6 +1,6 @@
 <template>
 	<view class="page">
-		<view class="jz" @click="path">
+		<view class="jz" @click="path('/pages/index/opeare')">
 			<view class="left">
 				<view class="t1">鉴渣</view>
 				<view>鉴定自己的说话</view>
@@ -12,7 +12,7 @@
 			</view>
 		</view>
 		<view class="bottom">
-			<view class="left">
+			<view class="left" @click="path('/pages/index/answer')">
 				<view><view>答案</view><view>之书</view></view>
 				<image :src="$getImg('index/answer')" mode="widthFix"/>
 			</view>
@@ -25,8 +25,8 @@
 </template>
 
 <script setup>
-const path = () => {
-  uni.navigateTo({url: "/pages/index/opeare" })
+const path = (url) => {
+  uni.navigateTo({url})
 }
 </script>
 
