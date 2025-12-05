@@ -57,4 +57,10 @@ export const getAnswerbook = (params) => {
 	return getRequest(`/answerbook/generate_image/`, params)
 }
 
+//获取ai答案
+export const getAi = (params) => {
+	return getRequest(`/answerbook/generate_answer_deep_image/`, params)
+}
+
+
 

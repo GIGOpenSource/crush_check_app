@@ -28,7 +28,7 @@
         <scroll-view class="poster-list-wrapper" scroll-y @scrolltolower="loadMore" :lower-threshold="100">
             <view class="poster-list-container">
                 <view v-for="(item, index) in posterList" :key="item.id || index"
-                    :class="['poster', { 'answer': index == 1 }]"
+                    :class="['poster', { 'answer': item.prompt_template.template_type == 'answer' }]"
                     @click="isType ? handlePosterClick(item, index) : toggleSelect(item)">
                     <!-- 选中图标 -->
                     <image v-if="!isType" class="select-icon" :src="item.isActive
@@ -38,7 +38,11 @@
 
                     <!-- 左侧图片 -->
                     <view class="left">
-                        <image v-if="item.file_url" :src="item.file_url" mode="scaleToFill"
+
+                        <image
+                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
+                            :src="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
+                            mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }">
                         </image>
                         <view v-else class="poster-placeholder">
@@ -59,28 +63,29 @@
                     <!-- 右侧内容 -->
                     <view class="right">
                         <!-- 鉴渣类型 -->
-                        <template v-if="index == 0">
-                            <view class="num">含渣量：{{ item.crush_rate || '50%' }}</view>
+                        <template
+                            v-if="item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'">
+                            <view class="num">含渣量：{{ item.score }}%</view>
                             <view class="details">
-                                <text>"TA可能是一个提供情绪价值，但拒绝负责的暧昧体验家"</text>
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index)">查看海报 {{
+                                <text>{{ item.summary }}</text>
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">查看海报 {{
                                     '>>' }}</text>
                             </view>
                         </template>
 
                         <!-- 答案之书类型 -->
-                        <template v-if="index == 1">
-                            <view class="num">{{ item.question || '答案之书的提问内容，具体用户可能舒服的字段' }}</view>
-                            <view class="details" style="margin-top: 10rpx;">
+                        <template v-if="item.prompt_template.template_type == 'answer'">
+                            <view class="num">{{ item.summary }}</view>
+                            <view class="details" style="margin-top: 20rpx;">
                                 <text style="font-weight: 100;">回答：</text>
-                                "{{ item.answer || '机会就在眼前' }}"
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index)">查看答案 {{
+                                "{{ item.content || '机会就在眼前' }}"
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 2)">查看答案 {{
                                     '>>' }}</text>
                             </view>
                         </template>
                     </view>
                 </view>
-                <view v-if="loading" class="loading-more">{{ $t('poster.loadingMore') }}</view>
+                <!-- <view v-if="loading" class="loading-more">{{ $t('poster.loadingMore') }}</view> -->
                 <view v-if="!hasMore && posterList.length > 0" class="no-more">{{ $t('poster.noMore') }}</view>
                 <view class="no-empt" v-if="posterList.length == 0">
                     <image :src="$getImg('index/no-empt')" mode="widthFix" />
@@ -131,7 +136,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -219,13 +224,13 @@ export default {
                 label: '答案之书',
                 icon: "/static/my/shejiao.png",
                 color: "#5B9BD5",
-                type: "social",
+                type: "answer",
             },
             {
                 label: '鉴渣',
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
-                type: "physical",
+                type: "crushcheck",
             },
         ];
         this.pageName = t('poster.title');
@@ -261,10 +266,15 @@ export default {
             })
         })
     },
+    onReachBottom() {
+        // 页面触底事件（作为 scroll-view 的备选方案）
+        console.log("========== 页面触底事件 ==========");
+        this.loadMore();
+    },
 
     methods: {
-        path(){
-           uni.switchTab({ url: '/pages/index/index' })
+        path() {
+            uni.switchTab({ url: '/pages/index/index' })
         },
         // 刷新用户信息
         refreshUserInfo() {
@@ -348,7 +358,7 @@ export default {
 
                     if (reset) {
                         this.posterList = formattedResults;
-                        this.currentPage = 1;
+                        // reset 时，currentPage 已经在前面设置为 1 了，这里不需要再设置
                     } else {
                         this.posterList = [...this.posterList, ...formattedResults];
                     }
@@ -361,24 +371,48 @@ export default {
                     }
 
                     // 根据 pagination 判断是否还有更多数据
-                    const currentPage = pagination.page || this.currentPage;
-                    const totalPages = pagination.total_pages || 0;
+                    const responsePage = pagination.page;
+                    const totalPages = pagination.total_pages;
 
                     console.log("分页信息", {
-                        currentPage: currentPage,
+                        reset: reset,
+                        responsePage: responsePage,
+                        thisCurrentPage: this.currentPage,
                         totalPages: totalPages,
-                        hasMore: currentPage < totalPages,
+                        resultsLength: results.length,
+                        pageSize: this.pageSize,
                     });
 
-                    if (currentPage >= totalPages) {
-                        // 当前页已经是最后一页，没有更多数据
+                    // 判断是否还有更多数据的逻辑：
+                    // 优先根据返回的数据数量判断，这是最可靠的判断方式
+                    const currentPageFromResponse = reset
+                        ? (responsePage !== undefined && responsePage !== null ? responsePage : 1)
+                        : (responsePage !== undefined && responsePage !== null ? responsePage : this.currentPage);
+
+                    if (results.length === 0) {
+                        // 返回空数据，说明没有更多数据了
                         this.hasMore = false;
-                        console.log("已到最后一页，没有更多数据");
+                        console.log("返回空数据，没有更多数据");
+                    } else if (results.length < this.pageSize) {
+                        // 返回的数据少于每页数量，说明没有更多数据了
+                        this.hasMore = false;
+                        console.log("返回数据少于每页数量，没有更多数据");
                     } else {
-                        // 还有更多数据，更新页码为下一页
-                        this.currentPage = currentPage + 1;
+                        // 返回的数据等于每页数量，假设还有更多数据，继续加载
+                        // 更新页码为下一页
+                        this.currentPage = currentPageFromResponse + 1;
                         this.hasMore = true;
-                        console.log("还有更多数据，下一页:", this.currentPage);
+                        console.log("返回数据等于每页数量，假设还有更多数据，下一页:", this.currentPage);
+
+                        // 如果有 totalPages 信息，也记录一下，但不作为主要判断依据
+                        if (totalPages !== undefined && totalPages !== null && totalPages > 0) {
+                            console.log("总页数信息:", totalPages, "当前页:", currentPageFromResponse);
+                            // 如果当前页已经大于等于总页数，记录警告但不停止加载
+                            // 因为可能接口返回的 totalPages 不准确
+                            if (currentPageFromResponse >= totalPages) {
+                                console.log("警告：当前页已大于等于总页数，但返回数据等于每页数量，继续尝试加载下一页");
+                            }
+                        }
                     }
                 }
             } catch (error) {
@@ -390,8 +424,22 @@ export default {
 
         // 加载更多
         loadMore() {
+            console.log("========== 触底加载更多 ==========");
+            console.log("状态检查:", {
+                loading: this.loading,
+                hasMore: this.hasMore,
+                currentPage: this.currentPage,
+                posterListLength: this.posterList.length
+            });
+
             if (!this.loading && this.hasMore) {
+                console.log("开始加载更多数据，当前页码:", this.currentPage);
                 this.fetchPosterList();
+            } else {
+                console.log("跳过加载:", {
+                    loading: this.loading,
+                    hasMore: this.hasMore
+                });
             }
         },
 
@@ -480,20 +528,34 @@ export default {
         },
 
         // 处理海报点击
-        handlePosterClick(item, index) {
+        handlePosterClick(item, index, type) {
             // 如果状态是已完成，跳转到详情页
             if (item.status === "done") {
                 if (item.id) {
-                    uni.navigateTo({
-                        url: `/pages/index/proProster?id=${item.id}`,
-                        fail: (err) => {
-                            console.error("跳转失败:", err);
-                            uni.showToast({
-                                title: this.$t('poster.jumpFailed'),
-                                icon: "none",
-                            });
-                        },
-                    });
+                    if (type == 1) {
+                        uni.navigateTo({
+                            url: `/pages/index/proProster?id=${item.id}`,
+                            fail: (err) => {
+                                console.error("跳转失败:", err);
+                                uni.showToast({
+                                    title: this.$t('poster.jumpFailed'),
+                                    icon: "none",
+                                });
+                            },
+                        });
+                    } else {
+                          uni.navigateTo({
+                            url: '/pages/index/answer-result?id='+item.id +'&details='+true,
+                            fail: (err) => {
+                                console.error("跳转失败:", err);
+                                uni.showToast({
+                                    title: this.$t('poster.jumpFailed'),
+                                    icon: "none",
+                                });
+                            },
+                        });
+                    }
+
                 } else {
                     uni.showToast({
                         title: this.$t('poster.posterIdNotExist'),
@@ -1028,7 +1090,7 @@ export default {
             margin-top: 50rpx;
             font-weight: 500;
             font-size: 36rpx;
-            line-height: 1.5;
+            line-height: 1.2;
 
             .look {
                 position: absolute;
@@ -1042,6 +1104,9 @@ export default {
         .num {
             margin-top: 10rpx;
             line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     }
 
@@ -1058,6 +1123,9 @@ export default {
         .num {
             // font-weight: bold;
             color: #fff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .left {
@@ -1072,6 +1140,16 @@ export default {
                 height: 80%;
                 object-fit: contain;
             }
+        }
+
+        .details {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
         }
     }
 }
