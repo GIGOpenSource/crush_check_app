@@ -164,10 +164,10 @@ export function getPosterList(currentPage = 1, pageSize = 10, poster_type, user 
  * @param {string} ids - 海报ID列表，逗号分隔的字符串
  * @returns {Promise}
  */
-export function deletePosters(ids) {
+export function deletePosters(params) {
   return deleteRequest(
-    `/poster/bulk-delete/?ids=${ids}`,
-    {},
+    `/poster/bulk-delete/`,
+    params,
     {
       header: {
         "Content-Type": "application/json",

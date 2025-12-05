@@ -2,7 +2,7 @@
     <view class="poster-page">
         <view class="top">
             <view v-if="isType">最近测试</view>
-            <view v-else>全选</view>
+            <view v-else @click="selectAll">{{ isSelectAll ? '取消全选' : '全选' }}</view>
             <view v-if="isType" hover-class="none" @click="enterManageMode">
                 管理
             </view>
@@ -180,13 +180,15 @@ export default {
             pageSize: 10,
             hasMore: true,
             loading: false,
+            isSelectAll: false, // 是否全选状态
+            wasSelectAll: false, // 是否曾经全选过（用于判断反选）
         };
     },
     onLoad() {
         // 设置导航栏标题
-        uni.setNavigationBarTitle({
-            title: this.$t('poster.title') || '历史海报'
-        });
+        // uni.setNavigationBarTitle({
+        //     title: this.$t('poster.title') || '历史海报'
+        // });
 
         // 初始化分类列表（使用 i18n）
         this.categoryList = [
@@ -353,7 +355,7 @@ export default {
                     // 为每个项目添加 isActive 属性
                     const formattedResults = results.map((item) => ({
                         ...item,
-                        isActive: false,
+                        isActive: this.isSelectAll && !this.isType, // 如果全选状态且处于管理模式，新数据也选中
                     }));
 
                     if (reset) {
@@ -364,9 +366,18 @@ export default {
                     }
 
                     if (!this.isType) {
-                        this.posterList.forEach((item) => {
-                            item.isActive = false;
-                        });
+                        // 如果处于管理模式
+                        if (this.isSelectAll) {
+                            // 如果全选状态，所有项都选中
+                            this.posterList.forEach((item) => {
+                                item.isActive = true;
+                            });
+                        } else {
+                            // 否则所有项都不选中
+                            this.posterList.forEach((item) => {
+                                item.isActive = false;
+                            });
+                        }
                         this.updateSelectedCount();
                     }
 
@@ -692,19 +703,48 @@ export default {
         toggleSelect(item) {
             item.isActive = !item.isActive;
             this.updateSelectedCount();
+            // 如果手动取消选择，检查是否所有项都被选中，如果不是则取消全选状态
+            const allSelected = this.posterList.every((p) => p.isActive);
+            this.isSelectAll = allSelected;
+            // 如果之前是全选状态，现在取消了一些，保持 wasSelectAll 为 true（用于反选判断）
+            if (!allSelected && this.wasSelectAll) {
+                // wasSelectAll 保持为 true，表示曾经全选过
+            } else if (allSelected) {
+                // 如果又全选了，重置 wasSelectAll
+                this.wasSelectAll = false;
+            }
         },
         updateSelectedCount() {
             this.selectedCount = this.posterList.filter((p) => p.isActive).length;
         },
         enterManageMode() {
             this.isType = false;
+            this.isSelectAll = false; // 重置全选状态
+            this.wasSelectAll = false; // 重置全选标志
             this.posterList.forEach((item) => {
                 item.isActive = false;
             });
             this.selectedCount = 0;
         },
+        selectAll() {
+            // 切换全选/取消全选状态
+            this.isSelectAll = !this.isSelectAll;
+            this.posterList.forEach((item) => {
+                item.isActive = this.isSelectAll;
+            });
+            this.updateSelectedCount();
+            // 如果全选，标记为曾经全选过
+            if (this.isSelectAll) {
+                this.wasSelectAll = true;
+            } else {
+                // 如果取消全选，重置标志
+                this.wasSelectAll = false;
+            }
+        },
         exitManageMode() {
             this.isType = true;
+            this.isSelectAll = false; // 重置全选状态
+            this.wasSelectAll = false; // 重置全选标志
             this.posterList.forEach((item) => {
                 item.isActive = false;
             });
@@ -732,30 +772,53 @@ export default {
         async confirmDelete() {
             // 获取选中的海报列表
             const selectedList = this.posterList.filter((item) => item.isActive);
+            // 获取未选中的海报列表
+            const unselectedList = this.posterList.filter((item) => !item.isActive);
 
             if (selectedList.length === 0) {
                 this.showDelPopup = false;
                 return;
             }
 
-            // 获取选中的海报ID数组
-            const ids = selectedList.map((item) => item.id).filter((id) => id);
-
-            if (ids.length === 0) {
-                uni.showToast({
-                    title: this.$t('poster.cannotGetPosterId'),
-                    icon: "none",
-                });
-                this.showDelPopup = false;
-                return;
-            }
-
             try {
-                // 将ID数组转换为逗号分隔的字符串
-                const idsString = ids.join(",");
+                const currentCategoryType =
+                    this.categoryList[this.currentCategory]?.type || "all";
+                const posterType =
+                    currentCategoryType === "all" ? "" : currentCategoryType;
+                
+                let params = {
+                    ids: [],
+                    poster_type: posterType,
+                    select_type: '' // normal(默认)/all(全选)/invert(反选)
+                };
+
+                // 判断选择类型
+                if (this.isSelectAll && selectedList.length === this.posterList.length) {
+                    // 全选状态：所有项都选中
+                    params.select_type = 'all';
+                    params.ids = ''
+                } else if (this.wasSelectAll && unselectedList.length > 0) {
+                    // 先全选，再取消部分：传递未选中的ID数组（反选）
+                    const unselectedIds = unselectedList.map((item) => item.id).filter((id) => id);
+                    params.select_type = 'invert';
+                    params.ids = unselectedIds.join(',')
+                } else {
+                    // 手动勾选：传递选中的ID数组
+                    const selectedIds = selectedList.map((item) => item.id).filter((id) => id);
+                    if (selectedIds.length === 0) {
+                        uni.showToast({
+                            title: this.$t('poster.cannotGetPosterId'),
+                            icon: "none",
+                        });
+                        this.showDelPopup = false;
+                        return;
+                    }
+                    params.select_type = 'normal';
+                    params.ids = selectedIds.join(',')
+                }
 
                 // 调用删除接口
-                const res = await deletePosters(idsString);
+                const res = await deletePosters(params);
                 console.log("删除海报成功", res);
 
                 if (res.code === 200 || res.code === 201) {
@@ -771,6 +834,8 @@ export default {
                         icon: "success",
                     });
 
+                    // 重置全选标志
+                    this.wasSelectAll = false;
                     this.exitManageMode();
                 } else {
                     uni.showToast({
