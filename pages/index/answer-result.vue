@@ -61,9 +61,7 @@ onLoad((op) => {
             details.value.poster_id = res.data.id
          })
     } else {
-        getAnswerbook({ answerId: id.value, user_question: uni.getStorageSync('question') }).then(res => {
-            details.value = res.data;
-        })
+        details.value.image_url = op.url
     }
 
 })

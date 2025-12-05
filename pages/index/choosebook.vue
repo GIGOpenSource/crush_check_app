@@ -19,15 +19,24 @@
                 <view>{{ question }}</view>
             </view>
             <view class="images">
-                <image v-for="(item, index) in list" :key="index" :src="$getImg('index/answer')"
-                    @click="choose(item.id)" />
+                <block v-for="(item, index) in list" :key="index">
+                    <view class="image-container" :class="{ 'flipping': item.show }">
+                        <view class="image-wrapper">
+                            <image :src="$getImg('index/answer')" @click="choose(item.id, index)" class="image-front" />
+                            <image :src="$getImg('index/change')" class="image-back" />
+                        </view>
+                    </view>
+                </block>
             </view>
         </view>
     </view>
 </template>
 
 <script setup>
-import { getBook } from '@/api/index.js';
+import { getBook, getAnswerbook } from '@/api/index.js';
+import {
+    host
+} from '@/config/config.js'
 import { onMounted, ref } from 'vue';
 const list = ref([]);
 const question = uni.getStorageSync('question');
@@ -39,18 +48,48 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 
     getBook().then(res => {
-        list.value = res.data;
+        list.value = res.data.map(item => {
+            return {
+                ...item,
+                show: false
+            }
+        })
     })
 })
 
 const back = () => {
     uni.navigateBack()
 }
-const choose = (id) => {
-    console.log(111111)
-    uni.navigateTo({
-        url: '/pages/index/answer-result?id=' + id
-    })
+const choose = (id, index) => {
+    list.value[index].show = true
+    let params = { answerId: id, user_question: uni.getStorageSync('question') }
+    uni.request({
+        url: host + '/answerbook/generate_image/', //仅为示例，并非真实接口地址。
+        data: params,
+        header: {
+            token: uni.getStorageSync('token'),
+            "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+        },
+        method: 'GET',
+        timeout: 1500000,
+        complete: (data) => {
+            if (data.data.code == 403) {
+                uni.navigateTo({
+                    url: "/pages/login/login"
+                })
+                return
+            }
+            if (data.data.code == 200) {
+                  uni.navigateTo({
+                        url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url
+                    });
+            } else {
+
+            }
+        }
+    });
+
+
 }
 </script>
 
@@ -96,7 +135,7 @@ const choose = (id) => {
     padding: 20rpx;
     overflow-y: auto;
     position: relative;
-    
+
     .top {
         position: absolute;
         left: 20rpx;
@@ -106,7 +145,7 @@ const choose = (id) => {
         color: #ffffff;
         font-size: 28rpx;
         z-index: 998;
-        
+
         text {
             margin-left: 10rpx;
         }
@@ -130,10 +169,38 @@ const choose = (id) => {
     justify-content: space-between;
     margin-top: 90rpx;
 
-    image {
+    .image-container {
         width: 31%;
         height: 280rpx;
         margin-bottom: 20rpx;
+        perspective: 1000rpx; // 3D透视效果
+
+        .image-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 3s ease-in-out;
+
+            image {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                backface-visibility: hidden;
+            }
+
+            .image-front {
+                transform: rotateY(0deg);
+            }
+
+            .image-back {
+                transform: rotateY(180deg);
+            }
+        }
+
+        &.flipping .image-wrapper {
+            transform: rotateY(180deg);
+        }
     }
 }
 </style>
