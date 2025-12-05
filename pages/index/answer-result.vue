@@ -57,7 +57,8 @@ onLoad((op) => {
          getPosterDetails(id.value).then(res => {
             details.value = res.data;
             details.value.image_url = res.data.file_url
-            console.log(res.data,'rrr')
+            details.value.deepimages = res.data.child_list[0]?.file_url
+            details.value.poster_id = res.data.id
          })
     } else {
         getAnswerbook({ answerId: id.value, user_question: uni.getStorageSync('question') }).then(res => {
