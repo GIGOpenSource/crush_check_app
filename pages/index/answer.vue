@@ -6,7 +6,7 @@
         <view class="rich">
             <view class="textarea-wrapper">
                 <up-textarea v-model="value1" :maxlength="30" height="150" :count="true"></up-textarea>
-                <view v-if="!value1" class="custom-placeholder"> 
+                <view v-if="!value1" class="custom-placeholder">
                     <text>在这里写下你的困惑或愿望</text>
                     <text>例如：我的感情会有结果吗？...</text>
                 </view>
@@ -15,18 +15,36 @@
         <view class="btn" @click="path">开始翻书</view>
     </view>
 </template>
- 
+
 <script setup>
 import { ref } from 'vue';
+import { onShow , onHide} from '@dcloudio/uni-app'
 const value1 = ref('');
+onShow(() => {
+    value1.value =  uni.getStorageSync('question') || '';
+});
 const path = () => {
+    if (!uni.getStorageSync('token')) {
+        uni.navigateTo({
+            url: "/pages/login/login"
+        })
+        return
+    }
+    if(!value1.value.trim()){
+        uni.showToast({
+            title: '请输入你的问题',
+            icon: 'none'
+        });
+        return;
+    }
+    uni.setStorageSync('question', value1.value.trim());
     uni.navigateTo({
         url: '/pages/index/choosebook'
     });
 };
 </script>
 
-<style lang="scss" scoped> 
+<style lang="scss" scoped>
 .page {
     height: 96vh;
     margin: 20rpx 25rpx;
@@ -38,9 +56,11 @@ const path = () => {
     flex-direction: column;
     align-items: center;
     font-weight: 100;
-    view{
+
+    view {
         line-height: 50rpx;
     }
+
     // justify-content: center;
 }
 
@@ -71,7 +91,7 @@ const path = () => {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    color:#fff;
+    color: #fff;
     font-size: 30rpx;
     line-height: 1.8;
     z-index: 1;

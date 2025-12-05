@@ -26,6 +26,7 @@
 
 <script setup>
 const path = (url) => {
+	uni.removeStorageSync('question');
   uni.navigateTo({url})
 }
 </script>

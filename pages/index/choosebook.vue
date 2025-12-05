@@ -2,18 +2,33 @@
     <view class="page">
         <view class="top" @click="back()"><up-icon name="arrow-left" color="#ffffff" size="24"></up-icon>返回修改问题</view>
         <view class="title">
-            <view>在这里写下你的困惑或愿望</view>
-            <view>例如：我的感情会有结果吗？....</view>
+            <!-- <view>在这里写下你的困惑或愿望</view> -->
+            <view>{{ question }}</view>
         </view>
         <view class="images">
-            <image v-for="item in 9" :key="index" :src="$getImg('index/answer')" />
+            <image v-for="(item,index) in list" :key="index" :src="$getImg('index/answer')" @click="choose(item.id)"/>
         </view>
     </view>
 </template>
 
 <script setup>
+import { getBook } from '@/api/index.js';
+import { onMounted ,ref} from 'vue';
+const list = ref([]);
+const question = uni.getStorageSync('question');
 const back = () => {
     uni.navigateBack()
+}
+onMounted(() => {
+    getBook().then(res => {
+        list.value = res.data;
+    })
+})
+const choose = (id) => {
+    console.log(111111)
+    uni.navigateTo({
+        url: '/pages/index/answer-result?id='+id
+    })
 }
 </script>
 
@@ -40,6 +55,7 @@ const back = () => {
     flex-direction: column;
     margin: 160rpx auto;
     line-height: 50rpx;
+    text-align: center;
 }
 .images{
     display: flex;
