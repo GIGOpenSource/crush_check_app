@@ -81,7 +81,7 @@ const choose = (id, index) => {
             }
             if (data.data.code == 200) {
                   uni.navigateTo({
-                        url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url
+                        url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id='+ data.data.data.poster_id
                     });
             } else {
 

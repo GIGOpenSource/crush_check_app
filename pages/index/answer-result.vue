@@ -51,6 +51,7 @@ const back = () => {
     
 }
 onLoad((op) => {
+    console.log(op,'ooo')
     id.value = op.id
     isdetails.value = op.details || false
     if (isdetails.value) {
@@ -62,6 +63,7 @@ onLoad((op) => {
          })
     } else {
         details.value.image_url = op.url
+        details.value.poster_id = op.parent_id
     }
 
 })
