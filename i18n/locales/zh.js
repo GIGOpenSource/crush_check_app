@@ -357,6 +357,7 @@ export default {
     tellTA: '告诉TA',
     askAgain: '再次提问',
     aiAnalysis: 'AI分析',
+    aiAnalyzing: '生成中',
     thinkQuestion: '在心中默念你的问题',
     clickBook: '然后点击翻书',
     getAnswer: '获取答案...',

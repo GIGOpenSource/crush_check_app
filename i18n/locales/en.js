@@ -357,6 +357,7 @@ export default {
     tellTA: 'Tell TA',
     askAgain: 'Ask Again',
     aiAnalysis: 'AI Analysis',
+    aiAnalyzing: 'Generating...',
     thinkQuestion: 'Silently think about your question',
     clickBook: 'Then click to flip the book',
     getAnswer: 'Get your answer...',

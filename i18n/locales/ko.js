@@ -357,6 +357,7 @@ export default {
     tellTA: 'TA에게 알리기',
     askAgain: '다시 질문하기',
     aiAnalysis: 'AI 분석',
+    aiAnalyzing: '생성 중',
     thinkQuestion: '마음 속으로 질문을 조용히 생각해보세요',
     clickBook: '그런 다음 책을 열기 위해 클릭하세요',
     getAnswer: '답변 받기...',

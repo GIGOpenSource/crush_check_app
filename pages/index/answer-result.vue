@@ -6,20 +6,25 @@
                 <view class="navbar-title">{{ t('answerBook.title') }}</view>
             </view>
         </view>
-        
+
         <view class="top" :style="{ top: (statusBarHeight + 88 + 40) + 'rpx' }" @click="back()">
             <up-icon name="arrow-left" color="#7F663E" size="24"></up-icon>
-            <text>{{ isdetails ? t('answerBook.back') : status == 1 ? t('answerBook.backToModify') : t('answerBook.back') }}</text>
+            <text>{{ isdetails ? t('answerBook.back') : status == 1 ? t('answerBook.backToModify') :
+                t('answerBook.back') }}</text>
         </view>
-        
+
         <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
-            <image :src="status == 1 ? details.image_url:details.deepimages" />
+            <image :src="status == 1 ? details.image_url : details.deepimages" />
             <view class="btns" v-if="status == 1">
                 <view class="btn1">
                     <view @click="save">{{ t('answerBook.tellTA') }}</view>
                     <view @click="again">{{ t('answerBook.askAgain') }}</view>
                 </view>
-                <view class="btn2" @click="aidetails">{{ t('answerBook.aiAnalysis') }}</view>
+                <view class="btn2" :class="{ 'btn-disabled': details.children_status === 'waiting' }"
+                    @click="aidetails">
+                    {{ details.children_status === 'waiting' ? t('answerBook.aiAnalyzing') : t('answerBook.aiAnalysis')
+                    }}
+                </view>
             </view>
         </view>
     </view>
@@ -27,7 +32,8 @@
     <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
         <template #content>
             <view class="content">
-                <view class="num">{{ t('index.analyzingPercent') }} {{ progress }}{{ t('index.analyzingPercentUnit') }}</view>
+                <view class="num">{{ t('index.analyzingPercent') }} {{ progress }}{{ t('index.analyzingPercentUnit') }}
+                </view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -40,21 +46,16 @@
         </template>
     </IndexProup>
 
-    <up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
-        <view class="vipProup">
-            <image :src="$getImg('index/bg')" class="bg" />
-            <view class="content">
-                <view class="top-title">
-                    <text class="t1">{{ t('index.becomeMember') }}</text>
-                    <text class="t2">{{ t('index.enjoyPrivileges') }}</text>
-                </view>
-                <view class="btns1">
-                    <view v-for="(item, index) in viplist" :key="index">
-                        <image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
-                        <text>{{ item }}</text>
-                    </view>
-                </view>
-                <view class="bottom1" @click="pay">{{ mouth.price }}{{ t('index.perMonth') }} {{ t('index.openNow') }}</view>
+    <!-- 解锁本次报告 -->
+    <up-popup :show="showDelPopup2" mode="center">
+        <view class="del-popup-content">
+            <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+            <view class="title">您需要付费来解锁本次分析</view>
+            <view class="del-popup-actions">
+                <view @click="pay">{{ mouth.price }}/次 立即支付</view>
+            </view>
+            <view class="icon" @click="showDelPopup2 = false">
+                <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
             </view>
         </view>
     </up-popup>
@@ -64,7 +65,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-import { getAnswerbook, getPosterDetails, getProducts, createOrder } from '@/api/index.js';
+import { getAnswerbook, getPosterDetails, getProducts, createOrder, freeReport } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { host } from '@/config/config.js';
@@ -78,8 +79,9 @@ const statusBarHeight = ref(0)
 const showProgress = ref(false)
 const progress = ref(0)
 const progressTimer = ref(null)
-const vipProup = ref(false)
 const mouth = ref({})
+const showDelPopup2 = ref(false)
+const userinfo = ref({ allow_count: 0 })
 const viplist = computed(() => [
     t('index.vipFeature1'),
     t('index.vipFeature2'),
@@ -92,36 +94,58 @@ onMounted(() => {
     const systemInfo = uni.getSystemInfoSync()
     const pxToRpx = systemInfo.windowWidth / 375 * 2 || 2
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
-    
-    // 获取会员价格
     getProducts().then(res => {
-        mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+        mouth.value = res.data.results.filter(item => item.product_type == 'once')[0]
     })
+    // 获取用户信息
+    const openId = uni.getStorageSync('openId')
+    if (openId) {
+        getUserInfo(openId).then(res => {
+            if (res.data) {
+                userinfo.value = res.data
+                uni.setStorageSync('userInfo', JSON.stringify(res.data))
+            }
+        })
+    }
 })
 
 const back = () => {
-    if(isdetails.value) return uni.navigateBack()
-    if(status.value == 2){
+    if (isdetails.value) return uni.navigateBack()
+    if (status.value == 2) {
         status.value = 1
-    }else{
-       uni.reLaunch({ url: '/pages/index/answer' })
+    } else {
+        uni.reLaunch({ url: '/pages/index/answer' })
     }
-    
+
 }
 onLoad((op) => {
-    console.log(op,'ooo')
+    console.log(op, 'ooo')
     id.value = op.id
     isdetails.value = op.details || false
+
+    // 初始化用户信息
+    const storedUserInfo = uni.getStorageSync('userInfo')
+    if (storedUserInfo) {
+        try {
+            userinfo.value = JSON.parse(storedUserInfo)
+        } catch (e) {
+            console.error('解析用户信息失败', e)
+        }
+    }
+
     if (isdetails.value) {
-         getPosterDetails(id.value).then(res => {
+        getPosterDetails(id.value).then(res => {
             details.value = res.data;
             details.value.image_url = res.data.file_url
             details.value.deepimages = res.data.child_list[0]?.file_url
             details.value.poster_id = res.data.id
-         })
+            // 设置 children_status，用于按钮状态判断
+            details.value.children_status = res.data.children_status || ''
+        })
     } else {
         details.value.image_url = op.url
         details.value.poster_id = op.parent_id
+        details.value.children_status = ''
     }
 
 })
@@ -150,26 +174,45 @@ const save = () => {
     })
 }
 const aidetails = () => {
-    if(details.value.deepimages) return status.value = 2
-    
-    // 检查会员状态
-    let userInfo = JSON.parse(uni.getStorageSync('userInfo') || '{}')
-    if (!userInfo.is_vip) {
-        vipProup.value = true
+    if (details.value.deepimages) {
+        status.value = 2
+        showDelPopup2.value = false
         return
     }
-    
-    // 显示进度条弹窗
+    getPosterDetails(details.value.poster_id).then(res => {
+        let status = res.data.children_status
+        if (status == 'error') {
+            submit()
+        } else if (status == 'done') {
+            details.value = res.data;
+            details.value.image_url = res.data.file_url
+            details.value.deepimages = res.data.child_list[0]?.file_url
+            details.value.poster_id = res.data.id
+            // 更新 children_status
+            details.value.children_status = 'done'
+        } else if (status == 'waiting') {
+            details.value.children_status = 'waiting'
+            uni.showToast({
+                title: t('answerBook.aiAnalyzing'),
+                icon: 'none'
+            })
+        } else if (!status) {
+            showDelPopup2.value = true
+        }
+
+    })
+
+    return
+
+}
+const submit = () => {
+    details.value.children_status = 'waiting'
     showProgress.value = true
     progress.value = 0
-    
-    // 清除之前的定时器
     if (progressTimer.value) {
         clearInterval(progressTimer.value)
         progressTimer.value = null
     }
-    
-    // 启动进度条动画
     progressTimer.value = setInterval(() => {
         if (progress.value >= 99) {
             clearInterval(progressTimer.value)
@@ -178,13 +221,12 @@ const aidetails = () => {
         }
         progress.value++
     }, 20)
-    
     let params = {
-        answerId: id.value,
+        answerId: isdetails.value ? details.value.prompt_template.id : id.value,
         parent_id: details.value.poster_id,
-        user_question: uni.getStorageSync('question')
+        user_question: isdetails.value ? details.value.summary : uni.getStorageSync('question')
     }
-    
+
     uni.request({
         url: host + '/answerbook/generate_answer_deep_image/',
         data: params,
@@ -200,30 +242,36 @@ const aidetails = () => {
                 clearInterval(progressTimer.value)
                 progressTimer.value = null
             }
-            
+
             if (data.data.code == 403) {
                 showProgress.value = false
                 progress.value = 0
+                // 重置等待状态
+                details.value.children_status = ''
                 uni.navigateTo({
                     url: "/pages/login/login"
                 })
                 return
             }
-            
+
             if (data.data.code == 200 || data.data.code == 201) {
                 // 设置进度为100%
                 progress.value = 100
-                
+
                 // 延迟关闭弹窗，让用户看到100%
                 setTimeout(() => {
                     showProgress.value = false
                     details.value.deepimages = data.data.data.image_url
                     status.value = 2
                     progress.value = 0
+                    // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
+                    details.value.children_status = ''
                 }, 500)
             } else {
                 showProgress.value = false
                 progress.value = 0
+                // 请求失败，重置等待状态，允许重试
+                details.value.children_status = ''
             }
         }
     })
@@ -238,6 +286,8 @@ const handleProgressClose = () => {
     showProgress.value = false
     progress.value = 0
 }
+
+
 
 // 支付
 const pay = () => {
@@ -257,24 +307,16 @@ const pay = () => {
                     title: t('proPoster.paySuccess'),
                     icon: 'success'
                 })
-                const openId = uni.getStorageSync('openId')
-                getUserInfo(openId).then(userRes => {
-                    if (userRes.code === 200 || userRes.code === 201) {
-                        if (userRes.data) {
-                            uni.setStorageSync('userInfo', JSON.stringify(userRes.data))
-                            console.log('用户信息更新成功', userRes.data)
-                        }
-                    }
-                }).catch(err => {
-                    console.log('获取用户信息失败', err)
-                })
-                vipProup.value = false
+                showDelPopup2.value = false
+                submit()
+
             },
             fail(e) {
                 uni.showToast({
                     title: t('proPoster.payFailed'),
                     icon: 'none'
                 })
+                showDelPopup2.value = false
             }
         })
     })
@@ -296,14 +338,14 @@ const pay = () => {
     right: 0;
     z-index: 999;
     background: #12111f;
-    
+
     .navbar-content {
         height: 88rpx;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 0 20rpx;
-        
+
         .navbar-title {
             font-size: 32rpx;
             font-weight: 500;
@@ -320,7 +362,7 @@ const pay = () => {
     color: #7F663E;
     font-size: 28rpx;
     z-index: 998;
-    
+
     text {
         margin-left: 10rpx;
     }
@@ -334,10 +376,11 @@ const pay = () => {
     border-radius: 10rpx;
     position: relative;
     overflow: hidden;
+
     image {
-    width: 100%;
-    height: 100%;
-}
+        width: 100%;
+        height: 100%;
+    }
 }
 
 
@@ -363,6 +406,13 @@ const pay = () => {
 
     .btn2 {
         text-align: center;
+
+        &.btn-disabled {
+            background: rgba(205, 181, 141, 0.5);
+            color: rgba(127, 102, 62, 0.5);
+            pointer-events: none;
+            opacity: 0.6;
+        }
     }
 
     .btn1 {
@@ -388,11 +438,12 @@ const pay = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-.num {
-		font-size: 26rpx;
-		margin: 20rpx 0;
-		color: #000;
-	}
+
+    .num {
+        font-size: 26rpx;
+        margin: 20rpx 0;
+        color: #000;
+    }
 
 }
 
@@ -453,81 +504,62 @@ const pay = () => {
     font-weight: 100;
 }
 
-.vipProup {
-	width: 100%;
-	height: 70vh;
-	position: relative;
+.del-popup-content {
+    position: relative;
+    width: 560rpx;
+    padding: 160rpx 40rpx 48rpx;
+    box-sizing: border-box;
+    border-radius: 36rpx;
+    background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+    box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+    text-align: center;
+    color: #000;
 
-	.bg {
-		width: 100%;
-		height: 100%;
-	}
+    .del-popup-icon {
+        position: absolute;
+        top: -90rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200rpx;
+        height: 200rpx;
+    }
 
-	.content {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
+    .title {
+        color: #000;
+        margin-top: -50rpx;
+        font-size: 34rpx;
+    }
 
-		.top-title {
-			width: 85%;
-			display: flex;
-			flex-direction: column;
-			margin-top: 160rpx;
+    .num {
+        font-size: 26rpx;
+        margin-top: 20rpx;
+    }
 
-			.name {
-				margin: 0 10rpx;
-			}
+    .del-popup-actions {
+        margin-top: 40rpx;
+        color: #fff;
 
-			.t1 {
-				font-weight: bold;
-				font-size: 42rpx;
-			}
+        view {
+            background: #b370ff;
+            height: 90rpx;
+            margin-top: 30rpx;
+            line-height: 90rpx;
+            border-radius: 90rpx;
+        }
+    }
 
-			.t2 {
-				margin-top: 10rpx;
-				font-size: 26rpx;
-				font-weight: 200;
-			}
-		}
+    .icon {
+        position: absolute;
+        transform: translateX(-50%);
+        left: 50%;
+        bottom: -100rpx;
+        color: #000;
+        cursor: pointer;
 
-		.btns1 {
-			width: 85%;
-			margin-top: 80rpx;
-
-			view {
-				width: 100%;
-				background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 99%);
-				font-weight: 100;
-				height: 100rpx;
-				margin-bottom: 20rpx;
-				line-height: 100rpx;
-				border-radius: 100rpx;
-				padding-left: 45rpx;
-				box-sizing: border-box;
-				display: flex;
-				align-items: center;
-
-				image {
-					width: 60rpx;
-					height: 60rpx;
-					vertical-align: middle;
-					margin-right: 15rpx;
-					margin-left: -10rpx;
-				}
-			}
-		}
-
-		.bottom1 {
-			width: 92%;
-			background: linear-gradient(90deg, #6273FD 0%, #EE72FD 100%);
-			margin-top: 30rpx;
-			height: 95rpx;
-			border-radius: 30rpx;
-			line-height: 95rpx;
-			text-align: center;
-		}
-	}
+        &.icon-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
 }
 </style>

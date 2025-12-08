@@ -357,6 +357,7 @@ export default {
     tellTA: 'Dizer para TA',
     askAgain: 'Perguntar Novamente',
     aiAnalysis: 'Análise IA',
+    aiAnalyzing: 'Gerando...',
     thinkQuestion: 'Pense silenciosamente em sua pergunta',
     clickBook: 'Depois clique para abrir o livro',
     getAnswer: 'Obtenha sua resposta...',
