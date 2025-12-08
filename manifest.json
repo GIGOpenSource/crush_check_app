@@ -123,7 +123,7 @@
     "h5" : {
         "router" : {
             "mode" : "hash",
-            "base" : "/h5"
+            "base" : "/app"
         },
         "title" : "CrushCheck",
         "template" : ""
