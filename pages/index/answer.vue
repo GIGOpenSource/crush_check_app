@@ -18,16 +18,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { onShow , onHide} from '@dcloudio/uni-app'
+import { ref, onMounted } from 'vue';
+import { onShow , onHide, onLoad} from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const value1 = ref('');
 const isFocused = ref(false);
 
+onLoad(() => {
+    // 设置导航栏标题
+    uni.setNavigationBarTitle({
+        title: t('answerBook.title')
+    });
+});
+
 onShow(() => {
     value1.value =  uni.getStorageSync('question') || '';
+    // 每次显示时也更新导航栏标题（语言切换时）
+    uni.setNavigationBarTitle({
+        title: t('answerBook.title')
+    });
 });
 
 const handleFocus = () => {
