@@ -236,6 +236,16 @@ export default {
             },
         ];
         this.pageName = t('poster.title');
+        
+        // 检查登录状态，如果没有登录，posterList 保持为空数组
+        const token = uni.getStorageSync("token");
+        const userInfo = uni.getStorageSync("userInfo");
+        if (!token || !userInfo) {
+            this.posterList = [];
+            this.hasMore = false;
+            return;
+        }
+        
         this.fetchPosterList();
     },
     onPullDownRefresh() {
@@ -312,6 +322,18 @@ export default {
         async fetchPosterList(reset = false) {
             if (this.loading) return Promise.resolve();
 
+            // 检查登录状态
+            const token = uni.getStorageSync("token");
+            const userInfo = uni.getStorageSync("userInfo");
+            
+            // 如果没有登录，将 posterList 设置为空数组
+            if (!token || !userInfo) {
+                this.posterList = [];
+                this.hasMore = false;
+                this.loading = false;
+                return Promise.resolve();
+            }
+
             if (reset) {
                 this.currentPage = 1;
                 this.posterList = [];
@@ -329,8 +351,7 @@ export default {
                     currentCategoryType === "all" ? "" : currentCategoryType;
 
                 // 获取用户ID
-                const userInfo = uni.getStorageSync("userInfo");
-                const userId = userInfo ? JSON.parse(userInfo).id : "";
+                const userId = JSON.parse(userInfo).id || "";
 
                 const res = await getPosterList(
                     this.currentPage,

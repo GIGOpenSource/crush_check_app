@@ -291,11 +291,12 @@ const handleProgressClose = () => {
 
 // 支付
 const pay = () => {
+    console.log(isdetails.value,'isdetails.valueisdetails.value')
     createOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),
         productId: mouth.value.id,
-        posterId: isdetails.value ? details.value.prompt_template.id : id.value
+        posterId: details.value.poster_id
     }).then(res => {
         uni.requestPayment({
             "provider": "wxpay",
