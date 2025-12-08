@@ -247,6 +247,7 @@ export default {
     book: 'の本',
     moreFeatures: 'その他の機能',
     comingSoon: '近日公開',
+    shareTitle: '友達を招待して一緒に浮気者かどうかテストしましょう',
     selectFileType: 'ファイルタイプを選択してください',
     uploadScreenshot: '関連スクリーンショットをアップロード',
     upload: 'アップロード',

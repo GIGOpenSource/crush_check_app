@@ -53,7 +53,7 @@ const path = () => {
         return;
     }
     uni.setStorageSync('question', value1.value.trim());
-    uni.navigateTo({
+    uni.reLaunch({
         url: '/pages/index/choosebook'
     });
 };

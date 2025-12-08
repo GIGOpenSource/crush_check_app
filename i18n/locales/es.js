@@ -247,6 +247,7 @@ export default {
     book: 'Libro',
     moreFeatures: 'Más Funciones',
     comingSoon: 'Próximamente',
+    shareTitle: 'Invita a amigos a probar juntos si eres un tramposo',
     selectFileType: 'Por favor seleccione el tipo de archivo',
     uploadScreenshot: 'Subir capturas relacionadas',
     upload: 'Subir',

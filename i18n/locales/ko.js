@@ -247,6 +247,7 @@ export default {
     book: '의 책',
     moreFeatures: '더 많은 기능',
     comingSoon: '곧 출시',
+    shareTitle: '친구를 초대하여 함께 바람둥이인지 테스트해보세요',
     selectFileType: '파일 유형을 선택하세요',
     uploadScreenshot: '관련 스크린샷 업로드',
     upload: '업로드',

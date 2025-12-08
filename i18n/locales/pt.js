@@ -247,6 +247,7 @@ export default {
     book: 'Livro',
     moreFeatures: 'Mais Recursos',
     comingSoon: 'Em Breve',
+    shareTitle: 'Convide amigos para testar juntos se você é um traidor',
     selectFileType: 'Por favor selecione o tipo de arquivo',
     uploadScreenshot: 'Fazer upload de capturas relacionadas',
     upload: 'Fazer upload',

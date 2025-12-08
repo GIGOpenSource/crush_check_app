@@ -247,6 +247,7 @@ export default {
     book: '之书',
     moreFeatures: '更多功能',
     comingSoon: '敬请期待',
+    shareTitle: '邀请好友一起来测测自己渣不渣',
     selectFileType: '请选择文件类型',
     uploadScreenshot: '上传相关截图',
     upload: '上传',

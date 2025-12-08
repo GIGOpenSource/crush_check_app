@@ -29,7 +29,7 @@
             <view class="poster-list-container">
                 <view v-for="(item, index) in posterList" :key="item.id || index"
                     :class="['poster', { 'answer': item.prompt_template.template_type == 'answer' }]"
-                    @click="isType ? handlePosterClick(item, index) : toggleSelect(item)">
+                    @click="isType ? handlePosterClick(item, index,item.prompt_template.template_type == 'answer'?2:1) : toggleSelect(item)">
                     <!-- 选中图标 -->
                     <image v-if="!isType" class="select-icon" :src="item.isActive
                         ? '/static/my/yixuan.png'
@@ -1346,12 +1346,7 @@ export default {
     align-items: center;
 }
 
-// .num {
-//     font-size: 36rpx;
-//     margin: 20rpx 0;
-//     color: #000;
-//     font-weight: 100;
-// }
+
 
 .progress-wrapper {
     width: 70%;

@@ -247,6 +247,7 @@ export default {
     book: 'Book',
     moreFeatures: 'More Features',
     comingSoon: 'Coming Soon',
+    shareTitle: 'Invite friends to test together if you are a cheater',
     selectFileType: 'Please select file type',
     uploadScreenshot: 'Upload related screenshots',
     upload: 'Upload',
