@@ -1379,31 +1379,34 @@ export default {
     // 更新 tabBar 国际化
     updateTabBarI18n() {
       try {
-        const currentLocale = uni.getStorageSync('currentLanguage') || 'zh';
-        let tabBarTexts = { index: '检测', my: '我的' };
-
-        if (currentLocale === 'en') {
-          tabBarTexts = { index: 'Check', my: 'My' };
-        } else if (currentLocale === 'es') {
-          tabBarTexts = { index: 'Verificar', my: 'Mi' };
-        } else if (currentLocale === 'pt') {
-          tabBarTexts = { index: 'Verificar', my: 'Meu' };
-        } else if (currentLocale === 'ja') {
-          tabBarTexts = { index: 'チェック', my: 'マイ' };
-        } else if (currentLocale === 'ko') {
-          tabBarTexts = { index: '확인', my: '내' };
-        }
-
+        // index 0: 首页
+        const indexText = this.$t('tabBar.index');
         uni.setTabBarItem({
           index: 0,
-          text: tabBarTexts.index
+          text: indexText && indexText !== 'tabBar.index' ? indexText : '首页'
         });
+        // index 1: 测试记录
+        const testText = this.$t('tabBar.test');
         uni.setTabBarItem({
           index: 1,
-          text: tabBarTexts.my
+          text: testText && testText !== 'tabBar.test' ? testText : '测试记录'
+        });
+        // index 2: 我的
+        const myText = this.$t('tabBar.my');
+        uni.setTabBarItem({
+          index: 2,
+          text: myText && myText !== 'tabBar.my' ? myText : '我的'
         });
       } catch (error) {
         console.error('更新 tabBar 国际化失败:', error);
+        // 如果国际化失败，使用默认值
+        try {
+          uni.setTabBarItem({ index: 0, text: '首页' });
+          uni.setTabBarItem({ index: 1, text: '测试记录' });
+          uni.setTabBarItem({ index: 2, text: '我的' });
+        } catch (e) {
+          console.error('设置 tabBar 默认值失败:', e);
+        }
       }
     },
   },
