@@ -45,7 +45,8 @@
             /* SDK配置 */
             "sdkConfigs" : {
                 "share" : {},
-                "oauth" : {}
+                "oauth" : {},
+                "payment" : {}
             }
         }
     },

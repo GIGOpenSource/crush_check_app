@@ -181,6 +181,9 @@ export default {
   },
   poster: {
     title: 'Pôsteres Históricos',
+    recentTest: 'Testes Recentes',
+    selectAll: 'Selecionar Tudo',
+    deselectAll: 'Desselecionar Tudo',
     all: 'Todos',
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociais',
@@ -224,9 +227,26 @@ export default {
     yearsAgoUnit: 'anos atrás',
     unknownType: 'Tipo desconhecido',
     done: 'Concluído',
-    deleted: 'Excluído'
+    deleted: 'Excluído',
+    cheatScore: 'Pontuação de Traidor:',
+    viewPoster: 'Ver Pôster',
+    viewAnswer: 'Ver Resposta',
+    answerLabel: 'Resposta:',
+    defaultAnswer: 'A oportunidade está bem na sua frente',
+    emptyMessage: 'Nada aqui ainda, vá testar agora',
+    goToTest: 'Ir Testar',
+    answerBook: 'Livro de Respostas',
+    crushCheck: 'Crush Check'
   },
   index: {
+    crushCheck: 'Crush Check',
+    checkYourself: 'Verifique sua forma de falar',
+    wayAndData: 'e dados, você é como',
+    cheater: 'um traidor',
+    answer: 'Resposta',
+    book: 'Livro',
+    moreFeatures: 'Mais Recursos',
+    comingSoon: 'Em Breve',
     selectFileType: 'Por favor selecione o tipo de arquivo',
     uploadScreenshot: 'Fazer upload de capturas relacionadas',
     upload: 'Fazer upload',
@@ -241,6 +261,7 @@ export default {
     analyzingPercent: 'Analisando',
     analyzingPercentUnit: '%',
     exitTip: 'Você pode verificar os resultados em Meu - Pôsteres Históricos após sair',
+    exitTipTestRecord: 'Você pode verificar os resultados em Registros de Teste após sair',
     selectCorrectType: 'Selecionar o tipo de arquivo correto pode tornar os resultados mais precisos!',
     fileTypeTip1: '1. Capturas de plataformas sociais: Capturas de conteúdo de plataformas como Xiaohongshu, Douyin, Moments, como páginas de notas, exibições de perfil, compartilhamentos dinâmicos, deixe a IA ajudá-lo a entender melhor o TA',
     fileTypeTip2: '2. Capturas físicas/cenários: Capturas de objetos reais ou cenários como padrões de tatuagem, detalhes de joias, paisagens de viagem, locais de check-in, entre no mundo do TA',
@@ -327,6 +348,21 @@ export default {
     loginFailedRetry: 'Falha no login, por favor tente novamente',
     agreeUserAgreement: 'Concordar com Acordo do Usuário',
     disagree: 'Discordar'
+  },
+  answerBook: {
+    title: 'Livro de Respostas',
+    back: 'Voltar',
+    backToModify: 'Voltar para Modificar Pergunta',
+    tellTA: 'Dizer para TA',
+    askAgain: 'Perguntar Novamente',
+    aiAnalysis: 'Análise IA',
+    thinkQuestion: 'Pense silenciosamente em sua pergunta',
+    clickBook: 'Depois clique para abrir o livro',
+    getAnswer: 'Obtenha sua resposta...',
+    placeholder: 'Escreva aqui sua confusão ou desejo',
+    example: 'Por exemplo: Meu relacionamento terá resultado?...',
+    startBook: 'Começar',
+    pleaseInputQuestion: 'Por favor, digite sua pergunta'
   }
 }
 

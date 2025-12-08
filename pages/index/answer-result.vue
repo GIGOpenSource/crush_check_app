@@ -3,23 +3,23 @@
         <!-- 自定义导航栏 -->
         <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
             <view class="navbar-content">
-                <view class="navbar-title">答案之书</view>
+                <view class="navbar-title">{{ t('answerBook.title') }}</view>
             </view>
         </view>
         
         <view class="top" :style="{ top: (statusBarHeight + 88 + 40) + 'rpx' }" @click="back()">
             <up-icon name="arrow-left" color="#7F663E" size="24"></up-icon>
-            <text>{{ isdetails ? '返回':status == 1 ? '返回修改问题' : '返回' }}</text>
+            <text>{{ isdetails ? t('answerBook.back') : status == 1 ? t('answerBook.backToModify') : t('answerBook.back') }}</text>
         </view>
         
         <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <image :src="status == 1 ? details.image_url:details.deepimages" />
             <view class="btns" v-if="status == 1">
                 <view class="btn1">
-                    <view @click="save">告诉TA</view>
-                    <view @click="again">再次提问</view>
+                    <view @click="save">{{ t('answerBook.tellTA') }}</view>
+                    <view @click="again">{{ t('answerBook.askAgain') }}</view>
                 </view>
-                <view class="btn2" @click="aidetails">AI分析</view>
+                <view class="btn2" @click="aidetails">{{ t('answerBook.aiAnalysis') }}</view>
             </view>
         </view>
     </view>
@@ -28,7 +28,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { useI18n } from 'vue-i18n'
 import { getAnswerbook,getPosterDetails ,getAi} from '@/api/index.js';
+
+const { t } = useI18n()
 const status = ref('1')
 const id = ref('')
 const details = ref({})

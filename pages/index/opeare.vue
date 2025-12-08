@@ -71,7 +71,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="tip">退出后可以在测试记录中查看结果</view>
+					<view class="tip">{{ $t('index.exitTipTestRecord') }}</view>
 
 
 				</view>

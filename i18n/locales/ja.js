@@ -181,6 +181,9 @@ export default {
   },
   poster: {
     title: '履歴ポスター',
+    recentTest: '最近のテスト',
+    selectAll: 'すべて選択',
+    deselectAll: '選択解除',
     all: 'すべて',
     chatScreenshot: 'チャットスクリーンショット',
     socialScreenshot: 'ソーシャルプラットフォームスクリーンショット',
@@ -224,9 +227,26 @@ export default {
     yearsAgoUnit: '年前',
     unknownType: '不明なタイプ',
     done: '完了',
-    deleted: '削除されました'
+    deleted: '削除されました',
+    cheatScore: '浮気スコア：',
+    viewPoster: 'ポスターを見る',
+    viewAnswer: '答えを見る',
+    answerLabel: '答え：',
+    defaultAnswer: '機会は目の前にあります',
+    emptyMessage: 'まだ何もありません。今すぐテストに行きましょう',
+    goToTest: 'テストに行く',
+    answerBook: '答えの本',
+    crushCheck: 'クラッシュチェック'
   },
   index: {
+    crushCheck: 'クラッシュチェック',
+    checkYourself: '自分の話し方をチェック',
+    wayAndData: 'とデータ、あなたは',
+    cheater: '浮気者のようですか',
+    answer: '答え',
+    book: 'の本',
+    moreFeatures: 'その他の機能',
+    comingSoon: '近日公開',
     selectFileType: 'ファイルタイプを選択してください',
     uploadScreenshot: '関連スクリーンショットをアップロード',
     upload: 'アップロード',
@@ -241,6 +261,7 @@ export default {
     analyzingPercent: '分析中',
     analyzingPercentUnit: '%',
     exitTip: '終了後、マイ - 履歴ポスターで結果を確認できます',
+    exitTipTestRecord: '終了後、テスト記録で結果を確認できます',
     selectCorrectType: '正しいファイルタイプを選択すると、結果がより正確になります！',
     fileTypeTip1: '1.ソーシャルプラットフォームスクリーンショット：シャオホンシュ、ドウイン、モーメンツなどのプラットフォームのコンテンツスクリーンショット、ノートページ、プロフィール表示、動的共有など、AIがTAをより理解できるようにします',
     fileTypeTip2: '2.実物/シーンスクリーンショット：タトゥーパターン、ジュエリーの詳細、旅行の風景、チェックイン場所などの実際の実物やシーンのスクリーンショット、TAの世界に入る',
@@ -327,6 +348,21 @@ export default {
     loginFailedRetry: 'ログインに失敗しました。もう一度お試しください',
     agreeUserAgreement: '利用規約に同意',
     disagree: '同意しない'
+  },
+  answerBook: {
+    title: '答えの本',
+    back: '戻る',
+    backToModify: '質問を修正に戻る',
+    tellTA: 'TAに伝える',
+    askAgain: 'もう一度質問する',
+    aiAnalysis: 'AI分析',
+    thinkQuestion: '心の中で質問を静かに考えてください',
+    clickBook: 'その後、本を開くためにクリックしてください',
+    getAnswer: '答えを取得...',
+    placeholder: 'ここにあなたの困惑や願いを書いてください',
+    example: '例：私の恋愛は実を結ぶでしょうか？...',
+    startBook: '始める',
+    pleaseInputQuestion: '質問を入力してください'
   }
 }
 

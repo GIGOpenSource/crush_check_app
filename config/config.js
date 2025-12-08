@@ -4,7 +4,7 @@ const develop = true
 // https://www.liangstart.online/api	
 // https://www.crashcheck.net/api
 let host = 'https://www.crashcheck.net/api';
-if (develop) host = 'https://www.crashcheck.net/apii'; 
+if (develop) host = 'https://www.crashcheck.net/api'; 
 else '';
 console.log = develop ? console.log : () => {};
 console.info = develop ? console.info : () => {};

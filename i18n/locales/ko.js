@@ -181,6 +181,9 @@ export default {
   },
   poster: {
     title: '히스토리 포스터',
+    recentTest: '최근 테스트',
+    selectAll: '전체 선택',
+    deselectAll: '선택 해제',
     all: '전체',
     chatScreenshot: '채팅 스크린샷',
     socialScreenshot: '소셜 플랫폼 스크린샷',
@@ -224,9 +227,26 @@ export default {
     yearsAgoUnit: '년 전',
     unknownType: '알 수 없는 유형',
     done: '완료',
-    deleted: '삭제됨'
+    deleted: '삭제됨',
+    cheatScore: '바람둥이 점수：',
+    viewPoster: '포스터 보기',
+    viewAnswer: '답변 보기',
+    answerLabel: '답변：',
+    defaultAnswer: '기회가 바로 눈앞에 있습니다',
+    emptyMessage: '아직 아무것도 없습니다. 지금 테스트하러 가세요',
+    goToTest: '테스트하러 가기',
+    answerBook: '답변의 책',
+    crushCheck: '크러시 체크'
   },
   index: {
+    crushCheck: '크러시 체크',
+    checkYourself: '자신의 말투를 확인',
+    wayAndData: '과 데이터, 당신은',
+    cheater: '바람둥이 같나요',
+    answer: '답변',
+    book: '의 책',
+    moreFeatures: '더 많은 기능',
+    comingSoon: '곧 출시',
     selectFileType: '파일 유형을 선택하세요',
     uploadScreenshot: '관련 스크린샷 업로드',
     upload: '업로드',
@@ -241,6 +261,7 @@ export default {
     analyzingPercent: '분석 중',
     analyzingPercentUnit: '%',
     exitTip: '종료 후 내 - 히스토리 포스터에서 결과를 확인할 수 있습니다',
+    exitTipTestRecord: '종료 후 테스트 기록에서 결과를 확인할 수 있습니다',
     selectCorrectType: '올바른 파일 유형을 선택하면 결과가 더 정확해집니다!',
     fileTypeTip1: '1. 소셜 플랫폼 스크린샷: 샤오홍슈, 도우인, 모멘트 등 플랫폼의 콘텐츠 스크린샷, 예를 들어 노트 페이지, 프로필 표시, 동적 공유 등, AI가 TA를 더 잘 이해하도록 도와줍니다',
     fileTypeTip2: '2. 실물/장면 스크린샷: 문신 패턴, 보석 세부사항, 여행 풍경, 체크인 장소 등 실제 실물이나 장면의 스크린샷, TA의 세계로 들어가기',
@@ -327,6 +348,21 @@ export default {
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',
     disagree: '동의하지 않음'
+  },
+  answerBook: {
+    title: '답변의 책',
+    back: '돌아가기',
+    backToModify: '질문 수정으로 돌아가기',
+    tellTA: 'TA에게 알리기',
+    askAgain: '다시 질문하기',
+    aiAnalysis: 'AI 분석',
+    thinkQuestion: '마음 속으로 질문을 조용히 생각해보세요',
+    clickBook: '그런 다음 책을 열기 위해 클릭하세요',
+    getAnswer: '답변 받기...',
+    placeholder: '여기에 당신의 혼란이나 소원을 적어주세요',
+    example: '예: 내 연애가 성공할까요?...',
+    startBook: '시작하기',
+    pleaseInputQuestion: '질문을 입력해주세요'
   }
 }
 

@@ -181,6 +181,9 @@ export default {
   },
   poster: {
     title: '历史海报',
+    recentTest: '最近测试',
+    selectAll: '全选',
+    deselectAll: '取消全选',
     all: '全部',
     chatScreenshot: '聊天记录截图',
     socialScreenshot: '社交平台截图',
@@ -224,9 +227,26 @@ export default {
     yearsAgoUnit: '年前',
     unknownType: '未知类型',
     done: '完成',
-    deleted: '已删除'
+    deleted: '已删除',
+    cheatScore: '含渣量：',
+    viewPoster: '查看海报',
+    viewAnswer: '查看答案',
+    answerLabel: '回答：',
+    defaultAnswer: '机会就在眼前',
+    emptyMessage: '目前什么都没有，快去测试吧',
+    goToTest: '去测试',
+    answerBook: '答案之书',
+    crushCheck: '鉴渣'
   },
   index: {
+    crushCheck: '鉴渣',
+    checkYourself: '鉴定自己的说话',
+    wayAndData: '方式和资料，像不像',
+    cheater: '渣男渣女',
+    answer: '答案',
+    book: '之书',
+    moreFeatures: '更多功能',
+    comingSoon: '敬请期待',
     selectFileType: '请选择文件类型',
     uploadScreenshot: '上传相关截图',
     upload: '上传',
@@ -241,6 +261,7 @@ export default {
     analyzingPercent: '正在分析',
     analyzingPercentUnit: '%',
     exitTip: '退出后可以在我的-历史海报中查看结果',
+    exitTipTestRecord: '退出后可以在测试记录中查看结果',
     selectCorrectType: '选择正确文件类型可使 结果更准确喔！',
     fileTypeTip1: '1.社交平台截图：小红书、抖音、朋友圈等平台的内容截图，比如笔记页面、主页展示、动态分享，让AI带你更了解TA',
     fileTypeTip2: '2.实物/场景照片：纹身图案、首饰细节、旅行风景、打卡地点等真实实物或场景的截图，走进TA的世界',
@@ -327,5 +348,20 @@ export default {
     loginFailedRetry: '登录失败，请重试',
     agreeUserAgreement: '同意用户协议',
     disagree: '不同意'
+  },
+  answerBook: {
+    title: '答案之书',
+    back: '返回',
+    backToModify: '返回修改问题',
+    tellTA: '告诉TA',
+    askAgain: '再次提问',
+    aiAnalysis: 'AI分析',
+    thinkQuestion: '在心中默念你的问题',
+    clickBook: '然后点击翻书',
+    getAnswer: '获取答案...',
+    placeholder: '在这里写下你的困惑或愿望',
+    example: '例如：我的感情会有结果吗？...',
+    startBook: '开始翻书',
+    pleaseInputQuestion: '请输入你的问题'
   }
 }

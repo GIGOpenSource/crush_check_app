@@ -2,10 +2,10 @@
 	<view class="page">
 		<view class="jz" @click="path('/pages/index/opeare')">
 			<view class="left">
-				<view class="t1">鉴渣</view>
-				<view>鉴定自己的说话</view>
-				<view>方式和资料，像不像</view>
-				<view>渣男渣女</view>
+				<view class="t1">{{ t('index.crushCheck') }}</view>
+				<view>{{ t('index.checkYourself') }}</view>
+				<view>{{ t('index.wayAndData') }}</view>
+				<view>{{ t('index.cheater') }}</view>
 			</view>
 			<view class="right">
 				<image :src="$getImg('index/jz')" />
@@ -13,18 +13,22 @@
 		</view>
 		<view class="bottom">
 			<view class="left" @click="path('/pages/index/answer')">
-				<view><view>答案</view><view>之书</view></view>
+				<view><view>{{ t('index.answer') }}</view><view>{{ t('index.book') }}</view></view>
 				<image :src="$getImg('index/answer')" mode="widthFix"/>
 			</view>
 			<view class="right">
-				<view>更多功能</view>
-				<view>敬请期待</view>
+				<view>{{ t('index.moreFeatures') }}</view>
+				<view>{{ t('index.comingSoon') }}</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
 const path = (url) => {
 	uni.removeStorageSync('question');
   uni.navigateTo({url})

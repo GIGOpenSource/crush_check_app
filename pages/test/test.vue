@@ -1,14 +1,14 @@
 <template>
     <view class="poster-page">
         <view class="top">
-            <view v-if="isType">最近测试</view>
-            <view v-else @click="selectAll">{{ isSelectAll ? '取消全选' : '全选' }}</view>
+            <view v-if="isType">{{ $t('poster.recentTest') }}</view>
+            <view v-else @click="selectAll">{{ isSelectAll ? $t('poster.deselectAll') : $t('poster.selectAll') }}</view>
             <view v-if="isType" hover-class="none" @click="enterManageMode">
-                管理
+                {{ $t('poster.manage') }}
             </view>
             <view v-else class="action-controls">
                 <view @click="exitManageMode">
-                    取消
+                    {{ $t('common.cancel') }}
                 </view>
             </view>
         </view>
@@ -65,10 +65,10 @@
                         <!-- 鉴渣类型 -->
                         <template
                             v-if="item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'">
-                            <view class="num">含渣量：{{ item.score }}%</view>
+                            <view class="num">{{ $t('poster.cheatScore') }}{{ item.score }}%</view>
                             <view class="details">
                                 <text>{{ item.summary }}</text>
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">查看海报 {{
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">{{ $t('poster.viewPoster') }} {{
                                     '>>' }}</text>
                             </view>
                         </template>
@@ -77,9 +77,9 @@
                         <template v-if="item.prompt_template.template_type == 'answer'">
                             <view class="num">{{ item.summary }}</view>
                             <view class="details" style="margin-top: 20rpx;">
-                                <text style="font-weight: 100;">回答：</text>
-                                "{{ item.content || '机会就在眼前' }}"
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 2)">查看答案 {{
+                                <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
+                                "{{ item.content || $t('poster.defaultAnswer') }}"
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 2)">{{ $t('poster.viewAnswer') }} {{
                                     '>>' }}</text>
                             </view>
                         </template>
@@ -89,8 +89,8 @@
                 <view v-if="!hasMore && posterList.length > 0" class="no-more">{{ $t('poster.noMore') }}</view>
                 <view class="no-empt" v-if="posterList.length == 0">
                     <image :src="$getImg('index/no-empt')" mode="widthFix" />
-                    <view class="title">目前什么都没有，快去测试吧</view>
-                    <view class="btn" @click="path">去测试</view>
+                    <view class="title">{{ $t('poster.emptyMessage') }}</view>
+                    <view class="btn" @click="path">{{ $t('poster.goToTest') }}</view>
                 </view>
             </view>
         </scroll-view>
@@ -223,13 +223,13 @@ export default {
             //   type: "consume",
             // },
             {
-                label: '答案之书',
+                label: t('poster.answerBook'),
                 icon: "/static/my/shejiao.png",
                 color: "#5B9BD5",
                 type: "answer",
             },
             {
-                label: '鉴渣',
+                label: t('poster.crushCheck'),
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "crushcheck",

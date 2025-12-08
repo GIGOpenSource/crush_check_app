@@ -3,7 +3,7 @@
         <!-- 自定义导航栏 -->
         <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
             <view class="navbar-content">
-                <view class="navbar-title">答案之书</view>
+                <view class="navbar-title">{{ t('answerBook.title') }}</view>
             </view>
         </view>
 
@@ -12,7 +12,7 @@
         <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="top" @click="back()">
                 <up-icon name="arrow-left" color="#ffffff" size="24"></up-icon>
-                <text>返回修改问题</text>
+                <text>{{ t('answerBook.backToModify') }}</text>
             </view>
             <view class="title">
                 <!-- <view>在这里写下你的困惑或愿望</view> -->
@@ -38,6 +38,9 @@ import {
     host
 } from '@/config/config.js'
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 const list = ref([]);
 const question = uni.getStorageSync('question');
 const statusBarHeight = ref(0)
