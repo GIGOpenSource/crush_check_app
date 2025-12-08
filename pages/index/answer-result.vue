@@ -294,7 +294,8 @@ const pay = () => {
     createOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),
-        productId: mouth.value.id
+        productId: mouth.value.id,
+        posterId: isdetails.value ? details.value.prompt_template.id : id.value
     }).then(res => {
         uni.requestPayment({
             "provider": "wxpay",
