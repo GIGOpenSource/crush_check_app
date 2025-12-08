@@ -236,10 +236,10 @@ export default {
     emptyMessage: 'Nada aquí todavía, ve a probar ahora',
     goToTest: 'Ir a Probar',
     answerBook: 'Libro de Respuestas',
-    crushCheck: 'Crush Check'
+    crushCheck: 'CrushCheck'
   },
   index: {
-    crushCheck: 'Crush Check',
+    crushCheck: 'CrushCheck',
     checkYourself: 'Verifica tu forma de hablar',
     wayAndData: 'y datos, ¿eres como',
     cheater: 'un tramposo',
@@ -343,7 +343,7 @@ export default {
   },
   login: {
     title: 'Iniciar Sesión',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— Prueba Rápida de: ¿Es TA un Tramposo? ——',
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',

@@ -343,7 +343,7 @@ export default {
   },
   login: {
     title: '로그인',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— 빠른 테스트: TA는 바람둥이인가? ——',
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',

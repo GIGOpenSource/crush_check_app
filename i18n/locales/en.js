@@ -236,10 +236,10 @@ export default {
     emptyMessage: 'Nothing here yet, go test now',
     goToTest: 'Go Test',
     answerBook: 'Book of Answers',
-    crushCheck: 'Crush Check'
+    crushCheck: 'CrushCheck'
   },
   index: {
-    crushCheck: 'Crush Check',
+    crushCheck: 'CrushCheck',
     checkYourself: 'Check your way of speaking',
     wayAndData: 'and data, are you like',
     cheater: 'a cheater',
@@ -343,7 +343,7 @@ export default {
   },
   login: {
     title: 'Login',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— Quick Test: Is TA a Cheater? ——',
     wechatLogin: 'One-Click Login',
     loginFailedRetry: 'Login failed, please try again',

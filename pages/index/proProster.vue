@@ -132,7 +132,7 @@ onLoad((e) => {
 	userinfo.value = JSON.parse(uni.getStorageSync('userInfo'))
 	// 设置导航栏标题
 	uni.setNavigationBarTitle({
-		title: 'Crush Check'
+		title: 'CrushCheck'
 	});
 
 	// 初始化会员权益说明（使用 i18n）

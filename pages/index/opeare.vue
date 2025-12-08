@@ -356,7 +356,7 @@ watch(welecome, (val) => {
 onLoad((e) => {
 	// 设置导航栏标题
 	uni.setNavigationBarTitle({
-		title: 'Crush Check'
+		title: 'CrushCheck'
 	});
 	params.value.pageName = t('index.selectFileType')
 	vipprice()

@@ -75,7 +75,7 @@ const id = ref('')
 const details = ref({})
 const isdetails = ref(false)
 const statusBarHeight = ref(0)
-const showProgress = ref(false)
+const showProgress = ref(true)
 const progress = ref(0)
 const progressTimer = ref(null)
 const vipProup = ref(false)
@@ -388,12 +388,12 @@ const pay = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    .num {
-    font-size: 30rpx;
-    margin: 20rpx 0;
-    color: #000;
-    font-weight: 200;
-}
+.num {
+		font-size: 26rpx;
+		margin: 20rpx 0;
+		color: #000;
+	}
+
 }
 
 .progress-wrapper {
