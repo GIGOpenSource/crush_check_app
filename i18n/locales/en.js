@@ -364,6 +364,8 @@ export default {
     placeholder: 'Write down your confusion or wish here',
     example: 'For example: Will my relationship work out?...',
     startBook: 'Start Flipping',
-    pleaseInputQuestion: 'Please enter your question'
+    pleaseInputQuestion: 'Please enter your question',
+    unlockAnalysis: 'You need to pay to unlock this analysis',
+    payNow: '/time Pay Now'
   }
 }

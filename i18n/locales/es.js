@@ -364,6 +364,8 @@ export default {
     placeholder: 'Escribe aquí tu confusión o deseo',
     example: 'Por ejemplo: ¿Funcionará mi relación?...',
     startBook: 'Comenzar',
-    pleaseInputQuestion: 'Por favor ingresa tu pregunta'
+    pleaseInputQuestion: 'Por favor ingresa tu pregunta',
+    unlockAnalysis: 'Necesitas pagar para desbloquear este análisis',
+    payNow: '/vez Pagar Ahora'
   }
 }

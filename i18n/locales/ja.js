@@ -364,7 +364,9 @@ export default {
     placeholder: 'ここにあなたの困惑や願いを書いてください',
     example: '例：私の恋愛は実を結ぶでしょうか？...',
     startBook: '始める',
-    pleaseInputQuestion: '質問を入力してください'
+    pleaseInputQuestion: '質問を入力してください',
+    unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
+    payNow: '/回 今すぐ支払う'
   }
 }
 

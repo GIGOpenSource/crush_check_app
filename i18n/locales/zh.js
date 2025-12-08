@@ -364,6 +364,8 @@ export default {
     placeholder: '在这里写下你的困惑或愿望',
     example: '例如：我的感情会有结果吗？...',
     startBook: '开始翻书',
-    pleaseInputQuestion: '请输入你的问题'
+    pleaseInputQuestion: '请输入你的问题',
+    unlockAnalysis: '您需要付费来解锁本次分析',
+    payNow: '/次 立即支付'
   }
 }

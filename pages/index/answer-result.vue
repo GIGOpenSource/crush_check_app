@@ -50,9 +50,9 @@
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-            <view class="title">您需要付费来解锁本次分析</view>
+            <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
             <view class="del-popup-actions">
-                <view @click="pay">{{ mouth.price }}/次 立即支付</view>
+                <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>

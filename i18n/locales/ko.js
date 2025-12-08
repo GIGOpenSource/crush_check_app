@@ -364,7 +364,9 @@ export default {
     placeholder: '여기에 당신의 혼란이나 소원을 적어주세요',
     example: '예: 내 연애가 성공할까요?...',
     startBook: '시작하기',
-    pleaseInputQuestion: '질문을 입력해주세요'
+    pleaseInputQuestion: '질문을 입력해주세요',
+    unlockAnalysis: '이 분석을 잠금 해제하려면 결제가 필요합니다',
+    payNow: '/회 지금 결제'
   }
 }
 
