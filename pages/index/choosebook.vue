@@ -83,9 +83,7 @@ const choose = (id, index) => {
                 return
             }
             if (data.data.code == 200) {
-                  uni.reLaunch({
-                        url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id='+ data.data.data.poster_id
-                    });
+                uni.redirectTo({  url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id='+ data.data.data.poster_id })
             } else {
 
             }
