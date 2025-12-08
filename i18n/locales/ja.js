@@ -366,7 +366,7 @@ export default {
     startBook: '始める',
     pleaseInputQuestion: '質問を入力してください',
     unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
-    payNow: '/回 今すぐ支払う'
+    payNow: '元/回 今すぐ支払う'
   }
 }
 

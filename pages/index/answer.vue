@@ -31,15 +31,8 @@ onLoad(() => {
     uni.setNavigationBarTitle({
         title: t('answerBook.title')
     });
-});
-
-onShow(() => {
-    value1.value =  uni.getStorageSync('question') || '';
-    // 每次显示时也更新导航栏标题（语言切换时）
-    uni.setNavigationBarTitle({
-        title: t('answerBook.title')
-    });
-});
+     value1.value =  uni.getStorageSync('question') || '';
+})
 
 const handleFocus = () => {
     isFocused.value = true;

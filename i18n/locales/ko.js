@@ -366,7 +366,7 @@ export default {
     startBook: '시작하기',
     pleaseInputQuestion: '질문을 입력해주세요',
     unlockAnalysis: '이 분석을 잠금 해제하려면 결제가 필요합니다',
-    payNow: '/회 지금 결제'
+    payNow: '위안/회 지금 결제'
   }
 }
 

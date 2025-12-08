@@ -366,6 +366,6 @@ export default {
     startBook: 'Comenzar',
     pleaseInputQuestion: 'Por favor ingresa tu pregunta',
     unlockAnalysis: 'Necesitas pagar para desbloquear este análisis',
-    payNow: '/vez Pagar Ahora'
+    payNow: 'CNY/vez Pagar Ahora'
   }
 }

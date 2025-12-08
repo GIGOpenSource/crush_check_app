@@ -366,6 +366,6 @@ export default {
     startBook: 'Start Flipping',
     pleaseInputQuestion: 'Please enter your question',
     unlockAnalysis: 'You need to pay to unlock this analysis',
-    payNow: '/time Pay Now'
+    payNow: 'CNY/time Pay Now'
   }
 }

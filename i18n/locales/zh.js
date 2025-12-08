@@ -366,6 +366,6 @@ export default {
     startBook: '开始翻书',
     pleaseInputQuestion: '请输入你的问题',
     unlockAnalysis: '您需要付费来解锁本次分析',
-    payNow: '/次 立即支付'
+    payNow: '元/次 立即支付'
   }
 }
