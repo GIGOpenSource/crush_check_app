@@ -305,7 +305,7 @@ const pay = () => {
             success(res) {
                 uni.showToast({
                     title: t('proPoster.paySuccess'),
-                    icon: 'success'
+                    icon: 'none'
                 })
                 showDelPopup2.value = false
                 submit()
