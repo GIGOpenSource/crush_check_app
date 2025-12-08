@@ -5,8 +5,9 @@
         <view>{{ t('answerBook.getAnswer') }}</view>
         <view class="rich">
             <view class="textarea-wrapper">
-                <up-textarea v-model="value1" :maxlength="30" height="150" :count="true"></up-textarea>
-                <view v-if="!value1" class="custom-placeholder">
+                <up-textarea v-model="value1" :maxlength="30" height="150" :count="true" 
+                    @focus="handleFocus" @blur="handleBlur"></up-textarea>
+                <view v-if="!value1 && !isFocused" class="custom-placeholder">
                     <text>{{ t('answerBook.placeholder') }}</text>
                     <text>{{ t('answerBook.example') }}</text>
                 </view>
@@ -23,9 +24,20 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const value1 = ref('');
+const isFocused = ref(false);
+
 onShow(() => {
     value1.value =  uni.getStorageSync('question') || '';
 });
+
+const handleFocus = () => {
+    isFocused.value = true;
+};
+
+const handleBlur = () => {
+    isFocused.value = false;
+};
+
 const path = () => {
     if (!uni.getStorageSync('token')) {
         uni.navigateTo({
@@ -118,7 +130,7 @@ const path = () => {
 }
 </style>
 <style>
-.u-textarea.data-v-31706dd7 {
+.u-textarea {
     background: rgba(255, 255, 255, 0.1) !important;
 }
 
