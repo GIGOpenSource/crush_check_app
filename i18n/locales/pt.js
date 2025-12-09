@@ -343,13 +343,8 @@ export default {
   },
   login: {
     title: 'Login',
-<<<<<<< HEAD
     appName: 'Crush Check',
    appDesc: '—— Teste Rápido de: TA é um Traidor? ——',
-=======
-    appName: 'CrushCheck',
-    appDesc: '—— Teste Rápido de: TA é um Traidor? ——',
->>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     wechatLogin: 'Login com Um Clique',
     loginFailedRetry: 'Falha no login, por favor tente novamente',
     agreeUserAgreement: 'Concordar com Acordo do Usuário',

@@ -343,11 +343,7 @@ export default {
   },
   login: {
     title: 'Iniciar Sesión',
-<<<<<<< HEAD
     appName: 'Crush Check',
-=======
-    appName: 'CrushCheck',
->>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     appDesc: '—— Prueba Rápida de: ¿Es TA un Tramposo? ——',
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',

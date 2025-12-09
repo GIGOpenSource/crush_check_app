@@ -4,7 +4,6 @@ import {
 	onShow,
 	onHide
 } from '@dcloudio/uni-app'
-// import uma from '@/uma.js'
 import { ref } from 'vue'
 import { t } from '@/i18n/index.js'
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
@@ -45,26 +44,14 @@ onLaunch(() => {
 })
 const app_hide = () => {
 	params.value.eventTime = formatDateTime()
-	// if (uma && uma.trackEvent) {
-	// 	uma.trackEvent('app_hide', params.value)
-	// }
 }
 
 const app_launch = () => {
 	params.value.eventTime = formatDateTime()
-	// if (uma && uma.trackEvent) {
-	// 	uma.trackEvent('app_launch', params.value)
-	// }
 }
 
 const app_show = () => {
 	params.value.eventTime = formatDateTime()
-	// if (uma && uma.trackEvent) {
-	// 	uma.trackEvent('app_show', params.value)
-	// }
-	if (uma && uma.trackEvent) {
-		uma.trackEvent('app_show', params.value)
-	}
 	// 延迟设置 tabBar，确保国际化已加载
 	setTimeout(() => {
 		setTabBarI18n()

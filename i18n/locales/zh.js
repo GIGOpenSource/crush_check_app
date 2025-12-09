@@ -343,11 +343,7 @@ export default {
   },
   login: {
     title: '登录',
-<<<<<<< HEAD
     appName: 'Crush Check',
-=======
-    appName: 'CrushCheck',
->>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     appDesc: '—— 快速测试TA渣不渣 ——',
     wechatLogin: '一键登录',
     loginFailedRetry: '登录失败，请重试',

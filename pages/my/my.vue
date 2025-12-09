@@ -208,7 +208,6 @@ import {
   reGeneratePoster,
   getSystemContent,
 } from "@/api/login.js";
-import { trackUmengEvent } from "@/utils/umeng.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
@@ -636,12 +635,6 @@ export default {
                   paySign: paySign,
                   success: async (payRes) => {
                     console.log("支付成功", payRes);
-                    // 获取用户ID
-                    const userId = _this.userInfo?.id || "";
-                    trackUmengEvent("pay_success", {
-                      userId: userId,
-                      pageName: "我的",
-                    });
                     uni.showToast({
                       title: this.$t('common.paySuccess'),
                       icon: "success",
@@ -652,15 +645,6 @@ export default {
                   },
                   fail: async (payErr) => {
                     console.error("支付失败", payErr);
-                    // 如果不是用户取消，则调用友盟统计事件
-                    if (!payErr.errMsg || !payErr.errMsg.includes("cancel")) {
-                      // 获取用户ID
-                      const userId = _this.userInfo?.id || "";
-                      trackUmengEvent("pay_fail", {
-                        userId: userId,
-                        pageName: "我的",
-                      });
-                    }
                     if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
                       uni.showToast({
                         title: this.$t('common.payCanceled'),
@@ -889,20 +873,8 @@ export default {
         });
         return;
       }
-      
-      // 调用友盟统计事件
-      trackUmengEvent("click_invite", {
-        userId: this.userInfo?.id || "",
-        pageName: "我的",
-      });
     },
     handleUnlockCardClick() {
-      // 调用友盟统计事件
-      trackUmengEvent("click_monthpay", {
-        userId: this.userInfo?.id || "",
-        pageName: "我的",
-      });
-
       if (!this.isLoggedIn) {
         this.handleUnlockClick();
         return;
@@ -921,12 +893,6 @@ export default {
       this.handleUnlockClick();
     },
     ensureShare() {
-      // 调用友盟统计事件
-      trackUmengEvent("click_invite", {
-        userId: this.userInfo?.id || "",
-        pageName: "我的",
-      });
-
       if (!this.isLoggedIn) {
       uni.navigateTo({
 					url: "/pages/login/login"
@@ -940,12 +906,6 @@ export default {
       // #endif
     },
     async handlePublicFollow() {
-      // 调用友盟统计事件
-      trackUmengEvent("click_focus", {
-        userId: this.userInfo?.id || "",
-        pageName: "我的",
-      });
-
       try {
         // 调用接口获取二维码
         const res = await getSystemContent();
@@ -1188,16 +1148,11 @@ export default {
         await this.refreshUserInfo()
         // 刷新海报列表
         await this.fetchPosterList()
-<<<<<<< HEAD
-        // 停止下拉刷新动画
-        uni.stopPullDownRefresh()
-=======
         // 延迟一下再停止刷新，让动画更流畅
         setTimeout(() => {
           uni.hideLoading()
           uni.stopPullDownRefresh()
         }, 500)
->>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
       } catch (err) {
         // 即使获取用户信息失败，也刷新海报列表
         await this.fetchPosterList()

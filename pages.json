@@ -52,15 +52,7 @@
 				"backgroundColor": "#12111f",
 				"backgroundTextStyle": "light"
 			}
-		}, 		{
-			"path": "pages/my/my",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": true,
-				"backgroundColor": "#12111f",
-				"backgroundTextStyle": "light"
-			}
-		}, {
+		},  {
 
 			"path": "pages/my/my",
 			"style": {

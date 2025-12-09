@@ -16,7 +16,7 @@
         </view>
       </view>
 
-      <button open-type="getPhoneNumber" @getphonenumber="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed"
+      <button  @click="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed"
         hover-class="none">
         <view class="login-button">
           <text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { wechatLogin, getUserInfo, getUserPhone } from "@/api/login.js";
+import { wechatLogin, getUserInfo, getUserPhone,iosLogin } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import {
   share
@@ -85,34 +85,21 @@ export default {
         icon: "none",
       });
     },
-    onGetPhoneNumber(e) {
-      console.log("获取手机号授权", e);
-
-      if (e.detail.errMsg == "getPhoneNumber:ok" && e.detail.code) {
-        // 保存手机号授权的code
-        this.phoneCode = e.detail.code;
-        this.clickLogin();
-      } else if (e.detail.errMsg == "getPhoneNumber:fail user deny") {
-        uni.showToast({
-          title: this.$t('common.needPhoneAuth'),
-          icon: "none",
-        });
-      } else {
-        console.log(e);
-        uni.showToast({
-          title: this.$t('common.authFailed'),
-          icon: "none",
-        });
-      }
+    onGetPhoneNumber() {
+      this.clickLogin();
     },
 
     clickLogin() {
+		console.log(1111)
+		let code = uni.getSystemInfoSync()
+		 this.loginWithCode(code.deviceId);
+		return
       uni.login({
         success: (res) => {
           console.log("获取code成功:", res);
           if (res.code) {
             // 调用登录接口
-            this.loginWithCode(res.code);
+           
           } else {
             uni.showToast({
               title: this.$t('common.getLoginCodeFailed'),
@@ -134,7 +121,7 @@ export default {
       try {
         const inviterOpenId = uni.getStorageSync("inviter_openid");
         // 第一步：调用登录接口，必须等待完成
-        const res = await wechatLogin(code, inviterOpenId);
+        const res = await iosLogin(code, inviterOpenId);
         // 检查登录是否成功
         if (res.code !== 200 && res.code !== 201) {
           uni.showToast({

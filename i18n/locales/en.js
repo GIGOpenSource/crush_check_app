@@ -343,11 +343,7 @@ export default {
   },
   login: {
     title: 'Login',
-<<<<<<< HEAD
-    appName: 'Crush Check',
-=======
     appName: 'CrushCheck',
->>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     appDesc: '—— Quick Test: Is TA a Cheater? ——',
     wechatLogin: 'One-Click Login',
     loginFailedRetry: 'Login failed, please try again',

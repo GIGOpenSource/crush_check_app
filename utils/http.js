@@ -186,7 +186,17 @@ function deleteRequest(url, params = {}, other = {}) {
 	})
 }
 function getImg(url) {
+	// #ifdef H5
+	// H5 平台：需要包含 manifest.json 中配置的 base 路径
+	// manifest.json 中 h5.router.base 配置为 "/welcomeApp"
+	const basePath = '/welcomeApp'
+	return `${basePath}/static/${url}.png`
+	// #endif
+	
+	// #ifndef H5
+	// 小程序和 App 平台：使用绝对路径
 	return `/static/${url}.png`
+	// #endif
 }
 
 /**
