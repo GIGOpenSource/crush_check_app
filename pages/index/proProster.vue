@@ -14,8 +14,8 @@
 					$t('proPoster.openMember') }}</view> -->
 				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
-				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'" hover-class="none"
-					@click="invitefriend">{{
+				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
+					hover-class="none" @click="invitefriend">{{
 						$t('proPoster.inviteFiveFree') }}</button>
 				<view style="height: 60rpx;"></view>
 				<view v-for="(item, index) in moretitle" :key="index" class="moretitle">
@@ -59,7 +59,7 @@
 				<view class="title">{{ $t('proPoster.unlockThisReport') }}</view>
 				<view class="num">{{ $t('proPoster.reportRemainingTimes') }}: {{ userinfo.allow_count }}{{
 					$t('proPoster.times')
-					}}</view>
+				}}</view>
 				<view class="del-popup-actions">
 					<view @click="lock">{{ $t('proPoster.unlockThis') }}</view>
 					<!-- <view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view> -->
@@ -173,7 +173,7 @@ onPullDownRefresh(() => {
 // 刷新用户信息
 const refreshUserInfo = () => {
 	const openId = uni.getStorageSync('openId')
-	
+
 	getUserInfo(openId).then(res => {
 		userinfo.value = res.data
 		uni.setStorageSync('userInfo', JSON.stringify(res.data))
@@ -183,9 +183,9 @@ const refreshUserInfo = () => {
 			uni.stopPullDownRefresh()
 		}, 500)
 	}).catch(err => {
-	
+
 		uni.stopPullDownRefresh()
-	
+
 	})
 }
 
@@ -344,8 +344,11 @@ const share = () => {
 		url: details.value.file_url,
 		success: (res) => {
 			if (res.statusCode === 200) {
+				const inviterOpenId = uni.getStorageSync("openId") || "";
+				const query = `?scene=${inviterOpenId}`
 				wx.showShareImageMenu({
 					path: res.tempFilePath,
+					entrancePath: `/pages/index/index${query}`,
 					complete: (res) => {
 						if (res.errMsg == 'showShareImageMenu:fail cancel') {
 							share_fail()
@@ -552,7 +555,7 @@ const click_invitecancel = () => {
 	left: 0;
 	top: 150rpx;
 	color: #000;
-	background: linear-gradient(rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 1));
+	background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
 	width: 100%;
 	min-height: calc(75vh - 150rpx);
 	overflow-y: auto;
@@ -645,7 +648,7 @@ const click_invitecancel = () => {
 	margin-top: 40rpx;
 	margin-bottom: 20rpx;
 	position: relative;
-	
+
 	&.no-scroll {
 		overflow: hidden;
 	}
