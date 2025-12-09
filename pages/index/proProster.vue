@@ -197,8 +197,9 @@ const getDeepReport = () => {
 		status.value = 2
 		return
 	}
+
 	let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
-	if (userinfo.allow_count && !userinfo.is_vip && !details.value.child_list[0]?.file_ur) {
+	if (userinfo.allow_count && !userinfo.is_vip && !details.value.child_list[0]?.file_url) {
 		showDelPopup2.value = true
 		return
 	}
@@ -209,6 +210,7 @@ const getDeepReport = () => {
 			images.value = res.data.url
 			let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 			status.value = 2
+			show.value = true
 			if (userinfo.is_vip) {
 				getPosterDetails(id.value).then(res => {
 					details.value = res.data

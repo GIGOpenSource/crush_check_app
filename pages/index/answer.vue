@@ -138,11 +138,11 @@ const path = () => {
     background: rgba(255, 255, 255, 0.1) !important;
 }
 
-.u-textarea__count.data-v-31706dd7 {
+.u-textarea__count {
     background: transparent !important;
 }
 
-.u-textarea__field.data-v-31706dd7 {
+.u-textarea__field {
     color: #FFF !important;
 }
 
