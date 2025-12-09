@@ -147,7 +147,7 @@ page {
 </template>
 
 <script>
-import { getRechargeList } from "@/api/login.js";
+import { getRechargeList, getUserInfo } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 
 export default {
@@ -176,6 +176,7 @@ export default {
       // 停止下拉刷新动画
       uni.stopPullDownRefresh();
     });
+    this.refreshUserInfo();
   },
   onReachBottom() {
     // 页面触底事件（作为 scroll-view 的备选方案）
@@ -183,6 +184,28 @@ export default {
     this.loadMore();
   },
   methods: {
+    // 刷新用户信息
+    refreshUserInfo() {
+      const openId = uni.getStorageSync('openId')
+      
+      getUserInfo(openId).then(res => {
+        const userinfo = res.data
+        uni.setStorageSync('userInfo', JSON.stringify(userinfo))
+        // 刷新充值记录列表
+        this.fetchRechargeList(true).finally(() => {
+          // 延迟一下再停止刷新，让动画更流畅
+          setTimeout(() => {
+            uni.hideLoading()
+            uni.stopPullDownRefresh()
+          }, 500)
+        })
+      }).catch(err => {
+        // 即使获取用户信息失败，也刷新充值记录列表
+        this.fetchRechargeList(true).finally(() => {
+          uni.stopPullDownRefresh()
+        })
+      })
+    },
     // 获取充值记录列表
     async fetchRechargeList(reset = false) {
       if (this.loading) return Promise.resolve();

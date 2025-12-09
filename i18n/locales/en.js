@@ -108,7 +108,8 @@ export default {
     korean: 'Korean'
   },
   tabBar: {
-    index: 'Check',
+    index: 'Home',
+    test: 'Test Records',
     my: 'My'
   },
   my: {
@@ -180,6 +181,9 @@ export default {
   },
   poster: {
     title: 'History Posters',
+    recentTest: 'Recent Tests',
+    selectAll: 'Select All',
+    deselectAll: 'Deselect All',
     all: 'All',
     chatScreenshot: 'Chat Screenshots',
     socialScreenshot: 'Social Platform Screenshots',
@@ -223,9 +227,27 @@ export default {
     yearsAgoUnit: 'years ago',
     unknownType: 'Unknown type',
     done: 'Done',
-    deleted: 'Deleted'
+    deleted: 'Deleted',
+    cheatScore: 'Cheat Score:',
+    viewPoster: 'View Poster',
+    viewAnswer: 'View Answer',
+    answerLabel: 'Answer:',
+    defaultAnswer: 'Opportunity is right in front of you',
+    emptyMessage: 'Nothing here yet, go test now',
+    goToTest: 'Go Test',
+    answerBook: 'Book of Answers',
+    crushCheck: 'CrushCheck'
   },
   index: {
+    crushCheck: 'CrushCheck',
+    checkYourself: 'Check your way of speaking',
+    wayAndData: 'and data, are you like',
+    cheater: 'a cheater',
+    answer: 'Answer',
+    book: 'Book',
+    moreFeatures: 'More Features',
+    comingSoon: 'Coming Soon',
+    shareTitle: 'Invite friends to test together if you are a cheater',
     selectFileType: 'Please select file type',
     uploadScreenshot: 'Upload related screenshots',
     upload: 'Upload',
@@ -240,6 +262,7 @@ export default {
     analyzingPercent: 'Analyzing',
     analyzingPercentUnit: '%',
     exitTip: 'You can check the results in My - History Posters after exiting',
+    exitTipTestRecord: 'You can check the results in Test Records after exiting',
     selectCorrectType: 'Selecting the correct file type can make the results more accurate!',
     fileTypeTip1: '1. Social platform screenshots: Content screenshots from platforms like Xiaohongshu, Douyin, Moments, such as note pages, profile displays, dynamic shares, let AI help you understand TA better',
     fileTypeTip2: '2. Physical/scene screenshots: Screenshots of real objects or scenes like tattoo patterns, jewelry details, travel scenery, check-in locations, enter TA\'s world',
@@ -256,11 +279,19 @@ export default {
     uploadSuccess: 'Upload successful',
     partUploadFailed: 'Some files failed to upload',
     inviteFriends: 'Invite friends to use together',
-    shareTitle: 'Invite friends to test if you are a player',
     chatScreenshot: 'Chat Screenshots',
     socialScreenshot: 'Social Platform Screenshots',
     physicalPhoto: 'Physical/Scene Photos',
-    consumeVoucher: 'Consumption/Travel Vouchers'
+    consumeVoucher: 'Consumption/Travel Vouchers',
+    becomeMember: 'Become a Member',
+    enjoyPrivileges: 'Enjoy Privileges',
+    perMonth: '/month',
+    openNow: 'Open Now',
+    vipFeature1: 'Unlimited Premium Reports',
+    vipFeature2: 'Deep Analysis Reports',
+    vipFeature3: 'Timely Risk Alerts',
+    vipFeature4: 'Professional Analysis Reports',
+    vipFeature5: 'Priority Customer Support'
   },
   proPoster: {
     viewDeepReport: 'View Deep Analysis Report',
@@ -312,11 +343,33 @@ export default {
   },
   login: {
     title: 'Login',
+<<<<<<< HEAD
     appName: 'Crush Check',
+=======
+    appName: 'CrushCheck',
+>>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     appDesc: '—— Quick Test: Is TA a Cheater? ——',
     wechatLogin: 'One-Click Login',
     loginFailedRetry: 'Login failed, please try again',
     agreeUserAgreement: 'Agree to User Agreement',
     disagree: 'Disagree'
+  },
+  answerBook: {
+    title: 'Book of Answers',
+    back: 'Back',
+    backToModify: 'Back to Modify Question',
+    tellTA: 'Tell TA',
+    askAgain: 'Ask Again',
+    aiAnalysis: 'AI Analysis',
+    aiAnalyzing: 'Generating...',
+    thinkQuestion: 'Silently think about your question',
+    clickBook: 'Then click to flip the book',
+    getAnswer: 'Get your answer...',
+    placeholder: 'Write down your confusion or wish here',
+    example: 'For example: Will my relationship work out?...',
+    startBook: 'Start Flipping',
+    pleaseInputQuestion: 'Please enter your question',
+    unlockAnalysis: 'You need to pay to unlock this analysis',
+    payNow: 'CNY/time Pay Now'
   }
 }

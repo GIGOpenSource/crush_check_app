@@ -77,14 +77,12 @@
     </view>
 
     <!-- 历史海报模块 -->
-    <view class="history-card">
+    <!-- <view class="history-card">
       <view class="card-header" @click="handleHistoryClick">
         <text class="card-title">{{ $t('my.historyPoster') }}</text>
         <text class="arrow-icon">›</text>
       </view>
-      <!-- <view class="date-text" v-if="posterList.length > 0">
-        {{ formatDate(posterList[0].created_time) }}
-      </view> -->
+      
       <view class="poster-list" v-if="posterList.length > 0">
         <view class="poster-item" v-for="(item, index) in posterList" :key="item.id || index"
           @click="handlePosterClick(item)">
@@ -114,7 +112,7 @@
           }}</text>
         </view>
       </view>
-    </view>
+    </view> -->
 
     <!-- 常用功能 -->
     <view class="functions-section">
@@ -281,6 +279,7 @@ export default {
     } else {
       uni.stopPullDownRefresh();
     }
+    this.refreshUserInfoForPullDown();
   },
   computed: {
     // 性别选项（使用计算属性，语言切换时自动更新）
@@ -1189,8 +1188,16 @@ export default {
         await this.refreshUserInfo()
         // 刷新海报列表
         await this.fetchPosterList()
+<<<<<<< HEAD
         // 停止下拉刷新动画
         uni.stopPullDownRefresh()
+=======
+        // 延迟一下再停止刷新，让动画更流畅
+        setTimeout(() => {
+          uni.hideLoading()
+          uni.stopPullDownRefresh()
+        }, 500)
+>>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
       } catch (err) {
         // 即使获取用户信息失败，也刷新海报列表
         await this.fetchPosterList()
@@ -1382,31 +1389,34 @@ export default {
     // 更新 tabBar 国际化
     updateTabBarI18n() {
       try {
-        const currentLocale = uni.getStorageSync('currentLanguage') || 'zh';
-        let tabBarTexts = { index: '检测', my: '我的' };
-
-        if (currentLocale === 'en') {
-          tabBarTexts = { index: 'Check', my: 'My' };
-        } else if (currentLocale === 'es') {
-          tabBarTexts = { index: 'Verificar', my: 'Mi' };
-        } else if (currentLocale === 'pt') {
-          tabBarTexts = { index: 'Verificar', my: 'Meu' };
-        } else if (currentLocale === 'ja') {
-          tabBarTexts = { index: 'チェック', my: 'マイ' };
-        } else if (currentLocale === 'ko') {
-          tabBarTexts = { index: '확인', my: '내' };
-        }
-
+        // index 0: 首页
+        const indexText = this.$t('tabBar.index');
         uni.setTabBarItem({
           index: 0,
-          text: tabBarTexts.index
+          text: indexText && indexText !== 'tabBar.index' ? indexText : '首页'
         });
+        // index 1: 测试记录
+        const testText = this.$t('tabBar.test');
         uni.setTabBarItem({
           index: 1,
-          text: tabBarTexts.my
+          text: testText && testText !== 'tabBar.test' ? testText : '测试记录'
+        });
+        // index 2: 我的
+        const myText = this.$t('tabBar.my');
+        uni.setTabBarItem({
+          index: 2,
+          text: myText && myText !== 'tabBar.my' ? myText : '我的'
         });
       } catch (error) {
         console.error('更新 tabBar 国际化失败:', error);
+        // 如果国际化失败，使用默认值
+        try {
+          uni.setTabBarItem({ index: 0, text: '首页' });
+          uni.setTabBarItem({ index: 1, text: '测试记录' });
+          uni.setTabBarItem({ index: 2, text: '我的' });
+        } catch (e) {
+          console.error('设置 tabBar 默认值失败:', e);
+        }
       }
     },
   },

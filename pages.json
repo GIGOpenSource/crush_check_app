@@ -3,19 +3,65 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "Crush Check",
+				"navigationBarTitleText": "CrushCheck",
 				"enablePullDownRefresh": false,
 				"disableScroll": false
+			}
+		},{
+			"path": "pages/test/test",
+			"style": {
+				"navigationBarTitleText": "CrushCheck",
+				"enablePullDownRefresh": true,
+				"disableScroll": false
+			}
+		},  {
+			"path": "pages/index/opeare",
+			"style": {
+				"navigationBarTitleText": "CrushCheck",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
+		},  {
+			"path": "pages/index/answer",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
+		},  {
+			"path": "pages/index/answer-result",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": true,
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/index/choosebook",
+			"style": {
+				"navigationBarTitleText": "答案之书",
+				"enablePullDownRefresh": false,
+				"disableScroll": false,
+				"navigationStyle": "custom"
 			}
 		}, {
 			"path": "pages/index/proProster",
 			"style": {
-				"navigationBarTitleText": "Crush Check",
+				"navigationBarTitleText": "CrushCheck",
+				"enablePullDownRefresh": true,
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
+			}
+		}, 		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "",
 				"enablePullDownRefresh": true,
 				"backgroundColor": "#12111f",
 				"backgroundTextStyle": "light"
 			}
 		}, {
+
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "",
@@ -81,7 +127,12 @@
 			"pagePath": "pages/index/index",
 			"iconPath": "/static/tarbar/index.png",
 			"selectedIconPath": "/static/tarbar/indexcli.png",
-			"text": "检测"
+			"text": "首页"
+		}, {
+			"pagePath": "pages/test/test",
+			"iconPath": "/static/tarbar/test.png",
+			"selectedIconPath": "/static/tarbar/testcli.png",
+			"text": "测试记录"
 		}, {
 			"pagePath": "pages/my/my",
 			"iconPath": "/static/tarbar/my.png",

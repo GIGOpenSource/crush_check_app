@@ -8,14 +8,14 @@
 			<view class="bottomtitle" v-if="status == 1">{{ $t('proPoster.aiGeneratedTip') }}</view>
 			<!-- 深度报告蒙层 -->
 			<view class="mengceng" v-if="show">
-				<view>{{ $t('proPoster.openMember') }}</view>
-				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view>
-				<view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
-					$t('proPoster.openMember') }}</view>
+				<!-- <view>{{ $t('proPoster.openMember') }}</view>
+				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view> -->
+				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
+					$t('proPoster.openMember') }}</view> -->
 				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
-				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'" hover-class="none"
-					@click="invitefriend">{{
+				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
+					hover-class="none" @click="invitefriend">{{
 						$t('proPoster.inviteFiveFree') }}</button>
 				<view style="height: 60rpx;"></view>
 				<view v-for="(item, index) in moretitle" :key="index" class="moretitle">
@@ -59,10 +59,10 @@
 				<view class="title">{{ $t('proPoster.unlockThisReport') }}</view>
 				<view class="num">{{ $t('proPoster.reportRemainingTimes') }}: {{ userinfo.allow_count }}{{
 					$t('proPoster.times')
-					}}</view>
+				}}</view>
 				<view class="del-popup-actions">
 					<view @click="lock">{{ $t('proPoster.unlockThis') }}</view>
-					<view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view>
+					<!-- <view @click="pay(1)">{{ $t('proPoster.unlockMonthlyUnlimited') }}</view> -->
 				</view>
 				<view class="icon" @click="showDelPopup2 = false"> <up-icon name="close-circle" color="#ffffff"
 						size="30"></up-icon></view>
@@ -132,7 +132,7 @@ onLoad((e) => {
 	userinfo.value = JSON.parse(uni.getStorageSync('userInfo'))
 	// 设置导航栏标题
 	uni.setNavigationBarTitle({
-		title: 'Crush Check'
+		title: 'CrushCheck'
 	});
 
 	// 初始化会员权益说明（使用 i18n）
@@ -173,7 +173,7 @@ onPullDownRefresh(() => {
 // 刷新用户信息
 const refreshUserInfo = () => {
 	const openId = uni.getStorageSync('openId')
-	
+
 	getUserInfo(openId).then(res => {
 		userinfo.value = res.data
 		uni.setStorageSync('userInfo', JSON.stringify(res.data))
@@ -183,9 +183,9 @@ const refreshUserInfo = () => {
 			uni.stopPullDownRefresh()
 		}, 500)
 	}).catch(err => {
-	
+
 		uni.stopPullDownRefresh()
-	
+
 	})
 }
 
@@ -197,8 +197,9 @@ const getDeepReport = () => {
 		status.value = 2
 		return
 	}
+
 	let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
-	if (userinfo.allow_count && !userinfo.is_vip && !details.value.child_list[0]?.file_ur) {
+	if (userinfo.allow_count && !userinfo.is_vip && !details.value.child_list[0]?.file_url) {
 		showDelPopup2.value = true
 		return
 	}
@@ -209,6 +210,7 @@ const getDeepReport = () => {
 			images.value = res.data.url
 			let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 			status.value = 2
+			show.value = true
 			if (userinfo.is_vip) {
 				getPosterDetails(id.value).then(res => {
 					details.value = res.data
@@ -342,8 +344,11 @@ const share = () => {
 		url: details.value.file_url,
 		success: (res) => {
 			if (res.statusCode === 200) {
+				const inviterOpenId = uni.getStorageSync("openId") || "";
+				const query = `?scene=${inviterOpenId}`
 				wx.showShareImageMenu({
 					path: res.tempFilePath,
+					entrancePath: `/pages/index/index${query}`,
 					complete: (res) => {
 						if (res.errMsg == 'showShareImageMenu:fail cancel') {
 							share_fail()
@@ -550,7 +555,7 @@ const click_invitecancel = () => {
 	left: 0;
 	top: 150rpx;
 	color: #000;
-	background: linear-gradient(rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 1));
+	background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
 	width: 100%;
 	min-height: calc(75vh - 150rpx);
 	overflow-y: auto;
@@ -643,7 +648,7 @@ const click_invitecancel = () => {
 	margin-top: 40rpx;
 	margin-bottom: 20rpx;
 	position: relative;
-	
+
 	&.no-scroll {
 		overflow: hidden;
 	}

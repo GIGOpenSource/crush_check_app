@@ -108,7 +108,8 @@ export default {
     korean: 'Coreano'
   },
   tabBar: {
-    index: 'Verificar',
+    index: 'Inicio',
+    test: 'Registros de Prueba',
     my: 'Mi'
   },
   my: {
@@ -180,6 +181,9 @@ export default {
   },
   poster: {
     title: 'Pósters Históricos',
+    recentTest: 'Pruebas Recientes',
+    selectAll: 'Seleccionar Todo',
+    deselectAll: 'Deseleccionar Todo',
     all: 'Todos',
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociales',
@@ -223,9 +227,27 @@ export default {
     yearsAgoUnit: 'años',
     unknownType: 'Tipo desconocido',
     done: 'Completado',
-    deleted: 'Eliminado'
+    deleted: 'Eliminado',
+    cheatScore: 'Puntuación de Tramposo:',
+    viewPoster: 'Ver Póster',
+    viewAnswer: 'Ver Respuesta',
+    answerLabel: 'Respuesta:',
+    defaultAnswer: 'La oportunidad está justo frente a ti',
+    emptyMessage: 'Nada aquí todavía, ve a probar ahora',
+    goToTest: 'Ir a Probar',
+    answerBook: 'Libro de Respuestas',
+    crushCheck: 'CrushCheck'
   },
   index: {
+    crushCheck: 'CrushCheck',
+    checkYourself: 'Verifica tu forma de hablar',
+    wayAndData: 'y datos, ¿eres como',
+    cheater: 'un tramposo',
+    answer: 'Respuesta',
+    book: 'Libro',
+    moreFeatures: 'Más Funciones',
+    comingSoon: 'Próximamente',
+    shareTitle: 'Invita a amigos a probar juntos si eres un tramposo',
     selectFileType: 'Por favor seleccione el tipo de archivo',
     uploadScreenshot: 'Subir capturas relacionadas',
     upload: 'Subir',
@@ -240,6 +262,7 @@ export default {
     analyzingPercent: 'Analizando',
     analyzingPercentUnit: '%',
     exitTip: 'Puedes ver los resultados en Mi - Pósters Históricos después de salir',
+    exitTipTestRecord: 'Puedes ver los resultados en Registros de Prueba después de salir',
     selectCorrectType: '¡Seleccionar el tipo de archivo correcto puede hacer que los resultados sean más precisos!',
     fileTypeTip1: '1. Capturas de plataformas sociales: Capturas de contenido de plataformas como Xiaohongshu, Douyin, Moments, como páginas de notas, visualizaciones de perfil, compartir dinámico, deja que la IA te ayude a entender mejor a TA',
     fileTypeTip2: '2. Capturas físicas/escenas: Capturas de objetos reales o escenas como patrones de tatuajes, detalles de joyas, paisajes de viaje, ubicaciones de check-in, entra al mundo de TA',
@@ -256,11 +279,19 @@ export default {
     uploadSuccess: 'Subida exitosa',
     partUploadFailed: 'Algunos archivos fallaron al subir',
     inviteFriends: 'Invitar amigos a usar juntos',
-    shareTitle: 'Invita a tus amigos a probar si eres un jugador',
     chatScreenshot: 'Capturas de Chat',
     socialScreenshot: 'Capturas de Redes Sociales',
     physicalPhoto: 'Fotos Físicas/Escenas',
-    consumeVoucher: 'Vales de Consumo/Viaje'
+    consumeVoucher: 'Vales de Consumo/Viaje',
+    becomeMember: 'Convertirse en Miembro',
+    enjoyPrivileges: 'Disfrutar de Privilegios',
+    perMonth: '/mes',
+    openNow: 'Abrir Ahora',
+    vipFeature1: 'Informes Premium Ilimitados',
+    vipFeature2: 'Informes de Análisis Profundo',
+    vipFeature3: 'Alertas de Riesgo Oportunas',
+    vipFeature4: 'Informes de Análisis Profesional',
+    vipFeature5: 'Soporte al Cliente Prioritario'
   },
   proPoster: {
     viewDeepReport: 'Ver Informe de Análisis Profundo',
@@ -312,11 +343,33 @@ export default {
   },
   login: {
     title: 'Iniciar Sesión',
+<<<<<<< HEAD
     appName: 'Crush Check',
+=======
+    appName: 'CrushCheck',
+>>>>>>> 78b77f5e0915ffb22a8f9efc7c9556b4b80311f4
     appDesc: '—— Prueba Rápida de: ¿Es TA un Tramposo? ——',
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',
     agreeUserAgreement: 'Aceptar Acuerdo de Usuario',
     disagree: 'No aceptar'
+  },
+  answerBook: {
+    title: 'Libro de Respuestas',
+    back: 'Volver',
+    backToModify: 'Volver a Modificar Pregunta',
+    tellTA: 'Decirle a TA',
+    askAgain: 'Preguntar de Nuevo',
+    aiAnalysis: 'Análisis IA',
+    aiAnalyzing: 'Generando...',
+    thinkQuestion: 'Piensa en silencio tu pregunta',
+    clickBook: 'Luego haz clic para abrir el libro',
+    getAnswer: 'Obtén tu respuesta...',
+    placeholder: 'Escribe aquí tu confusión o deseo',
+    example: 'Por ejemplo: ¿Funcionará mi relación?...',
+    startBook: 'Comenzar',
+    pleaseInputQuestion: 'Por favor ingresa tu pregunta',
+    unlockAnalysis: 'Necesitas pagar para desbloquear este análisis',
+    payNow: 'CNY/vez Pagar Ahora'
   }
 }

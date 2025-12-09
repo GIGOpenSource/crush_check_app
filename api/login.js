@@ -130,14 +130,14 @@ export function updateUserInfo(openId, user_avatar = "", username = "", user_gen
  * @param {number} user - 用户ID
  * @returns {Promise}
  */
-export function getPosterList(currentPage = 1, pageSize = 10, poster_type = "", user = "") {
+export function getPosterList(currentPage = 1, pageSize = 10, poster_type, user = "") {
   const params = {
     currentPage,
-    pageSize,
+    pageSize
   };
   
-  // 如果指定了海报类型且不是"all"，添加到参数中
-  if (poster_type && poster_type !== "all") {
+  // 如果指定了海报类型且不是"all"和空字符串，添加到参数中
+  if (poster_type && poster_type !== "all" && poster_type !== "") {
     params.poster_type = poster_type;
   }
   
@@ -164,10 +164,10 @@ export function getPosterList(currentPage = 1, pageSize = 10, poster_type = "", 
  * @param {string} ids - 海报ID列表，逗号分隔的字符串
  * @returns {Promise}
  */
-export function deletePosters(ids) {
+export function deletePosters(params) {
   return deleteRequest(
-    `/poster/bulk-delete/?ids=${ids}`,
-    {},
+    `/poster/bulk-delete/`,
+    params,
     {
       header: {
         "Content-Type": "application/json",

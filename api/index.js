@@ -46,3 +46,21 @@ export const getGuid = () => {
 export const freeReport = (params) => {
 	return getRequest(`/poster/free_report/`, params)
 }
+
+//获取答案之书
+export const getBook = () => {
+	return getRequest(`/answerbook/random_9/`, {})
+}
+
+//获取答案之书答案
+export const getAnswerbook = (params) => {
+	return getRequest(`/answerbook/generate_image/`, params)
+}
+
+//获取ai答案
+export const getAi = (params) => {
+	return getRequest(`/answerbook/generate_answer_deep_image/`, params)
+}
+
+
+

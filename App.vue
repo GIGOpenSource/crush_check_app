@@ -6,6 +6,7 @@ import {
 } from '@dcloudio/uni-app'
 // import uma from '@/uma.js'
 import { ref } from 'vue'
+import { t } from '@/i18n/index.js'
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -17,11 +18,17 @@ const formatDateTime = (date = new Date()) => {
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+// 获取应用版本
+const getAppVersion = () => {
+	let appVersion = '1.0.0'
+	return appVersion
+}
+
 const params = ref({
 	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
-	appVersion: uni.getAccountInfoSync()?.miniProgram?.version || "1.0.0",
+	appVersion: getAppVersion(),
 	eventTime: formatDateTime(),
-	pageName: '检测'
+	pageName: '首页'
 })
 onShow(() => {
 	app_show()
@@ -31,9 +38,10 @@ onHide(() => {
 })
 onLaunch(() => {
 	app_launch()
+	// 延迟设置 tabBar，确保国际化已加载
 	setTimeout(() => {
 		setTabBarI18n()
-	}, 100)
+	}, 300)
 })
 const app_hide = () => {
 	params.value.eventTime = formatDateTime()
@@ -54,33 +62,46 @@ const app_show = () => {
 	// if (uma && uma.trackEvent) {
 	// 	uma.trackEvent('app_show', params.value)
 	// }
+	if (uma && uma.trackEvent) {
+		uma.trackEvent('app_show', params.value)
+	}
+	// 延迟设置 tabBar，确保国际化已加载
 	setTimeout(() => {
 		setTabBarI18n()
-	}, 100)
+	}, 300)
 }
 
 const setTabBarI18n = () => {
-	const currentLocale = uni.getStorageSync('currentLanguage') || 'zh'
-		let tabBarTexts = { index: '检测', my: '我的' }
-		if (currentLocale === 'en') {
-			tabBarTexts = { index: 'Check', my: 'My' }
-		} else if (currentLocale === 'es') {
-			tabBarTexts = { index: 'Verificar', my: 'Mi' }
-		} else if (currentLocale === 'pt') {
-			tabBarTexts = { index: 'Verificar', my: 'Meu' }
-		} else if (currentLocale === 'ja') {
-			tabBarTexts = { index: 'チェック', my: 'マイ' }
-		} else if (currentLocale === 'ko') {
-			tabBarTexts = { index: '확인', my: '내' }
-		}
+	try {
+		// index 0: 首页
+		const indexText = t('tabBar.index')
 		uni.setTabBarItem({
 			index: 0,
-			text: tabBarTexts.index
+			text: indexText && indexText !== 'tabBar.index' ? indexText : '首页'
 		})
+		// index 1: 测试记录
+		const testText = t('tabBar.test')
 		uni.setTabBarItem({
 			index: 1,
-			text: tabBarTexts.my
+			text: testText && testText !== 'tabBar.test' ? testText : '测试记录'
 		})
+		// index 2: 我的
+		const myText = t('tabBar.my')
+		uni.setTabBarItem({
+			index: 2,
+			text: myText && myText !== 'tabBar.my' ? myText : '我的'
+		})
+	} catch (error) {
+		console.error('更新 tabBar 国际化失败:', error)
+		// 如果国际化失败，使用默认值
+		try {
+			uni.setTabBarItem({ index: 0, text: '首页' })
+			uni.setTabBarItem({ index: 1, text: '测试记录' })
+			uni.setTabBarItem({ index: 2, text: '我的' })
+		} catch (e) {
+			console.error('设置 tabBar 默认值失败:', e)
+		}
+	}
 }
 
 </script>
