@@ -161,6 +161,7 @@ const save = () => {
             if (res.statusCode === 200) {
                 wx.showShareImageMenu({
                     path: res.tempFilePath,
+					entrancePath: `/pages/index/index`,
                     complete: (res) => {
                         if (res.errMsg == 'showShareImageMenu:fail cancel') {
                             // share_fail()
