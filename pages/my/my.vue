@@ -203,7 +203,7 @@ import {
   uploadAvatar,
   getPosterList,
   getProductsList,
-  getPrepayId,
+  mockPrepayId,
   getUserInfo,
   reGeneratePoster,
   getSystemContent,
@@ -585,7 +585,7 @@ export default {
 
             // 调用获取预支付ID接口
             try {
-              const prepayRes = await getPrepayId(
+              const prepayRes = await mockPrepayId(
                 description,
                 productId,
                 openId
@@ -624,6 +624,9 @@ export default {
                 // 调起微信支付（V3版本）
                 // #ifdef MP-WEIXIN
                 // 保存 this 引用，避免回调中 this 丢失
+        
+                   _this.refreshUserInfo();
+                return
                 const _this = this;
                 uni.requestPayment({
                   provider: "wxpay",

@@ -29,7 +29,12 @@ export const getProducts = () => {
 
 //创建订单
 export const createOrder = (params) => {
-	return postRequest('/wechat/getPrepayId',params)
+	return postRequest('/wechat/mockPrepayId',params)
+}
+
+//mock订单
+export const mockOrder = (params) => {
+	return postRequest('/mock/getPrepayId',params)
 }
 
 //分享

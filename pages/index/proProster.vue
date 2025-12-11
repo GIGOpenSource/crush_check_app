@@ -12,7 +12,8 @@
 				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view> -->
 				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.openMember') }}</view> -->
-				<view class="btn" @click="pay(2)">{{ once.price }}{{ $t('common.currencyUnit') }} {{
+					<!-- {{ once.price }} {{ $t('common.currencyUnit') }} -->
+				<view class="btn" @click="pay(2)"> {{
 					$t('proPoster.queryReport') }}</view>
 				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
 					hover-class="none" @click="invitefriend">{{
@@ -81,7 +82,7 @@ import {
 	getPosterDetails,
 	getDeepPoster,
 	getProducts,
-	createOrder,
+	mockOrder,
 	freeReport
 } from '@/api/index.js'
 import {
@@ -283,20 +284,13 @@ const pay = (type) => {
 		object = once.value
 		click_oncepay()
 	}
-	createOrder({
+	mockOrder({
 		description: object.description,
 		productId: object.id,
 		openId: uni.getStorageSync('openId'),
 		posterId: details.value.id
 	}).then(res => {
-		uni.requestPayment({
-			"provider": "wxpay",
-			...res.data,
-			"signType": "RSA",
-			"package": `${res.data.prepayid}`,
-			"nonceStr": res.data.noncestr,
-			success(res) {
-				uni.showToast({
+			uni.showToast({
 					title: t('proPoster.paySuccess'),
 					icon: 'success'
 				})
@@ -325,16 +319,55 @@ const pay = (type) => {
 					console.log(res.data, 'rrrrr')
 					details.value = res.data
 				})
-			},
-			fail(e) {
-				pay_fail()
-				uni.showToast({
-					title: t('proPoster.payFailed'),
-					icon: 'none'
-				})
-			}
-		})
+		// uni.requestPayment({
+		// 	"provider": "wxpay",
+		// 	...res.data,
+		// 	"signType": "RSA",
+		// 	"package": `${res.data.prepayid}`,
+		// 	"nonceStr": res.data.noncestr,
+		// 	success(res) {
+		// 		uni.showToast({
+		// 			title: t('proPoster.paySuccess'),
+		// 			icon: 'success'
+		// 		})
+		// 		pay_success()
+		// 		status.value = 2
+		// 		show.value = false
+		// 		showDelPopup2.value = false
+		// 		//重新调用一下用户信息接口 还得需要存本地
+		// 		if (type == 1) {
+		// 			const openId = uni.getStorageSync('openId')
+		// 			if (openId) {
+		// 				getUserInfo(openId).then(userRes => {
+		// 					if (userRes.code === 200 || userRes.code === 201) {
+		// 						if (userRes.data) {
+		// 							uni.setStorageSync('userInfo', JSON.stringify(userRes
+		// 								.data))
+		// 							console.log('用户信息更新成功', userRes.data)
+		// 						}
+		// 					}
+		// 				}).catch(err => {
+		// 					console.log('获取用户信息失败', err)
+		// 				})
+		// 			}
+		// 		}
+		// 		getPosterDetails(id.value).then(res => {
+		// 			console.log(res.data, 'rrrrr')
+		// 			details.value = res.data
+		// 		})
+		// 	},
+		// 	fail(e) {
+		// 		pay_fail()
+		// 		uni.showToast({
+		// 			title: t('proPoster.payFailed'),
+		// 			icon: 'none'
+		// 		})
+		// 	}
+		// })
 
+	})
+	.catch(err => {
+		pay_fail()
 	})
 }
 const share = () => {

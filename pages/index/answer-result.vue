@@ -65,7 +65,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-import { getAnswerbook, getPosterDetails, getProducts, createOrder, freeReport } from '@/api/index.js';
+import { getAnswerbook, getPosterDetails, getProducts, mockOrder, freeReport } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { host } from '@/config/config.js';
@@ -291,37 +291,42 @@ const handleProgressClose = () => {
 
 // 支付
 const pay = () => {
-    console.log(isdetails.value,'isdetails.valueisdetails.value')
-    createOrder({
+    console.log(isdetails.value, 'isdetails.valueisdetails.value')
+    mockOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),
         productId: mouth.value.id,
         posterId: details.value.poster_id
-    }).then(res => {
-        uni.requestPayment({
-            "provider": "wxpay",
-            ...res.data,
-            "signType": "RSA",
-            "package": `${res.data.prepayid}`,
-            "nonceStr": res.data.noncestr,
-            success(res) {
-                uni.showToast({
-                    title: t('proPoster.paySuccess'),
-                    icon: 'none'
-                })
-                showDelPopup2.value = false
-                submit()
-
-            },
-            fail(e) {
-                uni.showToast({
-                    title: t('proPoster.payFailed'),
-                    icon: 'none'
-                })
-                showDelPopup2.value = false
-            }
-        })
     })
+        .then(res => {
+            showDelPopup2.value = false
+            submit()
+            // uni.requestPayment({
+            //     "provider": "wxpay",
+            //     ...res.data,
+            //     "signType": "RSA",
+            //     "package": `${res.data.prepayid}`,
+            //     "nonceStr": res.data.noncestr,
+            //     success(res) {
+            //         uni.showToast({
+            //             title: t('proPoster.paySuccess'),
+            //             icon: 'none'
+            //         })
+
+
+            //     },
+            //     fail(e) {
+            //         uni.showToast({
+            //             title: t('proPoster.payFailed'),
+            //             icon: 'none'
+            //         })
+
+            //     }
+            // })
+        })
+        .catch(err => {
+            showDelPopup2.value = false
+        })
 }
 </script>
 

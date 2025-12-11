@@ -292,6 +292,33 @@ export function getPrepayId(description, productId, openId) {
 }
 
 /**
+ * 获取预支付ID
+ * @param {string} description - 商品描述
+ * @param {number|string} productId - 产品ID
+ * @param {string} openId - 用户openId
+ * @returns {Promise}
+ */
+export function mockPrepayId(description, productId, openId) {
+  return postRequest(
+    "/mock/getPrepayId",
+    {
+      description,
+      productId,
+      openId,
+    },
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "处理中...",
+    }
+  );
+}
+
+
+/**
  * 获取邀请记录列表
  * @param {number} currentPage - 当前页码
  * @param {number} pageSize - 每页数量

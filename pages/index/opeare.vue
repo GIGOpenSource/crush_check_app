@@ -145,7 +145,7 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-					<view class="bottom" @click="pay">{{ mouth.price }}{{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view>
+				<view class="bottom" @click="pay">解锁</view>
 				</view>
 			</view>
 		</up-popup>
@@ -167,7 +167,7 @@ import {
 	share,
 	getGuid,
 	getProducts,
-	createOrder
+	mockOrder
 } from '@/api/index.js'
 import {
 	getSystemContent,
@@ -200,7 +200,7 @@ const formatDateTime = (date = new Date()) => {
 
 const params = ref({
 	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
-	appVersion:  "1.0.0",
+	appVersion: "1.0.0",
 	eventTime: formatDateTime(),
 	pageName: ''
 })
@@ -410,50 +410,56 @@ const editimage = (index) => {
 //支付
 const pay = () => {
 	click_monthpay()
-	createOrder({
+	mockOrder({
 		description: mouth.value.description,
-        openId:uni.getStorageSync('openId'),
+		openId: uni.getStorageSync('openId'),
 		productId: mouth.value.id
 	}).then(res => {
-		uni.requestPayment({
-			"provider": "wxpay",
-			...res.data,
-			"signType": "RSA",
-			"package": `${res.data.prepayid}`,
-			"nonceStr": res.data.noncestr,
-			success(res) {
-				uni.showToast({
-					title: t('proPoster.paySuccess'),
-					icon: 'success'
-				})
-				pay_success()
-				const openId = uni.getStorageSync('openId')
-				getUserInfo(openId).then(userRes => {
-					if (userRes.code === 200 || userRes.code === 201) {
-						if (userRes.data) {
-							uni.setStorageSync('userInfo', JSON.stringify(userRes
-								.data))
-							console.log('用户信息更新成功', userRes.data)
-						}
-					}
-				}).catch(err => {
-					console.log('获取用户信息失败', err)
-				})
-			},
-			fail(e) {
-				pay_fail()
-				uni.showToast({
-					title: t('proPoster.payFailed'),
-					icon: 'none'
-				})
+		pay_success()
+		const openId = uni.getStorageSync('openId')
+		getUserInfo(openId).then(userRes => {
+			if (userRes.code === 200 || userRes.code === 201) {
+				if (userRes.data) {
+					uni.setStorageSync('userInfo', JSON.stringify(userRes
+						.data))
+					console.log('用户信息更新成功', userRes.data)
+				}
 			}
+			vipProup.value = false
+		}).catch(err => {
+			console.log('获取用户信息失败', err)
 		})
 
+		// uni.requestPayment({
+		// 	"provider": "wxpay",
+		// 	...res.data,
+		// 	"signType": "RSA",
+		// 	"package": `${res.data.prepayid}`,
+		// 	"nonceStr": res.data.noncestr,
+		// 	success(res) {
+		// 		uni.showToast({
+		// 			title: t('proPoster.paySuccess'),
+		// 			icon: 'success'
+		// 		})
+
+		// 	},
+		// 	fail(e) {
+		// 		pay_fail()
+		// 		uni.showToast({
+		// 			title: t('proPoster.payFailed'),
+		// 			icon: 'none'
+		// 		})
+		// 	}
+		// })
+
 	})
+		.catch(err => {
+			pay_fail()
+		})
 }
 const btn = () => {
 	let token = uni.getStorageSync('token')
-	
+
 	if (!token) return uni.navigateTo({
 		url: "/pages/login/login"
 	})
