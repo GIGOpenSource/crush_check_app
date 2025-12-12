@@ -388,3 +388,21 @@ export function reGeneratePoster(posterId, showLoading = true) {
   );
 }
 
+export function iosLogin(code, inviter_openid) {
+  const params = { code };
+  if (inviter_openid) {
+    params.inviter_openid = inviter_openid;
+  }
+  return postRequest(
+    "/mock/login",
+    params,
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "登录中...",
+    }
+  );
+}

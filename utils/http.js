@@ -189,7 +189,7 @@ function getImg(url) {
 	// #ifdef H5
 	// H5 平台：需要包含 manifest.json 中配置的 base 路径
 	// manifest.json 中 h5.router.base 配置为 "/welcomeApp"
-	const basePath = '/welcomeApp'
+	const basePath = '/crushh5'
 	return `${basePath}/static/${url}.png`
 	// #endif
 	
