@@ -47,27 +47,34 @@
             },
             /* ios打包配置 */
             "ios" : {
-                "dSYMs" : false
+                "dSYMs" : false,
+                "capabilities" : {
+                    "entitlements" : {
+                        "com.apple.developer.associated-domains" : [
+                            "applinks:static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com"
+                        ]
+                    }
+                }
             },
             /* SDK配置 */
             "sdkConfigs" : {
                 "share" : {
                     "weixin" : {
                         "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
                     }
                 },
                 "oauth" : {
                     "weixin" : {
                         "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
                     }
                 },
                 "payment" : {
                     "weixin" : {
                         "__platform__" : [ "android" ],
                         "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : ""
+                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
                     }
                 },
                 "geolocation" : {}
@@ -141,9 +148,10 @@
     "h5" : {
         "router" : {
             "mode" : "hash",
-            "base" : "/welcomeApp"
+            "base" : "/crushh5"
         },
         "title" : "CrushCheck",
         "template" : ""
-    }
+    },
+    "_spaceID" : "mp-aee88409-b919-4228-b191-c6b5e6cbddb2"
 }

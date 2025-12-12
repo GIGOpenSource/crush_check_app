@@ -23,13 +23,12 @@ export function wechatLogin(code, inviter_openid) {
     }
   );
 }
-export function iosLogin(code, inviter_openid) {
-  const params = { code };
-  if (inviter_openid) {
+export function apkLogin(params) {
+  if (params.inviter_openid) {
     params.inviter_openid = inviter_openid;
   }
   return postRequest(
-    "/mock/login",
+    "/wechat/apklogin",
     params,
     {
       header: {
