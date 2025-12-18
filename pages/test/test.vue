@@ -67,7 +67,7 @@
                             v-if="item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'">
                             <view class="num">{{ $t('poster.cheatScore') }}{{ item.score }}%</view>
                             <view class="details">
-                                <text>{{ item.summary }}</text>
+                                <view class="summary">{{ item.summary }}</view>
                                 <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">{{ $t('poster.viewPoster') }} {{
                                     '>>' }}</text>
                             </view>
@@ -1171,7 +1171,14 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
-
+        .summary{
+			overflow: hidden;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			text-overflow: ellipsis;
+			// white-space: nowrap;
+			-webkit-line-clamp: 2;
+		}
         .details {
             margin-top: 50rpx;
             font-weight: 500;

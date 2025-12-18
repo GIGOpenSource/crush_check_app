@@ -65,7 +65,7 @@
     </view>
 
     <!-- 邀请新伙伴 -->
-    <view class="invite-module">
+    <view class="invite-module" v-if="version == 2">
       <image class="invite-icon" src="/static/my/yaoqing.png" mode="aspectFit"></image>
       <view class="invite-info">
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
@@ -211,7 +211,7 @@ import {
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
-
+const version = uni.getStorageSync('version')
 export default {
   components: {
     IndexProup
@@ -258,9 +258,9 @@ export default {
   onShow() {
      this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
-      { label: this.$t('my.share'), type: "share" },
+      // { label: this.$t('my.share'), type: "share" },
       { label: this.$t('my.settings'), type: "settings" },
-      { label: this.$t('my.inviteRecord'), type: "invite", url: "/pages/my/invite" },
+      // { label: this.$t('my.inviteRecord'), type: "invite", url: "/pages/my/invite" },
       { label: this.$t('language.title'), type: "language", url: "/pages/my/lauage" },
     ]
     this.pageName = this.$t('my.title');
@@ -596,30 +596,30 @@ export default {
                 // 获取支付参数
                 const paymentData =
                   prepayRes.data?.data || prepayRes.data || prepayRes;
+                await this.refreshUserInfo(); 
+                // const {
+                //   appId,
+                //   noncestr,
+                //   partnerid,
+                //   prepayid,
+                //   paySign,
+                //   timeStamp,
+                // } = paymentData;
 
-                const {
-                  appId,
-                  noncestr,
-                  partnerid,
-                  prepayid,
-                  paySign,
-                  timeStamp,
-                } = paymentData;
-
-                // 检查必要的支付参数
-                if (
-                  !appId ||
-                  !noncestr ||
-                  !prepayid ||
-                  !paySign ||
-                  !timeStamp
-                ) {
-                  uni.showToast({
-                    title: this.$t('common.payParamsIncomplete'),
-                    icon: "none",
-                  });
-                  return;
-                }
+                // // 检查必要的支付参数
+                // if (
+                //   !appId ||
+                //   !noncestr ||
+                //   !prepayid ||
+                //   !paySign ||
+                //   !timeStamp
+                // ) {
+                //   uni.showToast({
+                //     title: this.$t('common.payParamsIncomplete'),
+                //     icon: "none",
+                //   });
+                //   return;
+                // }
 
                 // 调起微信支付（V3版本）
                 // #ifdef MP-WEIXIN
@@ -628,46 +628,46 @@ export default {
                    _this.refreshUserInfo();
                 return
                 const _this = this;
-                uni.requestPayment({
-                  provider: "wxpay",
-                  appId: appId,
-                  timeStamp: String(timeStamp),
-                  nonceStr: noncestr,
-                  package: prepayid,
-                  signType: "RSA", // V3版本使用RSA签名
-                  paySign: paySign,
-                  success: async (payRes) => {
-                    console.log("支付成功", payRes);
-                    uni.showToast({
-                      title: this.$t('common.paySuccess'),
-                      icon: "success",
-                    });
-                    // 支付成功后刷新用户信息，更新VIP状态
-                    console.log("开始刷新用户信息...");
-                    await _this.refreshUserInfo();
-                  },
-                  fail: async (payErr) => {
-                    console.error("支付失败", payErr);
-                    if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
-                      uni.showToast({
-                        title: this.$t('common.payCanceled'),
-                        icon: "none",
-                      });
-                    } else {
-                      uni.showToast({
-                        title: payErr.errMsg || this.$t('common.payFailed'),
-                        icon: "none",
-                      });
-                    }
-                  },
-                });
+                // uni.requestPayment({
+                //   provider: "wxpay",
+                //   appId: appId,
+                //   timeStamp: String(timeStamp),
+                //   nonceStr: noncestr,
+                //   package: prepayid,
+                //   signType: "RSA", // V3版本使用RSA签名
+                //   paySign: paySign,
+                //   success: async (payRes) => {
+                //     console.log("支付成功", payRes);
+                //     uni.showToast({
+                //       title: this.$t('common.paySuccess'),
+                //       icon: "success",
+                //     });
+                //     // 支付成功后刷新用户信息，更新VIP状态
+                //     console.log("开始刷新用户信息...");
+                //     await _this.refreshUserInfo();
+                //   },
+                //   fail: async (payErr) => {
+                //     console.error("支付失败", payErr);
+                //     if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
+                //       uni.showToast({
+                //         title: this.$t('common.payCanceled'),
+                //         icon: "none",
+                //       });
+                //     } else {
+                //       uni.showToast({
+                //         title: payErr.errMsg || this.$t('common.payFailed'),
+                //         icon: "none",
+                //       });
+                //     }
+                //   },
+                // });
                 // #endif
 
                 // #ifndef MP-WEIXIN
-                uni.showToast({
-                  title: this.$t('common.wechatPayNotSupported'),
-                  icon: "none",
-                });
+                // uni.showToast({
+                //   title: this.$t('common.wechatPayNotSupported'),
+                //   icon: "none",
+                // });
                 // #endif
               } else {
                 uni.showToast({

@@ -6,6 +6,7 @@ import {
 } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { t } from '@/i18n/index.js'
+import { getSystemContent } from "@/api/login.js";
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -30,6 +31,9 @@ const params = ref({
 	pageName: '首页'
 })
 onShow(() => {
+	getSystemContent({}).then(res => {
+		 uni.setStorageSync('version',res.data[0].version)
+	})
 	app_show()
 })
 onHide(() => {

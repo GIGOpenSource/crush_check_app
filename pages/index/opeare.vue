@@ -31,7 +31,7 @@
 					{{ $t('common.agreePolicy') }}{{ $t('common.userAgreement') }}{{ $t('common.and') }}{{
 						$t('common.privacyPolicy') }}
 				</view>
-				<view class="bottom">
+				<view class="bottom" v-if="version == 2">
 					<view class="left">
 						<image :src="$getImg('index/invite')" mode="scaleToFill" />
 						<view>
@@ -145,7 +145,7 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-				<view class="bottom" @click="pay">解锁</view>
+					<view class="bottom" @click="pay">{{ $t('my.unlock') }}</view>
 				</view>
 			</view>
 		</up-popup>
@@ -181,7 +181,7 @@ import {
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
 import { getLocale } from '@/i18n/index.js'
-
+const version = uni.getStorageSync('version')
 const { t } = useI18n()
 const vipProup = ref(false)
 // 页面停留时长统计
@@ -409,7 +409,7 @@ const editimage = (index) => {
 }
 //支付
 const pay = () => {
-	click_monthpay()
+	click_monthpay()	
 	mockOrder({
 		description: mouth.value.description,
 		openId: uni.getStorageSync('openId'),
@@ -613,15 +613,25 @@ const updateImages = () => {
 			photo_upload_start()
 			// 使用 map 创建 Promise 数组
 			const uploadPromises = res.tempFilePaths.map((filePath, index) => {
+				let params = {
+					type: 'img',
+					file_name: filePath,
+				}
+				const systemInfo = uni.getSystemInfoSync();
+				if (systemInfo.platform === 'android') {
+					console.log('Android设备');
+					params.file = filePath
+				} else if (systemInfo.platform === 'ios') {
+					console.log('iOS设备');
+				}
 				return new Promise((resolve, reject) => {
 					uni.uploadFile({
 						url: host + '/upload/',
 						filePath: filePath,
 						name: 'file',
-						formData: {
-							type: 'img',
-							file: filePath,
-							file_name: filePath,
+						formData: params,
+						header: {
+							'content-type': 'multipart/form-data'
 						},
 						success: (uploadFileRes) => {
 							try {

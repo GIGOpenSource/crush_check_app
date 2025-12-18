@@ -1,7 +1,7 @@
 {
     "name" : "CrushCheck",
     "appid" : "__UNI__52A3010",
-    "description" : "",
+    "description" : "CrushCheck",
     "versionName" : "1.0.0",
     "versionCode" : 101,
     "transformPx" : false,
@@ -54,6 +54,11 @@
                             "applinks:static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com"
                         ]
                     }
+                },
+                "privacyDescription" : {
+                    "NSPhotoLibraryUsageDescription" : "应用希望访问您的相册",
+                    "NSPhotoLibraryAddUsageDescription" : "应用希望访问您的相册",
+                    "NSCameraUsageDescription" : "应用希望开启您的摄像头"
                 }
             },
             /* SDK配置 */

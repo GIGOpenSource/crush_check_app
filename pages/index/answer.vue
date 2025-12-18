@@ -1,37 +1,51 @@
 <template>
-    <view class="page">
-        <view class="title">{{ t('answerBook.thinkQuestion') }}</view>
-        <view>{{ t('answerBook.clickBook') }}</view>
-        <view>{{ t('answerBook.getAnswer') }}</view>
-        <view class="rich">
-            <view class="textarea-wrapper">
-                <up-textarea v-model="value1" :maxlength="30" height="150" :count="true" 
-                    @focus="handleFocus" @blur="handleBlur"></up-textarea>
-                <view v-if="!value1 && !isFocused" class="custom-placeholder">
-                    <text>{{ t('answerBook.placeholder') }}</text>
-                    <text>{{ t('answerBook.example') }}</text>
-                </view>
+    <view class="wrapper">
+        <!-- 自定义导航栏 -->
+        <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
+            <view class="navbar-content">
+                <view @click="back"> <up-icon name="arrow-left" color="#ffffff" size="24"></up-icon></view>
+                <view class="navbar-title">{{ t('answerBook.title') }}</view>
+                <view></view>
             </view>
         </view>
-        <view class="btn" @click="path">{{ t('answerBook.startBook') }}</view>
+        <view class="page" :style="{ marginTop: (statusBarHeight + 110) + 'rpx' }">
+
+            <view class="title">{{ t('answerBook.thinkQuestion') }}</view>
+            <view>{{ t('answerBook.clickBook') }}</view>
+            <view>{{ t('answerBook.getAnswer') }}</view>
+            <view class="rich">
+                <view class="textarea-wrapper">
+                    <up-textarea v-model="value1" :maxlength="30" height="150" :count="true" @focus="handleFocus"
+                        @blur="handleBlur"></up-textarea>
+                    <view v-if="!value1 && !isFocused" class="custom-placeholder">
+                        <text>{{ t('answerBook.placeholder') }}</text>
+                        <text>{{ t('answerBook.example') }}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="btn" @click="path">{{ t('answerBook.startBook') }}</view>
+        </view>
     </view>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { onShow , onHide, onLoad} from '@dcloudio/uni-app'
+import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-
+const statusBarHeight = ref(0)
 const { t } = useI18n()
 const value1 = ref('');
 const isFocused = ref(false);
 
 onLoad(() => {
+    const systemInfo = uni.getSystemInfoSync()
+    const pxToRpx = systemInfo.windowWidth / 375 * 2 || 2
+    statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
     // 设置导航栏标题
     uni.setNavigationBarTitle({
         title: t('answerBook.title')
     });
-     value1.value =  uni.getStorageSync('question') || '';
+    value1.value = uni.getStorageSync('question') || '';
 })
 
 const handleFocus = () => {
@@ -41,7 +55,11 @@ const handleFocus = () => {
 const handleBlur = () => {
     isFocused.value = false;
 };
-
+const back = () => {
+    uni.switchTab({
+        url:'/pages/index/index'
+    })
+}
 const path = () => {
     if (!uni.getStorageSync('token')) {
         uni.navigateTo({
@@ -49,7 +67,7 @@ const path = () => {
         })
         return
     }
-    if(!value1.value.trim()){
+    if (!value1.value.trim()) {
         uni.showToast({
             title: t('answerBook.pleaseInputQuestion'),
             icon: 'none'
@@ -65,7 +83,7 @@ const path = () => {
 
 <style lang="scss" scoped>
 .page {
-    height: 96vh;
+     height: 83vh;
     margin: 20rpx 25rpx;
     background: rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
@@ -75,12 +93,40 @@ const path = () => {
     flex-direction: column;
     align-items: center;
     font-weight: 100;
-
     view {
         line-height: 50rpx;
     }
 
     // justify-content: center;
+}
+.wrapper{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #12111f;
+}
+.custom-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #1d182e;
+   
+    
+    .navbar-content {
+        height: 88rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20rpx;
+
+        .navbar-title {
+            font-size: 32rpx;
+            font-weight: 500;
+            color: #ffffff;
+        }
+    }
 }
 
 .title {

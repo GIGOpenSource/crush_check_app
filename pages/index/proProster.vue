@@ -16,7 +16,7 @@
 				<view class="btn" @click="pay(2)"> {{
 					$t('proPoster.queryReport') }}</view>
 				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
-					hover-class="none" @click="invitefriend">{{
+					hover-class="none" @click="invitefriend" v-if="version == 2">{{
 						$t('proPoster.inviteFiveFree') }}</button>
 				<view style="height: 60rpx;"></view>
 				<view v-for="(item, index) in moretitle" :key="index" class="moretitle">
@@ -33,7 +33,7 @@
 				<image :src="$getImg('index/save')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.savePoster') }}</view>
 			</view>
-			<view class="btn1" @click="share">
+			<view class="btn1" @click="share" v-if="version == 2">
 				<image :src="$getImg('index/share')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.sharePoster') }}</view>
 			</view>
@@ -97,6 +97,7 @@ import {
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
+const version = uni.getStorageSync('version')
 const showDelPopup2 = ref(false)
 // 页面停留时长统计
 usePageStay('结果页')
@@ -290,10 +291,10 @@ const pay = (type) => {
 		openId: uni.getStorageSync('openId'),
 		posterId: details.value.id
 	}).then(res => {
-			uni.showToast({
-					title: t('proPoster.paySuccess'),
-					icon: 'success'
-				})
+			// uni.showToast({
+			// 		title: t('proPoster.paySuccess'),
+			// 		icon: 'success'
+			// 	})
 				pay_success()
 				status.value = 2
 				show.value = false

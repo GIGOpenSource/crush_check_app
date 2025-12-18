@@ -16,10 +16,14 @@
         <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <image :src="status == 1 ? details.image_url : details.deepimages" />
             <view class="btns" v-if="status == 1">
-                <view class="btn1">
+               <!-- <view class="btn1">
                     <view @click="save">{{ t('answerBook.tellTA') }}</view>
                     <view @click="again">{{ t('answerBook.askAgain') }}</view>
-                </view>
+                </view> -->
+				<view class="btn2" @click="again">
+				   {{ t('answerBook.askAgain') }}
+				 </view>
+				 <view style="height: 30rpx;"></view>
                 <view class="btn2" :class="{ 'btn-disabled': details.children_status === 'waiting' }"
                     @click="aidetails">
                     {{ details.children_status === 'waiting' ? t('answerBook.aiAnalyzing') : t('answerBook.aiAnalysis')
@@ -50,9 +54,11 @@
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-            <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
+            <!-- <view class="title">{{ t('answerBook.unlockAnalysis') }}</view> -->
+			<view class="title">{{ t('my.unlock') }}{{ t('answerBook.aiAnalysis') }}</view>
             <view class="del-popup-actions">
-                <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
+                <!-- <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view> -->
+				<view @click="pay">{{ t('my.unlock') }}</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
@@ -154,7 +160,9 @@ const again = () => {
     uni.reLaunch({ url: '/pages/index/answer' })
 }
 const save = () => {
-
+	uni.removeStorageSync('question')
+	uni.reLaunch({ url: '/pages/index/answer' })
+    return
     uni.downloadFile({
         url: details.value.image_url,
         success: (res) => {
