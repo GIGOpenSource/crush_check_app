@@ -18,10 +18,7 @@
         },
         /* 模块配置 */
         "modules" : {
-            "Camera" : {},
-            "Payment" : {},
-            "Share" : {},
-            "OAuth" : {}
+            "Camera" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -48,13 +45,6 @@
             /* ios打包配置 */
             "ios" : {
                 "dSYMs" : false,
-                "capabilities" : {
-                    "entitlements" : {
-                        "com.apple.developer.associated-domains" : [
-                            "applinks:static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com"
-                        ]
-                    }
-                },
                 "privacyDescription" : {
                     "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
                     "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
@@ -65,28 +55,7 @@
                 }
             },
             /* SDK配置 */
-            "sdkConfigs" : {
-                "share" : {
-                    "weixin" : {
-                        "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
-                    }
-                },
-                "oauth" : {
-                    "weixin" : {
-                        "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
-                    }
-                },
-                "payment" : {
-                    "weixin" : {
-                        "__platform__" : [ "android" ],
-                        "appid" : "wxa1b9e2d76d5a2ca8",
-                        "UniversalLinks" : "https://static-mp-aee88409-b919-4228-b191-c6b5e6cbddb2.next.bspapp.com/uni-universallinks/__UNI__52A3010/"
-                    }
-                },
-                "geolocation" : {}
-            },
+            "sdkConfigs" : {},
             "icons" : {
                 "android" : {
                     "hdpi" : "unpackage/res/icons/72x72.png",
