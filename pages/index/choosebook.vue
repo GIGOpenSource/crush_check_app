@@ -29,6 +29,11 @@
                 </block>
             </view>
         </view>
+        <!-- <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
+            @close="onadclose" @error="onaderror">
+            <button :disabled="loading" :loading="loading">显示广告</button>
+            <view v-if="error">{{ error }}</view>
+        </ad-rewarded-video> -->
     </view>
 </template>
 
@@ -83,7 +88,7 @@ const choose = (id, index) => {
                 return
             }
             if (data.data.code == 200) {
-                uni.redirectTo({  url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id='+ data.data.data.poster_id })
+                uni.redirectTo({ url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id=' + data.data.data.poster_id })
             } else {
 
             }
@@ -92,6 +97,18 @@ const choose = (id, index) => {
 
 
 }
+ const onAdLoad = (e) => {
+      console.log('广告数据加载成功')
+    }
+
+    const onAdClose = (e) => {
+      const { isEnded } = e.detail
+      console.log('onadclose', isEnded)
+    }
+
+    const onAdError = (e) => {
+      console.log('onaderror:', e.detail)
+    }
 </script>
 
 <style lang="scss" scoped>
