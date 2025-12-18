@@ -56,11 +56,12 @@
                     }
                 },
                 "privacyDescription" : {
-                    "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便为你编辑用户信息",
-                    "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便为你编辑用户信息",
-                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你拍摄上传头像信息",
-                    "NSLocationWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息"
+                    "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
+                    "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
+                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你通过拍摄方式直接获取社交平台截图，无需先保存至相册即可完成上传操作，提升服务使用的便捷性。相机权限仅在你主动触发拍摄功能时启用，拍摄内容仅用于本次分析服务，不会进行额外留存。",
+                    "NSLocationWhenInUseUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。",
+                    "NSLocationAlwaysUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。"
                 }
             },
             /* SDK配置 */
