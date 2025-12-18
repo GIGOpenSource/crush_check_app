@@ -56,9 +56,11 @@
                     }
                 },
                 "privacyDescription" : {
-                    "NSPhotoLibraryUsageDescription" : "应用希望访问您的相册",
-                    "NSPhotoLibraryAddUsageDescription" : "应用希望访问您的相册",
-                    "NSCameraUsageDescription" : "应用希望开启您的摄像头"
+                    "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便为你编辑用户信息",
+                    "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便为你编辑用户信息",
+                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你拍摄上传头像信息",
+                    "NSLocationWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "该应用需要你的地理位置，以便为你提供当前位置信息"
                 }
             },
             /* SDK配置 */
