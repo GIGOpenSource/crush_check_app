@@ -236,7 +236,8 @@ export default {
     emptyMessage: 'まだ何もありません。今すぐテストに行きましょう',
     goToTest: 'テストに行く',
     answerBook: '答えの本',
-    crushCheck: 'クラッシュチェック'
+    crushCheck: 'クラッシュチェック',
+    noDataToManage: '操作可能なデータがありません'
   },
   index: {
     crushCheck: 'クラッシュチェック',

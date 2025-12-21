@@ -539,7 +539,7 @@ export default {
 				})
         return;
       }
-
+      
       try {
         // 获取产品列表
         const res = await getProductsList();
@@ -596,7 +596,12 @@ export default {
                 // 获取支付参数
                 const paymentData =
                   prepayRes.data?.data || prepayRes.data || prepayRes;
+                     uni.showToast({
+                title: '解锁成功',
+                icon: "none",
+              });
                 await this.refreshUserInfo(); 
+     
                 // const {
                 //   appId,
                 //   noncestr,
@@ -893,6 +898,7 @@ export default {
       //   });
       //   return;
       // }
+    
       this.handleUnlockClick();
     },
     ensureShare() {
@@ -1596,7 +1602,7 @@ width: 44rpx;
   transform: translateY(-50%);
   // width: 100rpx;
   // min-height: 70rpx;
-  width: 130rpx;
+  width: 160rpx;
   border-radius: 46rpx;
   border: none;
   background: linear-gradient(90deg, #9159e1 1%, #6341e2 100%);

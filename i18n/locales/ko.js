@@ -236,7 +236,8 @@ export default {
     emptyMessage: '아직 아무것도 없습니다. 지금 테스트하러 가세요',
     goToTest: '테스트하러 가기',
     answerBook: '답변의 책',
-    crushCheck: '크러시 체크'
+    crushCheck: '크러시 체크',
+    noDataToManage: '관리할 데이터가 없습니다'
   },
   index: {
     crushCheck: '크러시 체크',

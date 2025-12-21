@@ -236,7 +236,8 @@ export default {
     emptyMessage: 'Nothing here yet, go test now',
     goToTest: 'Go Test',
     answerBook: 'Book of Answers',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    noDataToManage: 'No data available to manage'
   },
   index: {
     crushCheck: 'CrushCheck',

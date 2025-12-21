@@ -283,6 +283,19 @@ export default {
         console.log("========== 页面触底事件 ==========");
         this.loadMore();
     },
+    onShow() {
+        // 每次页面显示时刷新数据（包括从其他页面返回）
+        // 检查登录状态
+        const token = uni.getStorageSync("token");
+        const userInfo = uni.getStorageSync("userInfo");
+        if (!token || !userInfo) {
+            this.posterList = [];
+            this.hasMore = false;
+            return;
+        }
+        // 刷新海报列表，就像下拉刷新一样
+        this.fetchPosterList(true);
+    },
 
     methods: {
         path() {
@@ -739,6 +752,24 @@ export default {
             this.selectedCount = this.posterList.filter((p) => p.isActive).length;
         },
         enterManageMode() {
+            // 检查登录状态
+            const token = uni.getStorageSync("token");
+            const userInfo = uni.getStorageSync("userInfo");
+            const isLoggedIn = !!(token && userInfo);
+            
+            // 检查是否有数据
+            const hasData = this.posterList && this.posterList.length > 0;
+            
+            // 如果没有登录或者没有数据，提示用户
+            if (!isLoggedIn || !hasData) {
+                uni.showToast({
+                    title: this.$t('poster.noDataToManage'),
+                    icon: 'none',
+                    duration: 2000
+                });
+                return;
+            }
+            
             this.isType = false;
             this.isSelectAll = false; // 重置全选状态
             this.wasSelectAll = false; // 重置全选标志

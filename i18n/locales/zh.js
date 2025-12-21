@@ -170,7 +170,7 @@ export default {
     aboutUs: '关于我们',
     monthlyCard: '月卡',
     //  renew: '续费,
-    renew: '续期',
+    renew: '解锁会员',
     unlock: '解锁',
     times: '次',
     congratulations: '恭喜您',
@@ -178,7 +178,10 @@ export default {
     rewardMessagePrefix: '已获得',
     rewardMessageMiddle: '次高级报告，您本月还有',
     rewardMessageSuffix: '次高级报告',
-    noExpire: '暂无到期'
+    noExpire: '暂无到期',
+    unlockSuccessTitle: '解锁成功',
+    unlockSuccessMessage: '恭喜您成功解锁会员！',
+    unlockSuccessConfirm: '知道了'
   },
   poster: {
     title: '历史海报',
@@ -237,7 +240,8 @@ export default {
     emptyMessage: '目前什么都没有，快去测试吧',
     goToTest: '去测试',
     answerBook: '答案之书',
-    crushCheck: '鉴渣'
+    crushCheck: '鉴渣',
+    noDataToManage: '暂无可操作数据'
   },
   index: {
     crushCheck: '鉴渣',
