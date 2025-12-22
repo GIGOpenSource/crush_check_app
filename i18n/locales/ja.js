@@ -356,7 +356,7 @@ export default {
     backToModify: '質問を修正に戻る',
     tellTA: 'TAに伝える',
     askAgain: 'もう一度質問する',
-    aiAnalysis: 'AI分析',
+    aiAnalysis: 'システム分析',
     aiAnalyzing: '生成中',
     thinkQuestion: '心の中で質問を静かに考えてください',
     clickBook: 'その後、本を開くためにクリックしてください',

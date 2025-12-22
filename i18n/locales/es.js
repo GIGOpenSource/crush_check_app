@@ -356,7 +356,7 @@ export default {
     backToModify: 'Volver a Modificar Pregunta',
     tellTA: 'Decirle a TA',
     askAgain: 'Preguntar de Nuevo',
-    aiAnalysis: 'Análisis IA',
+    aiAnalysis: 'Análisis del sistema',
     aiAnalyzing: 'Generando...',
     thinkQuestion: 'Piensa en silencio tu pregunta',
     clickBook: 'Luego haz clic para abrir el libro',

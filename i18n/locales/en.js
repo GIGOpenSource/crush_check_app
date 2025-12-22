@@ -356,7 +356,7 @@ export default {
     backToModify: 'Back to Modify Question',
     tellTA: 'Tell TA',
     askAgain: 'Ask Again',
-    aiAnalysis: 'AI Analysis',
+    aiAnalysis: 'System Analysis',
     aiAnalyzing: 'Generating...',
     thinkQuestion: 'Silently think about your question',
     clickBook: 'Then click to flip the book',

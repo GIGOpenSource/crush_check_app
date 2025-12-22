@@ -356,7 +356,7 @@ export default {
     backToModify: '返回修改问题',
     tellTA: '告诉TA',
     askAgain: '再次提问',
-    aiAnalysis: 'AI分析',
+    aiAnalysis: '系统分析',
     aiAnalyzing: '生成中',
     thinkQuestion: '在心中默念你的问题',
     clickBook: '然后点击翻书',
