@@ -227,7 +227,9 @@ export function getRechargeList(currentPage = 1, pageSize = 20) {
  * @returns {Promise}
  */
 export function getSystemContent(type = "") {
-  const params = {};
+  const params = {
+      platform:'ios'
+  };
   if (type) {
     params.type = type;
   }
