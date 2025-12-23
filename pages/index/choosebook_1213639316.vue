@@ -41,8 +41,10 @@
         <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
             <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
                 @close="onadclose" @error="onaderror">
-                <button :disabled="loading" :loading="loading" class="ad-button">观看广告</button>
+                <button :disabled="loading" :loading="loading" class="ad-button">打开广告</button>
+                <view ></view>
                 <view v-if="error" class="ad-error">{{ error }}</view>
+                <view v-else class="ad-text">观看完成请点击关闭按钮</view>
             </ad-rewarded-video>
         </view>
 
@@ -304,15 +306,20 @@ const pay = () => {
 }
 
 .ad-button {
-    width: 300rpx;
+    width: 700rpx;
     height: 80rpx;
     background: #007AFF;
     color: #ffffff;
     border-radius: 10rpx;
     border: none;
     font-size: 32rpx;
+    margin-top: 200rpx;
 }
-
+.ad-text{
+    color: #fff;
+    margin-top: 20rpx;
+    margin-left: 30rpx;
+}
 .ad-error {
     color: #ff3b30;
     font-size: 24rpx;

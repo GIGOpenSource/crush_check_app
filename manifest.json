@@ -69,14 +69,14 @@
                 "provider" : "wxf72d316417b6767f"
             }
         },
-        "uniAD" : {
-            "version" : "1.1.0",
-            "provider" : "wxf72d316417b6767f"
-        },
-        "adcore" : {
-            "version" : "1.1.0",
-            "provider" : "wxe6129e9cc9619c07"
-        },
+        // "uniAD" : {
+        //     "version" : "1.1.0",
+        //     "provider" : "wxf72d316417b6767f"
+        // },
+        // "adcore" : {
+        //     "version" : "1.1.0",
+        //     "provider" : "wxe6129e9cc9619c07"
+        // },
         "requiredBackgroundModes" : [ "audio" ], // 激励视频需要
         "setting" : {
             "urlCheck" : false,
