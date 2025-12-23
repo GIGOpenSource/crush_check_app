@@ -41,7 +41,7 @@
     </view>
 
     <!-- 高级报告模块 -->
-    <view class="vip-module">
+    <view class="vip-module" v-if="version == 2">
       <view class="vip-content">
         <text class="vip-tag">CrashCheck· VIP · {{ $t('my.monthlyCard') }}</text>
         <view v-if="userInfo.is_vip" class="vip-header vip-header--member">
