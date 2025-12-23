@@ -378,7 +378,7 @@ const onaderror = (e) => {
     }
 }
 const adLock = () => {
-    createOrder({
+    advOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),
         productId: mouth.value.id,
@@ -403,20 +403,20 @@ const adLock = () => {
 }
 
 .ad-button {
-    width: 700rpx;
+    width: 600rpx;
     height: 80rpx;
     background: #007AFF;
     color: #ffffff;
     border-radius: 10rpx;
     border: none;
     font-size: 32rpx;
-    margin-top: 200rpx;
+    margin-top: 250rpx;
 }
 
 .ad-text {
     color: #fff;
     margin-top: 20rpx;
-    margin-left: 30rpx;
+    margin-left: 100rpx;
 }
 
 .ad-error {
@@ -656,4 +656,10 @@ const adLock = () => {
         }
     }
 }
+</style>
+<style>
+
+    .u-popup__content{
+        background: transparent !important;
+    }
 </style>

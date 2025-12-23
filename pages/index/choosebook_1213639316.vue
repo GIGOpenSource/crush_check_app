@@ -30,7 +30,7 @@
                 <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
                 <view class="title1">今日免费次数已用完</view>
                 <view class="del-popup-actions">
-                    <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
+                    <view @click="pay">{{ mouth.price }}{{ t('index.perMonth') }} {{ t('index.openNow') }}</view>
                     <view @click="watchAdInPopup">看广告免费解锁本次</view>
                 </view>
                 <view class="icon" @click="showDelPopup2 = false">
@@ -305,19 +305,18 @@ const pay = () => {
 }
 
 .ad-button {
-    width: 700rpx;
+    width: 600rpx;
     height: 80rpx;
     background: #007AFF;
     color: #ffffff;
     border-radius: 10rpx;
     border: none;
     font-size: 32rpx;
-    margin-top: 200rpx;
+    margin-top: 250rpx;
 }
 .ad-text{
     color: #fff;
     margin-top: 20rpx;
-    margin-left: 30rpx;
 }
 .ad-error {
     color: #ff3b30;
@@ -335,7 +334,7 @@ const pay = () => {
     box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
     text-align: center;
     color: #000;
-
+   
     .del-popup-icon {
         position: absolute;
         top: -90rpx;
@@ -348,7 +347,8 @@ const pay = () => {
     .title1 {
         color: #000;
         margin-top: -50rpx;
-        font-size: 34rpx;
+        font-size: 30rpx;
+        font-weight: 400;
     }
 
     .num {
@@ -359,6 +359,7 @@ const pay = () => {
     .del-popup-actions {
         margin-top: 40rpx;
         color: #fff;
+        font-size: 30rpx;
 
         view {
             background: #b370ff;
@@ -495,4 +496,10 @@ const pay = () => {
         }
     }
 }
+</style>
+<style>
+
+    .u-popup__content{
+        background: transparent !important;
+    }
 </style>
