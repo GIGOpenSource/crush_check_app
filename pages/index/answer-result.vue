@@ -50,9 +50,10 @@
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-            <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
+            <view class="title">解锁答案分析</view>
             <view class="del-popup-actions">
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
+                <view>看广告免费解锁本次</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
