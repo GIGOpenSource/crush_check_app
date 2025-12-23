@@ -32,6 +32,11 @@ export const createOrder = (params) => {
 	return postRequest('/wechat/getPrepayId',params)
 }
 
+//解锁广告订单
+export const advOrder = (params) => {
+	return postRequest('/adv/getPrepayId',params)
+}
+
 //分享
 export const share = (params) => {
 	return postRequest('/wechat/updateShare',params)

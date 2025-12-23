@@ -1,5 +1,5 @@
 <template>
-    <view class="page">
+    <view class="page" v-if="!showAdInPopup && !pageReady">
         <!-- 自定义导航栏 -->
         <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
             <view class="navbar-content">
@@ -53,20 +53,28 @@
             <view class="title">解锁答案分析</view>
             <view class="del-popup-actions">
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
-                <view>看广告免费解锁本次</view>
+                <view @click="watchAdInPopup">看广告免费解锁本次</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
             </view>
         </view>
     </up-popup>
+    <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
+        <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
+            @close="onadclose" @error="onaderror">
+            <button :disabled="loading" :loading="loading" class="ad-button">打开广告</button>
+            <view v-if="error" class="ad-error">{{ error }}</view>
+            <view v-else class="ad-text">观看完成请点击关闭按钮</view>
+        </ad-rewarded-video>
+    </view>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-import { getAnswerbook, getPosterDetails, getProducts, createOrder, freeReport } from '@/api/index.js';
+import { getAnswerbook, getPosterDetails, getProducts, createOrder, freeReport, advOrder } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { host } from '@/config/config.js';
@@ -83,6 +91,10 @@ const progressTimer = ref(null)
 const mouth = ref({})
 const showDelPopup2 = ref(false)
 const userinfo = ref({ allow_count: 0 })
+const showAdInPopup = ref(false) // 弹窗内是否显示广告
+const pendingChooseParams = ref(null) // 存储待执行的choose参数
+const pageReady = ref(false)
+const showAd = ref(false)
 const viplist = computed(() => [
     t('index.vipFeature1'),
     t('index.vipFeature2'),
@@ -162,7 +174,7 @@ const save = () => {
             if (res.statusCode === 200) {
                 wx.showShareImageMenu({
                     path: res.tempFilePath,
-					entrancePath: `/pages/index/index`,
+                    entrancePath: `/pages/index/index`,
                     complete: (res) => {
                         if (res.errMsg == 'showShareImageMenu:fail cancel') {
                             // share_fail()
@@ -278,7 +290,6 @@ const submit = () => {
         }
     })
 }
-
 const handleProgressClose = () => {
     // 清除进度条定时器
     if (progressTimer.value) {
@@ -288,12 +299,9 @@ const handleProgressClose = () => {
     showProgress.value = false
     progress.value = 0
 }
-
-
-
 // 支付
 const pay = () => {
-    console.log(isdetails.value,'isdetails.valueisdetails.value')
+    console.log(isdetails.value, 'isdetails.valueisdetails.value')
     createOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),
@@ -325,6 +333,65 @@ const pay = () => {
         })
     })
 }
+
+const onadload = (e) => {
+    console.log(e, 'eee')
+    console.log('广告数据加载成功')
+}
+const watchAdInPopup = () => {
+    showAdInPopup.value = true
+    pageReady.value = true
+    showDelPopup2.value = false
+    setTimeout(() => {
+        showAd.value = true
+        console.log('弹窗内广告组件已准备')
+    }, 100)
+}
+const onadclose = (e) => {
+    const detail = e.detail
+    // 用户点击了【关闭广告】按钮
+    if (detail && detail.isEnded) {
+        // 正常播放结束，允许继续操作
+        console.log("广告播放完成");
+        showAd.value = false
+        showAdInPopup.value = false
+        showDelPopup2.value = false
+        pageReady.value = false
+        adLock()
+            pendingChooseParams.value = null
+    } else {
+        // 播放中途退出，不执行操作
+        console.log("广告播放中断");
+        showAd.value = false
+        showAdInPopup.value = false
+        showDelPopup2.value = false
+        pageReady.value = false
+        pendingChooseParams.value = null
+    }
+}
+
+const onaderror = (e) => {
+    console.log('onaderror:', e.detail)
+    // 如果广告加载失败，隐藏广告组件避免持续报错
+    if (e.detail && e.detail.errMsg && e.detail.errMsg.includes('parent')) {
+        showAd.value = false
+    }
+}
+const adLock = () => {
+    createOrder({
+        description: mouth.value.description,
+        openId: uni.getStorageSync('openId'),
+        productId: mouth.value.id,
+        posterId: details.value.poster_id
+    })
+        .then(res => {
+            showDelPopup2.value = false
+            submit()
+        })
+        .catch(err => {
+            showDelPopup2.value = false
+        })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -333,6 +400,29 @@ const pay = () => {
     background: #12111f;
     font-weight: 100 !important;
     overflow: hidden;
+}
+
+.ad-button {
+    width: 700rpx;
+    height: 80rpx;
+    background: #007AFF;
+    color: #ffffff;
+    border-radius: 10rpx;
+    border: none;
+    font-size: 32rpx;
+    margin-top: 200rpx;
+}
+
+.ad-text {
+    color: #fff;
+    margin-top: 20rpx;
+    margin-left: 30rpx;
+}
+
+.ad-error {
+    color: #ff3b30;
+    font-size: 24rpx;
+    margin-top: 20rpx;
 }
 
 .custom-navbar {

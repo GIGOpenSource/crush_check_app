@@ -42,7 +42,6 @@
             <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
                 @close="onadclose" @error="onaderror">
                 <button :disabled="loading" :loading="loading" class="ad-button">打开广告</button>
-                <view ></view>
                 <view v-if="error" class="ad-error">{{ error }}</view>
                 <view v-else class="ad-text">观看完成请点击关闭按钮</view>
             </ad-rewarded-video>
@@ -209,7 +208,7 @@ const executeChoose = (id, index, isFromAd = false) => {
                 return
             }
             if (data.data.code == 200) {
-                uni.redirectTo({ url: '/pages/index/answer-result?id=' + id + '&url=' + data.data.data.image_url + '&parent_id=' + data.data.data.poster_id })
+                uni.redirectTo({ url: '/pages/index/answer-result_1213639316?id=' + id + '&url=' + data.data.data.image_url + '&parent_id=' + data.data.data.poster_id })
             } else {
 
             }
