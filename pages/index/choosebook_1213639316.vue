@@ -248,6 +248,8 @@ const onadclose = (e) => {
         console.log("广告播放中断");
         showAd.value = false
         showAdInPopup.value = false
+        showDelPopup2.value = false
+        pageReady.value = false
         pendingChooseParams.value = null
     }
 }
