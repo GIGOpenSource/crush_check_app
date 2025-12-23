@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5 personas',
     historyPoster: 'Pósters Históricos',
     commonFunctions: 'Funciones Comunes',
-    rechargeHistory: 'Historial de Recarga',
+    rechargeHistory: 'Historial de Desbloqueo',
     share: 'Compartir con Amigos',
     settings: 'Configuración',
     inviteRecord: 'Registro de Invitaciones',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: 'Desbloquear Pase Mensual para Informes Premium Ilimitados'
   },
   recharge: {
-    title: 'Historial de Recarga',
-    emptyText: 'Sin registros de recarga',
+    title: 'Historial de Desbloqueo',
+    emptyText: 'Sin registros de desbloqueo',
     loading: 'Cargando...',
     noMore: 'No hay más'
   },

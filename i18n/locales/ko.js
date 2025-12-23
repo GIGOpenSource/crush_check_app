@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5명',
     historyPoster: '히스토리 포스터',
     commonFunctions: '일반 기능',
-    rechargeHistory: '충전 내역',
+    rechargeHistory: '잠금 해제 내역',
     share: '친구와 공유',
     settings: '설정',
     inviteRecord: '초대 기록',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: '월간 패스 무제한 고급 보고서 잠금 해제'
   },
   recharge: {
-    title: '충전 내역',
-    emptyText: '충전 기록 없음',
+    title: '잠금 해제 내역',
+    emptyText: '잠금 해제 기록 없음',
     loading: '로딩 중...',
     noMore: '더 이상 없음'
   },

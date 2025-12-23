@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5人',
     historyPoster: '历史海报',
     commonFunctions: '常用功能',
-    rechargeHistory: '历史充值记录',
+    rechargeHistory: '历史解锁记录',
     share: '分享给好友',
     settings: '设置',
     inviteRecord: '邀请记录',
@@ -325,8 +325,8 @@ export default {
     unlockMonthlyUnlimited: '解锁月卡无限高级报告'
   },
   recharge: {
-    title: '历史充值记录',
-    emptyText: '暂无充值记录',
+    title: '历史解锁记录',
+    emptyText: '暂无解锁记录',
     loading: '加载中...',
     noMore: '没有更多了'
   },

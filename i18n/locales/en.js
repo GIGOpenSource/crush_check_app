@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5 people',
     historyPoster: 'History Posters',
     commonFunctions: 'Common Functions',
-    rechargeHistory: 'Recharge History',
+    rechargeHistory: 'Unlock History',
     share: 'Share with Friends',
     settings: 'Settings',
     inviteRecord: 'Invite Record',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: 'Unlock Monthly Pass for Unlimited Premium Reports'
   },
   recharge: {
-    title: 'Recharge History',
-    emptyText: 'No recharge records',
+    title: 'Unlock History',
+    emptyText: 'No unlock records',
     loading: 'Loading...',
     noMore: 'No more'
   },

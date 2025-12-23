@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5人',
     historyPoster: '履歴ポスター',
     commonFunctions: '一般的な機能',
-    rechargeHistory: 'チャージ履歴',
+    rechargeHistory: 'アンロック履歴',
     share: '友達と共有',
     settings: '設定',
     inviteRecord: '招待記録',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: '月間パス無制限プレミアムレポート解除'
   },
   recharge: {
-    title: 'チャージ履歴',
-    emptyText: 'チャージ記録なし',
+    title: 'アンロック履歴',
+    emptyText: 'アンロック記録なし',
     loading: '読み込み中...',
     noMore: 'これ以上ありません'
   },

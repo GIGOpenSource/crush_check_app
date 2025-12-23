@@ -165,9 +165,9 @@ export default {
   onLoad() {
     // 设置导航栏标题
     uni.setNavigationBarTitle({
-      title: this.$t('recharge.title') || '历史充值记录'
+      title: this.$t('recharge.title') || '历史解锁记录'
     });
-    this.pageName = this.$t('recharge.title') || '历史充值记录';
+    this.pageName = this.$t('recharge.title') || '历史解锁记录';
     this.fetchRechargeList();
   },
   onPullDownRefresh() {
