@@ -29,7 +29,7 @@
         </view>
     </view>
 
-    <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
+    <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125" round="20">
         <template #content>
             <view class="content">
                 <view class="num">{{ t('index.analyzingPercent') }} {{ progress }}{{ t('index.analyzingPercentUnit') }}
@@ -533,7 +533,9 @@ const adLock = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-
+	background: #fff;
+	overflow: hidden;
+    border-radius: 20rpx;
     .num {
         font-size: 26rpx;
         margin: 20rpx 0;
