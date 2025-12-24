@@ -41,7 +41,7 @@
     </view>
 
     <!-- 高级报告模块 -->
-    <view class="vip-module" v-if="version == 2">
+    <view class="vip-module">
       <view class="vip-content">
         <text class="vip-tag">CrashCheck· VIP · {{ $t('my.monthlyCard') }}</text>
         <view v-if="userInfo.is_vip" class="vip-header vip-header--member">
@@ -65,7 +65,7 @@
     </view>
 
     <!-- 邀请新伙伴 -->
-    <view class="invite-module" v-if="version == 2">
+    <view class="invite-module" >
       <image class="invite-icon" src="/static/my/yaoqing.png" mode="aspectFit"></image>
       <view class="invite-info">
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
@@ -211,7 +211,7 @@ import {
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
-const version = uni.getStorageSync('version')
+import { ref } from 'vue'
 export default {
   components: {
     IndexProup
@@ -258,9 +258,9 @@ export default {
   onShow() {
      this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
-      // { label: this.$t('my.share'), type: "share" },
+      { label: this.$t('my.share'), type: "share" },
       { label: this.$t('my.settings'), type: "settings" },
-      // { label: this.$t('my.inviteRecord'), type: "invite", url: "/pages/my/invite" },
+      { label: this.$t('my.inviteRecord'), type: "invite", url: "/pages/my/invite" },
       { label: this.$t('language.title'), type: "language", url: "/pages/my/lauage" },
     ]
     this.pageName = this.$t('my.title');

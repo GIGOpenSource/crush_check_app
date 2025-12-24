@@ -390,13 +390,12 @@ export function reGeneratePoster(posterId, showLoading = true) {
   );
 }
 
-export function iosLogin(code, inviter_openid) {
-  const params = { code };
+export function iosLogin(params, inviter_openid) {
   if (inviter_openid) {
-    params.inviter_openid = inviter_openid;
+    params.inviter_apple_id = inviter_openid;
   }
   return postRequest(
-    "/mock/login",
+    "/ios/login",
     params,
     {
       header: {

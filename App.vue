@@ -31,7 +31,8 @@ const params = ref({
 	pageName: '首页'
 })
 onShow(() => {
-	getSystemContent({}).then(res => {
+	getSystemContent().then(res => {
+		console.log(res.data[0].version,'res.data[0].version')
 		 uni.setStorageSync('version',res.data[0].version)
 	})
 	app_show()

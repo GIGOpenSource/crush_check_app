@@ -9,19 +9,29 @@
 
 			<view class="app-desc">{{ $t('login.appDesc') }}</view>
 
-			<!-- 一键登录按钮 -->
-			<view class="login-button-wrapper" v-if="!isAgreed" @click.stop="checkDisabled">
+			<!-- apk一键登录按钮 -->
+			<view class="login-button-wrapper" v-if="!isAgreed && systemInfo !== 'ios'" @click.stop="checkDisabled">
 				<view class="login-button" :class="{ disabled: true }">
 					<text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
 				</view>
 			</view>
 
-			<button @click="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed" hover-class="none">
+			<button @click="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed && systemInfo !== 'ios'" hover-class="none">
 				<view class="login-button">
 					<text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
 				</view>
 			</button>
-
+           
+		   <!-- 苹果登录 -->
+		   <view class="iosLogin chooseapple" v-if="!isAgreed && systemInfo == 'ios'" @click.stop="checkDisabled">
+		   			   <image src="/static/my/no-Apple.png" mode=""></image>
+		   	    <text>通过 Apple 登录</text>
+		   </view>
+		   <view class="iosLogin"  v-if="isAgreed && systemInfo == 'ios'" @click="onGetPhoneNumber">
+			   <image src="/static/my/yes-Apple.png" mode=""></image>
+		   	    <text>通过 Apple 登录</text>
+		   </view>
+		  
 			<!-- 协议同意区域 -->
 			<view class="agreement-section">
 				<view class="agreement-checkbox" @click="toggleAgreement">
@@ -65,6 +75,7 @@ export default {
 	mixins: [pageStayMixin],
 	data() {
 		return {
+			systemInfo:uni.getSystemInfoSync().platform,
 			pageName: '',
 			isAgreed: false,
 			phoneCode: "", // 保存手机号授权的code
@@ -103,7 +114,22 @@ export default {
 		clickLogin() {
 			const systemInfo = uni.getSystemInfoSync();
 			if (systemInfo.platform === 'ios') {
-				this.loginWithCode(systemInfo.deviceId, {});
+				uni.login({
+				    provider: 'apple',
+				    success: (loginRes)=> {
+				        // 登录成功
+				        uni.getUserInfo({
+				            provider: 'apple',
+				            success: (info) => {
+								console.log(info,'infoRes.')
+								this.loginWithCode(info.userInfo,{});
+				            }
+				        })
+				    },
+				    fail:  (err) =>{
+				       
+				    }
+				});
 				return
 			}
 			uni.login({
@@ -113,7 +139,7 @@ export default {
 					uni.getUserInfo({
 						provider: 'weixin',
 						success: (infoRes) => {
-							this.loginWithCode(res.authResult, infoRes.userInfo);
+							this.loginWithCode(infoRes.authResult, infoRes.userInfo);
 						}
 					})
 				},
@@ -133,7 +159,14 @@ export default {
 				const systemInfo = uni.getSystemInfoSync();
 				let res = {}
 				if (systemInfo.platform === 'ios') {
-					res = await iosLogin(message, inviterOpenId)
+				let params = {
+					authorizationCode:message.authorizationCode,
+					username:message.fullName.familyName + message.fullName.giveName,
+					identityToken:message.identityToken,
+					openId:message.openId
+				}
+				console.log(params,'params')
+					res = await iosLogin(params, inviterOpenId)
 				} else {
 					let params = {
 						refresh_token: message.refresh_token,
@@ -280,7 +313,28 @@ page {
 	background: #1d182e;
 	height: 100vh;
 }
-
+.iosLogin{
+	width: 360rpx;
+	height: 80rpx;
+	border-radius: 12rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	color: #000;
+	font-weight: bold;
+	margin-bottom: 40rpx;
+	image{
+		width: 35rpx;
+		height: 35rpx;
+		margin-right: 20rpx;
+	}
+	
+}
+.chooseapple{
+	background: #000;
+	color: #fff;
+}
 /* 核心：去除默认样式 */
 button {
 	/* 重置背景和边框 */

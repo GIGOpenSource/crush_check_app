@@ -18,7 +18,9 @@
         },
         /* 模块配置 */
         "modules" : {
-            "Camera" : {}
+            "Camera" : {},
+            "OAuth" : {},
+            "Share" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -52,10 +54,30 @@
                     "NSLocationWhenInUseUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。",
                     "NSLocationAlwaysAndWhenInUseUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。",
                     "NSLocationAlwaysUsageDescription" : "该应用需要获取你的IP地址，以便我们识别你的大致地域信息，用于优化服务响应速度、匹配区域相关服务配置及保障账号登录安全。我们仅收集IP地址对应的地域标识信息，不会将其与你的个人身份信息进行关联存储，且会采取加密措施保护相关数据。"
+                },
+                "capabilities" : {
+                    "entitlements" : {
+                        "com.apple.developer.associated-domains" : [ "applinks:www.crashcheck.net" ]
+                    }
                 }
             },
             /* SDK配置 */
-            "sdkConfigs" : {},
+            "sdkConfigs" : {
+                "oauth" : {
+                    "apple" : {},
+                    "weixin" : {
+                        "appid" : "wxa1b9e2d76d5a2ca8",
+                        "UniversalLinks" : "https://www.crashcheck.net/uni-universallinks/__UNI__52A3010/"
+                    }
+                },
+                "payment" : {},
+                "share" : {
+                    "weixin" : {
+                        "appid" : "wxa1b9e2d76d5a2ca8",
+                        "UniversalLinks" : "https://www.crashcheck.net/uni-universallinks/__UNI__52A3010/"
+                    }
+                }
+            },
             "icons" : {
                 "android" : {
                     "hdpi" : "unpackage/res/icons/72x72.png",
