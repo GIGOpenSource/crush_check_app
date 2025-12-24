@@ -57,7 +57,7 @@ import {
 } from '@/config/config.js'
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getProducts, createOrder } from '@/api/index.js';
+import { getProducts, createOrder ,getCard} from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 const { t } = useI18n();
 const list = ref([]);
@@ -80,27 +80,11 @@ try {
     console.error('解析用户信息失败:', e)
 }
 
-// 获取今天的日期字符串
-const getTodayKey = () => {
-    const today = new Date()
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+const getTodayFreeCount = async () => {
+    let res  = await getCard()
+     return res.data.used_count
 }
 
-// 获取今天已使用的免费次数
-const getTodayFreeCount = () => {
-    const todayKey = getTodayKey()
-    const countKey = `answerBook_free_count_${todayKey}`
-    const count = uni.getStorageSync(countKey) || 0
-    return parseInt(count)
-}
-
-// 增加今天已使用的免费次数
-const incrementTodayFreeCount = () => {
-    const todayKey = getTodayKey()
-    const countKey = `answerBook_free_count_${todayKey}`
-    const currentCount = getTodayFreeCount()
-    uni.setStorageSync(countKey, currentCount + 1)
-}
 
 // 获取最新的用户信息
 const getLatestUserInfo = () => {
@@ -116,18 +100,13 @@ const getLatestUserInfo = () => {
 }
 
 // 检查是否需要看广告
-const needWatchAd = () => {
-    // 获取最新的用户信息
+const needWatchAd = async () => {
     const latestUserInfo = getLatestUserInfo()
-    // 如果是VIP，不需要看广告
     if (latestUserInfo && latestUserInfo.is_vip) {
-        console.log('VIP用户，不需要看广告')
         return false
     }
-    // 普通用户每天免费3次，等于或超过3次需要看广告
-    const todayCount = getTodayFreeCount()
+    const todayCount = await getTodayFreeCount()
     const needAd = todayCount >= 3
-    console.log('检查是否需要看广告:', { todayCount, needAd })
     return needAd
 }
 
@@ -153,43 +132,18 @@ const back = () => {
     uni.navigateBack()
 }
 const choose = (id, index) => {
-    // 获取最新的用户信息
-    const latestUserInfo = getLatestUserInfo()
-    const todayCount = getTodayFreeCount()
-
-    console.log('choose 被调用:', { id, index, isVip: latestUserInfo?.is_vip, todayCount })
-
-    // 判断是否需要看广告
-    // 1. 如果是VIP用户，不需要看广告
-    // 2. 如果是普通用户，检查今天已使用的免费次数
-    // 3. 普通用户每天免费3次，等于或超过3次需要看广告
     if (needWatchAd()) {
-        console.log('需要看广告，显示解锁弹窗')
-        // 需要看广告：显示解锁弹窗
         pendingChooseParams.value = { id, index }
         showDelPopup2.value = true
         return
     }
-
-    console.log('不需要看广告，直接执行')
-    // 不需要看广告（VIP用户或普通用户免费次数未满），直接执行
     executeChoose(id, index)
 }
-
 
 
 // 执行选择操作
 const executeChoose = (id, index, isFromAd = false) => {
     list.value[index].show = true
-
-    // 获取最新的用户信息
-    const latestUserInfo = getLatestUserInfo()
-    // 如果是普通用户且不是通过广告使用，增加免费次数
-    // 通过广告使用的不计入免费次数
-    if ((!latestUserInfo || !latestUserInfo.is_vip) && !isFromAd) {
-        incrementTodayFreeCount()
-    }
-
     let params = { answerId: id, user_question: uni.getStorageSync('question') }
     uni.request({
         url: host + '/answerbook/generate_image/',
