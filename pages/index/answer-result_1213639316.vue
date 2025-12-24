@@ -188,6 +188,7 @@ const save = () => {
     })
 }
 const aidetails = () => {
+    console.log(details.value.deepimages,'details.value.deepimages')
     if (details.value.deepimages) {
         status.value = 2
         showDelPopup2.value = false
