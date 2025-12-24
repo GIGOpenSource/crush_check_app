@@ -367,5 +367,11 @@ export default {
     pleaseInputQuestion: 'Please enter your question',
     unlockAnalysis: 'You need to pay to unlock this analysis',
     payNow: 'CNY/time Pay Now'
+  },
+  choosebook: {
+    noFreeTimes: "Today's free attempts are used up",
+    watchAdUnlock: "Watch ad to unlock this time for free",
+    openAd: "Open Ad",
+    adFinishTip: "After watching, please click the close button"
   }
 }

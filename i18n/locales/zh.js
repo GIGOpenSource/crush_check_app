@@ -367,5 +367,11 @@ export default {
     pleaseInputQuestion: '请输入你的问题',
     unlockAnalysis: '您需要付费来解锁本次分析',
     payNow: '元/次 立即支付'
+  },
+  choosebook: {
+    noFreeTimes: '今日免费次数已用完',
+    watchAdUnlock: '看广告免费解锁本次',
+    openAd: '打开广告',
+    adFinishTip: '观看完成请点击关闭按钮'
   }
 }

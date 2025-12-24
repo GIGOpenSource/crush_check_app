@@ -367,6 +367,12 @@ export default {
     pleaseInputQuestion: '질문을 입력해주세요',
     unlockAnalysis: '이 분석을 잠금 해제하려면 결제가 필요합니다',
     payNow: '위안/회 지금 결제'
+  },
+  choosebook: {
+    noFreeTimes: '오늘의 무료 기회가 모두 소진되었습니다',
+    watchAdUnlock: '광고를 보고 이번을 무료로 해제',
+    openAd: '광고 열기',
+    adFinishTip: '시청 후 닫기 버튼을 클릭하세요'
   }
 }
 

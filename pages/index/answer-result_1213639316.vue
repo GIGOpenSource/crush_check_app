@@ -50,10 +50,10 @@
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-            <view class="title">解锁答案分析</view>
+            <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
             <view class="del-popup-actions">
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
-                <view @click="watchAdInPopup">看广告免费解锁本次</view>
+                <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
@@ -63,9 +63,9 @@
     <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
         <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
             @close="onadclose" @error="onaderror">
-            <button :disabled="loading" :loading="loading" class="ad-button">打开广告</button>
+            <button :disabled="loading" :loading="loading" class="ad-button">{{ t('answerBook.openAd') }}</button>
             <view v-if="error" class="ad-error">{{ error }}</view>
-            <view v-else class="ad-text">观看完成请点击关闭按钮</view>
+            <view v-else class="ad-text">{{ t('answerBook.adFinishTip') }}</view>
         </ad-rewarded-video>
     </view>
 </template>

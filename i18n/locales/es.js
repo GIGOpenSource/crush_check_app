@@ -367,5 +367,11 @@ export default {
     pleaseInputQuestion: 'Por favor ingresa tu pregunta',
     unlockAnalysis: 'Necesitas pagar para desbloquear este análisis',
     payNow: 'CNY/vez Pagar Ahora'
+  },
+  choosebook: {
+    noFreeTimes: 'Se han agotado los intentos gratuitos de hoy',
+    watchAdUnlock: 'Ver anuncio para desbloquear gratis esta vez',
+    openAd: 'Abrir anuncio',
+    adFinishTip: 'Después de ver, haz clic en el botón de cerrar'
   }
 }

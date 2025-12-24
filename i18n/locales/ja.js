@@ -367,6 +367,12 @@ export default {
     pleaseInputQuestion: '質問を入力してください',
     unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
     payNow: '元/回 今すぐ支払う'
+  },
+  choosebook: {
+    noFreeTimes: '本日の無料回数は使い切りました',
+    watchAdUnlock: '広告を見て今回を無料で解除',
+    openAd: '広告を開く',
+    adFinishTip: '視聴後、閉じるボタンをクリックしてください'
   }
 }
 
