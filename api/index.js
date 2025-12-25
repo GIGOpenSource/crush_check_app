@@ -67,5 +67,11 @@ export const getAi = (params) => {
 	return getRequest(`/answerbook/generate_answer_deep_image/`, params)
 }
 
+//获取次数
+export const getCard = (params) => {
+	return getRequest(`/answerbook/flip_card/`, params)
+}
+
+
 
 

@@ -590,7 +590,7 @@ export default {
                         });
                     } else {
                           uni.navigateTo({
-                            url: '/pages/index/answer-result?id='+item.id +'&details='+true,
+                            url: '/pages/index/answer-result_1213639316?id='+item.id +'&details='+true,
                             fail: (err) => {
                                 console.error("跳转失败:", err);
                                 uni.showToast({

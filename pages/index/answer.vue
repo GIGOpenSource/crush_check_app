@@ -76,7 +76,7 @@ const path = () => {
     }
     uni.setStorageSync('question', value1.value.trim());
     uni.navigateTo({
-        url: '/pages/index/choosebook'
+        url: '/pages/index/choosebook_1213639316'
     });
 };
 </script>
