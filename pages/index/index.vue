@@ -13,8 +13,11 @@
 		</view>
 		<view class="bottom">
 			<view class="left" @click="path('/pages/index/answer')">
-				<view><view>{{ t('index.answer') }}</view><view>{{ t('index.book') }}</view></view>
-				<image :src="$getImg('index/answer')" mode="widthFix"/>
+				<view>
+					<view>{{ t('index.answer') }}</view>
+					<view>{{ t('index.book') }}</view>
+				</view>
+				<image :src="$getImg('index/answer')" mode="widthFix" />
 			</view>
 			<view class="right">
 				<view>{{ t('index.moreFeatures') }}</view>
@@ -26,13 +29,34 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-
+import {
+	onLoad
+} from '@dcloudio/uni-app'
+import {
+	share
+} from '@/api/index.js'
 const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
-  uni.navigateTo({url})
+	uni.navigateTo({ url })
 }
+onLoad((e) => {
+	if (e.scene) {
+		uni.setStorageSync("inviter_openid", e.scene);
+		if (!uni.getStorageSync('token')) {
+			uni.navigateTo({
+				url: "/pages/login/login"
+			})
+			return
+		}
+		share({
+			shareId: e.scene,
+		}).then((res) => {
+			console.log(res, "share record");
+		});
+	}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -93,11 +117,13 @@ const path = (url) => {
 		justify-content: center;
 		height: 230rpx;
 	}
-	.left{
-        font-weight: 500 !important;
+
+	.left {
+		font-weight: 500 !important;
 	}
-	.right{
-		
+
+	.right {
+
 		flex-direction: column;
 		font-weight: 100;
 		letter-spacing: 2rpx;
