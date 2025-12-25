@@ -1,11 +1,13 @@
 <template>
     <view class="page">
-        <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }" v-if="!showAdInPopup && !pageReady">
+        <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }"
+            v-if="!showAdInPopup && !pageReady">
             <view class="navbar-content">
                 <view class="navbar-title">{{ t('answerBook.title') }}</view>
             </view>
         </view>
-        <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }" v-if="!showAdInPopup && !pageReady">
+        <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }"
+            v-if="!showAdInPopup && !pageReady">
             <view class="top" @click="back()">
                 <up-icon name="arrow-left" color="#ffffff" size="24"></up-icon>
                 <text>{{ t('answerBook.backToModify') }}</text>
@@ -57,7 +59,7 @@ import {
 } from '@/config/config.js'
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getProducts, createOrder ,getCard} from '@/api/index.js';
+import { getProducts, createOrder, getCard } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 const { t } = useI18n();
 const list = ref([]);
@@ -81,8 +83,8 @@ try {
 }
 
 const getTodayFreeCount = async () => {
-    let res  = await getCard()
-     return res.data.used_count
+    let res = await getCard()
+    return res.data.used_count
 }
 
 
@@ -230,12 +232,23 @@ const pay = () => {
             "package": `${res.data.prepayid}`,
             "nonceStr": res.data.noncestr,
             success(res) {
-                uni.showToast({
+             
+                getUserInfo(openId).then(userRes => {
+                    if (userRes.code === 200 || userRes.code === 201) {
+                        if (userRes.data) {
+                            uni.setStorageSync('userInfo', JSON.stringify(userRes
+                                .data))
+                            console.log('用户信息更新成功', userRes.data)
+                        }
+                    }
+                }).catch(err => {
+                    console.log('获取用户信息失败', err)
+                })
+                   uni.showToast({
                     title: t('proPoster.paySuccess'),
                     icon: 'none'
                 })
                 showDelPopup2.value = false
-                submit()
 
             },
             fail(e) {
@@ -268,10 +281,12 @@ const pay = () => {
     font-size: 32rpx;
     margin-top: 250rpx;
 }
-.ad-text{
+
+.ad-text {
     color: #fff;
     margin-top: 20rpx;
 }
+
 .ad-error {
     color: #ff3b30;
     font-size: 24rpx;
@@ -288,7 +303,7 @@ const pay = () => {
     box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
     text-align: center;
     color: #000;
-   
+
     .del-popup-icon {
         position: absolute;
         top: -90rpx;
@@ -452,8 +467,7 @@ const pay = () => {
 }
 </style>
 <style>
-
-    .u-popup__content{
-        background: transparent !important;
-    }
+.u-popup__content {
+    background: transparent !important;
+}
 </style>
