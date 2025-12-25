@@ -71,7 +71,7 @@
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
         <text class="invite-subtitle">{{ inviteProgressText }}</text>
       </view>
-      <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''" @click="handleInviteClick">
+      <button class="invite-action" hover-class="none"  @click="handleInviteClick">
         {{ $t('my.invite') }}
       </button>
     </view>
@@ -120,7 +120,7 @@
       <view class="functions-card">
         <view class="function-list">
           <template v-for="(item, index) in functionList" :key="index">
-            <button v-if="item.type === 'share'" class="function-item share-button" :open-type="isLoggedIn ? 'share' : ''" hover-class="none"
+            <button v-if="item.type === 'share'" class="function-item share-button"  hover-class="none"
               @click="ensureShare">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
@@ -881,6 +881,20 @@ export default {
         });
         return;
       }
+	  const inviterOpenId = uni.getStorageSync("openId") || "";
+	  const query = `?scene=${inviterOpenId}`
+	  uni.shareWithSystem({
+	  	type:'image',
+	  	summary: '邀请好友一起来测测自己渣不渣',
+	  	href: `https://crashcheck.net/h5/${query}`,
+	  	imageUrl:'/static/index/yq.png',
+	  	success: (res) => {
+	  		console.log(res, 'ress')
+	  	},
+	  	fail: (err) => {
+	  		console.log(err, 'rrr')
+	  	}
+	  })
     },
     handleUnlockCardClick() {
       if (!this.isLoggedIn) {
@@ -902,17 +916,7 @@ export default {
       this.handleUnlockClick();
     },
     ensureShare() {
-      if (!this.isLoggedIn) {
-      uni.navigateTo({
-					url: "/pages/login/login"
-				})
-        return;
-      }
-      // #ifdef MP-WEIXIN
-      uni.showShareMenu({
-        withShareTicket: true,
-      });
-      // #endif
+     this.handleInviteClick()
     },
     async handlePublicFollow() {
       try {

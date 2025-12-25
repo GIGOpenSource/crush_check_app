@@ -93,7 +93,7 @@ export default {
     unknownType: 'Tipo desconhecido',
     done: 'Concluído',
     deleted: 'Excluído',
-    currencyUnit: 'CNY'
+    currencyUnit: 'CNY/vez'
   },
   language: {
     title: 'Configurações de Idioma',
@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5 pessoas',
     historyPoster: 'Pôsteres Históricos',
     commonFunctions: 'Funções Comuns',
-    rechargeHistory: 'Histórico de Desbloqueio',
+    rechargeHistory: 'Histórico de recargas',
     share: 'Compartilhar com Amigos',
     settings: 'Configurações',
     inviteRecord: 'Registro de Convites',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: 'Desbloquear Passe Mensal para Relatórios Premium Ilimitados'
   },
   recharge: {
-    title: 'Histórico de Desbloqueio',
-    emptyText: 'Sem registros de desbloqueio',
+    title: 'Histórico de recargas',
+    emptyText: 'Sem registros de recarga',
     loading: 'Carregando...',
     noMore: 'Não há mais'
   },

@@ -12,8 +12,7 @@
 				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view> -->
 				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.openMember') }}</view> -->
-					<!-- {{ once.price }} {{ $t('common.currencyUnit') }} -->
-				<view class="btn" @click="pay(2)"> {{
+				<view class="btn" @click="pay(2)"> {{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
 				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
 					hover-class="none" @click="invitefriend" v-if="version == 2">{{
@@ -125,7 +124,7 @@ const formatDateTime = (date = new Date()) => {
 }
 const params = ref({
 	userId: JSON.parse(uni.getStorageSync('userInfo')).id || '',
-	appVersion:  "1.0.0",
+	appVersion: "1.0.0",
 	eventTime: formatDateTime(),
 	pageName: ''
 })
@@ -291,35 +290,35 @@ const pay = (type) => {
 		openId: uni.getStorageSync('openId'),
 		posterId: details.value.id
 	}).then(res => {
-			// uni.showToast({
-			// 		title: t('proPoster.paySuccess'),
-			// 		icon: 'success'
-			// 	})
-				pay_success()
-				status.value = 2
-				show.value = false
-				showDelPopup2.value = false
-				//重新调用一下用户信息接口 还得需要存本地
-				if (type == 1) {
-					const openId = uni.getStorageSync('openId')
-					if (openId) {
-						getUserInfo(openId).then(userRes => {
-							if (userRes.code === 200 || userRes.code === 201) {
-								if (userRes.data) {
-									uni.setStorageSync('userInfo', JSON.stringify(userRes
-										.data))
-									console.log('用户信息更新成功', userRes.data)
-								}
-							}
-						}).catch(err => {
-							console.log('获取用户信息失败', err)
-						})
+		// uni.showToast({
+		// 		title: t('proPoster.paySuccess'),
+		// 		icon: 'success'
+		// 	})
+		pay_success()
+		status.value = 2
+		show.value = false
+		showDelPopup2.value = false
+		//重新调用一下用户信息接口 还得需要存本地
+		if (type == 1) {
+			const openId = uni.getStorageSync('openId')
+			if (openId) {
+				getUserInfo(openId).then(userRes => {
+					if (userRes.code === 200 || userRes.code === 201) {
+						if (userRes.data) {
+							uni.setStorageSync('userInfo', JSON.stringify(userRes
+								.data))
+							console.log('用户信息更新成功', userRes.data)
+						}
 					}
-				}
-				getPosterDetails(id.value).then(res => {
-					console.log(res.data, 'rrrrr')
-					details.value = res.data
+				}).catch(err => {
+					console.log('获取用户信息失败', err)
 				})
+			}
+		}
+		getPosterDetails(id.value).then(res => {
+			console.log(res.data, 'rrrrr')
+			details.value = res.data
+		})
 		// uni.requestPayment({
 		// 	"provider": "wxpay",
 		// 	...res.data,
@@ -367,9 +366,9 @@ const pay = (type) => {
 		// })
 
 	})
-	.catch(err => {
-		pay_fail()
-	})
+		.catch(err => {
+			pay_fail()
+		})
 }
 const share = () => {
 	click_share()
@@ -379,15 +378,16 @@ const share = () => {
 			if (res.statusCode === 200) {
 				const inviterOpenId = uni.getStorageSync("openId") || "";
 				const query = `?scene=${inviterOpenId}`
-				wx.showShareImageMenu({
-					path: res.tempFilePath,
-					entrancePath: `/pages/index/index${query}`,
-					complete: (res) => {
-						if (res.errMsg == 'showShareImageMenu:fail cancel') {
-							share_fail()
-						} else {
-							share_success()
-						}
+				uni.shareWithSystem({
+					type: 'image',
+					summary: '邀请好友一起来测测自己渣不渣',
+					href: `https://crashcheck.net/h5/${query}`,
+					imageUrl: res.tempFilePath,
+					success: (res) => {
+						console.log(res, 'ress')
+					},
+					fail: (err) => {
+						console.log(err, 'rrr')
 					}
 				})
 			}

@@ -16,14 +16,11 @@
         <view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <image :src="status == 1 ? details.image_url : details.deepimages" />
             <view class="btns" v-if="status == 1">
-               <!-- <view class="btn1">
+                <view class="btn1">
                     <view @click="save">{{ t('answerBook.tellTA') }}</view>
                     <view @click="again">{{ t('answerBook.askAgain') }}</view>
-                </view> -->
-				<view class="btn2" @click="again">
-				   {{ t('answerBook.askAgain') }}
-				 </view>
-				 <view style="height: 30rpx;"></view>
+                </view>
+                <view style="height: 30rpx;"></view>
                 <view class="btn2" :class="{ 'btn-disabled': details.children_status === 'waiting' }"
                     @click="aidetails">
                     {{ details.children_status === 'waiting' ? t('answerBook.aiAnalyzing') : t('answerBook.aiAnalysis')
@@ -54,11 +51,9 @@
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-            <!-- <view class="title">{{ t('answerBook.unlockAnalysis') }}</view> -->
-			<view class="title">{{ t('my.unlock') }}{{ t('answerBook.aiAnalysis') }}</view>
+            <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
             <view class="del-popup-actions">
-                <!-- <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view> -->
-				<view @click="pay">{{ t('my.unlock') }}</view>
+                <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
@@ -160,26 +155,41 @@ const again = () => {
     uni.reLaunch({ url: '/pages/index/answer' })
 }
 const save = () => {
-	uni.removeStorageSync('question')
-	uni.reLaunch({ url: '/pages/index/answer' })
-    return
+//     uni.share({
+// 	provider: "weixin",
+// 	scene: "WXSceneTimeline",
+// 	type: 1,
+// 	summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
+// 	success: function (res) {
+// 		console.log("success:" + JSON.stringify(res));
+// 	},
+// 	fail: function (err) {
+// 		console.log("fail:" + JSON.stringify(err));
+// 	}
+// });
+//     return
     uni.downloadFile({
         url: details.value.image_url,
         success: (res) => {
             if (res.statusCode === 200) {
-                wx.showShareImageMenu({
-                    path: res.tempFilePath,
-                    complete: (res) => {
-                        if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                            // share_fail()
-                        } else {
-                            // share_success()
-                        }
+                const inviterOpenId = uni.getStorageSync("openId") || "";
+                const query = `?scene=${inviterOpenId}`
+                uni.shareWithSystem({
+                    type: 'image',
+                    summary: '邀请好友一起来测测自己渣不渣',
+                    href: `https://crashcheck.net/h5/${query}`,
+                    imageUrl: res.tempFilePath,
+                    success: (res) => {
+                        console.log(res, 'ress')
+                    },
+                    fail: (err) => {
+                        console.log(err, 'rrr')
                     }
                 })
             }
         }
     })
+
 }
 const aidetails = () => {
     if (details.value.deepimages) {

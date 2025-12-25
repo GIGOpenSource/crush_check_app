@@ -93,7 +93,7 @@ export default {
     unknownType: '不明なタイプ',
     done: '完了',
     deleted: '削除されました',
-    currencyUnit: '元'
+    currencyUnit: '元/回'
   },
   language: {
     title: '言語設定',
@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5人',
     historyPoster: '履歴ポスター',
     commonFunctions: '一般的な機能',
-    rechargeHistory: 'アンロック履歴',
+    rechargeHistory: 'チャージ履歴',
     share: '友達と共有',
     settings: '設定',
     inviteRecord: '招待記録',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: '月間パス無制限プレミアムレポート解除'
   },
   recharge: {
-    title: 'アンロック履歴',
-    emptyText: 'アンロック記録なし',
+    title: 'チャージ履歴',
+    emptyText: 'チャージ履歴がありません',
     loading: '読み込み中...',
     noMore: 'これ以上ありません'
   },

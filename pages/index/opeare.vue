@@ -144,7 +144,7 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-					<view class="bottom" @click="pay">{{ $t('my.unlock') }}</view>
+					<view class="bottom" @click="pay">{{mouth.price}} {{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view>
 				</view>
 			</view>
 		</up-popup>
@@ -262,19 +262,7 @@
 		t('index.vipFeature4'),
 		t('index.vipFeature5')
 	])
-	// #ifdef MP-WEIXIN
-	onShareAppMessage((res) => {
-		click_invite()
-		const inviterOpenId = uni.getStorageSync("openId") || "";
-		const query = `?scene=${inviterOpenId}`
-		return {
-			title: t('index.shareTitle'), // 分享标题
-			path: `/pages/index/index${query}`, // 分享路径携带个人ID
-			imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
-		};
-	})
-	// #endif
-
+    
 	const welcomeIndex = ref(0)
 	const handleWelcomeNext = () => {
 		if (welcomeIndex.value < welcomeSlides.value.length - 1) {
@@ -398,6 +386,9 @@
 		uni.setStorageSync('first', 'false')
 		welecome.value = false
 	}
+	const a = () => {
+
+	}
 	const handleInviteClick = () => {
 		if (!token.value) {
 			uni.navigateTo({
@@ -407,25 +398,18 @@
 		}
 		const inviterOpenId = uni.getStorageSync("openId") || "";
 		const query = `?scene=${inviterOpenId}`
-		// uni.shareWithSystem({
-		// 	summary: '邀请好友一起来测测自己渣不渣',
-		// 	href: `https://crashcheck.net/h5/${query}`,
-		// 	success: (res) => {
-		// 		console.log(res, 'ress')
-		// 	},
-		// 	fail: (err) => {
-		// 		console.log(err, 'rrr')
-		// 	}
-		// })
-		uni.share({ provider: 'weixin', 
-		scene: 'WXSceneSession', 
-		type: 0, 
-		href: `https://crashcheck.net/h5/${query}`,
-		title:'CrushCheck', 
-		summary: '邀请好友一起来测测自己渣不渣',
-		imageUrl:'/static/index/yq.png'
+		uni.shareWithSystem({
+			type:'image',
+			summary: '邀请好友一起来测测自己渣不渣',
+			href: `https://crashcheck.net/h5/${query}`,
+			imageUrl:'/static/index/yq.png',
+			success: (res) => {
+				console.log(res, 'ress')
+			},
+			fail: (err) => {
+				console.log(err, 'rrr')
+			}
 		})
-
 	}
 	const vipprice = () => {
 		getProducts().then(res => {

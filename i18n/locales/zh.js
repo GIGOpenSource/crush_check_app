@@ -93,7 +93,7 @@ export default {
     unknownType: '未知类型',
     done: '完成',
     deleted: '已删除',
-    currencyUnit: '元'
+    currencyUnit: '元/次'
   },
   language: {
     title: '语言设置',
@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5人',
     historyPoster: '历史海报',
     commonFunctions: '常用功能',
-    rechargeHistory: '历史解锁记录',
+    rechargeHistory: '历史充值记录',
     share: '分享给好友',
     settings: '设置',
     inviteRecord: '邀请记录',
@@ -169,8 +169,7 @@ export default {
     userAgreement: '用户协议',
     aboutUs: '关于我们',
     monthlyCard: '月卡',
-    //  renew: '续费,
-    renew: '解锁会员',
+     renew: '续费',
     unlock: '解锁',
     times: '次',
     congratulations: '恭喜您',
@@ -325,10 +324,10 @@ export default {
     unlockMonthlyUnlimited: '解锁月卡无限高级报告'
   },
   recharge: {
-    title: '历史解锁记录',
-    emptyText: '暂无解锁记录',
+    title: '历史充值记录',
+    emptyText: '暂无充值记录',
     loading: '加载中...',
-    noMore: '没有更多了'
+noMore: '没有更多了'
   },
   invite: {
     title: '邀请记录',

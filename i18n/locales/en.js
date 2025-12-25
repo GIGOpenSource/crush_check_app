@@ -93,7 +93,7 @@ export default {
     unknownType: 'Unknown type',
     done: 'Done',
     deleted: 'Deleted',
-    currencyUnit: 'CNY'
+    currencyUnit: 'CNY/time'
   },
   language: {
     title: 'Language Settings',
@@ -131,7 +131,7 @@ export default {
     inviteProgressUnit: '/5 people',
     historyPoster: 'History Posters',
     commonFunctions: 'Common Functions',
-    rechargeHistory: 'Unlock History',
+    rechargeHistory: 'Recharge History',
     share: 'Share with Friends',
     settings: 'Settings',
     inviteRecord: 'Invite Record',
@@ -321,8 +321,8 @@ export default {
     unlockMonthlyUnlimited: 'Unlock Monthly Pass for Unlimited Premium Reports'
   },
   recharge: {
-    title: 'Unlock History',
-    emptyText: 'No unlock records',
+    title: 'Recharge History',
+    emptyText: 'No recharge records',
     loading: 'Loading...',
     noMore: 'No more'
   },
