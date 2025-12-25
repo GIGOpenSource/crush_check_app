@@ -44,7 +44,8 @@
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
-                "abiFilters" : [ "x86" ]
+                "abiFilters" : [ "x86" ],
+                "schemes" : "crushcheck"
             },
             /* ios打包配置 */
             "ios" : {

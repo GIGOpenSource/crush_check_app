@@ -13,8 +13,11 @@
 		</view>
 		<view class="bottom">
 			<view class="left" @click="path('/pages/index/answer')">
-				<view><view>{{ t('index.answer') }}</view><view>{{ t('index.book') }}</view></view>
-				<image :src="$getImg('index/answer')" mode="widthFix"/>
+				<view>
+					<view>{{ t('index.answer') }}</view>
+					<view>{{ t('index.book') }}</view>
+				</view>
+				<image :src="$getImg('index/answer')" mode="widthFix" />
 			</view>
 			<view class="right">
 				<view>{{ t('index.moreFeatures') }}</view>
@@ -26,13 +29,59 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
-
+import {
+	onLaunch, onShow
+} from '@dcloudio/uni-app'
+import {
+	share
+} from '@/api/index.js'
 const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
-  uni.navigateTo({url})
+	uni.navigateTo({ url })
 }
+const handleScheme = (options) => {
+	let url = options && (options.path || options.query?.url || options.url);
+	if (url && url.startsWith('crushcheck://')) {
+		const schemeUrl = url.replace('crushcheck://', '');
+		const [pagePath, queryString] = schemeUrl.split('?');
+		let targetUrl = '/' + pagePath;
+		let scene = '';
+		if (queryString) {
+			targetUrl += '?' + queryString;
+			const params = new URLSearchParams(queryString);
+			scene = params.get('scene');
+		}
+		if (["/pages/index/index", "/pages/my/my", "/pages/test/test"].includes(targetUrl.split('?')[0])) {
+			uni.switchTab({ url: targetUrl });
+		} else {
+			uni.reLaunch({ url: targetUrl });
+		}
+		if (scene) {
+			invite(scene);
+		}
+	}
+}
+// 修改 invite 为接收 scene 参数
+const invite = (scene)  => {
+	if (scene) {
+		uni.setStorageSync("inviter_openid", scene);
+		if (!uni.getStorageSync('token')) {
+			uni.navigateTo({ url: "/pages/login/login" });
+			return;
+		}
+		share({ shareId: scene }).then((res) => {
+			console.log(res, "share record");
+		});
+	}
+}
+onLaunch((options) => {
+	handleScheme(options);
+});
+onShow((options) => {
+	handleScheme(options);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -93,11 +142,13 @@ const path = (url) => {
 		justify-content: center;
 		height: 230rpx;
 	}
-	.left{
-        font-weight: 500 !important;
+
+	.left {
+		font-weight: 500 !important;
 	}
-	.right{
-		
+
+	.right {
+
 		flex-direction: column;
 		font-weight: 100;
 		letter-spacing: 2rpx;
