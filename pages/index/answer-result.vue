@@ -155,37 +155,25 @@ const again = () => {
     uni.reLaunch({ url: '/pages/index/answer' })
 }
 const save = () => {
-//     uni.share({
-// 	provider: "weixin",
-// 	scene: "WXSceneTimeline",
-// 	type: 1,
-// 	summary: "我正在使用HBuilderX开发uni-app，赶紧跟我一起来体验！",
-// 	success: function (res) {
-// 		console.log("success:" + JSON.stringify(res));
-// 	},
-// 	fail: function (err) {
-// 		console.log("fail:" + JSON.stringify(err));
-// 	}
-// });
-//     return
     uni.downloadFile({
         url: details.value.image_url,
         success: (res) => {
             if (res.statusCode === 200) {
                 const inviterOpenId = uni.getStorageSync("openId") || "";
                 const query = `?scene=${inviterOpenId}`
-                uni.shareWithSystem({
-                    type: 'image',
-                    summary: '邀请好友一起来测测自己渣不渣',
-                    href: `https://crashcheck.net/h5/${query}`,
-                    imageUrl: res.tempFilePath,
-                    success: (res) => {
-                        console.log(res, 'ress')
-                    },
-                    fail: (err) => {
-                        console.log(err, 'rrr')
-                    }
-                })
+                uni.share({
+					provider: "weixin",
+					scene: "WXSceneSession",
+					type: 2,
+					href: `https://crashcheck.net/h5/${query}`,
+					imageUrl: res.tempFilePath,
+					success: function (res) {
+						console.log("success:" + JSON.stringify(res));
+					},
+					fail: function (err) {
+						console.log("fail:" + JSON.stringify(err));
+					}
+				});
             }
         }
     })

@@ -1,11 +1,14 @@
 {
-    "applinks": {
-        "apps": [],
-        "details": [
-            {
-                "appID":"5MT8Y9JXX7",
-                "paths": [ "*"]
-            }
-        ]
-    }
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "5MT8Y9JXX7.com.gig.crushcheck", // 例如：86SXXXXXX.com.xxx.app
+        "paths": [ "/app/*", "*" ] // 匹配路径，* 表示该域名下所有路径都生效
+      }
+    ]
+  },
+  "wechatUniversalLink": {
+    "apps": [ "wx60d3d2dd02186017" ] // 例如：wx1234567890abcdef
+  }
 }

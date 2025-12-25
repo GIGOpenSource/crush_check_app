@@ -20,8 +20,8 @@
               :placeholder="$t('my.nickname')" @blur="onNicknameBlur" @confirm="onNicknameConfirm" />
             <view class="gender-section">
               <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
-                :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')"
-                @change="handleGenderChange" @tap.stop @click.stop>
+                :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')" @change="handleGenderChange"
+                @tap.stop @click.stop>
                 <view class="gender-picker">
                   <text class="gender-text">{{
                     userInfo.user_gender !== null &&
@@ -65,13 +65,13 @@
     </view>
 
     <!-- 邀请新伙伴 -->
-    <view class="invite-module" >
+    <view class="invite-module">
       <image class="invite-icon" src="/static/my/yaoqing.png" mode="aspectFit"></image>
       <view class="invite-info">
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
         <text class="invite-subtitle">{{ inviteProgressText }}</text>
       </view>
-      <button class="invite-action" hover-class="none"  @click="handleInviteClick">
+      <button class="invite-action" hover-class="none" @click="handleInviteClick">
         {{ $t('my.invite') }}
       </button>
     </view>
@@ -120,7 +120,7 @@
       <view class="functions-card">
         <view class="function-list">
           <template v-for="(item, index) in functionList" :key="index">
-            <button v-if="item.type === 'share'" class="function-item share-button"  hover-class="none"
+            <button v-if="item.type === 'share'" class="function-item share-button" hover-class="none"
               @click="ensureShare">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
@@ -253,10 +253,10 @@ export default {
     };
   },
   onLoad() {
-   
+
   },
   onShow() {
-     this.functionList = [
+    this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
       { label: this.$t('my.share'), type: "share" },
       { label: this.$t('my.settings'), type: "settings" },
@@ -347,12 +347,12 @@ export default {
   onShareAppMessage(res) {
     const inviterOpenId =
       this.userInfo.open_id || uni.getStorageSync("openId") || "";
-      const query = `?scene=${inviterOpenId}`
-   return {
-		title: t('index.shareTitle'), // 分享标题
-		path: `/pages/index/index${query}`, // 分享路径携带个人ID
-		imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
-	};
+    const query = `?scene=${inviterOpenId}`
+    return {
+      title: t('index.shareTitle'), // 分享标题
+      path: `/pages/index/index${query}`, // 分享路径携带个人ID
+      imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
+    };
   },
   // #endif
   methods: {
@@ -520,9 +520,9 @@ export default {
 
       if (!this.isLoggedIn) {
         // 跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
       } else {
         // 可以跳转到个人资料编辑页面
         // uni.navigateTo({
@@ -534,12 +534,12 @@ export default {
       // 处理解锁按钮点击
       if (!this.isLoggedIn) {
         // 未登录，跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
         return;
       }
-      
+
       try {
         // 获取产品列表
         const res = await getProductsList();
@@ -596,12 +596,12 @@ export default {
                 // 获取支付参数
                 const paymentData =
                   prepayRes.data?.data || prepayRes.data || prepayRes;
-                     uni.showToast({
-                title: '解锁成功',
-                icon: "none",
-              });
-                await this.refreshUserInfo(); 
-     
+                uni.showToast({
+                  title: '解锁成功',
+                  icon: "none",
+                });
+                await this.refreshUserInfo();
+
                 // const {
                 //   appId,
                 //   noncestr,
@@ -629,8 +629,8 @@ export default {
                 // 调起微信支付（V3版本）
                 // #ifdef MP-WEIXIN
                 // 保存 this 引用，避免回调中 this 丢失
-        
-                   _this.refreshUserInfo();
+
+                _this.refreshUserInfo();
                 return
                 const _this = this;
                 // uni.requestPayment({
@@ -712,7 +712,7 @@ export default {
     handleHistoryClick() {
       // 处理历史海报点击
       console.log("查看历史海报");
-      
+
       // 检查登录状态，如果未登录则跳转到登录页面
       if (!this.isLoggedIn) {
         uni.navigateTo({
@@ -720,7 +720,7 @@ export default {
         });
         return;
       }
-      
+
       uni.navigateTo({
         url: "/pages/my/poster",
       });
@@ -753,7 +753,7 @@ export default {
         });
         return;
       }
-      
+
       // 如果状态是已完成，跳转到详情页
       if (item.status === "done") {
         if (item.id) {
@@ -821,7 +821,7 @@ export default {
     handleFunctionClick(item) {
       // 处理功能项点击
       console.log("点击功能:", item);
-      
+
       switch (item.type) {
         case "language":
           // 跳转到语言设置页面（不需要登录）
@@ -881,20 +881,23 @@ export default {
         });
         return;
       }
-	  const inviterOpenId = uni.getStorageSync("openId") || "";
-	  const query = `?scene=${inviterOpenId}`
-	  uni.shareWithSystem({
-	  	type:'image',
-	  	summary: '邀请好友一起来测测自己渣不渣',
-	  	href: `https://crashcheck.net/h5/${query}`,
-	  	imageUrl:'/static/index/yq.png',
-	  	success: (res) => {
-	  		console.log(res, 'ress')
-	  	},
-	  	fail: (err) => {
-	  		console.log(err, 'rrr')
-	  	}
-	  })
+      const inviterOpenId = uni.getStorageSync("openId") || "";
+      const query = `?scene=${inviterOpenId}`
+      uni.share({
+        provider: "weixin",
+        scene: "WXSceneSession",
+        type: 0,
+        title: "CrushCheck",
+        summary: '邀请好友一起来测测自己渣不渣',
+        href: `https://crashcheck.net/h5/${query}`,
+        imageUrl: '/static/index/yq.png',
+        success: function (res) {
+          console.log("success:" + JSON.stringify(res));
+        },
+        fail: function (err) {
+          console.log("fail:" + JSON.stringify(err));
+        }
+      });
     },
     handleUnlockCardClick() {
       if (!this.isLoggedIn) {
@@ -912,11 +915,11 @@ export default {
       //   });
       //   return;
       // }
-    
+
       this.handleUnlockClick();
     },
     ensureShare() {
-     this.handleInviteClick()
+      this.handleInviteClick()
     },
     async handlePublicFollow() {
       try {
@@ -1570,7 +1573,7 @@ page {
 }
 
 .vip-title-icon {
-width: 44rpx;
+  width: 44rpx;
   height: 36rpx;
   margin-left: 20rpx;
 }
@@ -2109,7 +2112,7 @@ width: 44rpx;
   color: #a0a0a0;
   margin-top: 15rpx;
   width: 90%;
-		text-align: center;
+  text-align: center;
 }
 
 .qr-code-popup {
