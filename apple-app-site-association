@@ -9,6 +9,6 @@
     ]
   },
   "wechatUniversalLink": {
-    "apps": [ "wx60d3d2dd02186017" ] // 例如：wx1234567890abcdef
+    "apps": [ "wxa1b9e2d76d5a2ca8" ] // 例如：wx1234567890abcdef
   }
 }

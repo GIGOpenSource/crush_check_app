@@ -207,6 +207,7 @@ import {
   getUserInfo,
   reGeneratePoster,
   getSystemContent,
+  iosPrepayId
 } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
@@ -549,7 +550,7 @@ export default {
           // 从results数组中找到product_type是vip的对象
           const results = res.data?.results || res.data?.data || res.data || [];
           const vipProduct = results.find(
-            (product) => product.product_type === "vip"
+            (product) => product.product_type === "ios_vip"
           );
 
           if (vipProduct) {
@@ -568,7 +569,7 @@ export default {
             }
 
             // 获取产品ID和描述
-            const productId = vipProduct.id || vipProduct.product_id;
+            const productId =vipProduct.id || vipProduct.product_id;
             const description =
               vipProduct.description ||
               vipProduct.name ||
@@ -585,95 +586,73 @@ export default {
 
             // 调用获取预支付ID接口
             try {
-              const prepayRes = await mockPrepayId(
-                description,
-                productId,
-                openId
-              );
-              console.log("获取预支付ID成功", prepayRes);
-
+				console.log(productId,'productId')
+              let prepayRes = {}
+			  const systemInfo = uni.getSystemInfoSync();
+			  if (systemInfo.platform === 'ios'){
+				  // uni.getProductInfo({
+					 //  success:(res) => {
+						//    console.log(res,'rrr')
+					 //  }
+				  // })
+				  // return
+				  prepayRes = await iosPrepayId(
+				    description,
+				    productId,
+				    openId
+				  );
+			  }else{
+				  prepayRes = await mockPrepayId(
+				    description,
+				    productId,
+				    openId
+				  );
+			  }
+			  console.log(prepayRes,'prepayRes')
               if (prepayRes.code === 200 || prepayRes.code === 201) {
                 // 获取支付参数
                 const paymentData =
                   prepayRes.data?.data || prepayRes.data || prepayRes;
-                uni.showToast({
-                  title: '解锁成功',
-                  icon: "none",
-                });
-                await this.refreshUserInfo();
-
-                // const {
-                //   appId,
-                //   noncestr,
-                //   partnerid,
-                //   prepayid,
-                //   paySign,
-                //   timeStamp,
-                // } = paymentData;
-
-                // // 检查必要的支付参数
-                // if (
-                //   !appId ||
-                //   !noncestr ||
-                //   !prepayid ||
-                //   !paySign ||
-                //   !timeStamp
-                // ) {
-                //   uni.showToast({
-                //     title: this.$t('common.payParamsIncomplete'),
-                //     icon: "none",
-                //   });
-                //   return;
-                // }
-
-                // 调起微信支付（V3版本）
-                // #ifdef MP-WEIXIN
-                // 保存 this 引用，避免回调中 this 丢失
-
-                _this.refreshUserInfo();
-                return
+				console.log(prepayRes.data,'rssss')
                 const _this = this;
-                // uni.requestPayment({
-                //   provider: "wxpay",
-                //   appId: appId,
-                //   timeStamp: String(timeStamp),
-                //   nonceStr: noncestr,
-                //   package: prepayid,
-                //   signType: "RSA", // V3版本使用RSA签名
-                //   paySign: paySign,
-                //   success: async (payRes) => {
-                //     console.log("支付成功", payRes);
-                //     uni.showToast({
-                //       title: this.$t('common.paySuccess'),
-                //       icon: "success",
-                //     });
-                //     // 支付成功后刷新用户信息，更新VIP状态
-                //     console.log("开始刷新用户信息...");
-                //     await _this.refreshUserInfo();
-                //   },
-                //   fail: async (payErr) => {
-                //     console.error("支付失败", payErr);
-                //     if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
-                //       uni.showToast({
-                //         title: this.$t('common.payCanceled'),
-                //         icon: "none",
-                //       });
-                //     } else {
-                //       uni.showToast({
-                //         title: payErr.errMsg || this.$t('common.payFailed'),
-                //         icon: "none",
-                //       });
-                //     }
-                //   },
-                // });
-                // #endif
-
-                // #ifndef MP-WEIXIN
-                // uni.showToast({
-                //   title: this.$t('common.wechatPayNotSupported'),
-                //   icon: "none",
-                // });
-                // #endif
+				// _this.getAppleProductInfo()
+				// return
+                uni.requestPayment({
+                provider: 'appleiap',
+                  orderInfo: {
+					  productid:'202512crushcheck_answer_poster',
+					  username:prepayRes.data.username,
+					  quantity:1,
+					  manualFinishTransaction:false,
+					  paymentDiscount:'否',
+					  sandbox: true 
+				  },
+                  success: async (payRes) => {
+                    console.log("支付成功", payRes);
+                    uni.showToast({
+                      title: this.$t('common.paySuccess'),
+                      icon: "success",
+                    });
+                    // 支付成功后刷新用户信息，更新VIP状态
+                    console.log("开始刷新用户信息...");
+                    await _this.refreshUserInfo();
+                  },
+                  fail: async (payErr) => {
+                    console.error("支付失败", payErr);
+                    if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
+                      uni.showToast({
+                        title: this.$t('common.payCanceled'),
+                        icon: "none",
+                      });
+                    } else {
+                      uni.showToast({
+                        title: payErr.errMsg || this.$t('common.payFailed'),
+                        icon: "none",
+                      });
+                    }
+                  },
+                });
+              
               } else {
                 uni.showToast({
                   title:
@@ -709,6 +688,35 @@ export default {
         });
       }
     },
+	 getAppleProductInfo() {
+	      // productId数组：与苹果开发者后台配置的内购项目Product ID完全一致（区分大小写）
+	      const productIdList = ['com.gig.crushcheck']; // 替换为你的实际productId
+	
+	      uni.getProductInfo({
+	        productId: productIdList,
+	        success: (res) => {
+	          console.log('获取苹果内购商品信息成功', res);
+			  
+			  
+			  return
+	          // 过滤有效商品（避免空数据）
+	          const validProductList = res.productInfo || [];
+	          if (validProductList.length === 0) {
+	            uni.showToast({ title: '暂无可用商品', icon: 'none' });
+	            return;
+	          }
+	          // 选择第一个商品发起支付（可根据业务需求选择指定商品）
+	          const targetProduct = validProductList[0];
+	          // 步骤2：传入有效商品信息，发起支付
+	          this.initApplePay(targetProduct);
+	        },
+	        fail: (err) => {
+	          console.error('获取苹果内购商品信息失败', err);
+	          // 失败原因：productId错误、内购配置未开启、设备未登录沙盒账号等
+	          uni.showToast({ title: '商品配置异常，请稍后重试', icon: 'none' });
+	        }
+	      });
+	    },
     handleHistoryClick() {
       // 处理历史海报点击
       console.log("查看历史海报");

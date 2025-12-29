@@ -318,6 +318,25 @@ export function mockPrepayId(description, productId, openId) {
   );
 }
 
+export function iosPrepayId(description, productId, openId) {
+  return postRequest(
+    "/ios/getPrepayId",
+    {
+      description,
+      productId,
+      openId,
+    },
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "处理中...",
+    }
+  );
+}
+
 
 /**
  * 获取邀请记录列表

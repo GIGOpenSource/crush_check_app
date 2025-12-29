@@ -96,7 +96,7 @@ onMounted(() => {
     const pxToRpx = systemInfo.windowWidth / 375 * 2 || 2
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
     getProducts().then(res => {
-        mouth.value = res.data.results.filter(item => item.product_type == 'once')[0]
+        mouth.value = res.data.results.filter(item => item.product_type == 'ios_answer_once')[0]
     })
     // 获取用户信息
     const openId = uni.getStorageSync('openId')

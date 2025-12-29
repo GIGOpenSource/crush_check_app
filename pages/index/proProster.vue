@@ -148,8 +148,8 @@ onLoad((e) => {
 		details.value = res.data
 	})
 	getProducts().then(res => {
-		once.value = res.data.results.filter(item => item.product_type == 'once')[0]
-		mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+		once.value = res.data.results.filter(item => item.product_type == 'ios_crush_once')[0]
+		mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
 	})
 })
 // #ifdef MP-WEIXIN
