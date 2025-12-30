@@ -133,8 +133,8 @@ onMounted(() => {
 const back = () => {
     uni.navigateBack()
 }
-const choose = (id, index) => {
-    if (needWatchAd()) {
+const choose = async (id, index) => {
+    if (await needWatchAd()) {
         pendingChooseParams.value = { id, index }
         showDelPopup2.value = true
         return
