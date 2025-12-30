@@ -601,54 +601,55 @@ export default {
               }
 
               if (prepayRes.code === 200 || prepayRes.code === 201) {
-				  
+
                 // 获取支付参数
                 const paymentData = prepayRes.data?.data || prepayRes.data || prepayRes;
                 const _this = this;
                 if (systemInfo.platform === 'ios') {
-                   plus.payment.getChannels(function (channels) {
-                  let iapChannel = channels.find(c => c.id === 'appleiap');
-                  if (!iapChannel) {
-                    uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
-                    return;
-                  }
-                  iapChannel.requestProduct([paymentData.productid], function (res) {
-                    uni.requestPayment({
-                      provider: 'appleiap',
-                      orderInfo: {
-                        productid: res[0].productid,
-                        quantity: 1,
-                        username: paymentData.username,
-                        manualFinishTransaction: false,
-                        paymentDiscount: '否'
-                      },
-                      success: (e) => {
-						  ios_receipt(e).then(result => {
-							   uni.showToast({
-							     title: _this.$t('proPoster.paySuccess'),
-							     icon: 'none'
-							   });
-							     _this.refreshUserInfo();
-						  })
-						  .catch(err => {
-							  console.log(err,'eee')
-						  })
-                      },
-                      fail: (err) => {
-                        console.log('2222',err)
-                      }
-                    })
+                  plus.payment.getChannels(function (channels) {
+                    let iapChannel = channels.find(c => c.id === 'appleiap');
+                    if (!iapChannel) {
+                      uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                      return;
+                    }
+                    iapChannel.requestProduct([paymentData.productid], function (res) {
+                      uni.requestPayment({
+                        provider: 'appleiap',
+                        orderInfo: {
+                          productid: res[0].productid,
+                          quantity: 1,
+                          username: paymentData.username,
+                          manualFinishTransaction: false,
+                          paymentDiscount: '否'
+                        },
+                        success: (e) => {
+                          e.payment.username = paymentData.username;
+                          ios_receipt(e).then(result => {
+                            uni.showToast({
+                              title: _this.$t('proPoster.paySuccess'),
+                              icon: 'none'
+                            });
+                            _this.refreshUserInfo();
+                          })
+                            .catch(err => {
+                              console.log(err, 'eee')
+                            })
+                        },
+                        fail: (err) => {
+                          console.log('2222', err)
+                        }
+                      })
 
-                  }, function (err) {
-                    console.error('IAP 商品信息获取失败:', err);
-                    uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                    }, function (err) {
+                      console.error('IAP 商品信息获取失败:', err);
+                      uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                    });
+                  }, function (e) {
+                    console.error('获取支付通道失败:', e);
+                    uni.showToast({ title: '支付通道获取失败', icon: 'none' });
                   });
-                }, function (e) {
-                  console.error('获取支付通道失败:', e);
-                  uni.showToast({ title: '支付通道获取失败', icon: 'none' });
-                });
-                }else{
-                    _this.refreshUserInfo();
+                } else {
+                  _this.refreshUserInfo();
                 }
               } else {
                 uni.showToast({

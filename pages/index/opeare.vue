@@ -453,6 +453,7 @@ const pay = () => {
 							paymentDiscount: '否'
 						},
 						success: (e) => {
+							   e.payment.username = paymentData.username;
 							ios_receipt(e).then(res => {
 								 const openId = uni.getStorageSync('openId')
 								 getUserInfo(openId).then(userRes => {
