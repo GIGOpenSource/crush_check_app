@@ -232,7 +232,7 @@ const pay = () => {
             "package": `${res.data.prepayid}`,
             "nonceStr": res.data.noncestr,
             success(res) {
-             
+             const openId = uni.getStorageSync('openId')
                 getUserInfo(openId).then(userRes => {
                     if (userRes.code === 200 || userRes.code === 201) {
                         if (userRes.data) {
