@@ -453,10 +453,10 @@ const pay = () => {
 						},
 						success: (e) => {
 							console.log(e,'eeeee')
-							uni.showToast({
-								title: _this.$t('common.operationSuccess'),
-								icon: "success",
-							});
+							   uni.showToast({
+                                title: t('proPoster.paySuccess'),
+                                icon: 'none'
+                            });
 							pay_success()
 							const openId = uni.getStorageSync('openId')
 							getUserInfo(openId).then(userRes => {
@@ -471,6 +471,12 @@ const pay = () => {
 							}).catch(err => {
 								console.log('获取用户信息失败', err)
 							})
+						},
+						fail:(err)=>{
+							 uni.showToast({
+                                title: t('proPoster.payFailed'),
+                                icon: 'none'
+                            })
 						}
 					})
 

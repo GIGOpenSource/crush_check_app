@@ -239,8 +239,8 @@ const pay = () => {
                         },
                         success: (e) => {
                             uni.showToast({
-                                title: this.$t('common.operationSuccess'),
-                                icon: "success",
+                                title: t('proPoster.paySuccess'),
+                                icon: 'none'
                             });
                             pay_success()
                             const openId = uni.getStorageSync('openId')

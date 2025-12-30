@@ -598,12 +598,13 @@ export default {
                   openId
                 );
               }
-            
+
               if (prepayRes.code === 200 || prepayRes.code === 201) {
                 // 获取支付参数
                 const paymentData = prepayRes.data?.data || prepayRes.data || prepayRes;
                 const _this = this;
-                plus.payment.getChannels(function (channels) {
+                if (systemInfo.platform === 'ios') {
+                   plus.payment.getChannels(function (channels) {
                   let iapChannel = channels.find(c => c.id === 'appleiap');
                   if (!iapChannel) {
                     uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
@@ -620,13 +621,16 @@ export default {
                         paymentDiscount: '否'
                       },
                       success: (e) => {
+                        uni.showToast({
+                          title: _this.$t('proPoster.paySuccess'),
+                          icon: 'none'
+                        });
                         console.log('支付成功:', e);
                         // 支付成功后，刷新用户信息
                         _this.refreshUserInfo();
-                        uni.showToast({
-                          title: _this.$t('common.operationSuccess'),
-                          icon: "success",
-                        });
+                      },
+                      fail: (err) => {
+                        console.log(err, 'rrr')
                       }
                     })
 
@@ -638,6 +642,9 @@ export default {
                   console.error('获取支付通道失败:', e);
                   uni.showToast({ title: '支付通道获取失败', icon: 'none' });
                 });
+                }else{
+                    _this.refreshUserInfo();
+                }
               } else {
                 uni.showToast({
                   title:

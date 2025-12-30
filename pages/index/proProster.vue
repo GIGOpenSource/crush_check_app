@@ -309,13 +309,14 @@ const pay = (type) => {
 							quantity: 1,
 							username: paymentData.username,
 							manualFinishTransaction: false,
-							paymentDiscount: '否'
+							paymentDiscount: '否',
+							out_trade_no:'1111'
 						},
 						success: (e) => {
 							console.log(e, 'eeee')
 							uni.showToast({
-								title: _this.$t('common.operationSuccess'),
-								icon: "success",
+								title: t('proPoster.paySuccess'),
+								icon: 'none'
 							});
 							pay_success()
 							status.value = 2
@@ -338,6 +339,12 @@ const pay = (type) => {
 							}
 							getPosterDetails(id.value).then(res => {
 								details.value = res.data
+							})
+						},
+						fail: (err) => {
+							uni.showToast({
+								title: t('proPoster.payFailed'),
+								icon: 'none'
 							})
 						}
 					})

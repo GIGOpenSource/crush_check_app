@@ -66,7 +66,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-import { getAnswerbook, getPosterDetails, getProducts, mockOrder, freeReport ,iosOrder} from '@/api/index.js';
+import { getAnswerbook, getPosterDetails, getProducts, mockOrder, freeReport, iosOrder } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { host } from '@/config/config.js';
@@ -306,7 +306,7 @@ const pay = () => {
             posterId: details.value.poster_id
         })
             .then(res => {
-                console.log(res.data,'eeee')
+                console.log(res.data, 'eeee')
                 let paymentData = res.data
                 plus.payment.getChannels(function (channels) {
                     let iapChannel = channels.find(c => c.id === 'appleiap');
@@ -326,15 +326,19 @@ const pay = () => {
                             },
                             success: (e) => {
                                 uni.showToast({
-                                    title: _this.$t('common.operationSuccess'),
-                                    icon: "success",
+                                    title: t('proPoster.paySuccess'),
+                                    icon: 'none'
                                 });
                                 showDelPopup2.value = false
                                 submit()
 
                             },
-                            fail:(err) => {
-                                 showDelPopup2.value = false
+                            fail: (err) => {
+                                 uni.showToast({
+                                title: t('proPoster.payFailed'),
+                                icon: 'none'
+                            })
+                                showDelPopup2.value = false
                             }
                         })
 
