@@ -209,6 +209,7 @@ import {
   getSystemContent,
   iosPrepayId
 } from "@/api/login.js";
+import { ios_receipt } from '@/api/index.js'
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
@@ -600,6 +601,7 @@ export default {
               }
 
               if (prepayRes.code === 200 || prepayRes.code === 201) {
+				  
                 // 获取支付参数
                 const paymentData = prepayRes.data?.data || prepayRes.data || prepayRes;
                 const _this = this;
@@ -621,16 +623,19 @@ export default {
                         paymentDiscount: '否'
                       },
                       success: (e) => {
-                        uni.showToast({
-                          title: _this.$t('proPoster.paySuccess'),
-                          icon: 'none'
-                        });
-                        console.log('支付成功:', e);
-                        // 支付成功后，刷新用户信息
-                        _this.refreshUserInfo();
+						  ios_receipt(e).then(result => {
+							   uni.showToast({
+							     title: _this.$t('proPoster.paySuccess'),
+							     icon: 'none'
+							   });
+							     _this.refreshUserInfo();
+						  })
+						  .catch(err => {
+							  console.log(err,'eee')
+						  })
                       },
                       fail: (err) => {
-                        console.log(err, 'rrr')
+                        console.log('2222',err)
                       }
                     })
 

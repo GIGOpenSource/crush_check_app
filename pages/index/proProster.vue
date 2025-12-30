@@ -83,7 +83,8 @@ import {
 	getProducts,
 	mockOrder,
 	freeReport,
-	iosOrder
+	iosOrder,
+	ios_receipt
 } from '@/api/index.js'
 import {
 	getUserInfo,
@@ -293,7 +294,6 @@ const pay = (type) => {
 			openId: uni.getStorageSync('openId'),
 			posterId: details.value.id
 		}).then(res => {
-			console.log(res.data, 'eee')
 			let paymentData = res.data
 			plus.payment.getChannels(function (channels) {
 				let iapChannel = channels.find(c => c.id === 'appleiap');
@@ -309,37 +309,38 @@ const pay = (type) => {
 							quantity: 1,
 							username: paymentData.username,
 							manualFinishTransaction: false,
-							paymentDiscount: '否',
-							out_trade_no:'1111'
+							paymentDiscount: '否'
 						},
 						success: (e) => {
-							console.log(e, 'eeee')
-							uni.showToast({
-								title: t('proPoster.paySuccess'),
-								icon: 'none'
-							});
-							pay_success()
 							status.value = 2
 							show.value = false
 							showDelPopup2.value = false
-							if (type == 1) {
-								const openId = uni.getStorageSync('openId')
-								if (openId) {
-									getUserInfo(openId).then(userRes => {
-										if (userRes.code === 200 || userRes.code === 201) {
-											if (userRes.data) {
-												uni.setStorageSync('userInfo', JSON.stringify(userRes
-													.data))
+							ios_receipt(e).then(result => {
+								if (type == 1) {
+									const openId = uni.getStorageSync('openId')
+									if (openId) {
+										getUserInfo(openId).then(userRes => {
+											if (userRes.code === 200 || userRes.code === 201) {
+												if (userRes.data) {
+													uni.setStorageSync('userInfo', JSON.stringify(userRes
+														.data))
+												}
 											}
-										}
-									}).catch(err => {
-										console.log('获取用户信息失败', err)
-									})
+										}).catch(err => {
+											console.log('获取用户信息失败', err)
+										})
+									}
 								}
-							}
-							getPosterDetails(id.value).then(res => {
-								details.value = res.data
+								getPosterDetails(id.value).then(res => {
+									details.value = res.data
+								})
+								uni.showToast({
+									title: t('proPoster.paySuccess'),
+									icon: 'none'
+								});
+								pay_success()
 							})
+
 						},
 						fail: (err) => {
 							uni.showToast({

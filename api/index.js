@@ -76,6 +76,11 @@ export const getCard = (params) => {
 	return getRequest(`/answerbook/flip_card/`, params)
 }
 
+//
+export const ios_receipt = (params) => {
+	return postRequest('/ios/ios_receipt',params)
+}
+
 
 
 

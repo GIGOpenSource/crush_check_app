@@ -170,7 +170,8 @@ import {
 	getGuid,
 	getProducts,
 	mockOrder,
-	iosOrder
+	iosOrder,
+	ios_receipt
 } from '@/api/index.js'
 import {
 	getSystemContent,
@@ -452,22 +453,25 @@ const pay = () => {
 							paymentDiscount: '否'
 						},
 						success: (e) => {
-							console.log(e,'eeeee')
-							   uni.showToast({
-                                title: t('proPoster.paySuccess'),
-                                icon: 'none'
-                            });
-							pay_success()
-							const openId = uni.getStorageSync('openId')
-							getUserInfo(openId).then(userRes => {
-								if (userRes.code === 200 || userRes.code === 201) {
-									if (userRes.data) {
-										uni.setStorageSync('userInfo', JSON.stringify(userRes
-											.data))
-										console.log('用户信息更新成功', userRes.data)
-									}
-								}
-								vipProup.value = false
+							ios_receipt(e).then(res => {
+								 const openId = uni.getStorageSync('openId')
+								 getUserInfo(openId).then(userRes => {
+								 	if (userRes.code === 200 || userRes.code === 201) {
+								 		if (userRes.data) {
+								 			uni.setStorageSync('userInfo', JSON.stringify(userRes
+								 				.data))
+								 			console.log('用户信息更新成功', userRes.data)
+								 		}
+								 	}
+								 	vipProup.value = false
+									uni.showToast({
+									    title: t('proPoster.paySuccess'),
+									    icon: 'none'
+									});
+									pay_success()
+							})
+							  
+						
 							}).catch(err => {
 								console.log('获取用户信息失败', err)
 							})
