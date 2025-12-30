@@ -90,24 +90,15 @@ const getTodayFreeCount = async () => {
 
 // 获取最新的用户信息
 const getLatestUserInfo = () => {
-    try {
-        const userInfoStr = uni.getStorageSync('userInfo')
-        if (userInfoStr) {
-            return JSON.parse(userInfoStr)
-        }
-    } catch (e) {
-        console.error('解析用户信息失败:', e)
-    }
-    return null
+    const userInfoStr = uni.getStorageSync('userInfo')
+    return JSON.parse(userInfoStr)
 }
 
 // 检查是否需要看广告
 const needWatchAd = async () => {
     return false
     const latestUserInfo = getLatestUserInfo()
-    if (latestUserInfo && latestUserInfo.is_vip) {
-        return false
-    }
+    if (latestUserInfo.is_vip) return false
     const todayCount = await getTodayFreeCount()
     const needAd = todayCount >= 3
     return needAd
@@ -134,8 +125,8 @@ onMounted(() => {
 const back = () => {
     uni.navigateBack()
 }
-const choose = (id, index) => {
-    if (!needWatchAd()) {
+const choose = async (id, index) => {
+    if (await needWatchAd()) {
         pendingChooseParams.value = { id, index }
         showDelPopup2.value = true
         return
