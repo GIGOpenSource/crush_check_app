@@ -36,6 +36,10 @@ export const createOrder = (params) => {
 export const mockOrder = (params) => {
 	return postRequest('/mock/getPrepayId',params)
 }
+//mock订单
+export const iosOrder = (params) => {
+	return postRequest('/ios/getPrepayId',params)
+}
 
 //分享
 export const share = (params) => {

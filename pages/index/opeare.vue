@@ -144,8 +144,9 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-					<view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{ $t('index.openNow')
-						}}
+					<view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{
+						$t('index.openNow')
+					}}
 					</view>
 				</view>
 			</view>
@@ -168,7 +169,8 @@ import {
 	share,
 	getGuid,
 	getProducts,
-	mockOrder
+	mockOrder,
+	iosOrder
 } from '@/api/index.js'
 import {
 	getSystemContent,
@@ -388,9 +390,6 @@ const close = () => {
 	uni.setStorageSync('first', 'false')
 	welecome.value = false
 }
-const a = () => {
-
-}
 const handleInviteClick = () => {
 	if (!token.value) {
 		uni.navigateTo({
@@ -428,52 +427,92 @@ const editimage = (index) => {
 //支付
 const pay = () => {
 	click_monthpay()
-	mockOrder({
-		description: mouth.value.description,
-		openId: uni.getStorageSync('openId'),
-		productId: mouth.value.id
-	}).then(res => {
-		pay_success()
-		const openId = uni.getStorageSync('openId')
-		getUserInfo(openId).then(userRes => {
-			if (userRes.code === 200 || userRes.code === 201) {
-				if (userRes.data) {
-					uni.setStorageSync('userInfo', JSON.stringify(userRes
-						.data))
-					console.log('用户信息更新成功', userRes.data)
+	const systemInfo = uni.getSystemInfoSync();
+	if (systemInfo.platform === 'ios') {
+		iosOrder({
+			description: mouth.value.description,
+			openId: uni.getStorageSync('openId'),
+			productId: mouth.value.id
+		}).then(res => {
+			let paymentData = res.data
+			plus.payment.getChannels(function (channels) {
+				let iapChannel = channels.find(c => c.id === 'appleiap');
+				if (!iapChannel) {
+					uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+					return;
 				}
-			}
-			vipProup.value = false
-		}).catch(err => {
-			console.log('获取用户信息失败', err)
+				iapChannel.requestProduct([paymentData.productid], function (res) {
+					uni.requestPayment({
+						provider: 'appleiap',
+						orderInfo: {
+							productid: res[0].productid,
+							quantity: 1,
+							username: paymentData.username,
+							manualFinishTransaction: false,
+							paymentDiscount: '否'
+						},
+						success: (e) => {
+							console.log(e,'eeeee')
+							uni.showToast({
+								title: _this.$t('common.operationSuccess'),
+								icon: "success",
+							});
+							pay_success()
+							const openId = uni.getStorageSync('openId')
+							getUserInfo(openId).then(userRes => {
+								if (userRes.code === 200 || userRes.code === 201) {
+									if (userRes.data) {
+										uni.setStorageSync('userInfo', JSON.stringify(userRes
+											.data))
+										console.log('用户信息更新成功', userRes.data)
+									}
+								}
+								vipProup.value = false
+							}).catch(err => {
+								console.log('获取用户信息失败', err)
+							})
+						}
+					})
+
+				}, function (err) {
+					console.error('IAP 商品信息获取失败:', err);
+					uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+				});
+			}, function (e) {
+				console.error('获取支付通道失败:', e);
+				uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+			});
+
 		})
-
-		// uni.requestPayment({
-		// 	"provider": "wxpay",
-		// 	...res.data,
-		// 	"signType": "RSA",
-		// 	"package": `${res.data.prepayid}`,
-		// 	"nonceStr": res.data.noncestr,
-		// 	success(res) {
-		// 		uni.showToast({
-		// 			title: t('proPoster.paySuccess'),
-		// 			icon: 'success'
-		// 		})
-
-		// 	},
-		// 	fail(e) {
-		// 		pay_fail()
-		// 		uni.showToast({
-		// 			title: t('proPoster.payFailed'),
-		// 			icon: 'none'
-		// 		})
-		// 	}
-		// })
-
-	})
-		.catch(err => {
-			pay_fail()
+			.catch(err => {
+				pay_fail()
+			})
+	} else {
+		mockOrder({
+			description: mouth.value.description,
+			openId: uni.getStorageSync('openId'),
+			productId: mouth.value.id
+		}).then(res => {
+			pay_success()
+			const openId = uni.getStorageSync('openId')
+			getUserInfo(openId).then(userRes => {
+				if (userRes.code === 200 || userRes.code === 201) {
+					if (userRes.data) {
+						uni.setStorageSync('userInfo', JSON.stringify(userRes
+							.data))
+						console.log('用户信息更新成功', userRes.data)
+					}
+				}
+				vipProup.value = false
+			}).catch(err => {
+				console.log('获取用户信息失败', err)
+			})
 		})
+			.catch(err => {
+				pay_fail()
+			})
+	}
+
 }
 const btn = () => {
 	let token = uni.getStorageSync('token')

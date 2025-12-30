@@ -33,7 +33,7 @@
                 <view class="title1">{{ t('choosebook.noFreeTimes') }}</view>
                 <view class="del-popup-actions">
                     <view @click="pay">{{ mouth.price }}{{ t('index.perMonth') }} {{ t('index.openNow') }}</view>
-                    <view @click="watchAdInPopup">{{ t('choosebook.watchAdUnlock') }}</view>
+                    <!-- <view @click="watchAdInPopup">{{ t('choosebook.watchAdUnlock') }}</view> -->
                 </view>
                 <view class="icon" @click="showDelPopup2 = false">
                     <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
@@ -59,7 +59,7 @@ import {
 } from '@/config/config.js'
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getProducts, createOrder, getCard } from '@/api/index.js';
+import { getProducts, createOrder, getCard, iosOrder, mockOrder } from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 const { t } = useI18n();
 const list = ref([]);
@@ -103,6 +103,7 @@ const getLatestUserInfo = () => {
 
 // 检查是否需要看广告
 const needWatchAd = async () => {
+    return false
     const latestUserInfo = getLatestUserInfo()
     if (latestUserInfo && latestUserInfo.is_vip) {
         return false
@@ -126,7 +127,7 @@ onMounted(() => {
         })
     })
     getProducts().then(res => {
-        mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+        mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
     })
 })
 
@@ -134,7 +135,7 @@ const back = () => {
     uni.navigateBack()
 }
 const choose = (id, index) => {
-    if (needWatchAd()) {
+    if (!needWatchAd()) {
         pendingChooseParams.value = { id, index }
         showDelPopup2.value = true
         return
@@ -220,46 +221,93 @@ const onaderror = (e) => {
 }
 // 支付
 const pay = () => {
-    createOrder({
-        description: mouth.value.description,
-        openId: uni.getStorageSync('openId'),
-        productId: mouth.value.id,
-    }).then(res => {
-        uni.requestPayment({
-            "provider": "wxpay",
-            ...res.data,
-            "signType": "RSA",
-            "package": `${res.data.prepayid}`,
-            "nonceStr": res.data.noncestr,
-            success(res) {
-             
-                getUserInfo(openId).then(userRes => {
-                    if (userRes.code === 200 || userRes.code === 201) {
-                        if (userRes.data) {
-                            uni.setStorageSync('userInfo', JSON.stringify(userRes
-                                .data))
-                            console.log('用户信息更新成功', userRes.data)
-                        }
-                    }
-                }).catch(err => {
-                    console.log('获取用户信息失败', err)
-                })
-                   uni.showToast({
-                    title: t('proPoster.paySuccess'),
-                    icon: 'none'
-                })
-                showDelPopup2.value = false
 
-            },
-            fail(e) {
-                uni.showToast({
-                    title: t('proPoster.payFailed'),
-                    icon: 'none'
-                })
-                showDelPopup2.value = false
-            }
+    const systemInfo = uni.getSystemInfoSync();
+    if (systemInfo.platform === 'ios') {
+        iosOrder({
+            description: mouth.value.description,
+            openId: uni.getStorageSync('openId'),
+            productId: mouth.value.id,
+        }).then(res => {
+            let paymentData = res.data
+            plus.payment.getChannels(function (channels) {
+                let iapChannel = channels.find(c => c.id === 'appleiap');
+                if (!iapChannel) {
+                    uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                    return;
+                }
+                iapChannel.requestProduct([paymentData.productid], function (res) {
+                    uni.requestPayment({
+                        provider: 'appleiap',
+                        orderInfo: {
+                            productid: res[0].productid,
+                            quantity: 1,
+                            username: paymentData.username,
+                            manualFinishTransaction: false,
+                            paymentDiscount: '否'
+                        },
+                        success: (e) => {
+                            uni.showToast({
+                                title: this.$t('common.operationSuccess'),
+                                icon: "success",
+                            });
+                            pay_success()
+                            const openId = uni.getStorageSync('openId')
+                            getUserInfo(openId).then(userRes => {
+                                if (userRes.code === 200 || userRes.code === 201) {
+                                    if (userRes.data) {
+                                        uni.setStorageSync('userInfo', JSON.stringify(userRes
+                                            .data))
+                                        console.log('用户信息更新成功', userRes.data)
+                                    }
+                                }
+                            }).catch(err => {
+                                console.log('获取用户信息失败', err)
+                            })
+                        },
+                        fail: (err) => {
+                            uni.showToast({
+                                title: t('proPoster.payFailed'),
+                                icon: 'none'
+                            })
+                            showDelPopup2.value = false
+                        }
+                    })
+
+                }, function (err) {
+                    console.error('IAP 商品信息获取失败:', err);
+                    uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                });
+            }, function (e) {
+                console.error('获取支付通道失败:', e);
+                uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+            });
+
         })
-    })
+    } else {
+        mockOrder({
+            description: mouth.value.description,
+            openId: uni.getStorageSync('openId'),
+            productId: mouth.value.id,
+        }).then(res => {
+            getUserInfo(openId).then(userRes => {
+                if (userRes.code === 200 || userRes.code === 201) {
+                    if (userRes.data) {
+                        uni.setStorageSync('userInfo', JSON.stringify(userRes
+                            .data))
+                        console.log('用户信息更新成功', userRes.data)
+                    }
+                }
+            }).catch(err => {
+                console.log('获取用户信息失败', err)
+            })
+
+            showDelPopup2.value = false
+        })
+    }
+
+
+
 }
 </script>
 

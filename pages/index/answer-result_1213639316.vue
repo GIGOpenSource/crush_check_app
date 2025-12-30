@@ -66,7 +66,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-import { getAnswerbook, getPosterDetails, getProducts, mockOrder, freeReport } from '@/api/index.js';
+import { getAnswerbook, getPosterDetails, getProducts, mockOrder, freeReport ,iosOrder} from '@/api/index.js';
 import { getUserInfo } from '@/api/login.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { host } from '@/config/config.js';
@@ -162,18 +162,18 @@ const save = () => {
                 const inviterOpenId = uni.getStorageSync("openId") || "";
                 const query = `?scene=${inviterOpenId}`
                 uni.share({
-					provider: "weixin",
-					scene: "WXSceneSession",
-					type: 2,
-					href: `https://crashcheck.net/h5/${query}`,
-					imageUrl: res.tempFilePath,
-					success: function (res) {
-						console.log("success:" + JSON.stringify(res));
-					},
-					fail: function (err) {
-						console.log("fail:" + JSON.stringify(err));
-					}
-				});
+                    provider: "weixin",
+                    scene: "WXSceneSession",
+                    type: 2,
+                    href: `https://crashcheck.net/h5/${query}`,
+                    imageUrl: res.tempFilePath,
+                    success: function (res) {
+                        console.log("success:" + JSON.stringify(res));
+                    },
+                    fail: function (err) {
+                        console.log("fail:" + JSON.stringify(err));
+                    }
+                });
             }
         }
     })
@@ -297,42 +297,75 @@ const handleProgressClose = () => {
 
 // 支付
 const pay = () => {
-    console.log(isdetails.value, 'isdetails.valueisdetails.value')
-    mockOrder({
-        description: mouth.value.description,
-        openId: uni.getStorageSync('openId'),
-        productId: mouth.value.id,
-        posterId: details.value.poster_id
-    })
-        .then(res => {
-            showDelPopup2.value = false
-            submit()
-            // uni.requestPayment({
-            //     "provider": "wxpay",
-            //     ...res.data,
-            //     "signType": "RSA",
-            //     "package": `${res.data.prepayid}`,
-            //     "nonceStr": res.data.noncestr,
-            //     success(res) {
-            //         uni.showToast({
-            //             title: t('proPoster.paySuccess'),
-            //             icon: 'none'
-            //         })
-
-
-            //     },
-            //     fail(e) {
-            //         uni.showToast({
-            //             title: t('proPoster.payFailed'),
-            //             icon: 'none'
-            //         })
-
-            //     }
-            // })
+    const systemInfo = uni.getSystemInfoSync();
+    if (systemInfo.platform === 'ios') {
+        iosOrder({
+            description: mouth.value.description,
+            openId: uni.getStorageSync('openId'),
+            productId: mouth.value.id,
+            posterId: details.value.poster_id
         })
-        .catch(err => {
-            showDelPopup2.value = false
+            .then(res => {
+                console.log(res.data,'eeee')
+                let paymentData = res.data
+                plus.payment.getChannels(function (channels) {
+                    let iapChannel = channels.find(c => c.id === 'appleiap');
+                    if (!iapChannel) {
+                        uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                        return;
+                    }
+                    iapChannel.requestProduct([paymentData.productid], function (res) {
+                        uni.requestPayment({
+                            provider: 'appleiap',
+                            orderInfo: {
+                                productid: res[0].productid,
+                                quantity: 1,
+                                username: paymentData.username,
+                                manualFinishTransaction: false,
+                                paymentDiscount: '否'
+                            },
+                            success: (e) => {
+                                uni.showToast({
+                                    title: _this.$t('common.operationSuccess'),
+                                    icon: "success",
+                                });
+                                showDelPopup2.value = false
+                                submit()
+
+                            },
+                            fail:(err) => {
+                                 showDelPopup2.value = false
+                            }
+                        })
+
+                    }, function (err) {
+                        console.error('IAP 商品信息获取失败:', err);
+                        uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                    });
+                }, function (e) {
+                    console.error('获取支付通道失败:', e);
+                    uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+                });
+            })
+            .catch(err => {
+                showDelPopup2.value = false
+            })
+    } else {
+        mockOrder({
+            description: mouth.value.description,
+            openId: uni.getStorageSync('openId'),
+            productId: mouth.value.id,
+            posterId: details.value.poster_id
         })
+            .then(res => {
+                showDelPopup2.value = false
+                submit()
+            })
+            .catch(err => {
+                showDelPopup2.value = false
+            })
+    }
+
 }
 </script>
 

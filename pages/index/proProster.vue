@@ -15,7 +15,7 @@
 				<view class="btn" @click="pay(2)"> {{ once.price }}{{ $t('common.currencyUnit') }} {{
 					$t('proPoster.queryReport') }}</view>
 				<button class="btn" open-type="share" :open-type="userinfo.allow_count ? '' : 'share'"
-					hover-class="none" @click="invitefriend" v-if="version == 2">{{
+					hover-class="none" @click="invitefriend">{{
 						$t('proPoster.inviteFiveFree') }}</button>
 				<view style="height: 60rpx;"></view>
 				<view v-for="(item, index) in moretitle" :key="index" class="moretitle">
@@ -32,7 +32,7 @@
 				<image :src="$getImg('index/save')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.savePoster') }}</view>
 			</view>
-			<view class="btn1" @click="share" v-if="version == 2">
+			<view class="btn1" @click="share">
 				<image :src="$getImg('index/share')" mode="scaleToFill" />
 				<view>{{ $t('proPoster.sharePoster') }}</view>
 			</view>
@@ -82,7 +82,8 @@ import {
 	getDeepPoster,
 	getProducts,
 	mockOrder,
-	freeReport
+	freeReport,
+	iosOrder
 } from '@/api/index.js'
 import {
 	getUserInfo,
@@ -284,91 +285,165 @@ const pay = (type) => {
 		object = once.value
 		click_oncepay()
 	}
-	mockOrder({
-		description: object.description,
-		productId: object.id,
-		openId: uni.getStorageSync('openId'),
-		posterId: details.value.id
-	}).then(res => {
-		// uni.showToast({
-		// 		title: t('proPoster.paySuccess'),
-		// 		icon: 'success'
-		// 	})
-		pay_success()
-		status.value = 2
-		show.value = false
-		showDelPopup2.value = false
-		//重新调用一下用户信息接口 还得需要存本地
-		if (type == 1) {
-			const openId = uni.getStorageSync('openId')
-			if (openId) {
-				getUserInfo(openId).then(userRes => {
-					if (userRes.code === 200 || userRes.code === 201) {
-						if (userRes.data) {
-							uni.setStorageSync('userInfo', JSON.stringify(userRes
-								.data))
-							console.log('用户信息更新成功', userRes.data)
+	const systemInfo = uni.getSystemInfoSync();
+	if (systemInfo.platform === 'ios') {
+		iosOrder({
+			description: object.description,
+			productId: object.id,
+			openId: uni.getStorageSync('openId'),
+			posterId: details.value.id
+		}).then(res => {
+			console.log(res.data, 'eee')
+			let paymentData = res.data
+			plus.payment.getChannels(function (channels) {
+				let iapChannel = channels.find(c => c.id === 'appleiap');
+				if (!iapChannel) {
+					uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+					return;
+				}
+				iapChannel.requestProduct([paymentData.productid], function (res) {
+					uni.requestPayment({
+						provider: 'appleiap',
+						orderInfo: {
+							productid: res[0].productid,
+							quantity: 1,
+							username: paymentData.username,
+							manualFinishTransaction: false,
+							paymentDiscount: '否'
+						},
+						success: (e) => {
+							console.log(e, 'eeee')
+							uni.showToast({
+								title: _this.$t('common.operationSuccess'),
+								icon: "success",
+							});
+							pay_success()
+							status.value = 2
+							show.value = false
+							showDelPopup2.value = false
+							if (type == 1) {
+								const openId = uni.getStorageSync('openId')
+								if (openId) {
+									getUserInfo(openId).then(userRes => {
+										if (userRes.code === 200 || userRes.code === 201) {
+											if (userRes.data) {
+												uni.setStorageSync('userInfo', JSON.stringify(userRes
+													.data))
+											}
+										}
+									}).catch(err => {
+										console.log('获取用户信息失败', err)
+									})
+								}
+							}
+							getPosterDetails(id.value).then(res => {
+								details.value = res.data
+							})
 						}
-					}
-				}).catch(err => {
-					console.log('获取用户信息失败', err)
-				})
-			}
-		}
-		getPosterDetails(id.value).then(res => {
-			console.log(res.data, 'rrrrr')
-			details.value = res.data
-		})
-		// uni.requestPayment({
-		// 	"provider": "wxpay",
-		// 	...res.data,
-		// 	"signType": "RSA",
-		// 	"package": `${res.data.prepayid}`,
-		// 	"nonceStr": res.data.noncestr,
-		// 	success(res) {
-		// 		uni.showToast({
-		// 			title: t('proPoster.paySuccess'),
-		// 			icon: 'success'
-		// 		})
-		// 		pay_success()
-		// 		status.value = 2
-		// 		show.value = false
-		// 		showDelPopup2.value = false
-		// 		//重新调用一下用户信息接口 还得需要存本地
-		// 		if (type == 1) {
-		// 			const openId = uni.getStorageSync('openId')
-		// 			if (openId) {
-		// 				getUserInfo(openId).then(userRes => {
-		// 					if (userRes.code === 200 || userRes.code === 201) {
-		// 						if (userRes.data) {
-		// 							uni.setStorageSync('userInfo', JSON.stringify(userRes
-		// 								.data))
-		// 							console.log('用户信息更新成功', userRes.data)
-		// 						}
-		// 					}
-		// 				}).catch(err => {
-		// 					console.log('获取用户信息失败', err)
-		// 				})
-		// 			}
-		// 		}
-		// 		getPosterDetails(id.value).then(res => {
-		// 			console.log(res.data, 'rrrrr')
-		// 			details.value = res.data
-		// 		})
-		// 	},
-		// 	fail(e) {
-		// 		pay_fail()
-		// 		uni.showToast({
-		// 			title: t('proPoster.payFailed'),
-		// 			icon: 'none'
-		// 		})
-		// 	}
-		// })
+					})
 
-	})
-		.catch(err => {
-			pay_fail()
+				}, function (err) {
+					console.error('IAP 商品信息获取失败:', err);
+					uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+				});
+			}, function (e) {
+				console.error('获取支付通道失败:', e);
+				uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+			});
+
+
 		})
+			.catch(err => {
+				pay_fail()
+			})
+	} else {
+		mockOrder({
+			description: object.description,
+			productId: object.id,
+			openId: uni.getStorageSync('openId'),
+			posterId: details.value.id
+		}).then(res => {
+			// uni.showToast({
+			// 		title: t('proPoster.paySuccess'),
+			// 		icon: 'success'
+			// 	})
+			pay_success()
+			status.value = 2
+			show.value = false
+			showDelPopup2.value = false
+			//重新调用一下用户信息接口 还得需要存本地
+			if (type == 1) {
+				const openId = uni.getStorageSync('openId')
+				if (openId) {
+					getUserInfo(openId).then(userRes => {
+						if (userRes.code === 200 || userRes.code === 201) {
+							if (userRes.data) {
+								uni.setStorageSync('userInfo', JSON.stringify(userRes
+									.data))
+								console.log('用户信息更新成功', userRes.data)
+							}
+						}
+					}).catch(err => {
+						console.log('获取用户信息失败', err)
+					})
+				}
+			}
+			getPosterDetails(id.value).then(res => {
+				console.log(res.data, 'rrrrr')
+				details.value = res.data
+			})
+			// uni.requestPayment({
+			// 	"provider": "wxpay",
+			// 	...res.data,
+			// 	"signType": "RSA",
+			// 	"package": `${res.data.prepayid}`,
+			// 	"nonceStr": res.data.noncestr,
+			// 	success(res) {
+			// 		uni.showToast({
+			// 			title: t('proPoster.paySuccess'),
+			// 			icon: 'success'
+			// 		})
+			// 		pay_success()
+			// 		status.value = 2
+			// 		show.value = false
+			// 		showDelPopup2.value = false
+			// 		//重新调用一下用户信息接口 还得需要存本地
+			// 		if (type == 1) {
+			// 			const openId = uni.getStorageSync('openId')
+			// 			if (openId) {
+			// 				getUserInfo(openId).then(userRes => {
+			// 					if (userRes.code === 200 || userRes.code === 201) {
+			// 						if (userRes.data) {
+			// 							uni.setStorageSync('userInfo', JSON.stringify(userRes
+			// 								.data))
+			// 							console.log('用户信息更新成功', userRes.data)
+			// 						}
+			// 					}
+			// 				}).catch(err => {
+			// 					console.log('获取用户信息失败', err)
+			// 				})
+			// 			}
+			// 		}
+			// 		getPosterDetails(id.value).then(res => {
+			// 			console.log(res.data, 'rrrrr')
+			// 			details.value = res.data
+			// 		})
+			// 	},
+			// 	fail(e) {
+			// 		pay_fail()
+			// 		uni.showToast({
+			// 			title: t('proPoster.payFailed'),
+			// 			icon: 'none'
+			// 		})
+			// 	}
+			// })
+
+		})
+			.catch(err => {
+				pay_fail()
+			})
+	}
+
 }
 const share = () => {
 	click_share()
@@ -402,7 +477,23 @@ const invitefriend = async () => {
 		userinfo.value = res.data
 		return
 	}
-
+	const inviterOpenId = uni.getStorageSync("openId") || "";
+	const query = `?scene=${inviterOpenId}`
+	uni.share({
+		provider: "weixin",
+		scene: "WXSceneSession",
+		type: 0,
+		title: "CrushCheck",
+		summary: '邀请好友一起来测测自己渣不渣',
+		href: `https://crashcheck.net/h5/${query}`,
+		imageUrl: '/static/index/yq.png',
+		success: function (res) {
+			console.log("success:" + JSON.stringify(res));
+		},
+		fail: function (err) {
+			console.log("fail:" + JSON.stringify(err));
+		}
+	});
 }
 //解锁
 const lock = () => {

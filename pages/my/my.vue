@@ -532,7 +532,6 @@ export default {
       }
     },
     async handleUnlockClick() {
-      // 处理解锁按钮点击
       if (!this.isLoggedIn) {
         // 未登录，跳转到登录页面
         uni.navigateTo({
@@ -569,7 +568,7 @@ export default {
             }
 
             // 获取产品ID和描述
-            const productId =vipProduct.id || vipProduct.product_id;
+            const productId = vipProduct.id || vipProduct.product_id;
             const description =
               vipProduct.description ||
               vipProduct.name ||
@@ -583,76 +582,62 @@ export default {
               });
               return;
             }
-
-            // 调用获取预支付ID接口
             try {
-				console.log(productId,'productId')
               let prepayRes = {}
-			  const systemInfo = uni.getSystemInfoSync();
-			  if (systemInfo.platform === 'ios'){
-				  // uni.getProductInfo({
-					 //  success:(res) => {
-						//    console.log(res,'rrr')
-					 //  }
-				  // })
-				  // return
-				  prepayRes = await iosPrepayId(
-				    description,
-				    productId,
-				    openId
-				  );
-			  }else{
-				  prepayRes = await mockPrepayId(
-				    description,
-				    productId,
-				    openId
-				  );
-			  }
-			  console.log(prepayRes,'prepayRes')
+              const systemInfo = uni.getSystemInfoSync();
+              if (systemInfo.platform === 'ios') {
+                prepayRes = await iosPrepayId(
+                  description,
+                  productId,
+                  openId
+                );
+              } else {
+                prepayRes = await mockPrepayId(
+                  description,
+                  productId,
+                  openId
+                );
+              }
+            
               if (prepayRes.code === 200 || prepayRes.code === 201) {
                 // 获取支付参数
-                const paymentData =
-                  prepayRes.data?.data || prepayRes.data || prepayRes;
-				console.log(prepayRes.data,'rssss')
+                const paymentData = prepayRes.data?.data || prepayRes.data || prepayRes;
                 const _this = this;
-				// _this.getAppleProductInfo()
-				// return
-                uni.requestPayment({
-                provider: 'appleiap',
-                  orderInfo: {
-					  productid:'202512crushcheck_answer_poster',
-					  username:prepayRes.data.username,
-					  quantity:1,
-					  manualFinishTransaction:false,
-					  paymentDiscount:'否',
-					  sandbox: true 
-				  },
-                  success: async (payRes) => {
-                    console.log("支付成功", payRes);
-                    uni.showToast({
-                      title: this.$t('common.paySuccess'),
-                      icon: "success",
-                    });
-                    // 支付成功后刷新用户信息，更新VIP状态
-                    console.log("开始刷新用户信息...");
-                    await _this.refreshUserInfo();
-                  },
-                  fail: async (payErr) => {
-                    console.error("支付失败", payErr);
-                    if (payErr.errMsg && payErr.errMsg.includes("cancel")) {
-                      uni.showToast({
-                        title: this.$t('common.payCanceled'),
-                        icon: "none",
-                      });
-                    } else {
-                      uni.showToast({
-                        title: payErr.errMsg || this.$t('common.payFailed'),
-                        icon: "none",
-                      });
-                    }
-                  },
+                plus.payment.getChannels(function (channels) {
+                  let iapChannel = channels.find(c => c.id === 'appleiap');
+                  if (!iapChannel) {
+                    uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                    return;
+                  }
+                  iapChannel.requestProduct([paymentData.productid], function (res) {
+                    uni.requestPayment({
+                      provider: 'appleiap',
+                      orderInfo: {
+                        productid: res[0].productid,
+                        quantity: 1,
+                        username: paymentData.username,
+                        manualFinishTransaction: false,
+                        paymentDiscount: '否'
+                      },
+                      success: (e) => {
+                        console.log('支付成功:', e);
+                        // 支付成功后，刷新用户信息
+                        _this.refreshUserInfo();
+                        uni.showToast({
+                          title: _this.$t('common.operationSuccess'),
+                          icon: "success",
+                        });
+                      }
+                    })
+
+                  }, function (err) {
+                    console.error('IAP 商品信息获取失败:', err);
+                    uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                  });
+                }, function (e) {
+                  console.error('获取支付通道失败:', e);
+                  uni.showToast({ title: '支付通道获取失败', icon: 'none' });
                 });
-              
               } else {
                 uni.showToast({
                   title:
@@ -688,35 +673,6 @@ export default {
         });
       }
     },
-	 getAppleProductInfo() {
-	      // productId数组：与苹果开发者后台配置的内购项目Product ID完全一致（区分大小写）
-	      const productIdList = ['com.gig.crushcheck']; // 替换为你的实际productId
-	
-	      uni.getProductInfo({
-	        productId: productIdList,
-	        success: (res) => {
-	          console.log('获取苹果内购商品信息成功', res);
-			  
-			  
-			  return
-	          // 过滤有效商品（避免空数据）
-	          const validProductList = res.productInfo || [];
-	          if (validProductList.length === 0) {
-	            uni.showToast({ title: '暂无可用商品', icon: 'none' });
-	            return;
-	          }
-	          // 选择第一个商品发起支付（可根据业务需求选择指定商品）
-	          const targetProduct = validProductList[0];
-	          // 步骤2：传入有效商品信息，发起支付
-	          this.initApplePay(targetProduct);
-	        },
-	        fail: (err) => {
-	          console.error('获取苹果内购商品信息失败', err);
-	          // 失败原因：productId错误、内购配置未开启、设备未登录沙盒账号等
-	          uni.showToast({ title: '商品配置异常，请稍后重试', icon: 'none' });
-	        }
-	      });
-	    },
     handleHistoryClick() {
       // 处理历史海报点击
       console.log("查看历史海报");
@@ -922,12 +878,6 @@ export default {
       //     url: "/pages/my/poster",
       //   });
       //   return;
-      // }
-
-      this.handleUnlockClick();
-    },
-    ensureShare() {
-      this.handleInviteClick()
     },
     async handlePublicFollow() {
       try {
@@ -2034,6 +1984,14 @@ page {
 .del-popup-actions {
   display: flex;
   gap: 24rpx;
+}
+
+.del-popup-btn {
+
+  .del-popup-actions {
+    display: flex;
+    gap: 24rpx;
+  }
 }
 
 .del-popup-btn {
