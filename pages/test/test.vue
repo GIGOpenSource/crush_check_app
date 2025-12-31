@@ -249,9 +249,9 @@ export default {
         this.fetchPosterList();
     },
     onPullDownRefresh() {
+        console.log("========== 下拉刷新 ==========");
         // 下拉刷新
         const openId = uni.getStorageSync('openId')
-
         if (!openId) {
             uni.stopPullDownRefresh()
             return

@@ -16,13 +16,13 @@
 		<view class="content-wrapper" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
 			<image :src="status == 1 ? details.image_url : details.deepimages" />
 			<view class="btns" v-if="status == 1">
-				<view class="btn1">
-					<view @click="save">{{ t('answerBook.tellTA') }}</view>
+				<view class="btn1" style="font-weight: 400;">
+					<view @click="save">{{ t('answerBook.tell') }}<text style="font-weight: 100;">{{ t('answerBook.TA') }}</text> </view>
 					<view @click="again">{{ t('answerBook.askAgain') }}</view>
 				</view>
 				<view style="height: 30rpx;"></view>
 				<view class="btn2" :class="{ 'btn-disabled': details.children_status === 'waiting' }"
-					@click="aidetails">
+					@click="aidetails" style="font-weight: 400;">
 					{{ details.children_status === 'waiting' ? t('answerBook.aiAnalyzing') : t('answerBook.aiAnalysis')
                     }}
 				</view>

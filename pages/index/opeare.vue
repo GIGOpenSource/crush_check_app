@@ -358,7 +358,6 @@ onLoad((e) => {
 		title: 'CrushCheck'
 	});
 	params.value.pageName = t('index.selectFileType')
-	vipprice()
 	getwelecome()
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);
@@ -377,6 +376,7 @@ onLoad((e) => {
 
 });
 onShow(() => {
+	vipprice()
 	if (!uni.getStorageSync('first')) {
 		welecome.value = true
 	} else {
@@ -419,7 +419,7 @@ const handleInviteClick = () => {
 const vipprice = () => {
 	getProducts().then(res => {
 		mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
-		console.log(mouth.value, 'mouthmouth')
+		console.log('222mouthmouth',mouth.value)
 	})
 }
 const editimage = (index) => {

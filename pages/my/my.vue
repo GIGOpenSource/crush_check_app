@@ -552,7 +552,6 @@ export default {
           const vipProduct = results.find(
             (product) => product.product_type === "ios_vip"
           );
-
           if (vipProduct) {
             console.log("找到VIP产品:", vipProduct);
 
@@ -885,6 +884,7 @@ export default {
         this.handleUnlockClick();
         return;
       }
+	  this.handleUnlockClick();
       // const allowCount = Number(this.userInfo.allow_count || 0);
       // if (allowCount > 0) {
       //   uni.navigateTo({

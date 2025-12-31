@@ -12,7 +12,8 @@
 			"style": {
 				"navigationBarTitleText": "CrushCheck",
 				"enablePullDownRefresh": true,
-				"disableScroll": false
+				"backgroundColor": "#12111f",
+				"backgroundTextStyle": "light"
 			}
 		},  {
 			"path": "pages/index/opeare",
