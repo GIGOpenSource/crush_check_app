@@ -384,5 +384,8 @@ noMore: '没有更多了'
     wxTimeline: '朋友圈',
     shareSummary: '邀请好友一起来测测自己渣不渣',
     copySuccess: '链接已复制到剪贴板'
+  },
+  choosebook:{
+    noFreeTimes:'本月免费次数已用完，邀请好友可获得更多免费次数',
   }
 }
