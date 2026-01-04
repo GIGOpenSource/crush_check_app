@@ -79,7 +79,7 @@
 			} else if (systemInfo == 'ko-CN') {
 				savedLanguage = 'ko'
 			} else {
-				savedLanguage = 'zh'
+				savedLanguage = 'en'
 			}
 		} 
 		console.log(systemInfo,'systemInfo')
