@@ -31,7 +31,7 @@
 					{{ $t('common.agreePolicy') }}{{ $t('common.userAgreement') }}{{ $t('common.and') }}{{
 						$t('common.privacyPolicy') }}
 				</view>
-				<view class="bottom" v-if="version == 2">
+				<view class="bottom">
 					<view class="left">
 						<image :src="$getImg('index/invite')" mode="scaleToFill" />
 						<view>
@@ -151,6 +151,8 @@
 				</view>
 			</view>
 		</up-popup>
+		<!-- 分享 -->
+		 <InvitationFriend/>
 	</view>
 </template>
 
@@ -162,6 +164,7 @@ import {
 	nextTick
 } from 'vue'
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import {
 	host
 } from '@/config/config.js'
