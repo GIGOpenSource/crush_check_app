@@ -121,7 +121,7 @@
         <view class="function-list">
           <template v-for="(item, index) in functionList" :key="index">
             <button v-if="item.type === 'share'" class="function-item share-button" hover-class="none"
-              @click="ensureShare">
+              @click="friend  = true">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
             </button>
@@ -195,6 +195,8 @@
       <view class="qr-code-popup-close" @click="saveQrCodeToAlbum">{{ $t('my.saveToAlbum') }}</view>
     </view>
   </up-popup>
+  <!-- 分享 -->
+			 <InvitationFriend :show="friend" @close="friend = false"/>
 </template>
 
 <script>
@@ -212,15 +214,18 @@ import {
 import { ios_receipt } from '@/api/index.js'
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import { t } from '@/i18n/index.js';
 import { ref } from 'vue'
 export default {
   components: {
-    IndexProup
+    IndexProup,
+    InvitationFriend
   },
   mixins: [pageStayMixin],
   data() {
     return {
+      friend:false,
       pageName: '',
       isLoggedIn: false,
       userInfo: {
@@ -857,23 +862,7 @@ export default {
         });
         return;
       }
-      const inviterOpenId = uni.getStorageSync("openId") || "";
-      const query = `?scene=${inviterOpenId}`
-      uni.share({
-        provider: "weixin",
-        scene: "WXSceneSession",
-        type: 0,
-        title: "CrushCheck",
-        summary: '邀请好友一起来测测自己渣不渣',
-        href: `https://crashcheck.net/h5/${query}`,
-        imageUrl: '/static/index/yq.png',
-        success: function (res) {
-          console.log("success:" + JSON.stringify(res));
-        },
-        fail: function (err) {
-          console.log("fail:" + JSON.stringify(err));
-        }
-      });
+      this.friend = true
     },
     handleUnlockCardClick() {
       if (!this.isLoggedIn) {

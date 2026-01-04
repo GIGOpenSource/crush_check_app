@@ -68,6 +68,7 @@
 						size="30"></up-icon></view>
 			</view>
 		</up-popup>
+		 <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="details.file_url"/>
 
 	</view>
 </template>
@@ -77,6 +78,7 @@ import {
 	ref,
 	computed
 } from 'vue'
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import {
 	getPosterDetails,
 	getDeepPoster,
@@ -103,6 +105,7 @@ const showDelPopup2 = ref(false)
 // 页面停留时长统计
 usePageStay('结果页')
 const userinfo = ref({ allow_count: 0 })
+const friend = ref(false)
 const { t } = useI18n()
 const posterImg = ref('')
 const details = ref({})
@@ -114,6 +117,7 @@ const show = ref(false)
 const images = ref('')
 const moretitle = ref([])
 const detailsProup = ref(false)
+const shareurl = ref('')
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -459,21 +463,8 @@ const share = () => {
 		url: details.value.file_url,
 		success: (res) => {
 			if (res.statusCode === 200) {
-				const inviterOpenId = uni.getStorageSync("openId") || "";
-				const query = `?scene=${inviterOpenId}`
-				uni.share({
-					provider: "weixin",
-					scene: "WXSceneSession",
-					type: 2,
-					href: `https://crashcheck.net/h5/${query}`,
-					imageUrl: res.tempFilePath,
-					success: function (res) {
-						console.log("success:" + JSON.stringify(res));
-					},
-					fail: function (err) {
-						console.log("fail:" + JSON.stringify(err));
-					}
-				});
+				shareurl.value = res.tempFilePath
+				friend.value = true
 			}
 		}
 	})
@@ -485,23 +476,8 @@ const invitefriend = async () => {
 		userinfo.value = res.data
 		return
 	}
-	const inviterOpenId = uni.getStorageSync("openId") || "";
-	const query = `?scene=${inviterOpenId}`
-	uni.share({
-		provider: "weixin",
-		scene: "WXSceneSession",
-		type: 0,
-		title: "CrushCheck",
-		summary: '邀请好友一起来测测自己渣不渣',
-		href: `https://crashcheck.net/h5/${query}`,
-		imageUrl: '/static/index/yq.png',
-		success: function (res) {
-			console.log("success:" + JSON.stringify(res));
-		},
-		fail: function (err) {
-			console.log("fail:" + JSON.stringify(err));
-		}
-	});
+	shareurl.value = '/static/index/yq.png'
+	friend.value = true
 }
 //解锁
 const lock = () => {

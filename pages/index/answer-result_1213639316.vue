@@ -60,6 +60,7 @@
 			</view>
 		</view>
 	</up-popup>
+	 <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="details.image_url"/>
 </template>
 
 <script setup>
@@ -74,6 +75,7 @@
 	import {
 		useI18n
 	} from 'vue-i18n'
+	import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 	import {
 		getAnswerbook,
 		getPosterDetails,
@@ -94,6 +96,8 @@
 	const {
 		t
 	} = useI18n()
+	const friend = ref(false)
+	const shareurl = ref('')
 	const status = ref('1')
 	const id = ref('')
 	const details = ref({})
@@ -187,21 +191,8 @@
 			url: details.value.image_url,
 			success: (res) => {
 				if (res.statusCode === 200) {
-					const inviterOpenId = uni.getStorageSync("openId") || "";
-					const query = `?scene=${inviterOpenId}`
-					uni.share({
-						provider: "weixin",
-						scene: "WXSceneSession",
-						type: 2,
-						href: `https://crashcheck.net/h5/${query}`,
-						imageUrl: res.tempFilePath,
-						success: function(res) {
-							console.log("success:" + JSON.stringify(res));
-						},
-						fail: function(err) {
-							console.log("fail:" + JSON.stringify(err));
-						}
-					});
+					shareurl.value = res.tempFilePath
+				friend.value = true
 				}
 			}
 		})

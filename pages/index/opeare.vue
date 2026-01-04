@@ -152,7 +152,7 @@
 			</view>
 		</up-popup>
 		<!-- 分享 -->
-		 <InvitationFriend/>
+		 <InvitationFriend :show="friend" @close="friend = false"/>
 	</view>
 </template>
 
@@ -201,7 +201,7 @@ const {
 const vipProup = ref(false)
 // 页面停留时长统计
 usePageStay(t('tabBar.index') || '检测')
-
+const friend = ref(false)
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -395,29 +395,16 @@ const close = () => {
 	welecome.value = false
 }
 const handleInviteClick = () => {
+	console.log('handleInviteClick11111')
 	if (!token.value) {
 		uni.navigateTo({
 			url: "/pages/login/login"
 		})
 		return
 	}
-	const inviterOpenId = uni.getStorageSync("openId") || "";
-	const query = `?scene=${inviterOpenId}`
-	uni.share({
-		provider: "weixin",
-		scene: "WXSceneSession",
-		type: 0,
-		title: "CrushCheck",
-		summary: '邀请好友一起来测测自己渣不渣',
-		href: `https://crashcheck.net/h5/${query}`,
-		imageUrl: '/static/index/yq.png',
-		success: function (res) {
-			console.log("success:" + JSON.stringify(res));
-		},
-		fail: function (err) {
-			console.log("fail:" + JSON.stringify(err));
-		}
-	});
+	friend.value = true
+	console.log('邀请好友')
+
 }
 const vipprice = () => {
 	getProducts().then(res => {
