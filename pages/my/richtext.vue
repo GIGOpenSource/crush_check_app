@@ -6,8 +6,8 @@
         :nodes="content"
         class="richtext-content"
       ></rich-text>
-      <view v-if="loading" class="loading">加载中...</view>
-      <view v-if="!loading && !content" class="empty">暂无内容</view>
+      <view v-if="loading" class="loading">{{ $t('common.loading') }}</view>
+      <view v-if="!loading && !content" class="empty">{{ $t('common.noContent') }}</view>
     </view>
   </view>
 </template>
