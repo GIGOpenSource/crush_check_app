@@ -96,7 +96,6 @@ const getLatestUserInfo = () => {
 
 // 检查是否需要看广告
 const needWatchAd = async () => {
-    return false
     const latestUserInfo = getLatestUserInfo()
     if (latestUserInfo.is_vip) return false
     const todayCount = await getTodayFreeCount()
