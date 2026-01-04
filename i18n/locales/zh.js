@@ -9,6 +9,7 @@ export default {
     next: '下一步',
     finish: '完成',
     loading: '加载中...',
+    noContent: '暂无内容',
     success: '成功',
     fail: '失败',
     retry: '重试',
@@ -352,7 +353,9 @@ noMore: '没有更多了'
     wechatLogin: '一键登录',
     loginFailedRetry: '登录失败，请重试',
     agreeUserAgreement: '同意用户协议',
-    disagree: '不同意'
+    disagree: '不同意',
+    login: '登录',
+    via: '通过'
   },
   answerBook: {
     title: '答案之书',
@@ -372,5 +375,14 @@ noMore: '没有更多了'
     pleaseInputQuestion: '请输入你的问题',
     unlockAnalysis: '您需要付费来解锁本次分析',
     payNow: '元/次 立即支付'
+  },
+  invitationFriend: {
+    title: '转发邀请',
+    desc: '点击复制按钮，复制链接邀请',
+    copyBtn: '复制链接',
+    wxFriend: '微信好友',
+    wxTimeline: '朋友圈',
+    shareSummary: '邀请好友一起来测测自己渣不渣',
+    copySuccess: '链接已复制到剪贴板'
   }
 }

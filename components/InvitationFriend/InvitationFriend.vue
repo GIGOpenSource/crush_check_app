@@ -2,17 +2,17 @@
     <view class="invitation-friend">
         <up-popup :show="show" :closeable="true" position="bottom" round="20" @close="handleClose" @open="show = true">
             <view>
-                <view class="title t1">转发邀请</view>
-                <view class="title">点击复制按钮，复制链接邀请</view>
-                <view class="btn" @click="copy">复制链接</view>
+                <view class="title t1">{{ t('invitationFriend.title') }}</view>
+                <view class="title">{{ t('invitationFriend.desc') }}</view>
+                <view class="btn" @click="copy">{{ t('invitationFriend.copyBtn') }}</view>
                 <view class="bottom">
                     <view @click="share('WXSceneSession')">
                         <image :src="$getImg('index/wx')" mode="scaleToFill" />
-                        <view>微信好友</view>
+                        <view>{{ t('invitationFriend.wxFriend') }}</view>
                     </view>
                     <view @click="share('WXSceneTimeline')">
                         <image :src="$getImg('index/quan')" mode="scaleToFill" />
-                        <view>朋友圈</view>
+                        <view>{{ t('invitationFriend.wxTimeline') }}</view>
                     </view>
                 </view>
             </view>
@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 const props = defineProps({
      show: {
 		type: Boolean,
@@ -41,14 +43,14 @@ const handleClose = () => {
 	emits("update:show", false);
 }
 const share = (type) => {
-    	const inviterOpenId = uni.getStorageSync("openId") || "";
+    const inviterOpenId = uni.getStorageSync("openId") || "";
 	const query = `?scene=${inviterOpenId}`
 	uni.share({
 		provider: "weixin",
 		scene: type,
 		type: props.imageUrl == '/static/index/yq.png'? 0 : 2,
 		title: "CrushCheck",
-		summary: '邀请好友一起来测测自己渣不渣',
+		summary: t('invitationFriend.shareSummary'),
 		href: `https://crashcheck.net/h5/${query}`,
 		imageUrl: props.imageUrl,
 		success: function (res) {
@@ -60,20 +62,21 @@ const share = (type) => {
 	});
 }
 const copy = () => {
-    	const inviterOpenId = uni.getStorageSync("openId") || "";
+    const inviterOpenId = uni.getStorageSync("openId") || "";
     const query = `?scene=${inviterOpenId}`
     let url = props.imageUrl == '/static/index/yq.png' ? `https://crashcheck.net/h5/${query}` :  props.downloadUrl
     uni.setClipboardData({
         data: url,
         success: () =>{
             uni.showToast({
-                title: '链接已复制到剪贴板',
+                title: t('invitationFriend.copySuccess'),
                 icon: 'none'
             });
         }
     });
 }
 </script>
+
 <style lang="scss" scoped>
 .invitation-friend {
     color: #333;

@@ -9,6 +9,7 @@ export default {
     next: '다음',
     finish: '완료',
     loading: '로딩 중...',
+    noContent: '내용 없음',
     success: '성공',
     fail: '실패',
     retry: '다시 시도',
@@ -349,7 +350,9 @@ export default {
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',
-    disagree: '동의하지 않음'
+    disagree: '동의하지 않음',
+    login: '로그인',
+    via: '통해'
   },
   answerBook: {
     title: '답변의 책',
@@ -369,6 +372,15 @@ export default {
     pleaseInputQuestion: '질문을 입력해주세요',
     unlockAnalysis: '이 분석을 잠금 해제하려면 결제가 필요합니다',
     payNow: '위안/회 지금 결제'
+  },
+  invitationFriend: {
+    title: '초대 공유',
+    desc: '복사 버튼을 클릭하여 링크를 복사하고 초대하세요',
+    copyBtn: '링크 복사',
+    wxFriend: '위챗 친구',
+    wxTimeline: '모멘츠',
+    shareSummary: '친구를 초대하여 함께 테스트하세요',
+    copySuccess: '링크가 클립보드에 복사되었습니다'
   }
 }
 

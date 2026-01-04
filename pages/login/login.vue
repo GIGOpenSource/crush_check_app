@@ -25,11 +25,11 @@
 		   <!-- 苹果登录 -->
 		   <view class="iosLogin chooseapple" v-if="!isAgreed && systemInfo == 'ios'" @click.stop="checkDisabled">
 		   			   <image src="/static/my/no-Apple.png" mode=""></image>
-		   	    <text>通过 Apple 登录</text>
+		   	    <text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
 		   </view>
 		   <view class="iosLogin"  v-if="isAgreed && systemInfo == 'ios'" @click="onGetPhoneNumber">
 			   <image src="/static/my/yes-Apple.png" mode=""></image>
-		   	    <text>通过 Apple 登录</text>
+		   	    <text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
 		   </view>
 		  
 			<!-- 协议同意区域 -->

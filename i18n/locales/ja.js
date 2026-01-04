@@ -9,6 +9,7 @@ export default {
     next: '次へ',
     finish: '完了',
     loading: '読み込み中...',
+    noContent: 'コンテンツがありません',
     success: '成功',
     fail: '失敗',
     retry: '再試行',
@@ -349,7 +350,9 @@ export default {
     wechatLogin: 'ワンクリックログイン',
     loginFailedRetry: 'ログインに失敗しました。もう一度お試しください',
     agreeUserAgreement: '利用規約に同意',
-    disagree: '同意しない'
+    disagree: '同意しない',
+    login: 'ログイン',
+    via: '経由'
   },
   answerBook: {
     title: '答えの本',
@@ -369,6 +372,15 @@ export default {
     pleaseInputQuestion: '質問を入力してください',
     unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
     payNow: '元/回 今すぐ支払う'
+  },
+  invitationFriend: {
+    title: '招待の共有',
+    desc: 'コピー ボタンをクリックしてリンクをコピーして招待',
+    copyBtn: 'リンクをコピー',
+    wxFriend: 'WeChat 友達',
+    wxTimeline: 'モーメンツ',
+    shareSummary: '友達を招待して一緒にテストしましょう',
+    copySuccess: 'リンクがクリップボードにコピーされました'
   }
 }
 

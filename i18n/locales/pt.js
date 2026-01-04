@@ -9,6 +9,7 @@ export default {
     next: 'Próximo',
     finish: 'Finalizar',
     loading: 'Carregando...',
+    noContent: 'Sem conteúdo',
     success: 'Sucesso',
     fail: 'Falhou',
     retry: 'Tentar Novamente',
@@ -349,7 +350,9 @@ export default {
     wechatLogin: 'Login com Um Clique',
     loginFailedRetry: 'Falha no login, por favor tente novamente',
     agreeUserAgreement: 'Concordar com Acordo do Usuário',
-    disagree: 'Discordar'
+    disagree: 'Discordar',
+    login: 'Entrar',
+    via: 'Via'
   },
   answerBook: {
     title: 'Livro de Respostas',
@@ -369,6 +372,15 @@ export default {
     pleaseInputQuestion: 'Por favor, digite sua pergunta',
     unlockAnalysis: 'Você precisa pagar para desbloquear esta análise',
     payNow: 'CNY/vez Pagar Agora'
+  },
+  invitationFriend: {
+    title: 'Compartilhar convite',
+    desc: 'Clique no botão copiar para copiar o link e convidar',
+    copyBtn: 'Copiar link',
+    wxFriend: 'Amigo do WeChat',
+    wxTimeline: 'Momentos',
+    shareSummary: 'Convide amigos para testar juntos',
+    copySuccess: 'Link copiado para a área de transferência'
   }
 }
 
