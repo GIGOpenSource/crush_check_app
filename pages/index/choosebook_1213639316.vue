@@ -33,21 +33,21 @@
                 <view class="title1">{{ t('choosebook.noFreeTimes') }}</view>
                 <view class="del-popup-actions">
                     <view @click="pay">{{ mouth.price }}{{ t('index.perMonth') }} {{ t('index.openNow') }}</view>
-                    <view @click="watchAdInPopup">{{ t('choosebook.watchAdUnlock') }}</view>
+                    <!-- <view @click="watchAdInPopup">{{ t('choosebook.watchAdUnlock') }}</view> -->
                 </view>
                 <view class="icon" @click="showDelPopup2 = false">
                     <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
                 </view>
             </view>
         </up-popup>
-        <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
+        <!-- <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
             <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
                 @close="onadclose" @error="onaderror">
                 <button :disabled="loading" :loading="loading" class="ad-button">{{ t('choosebook.openAd') }}</button>
                 <view v-if="error" class="ad-error">{{ error }}</view>
                 <view v-else class="ad-text">{{ t('choosebook.adFinishTip') }}</view>
             </ad-rewarded-video>
-        </view>
+        </view> -->
 
     </view>
 </template>

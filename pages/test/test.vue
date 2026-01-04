@@ -191,50 +191,7 @@ export default {
         // });
 
         // 初始化分类列表（使用 i18n）
-        this.categoryList = [
-            {
-                label: t('poster.all'),
-                icon: "/static/my/quanbu.png",
-                color: "#9B59B6",
-                type: "all",
-            },
-            // {
-            //   label: t('poster.chatScreenshot'),
-            //   icon: "/static/my/liaotian.png",
-            //   color: "#FFB6E1",
-            //   type: "chat",
-            // },
-            //   {
-            //     label: t('poster.socialScreenshot'),
-            //     icon: "/static/my/shejiao.png",
-            //     color: "#5B9BD5",
-            //     type: "social",
-            //   },
-            //   {
-            //     label: t('poster.physicalPhoto'),
-            //     icon: "/static/my/shiwu.png",
-            //     color: "#66BB6A",
-            //     type: "physical",
-            //   },
-            // {
-            //   label: t('poster.consumeVoucher'),
-            //   icon: "/static/my/xiaofei.png",
-            //   color: "#F2C448",
-            //   type: "consume",
-            // },
-            {
-                label: t('poster.answerBook'),
-                icon: "/static/my/shejiao.png",
-                color: "#5B9BD5",
-                type: "answer",
-            },
-            {
-                label: t('poster.crushCheck'),
-                icon: "/static/my/shiwu.png",
-                color: "#66BB6A",
-                type: "crushcheck",
-            },
-        ];
+      
         this.pageName = t('poster.title');
         
         // 检查登录状态，如果没有登录，posterList 保持为空数组
@@ -282,6 +239,52 @@ export default {
         // 页面触底事件（作为 scroll-view 的备选方案）
         console.log("========== 页面触底事件 ==========");
         this.loadMore();
+    },
+    onShow() {
+      this.categoryList = [
+            {
+                label: t('poster.all'),
+                icon: "/static/my/quanbu.png",
+                color: "#9B59B6",
+                type: "all",
+            },
+            // {
+            //   label: t('poster.chatScreenshot'),
+            //   icon: "/static/my/liaotian.png",
+            //   color: "#FFB6E1",
+            //   type: "chat",
+            // },
+            //   {
+            //     label: t('poster.socialScreenshot'),
+            //     icon: "/static/my/shejiao.png",
+            //     color: "#5B9BD5",
+            //     type: "social",
+            //   },
+            //   {
+            //     label: t('poster.physicalPhoto'),
+            //     icon: "/static/my/shiwu.png",
+            //     color: "#66BB6A",
+            //     type: "physical",
+            //   },
+            // {
+            //   label: t('poster.consumeVoucher'),
+            //   icon: "/static/my/xiaofei.png",
+            //   color: "#F2C448",
+            //   type: "consume",
+            // },
+            {
+                label: t('poster.answerBook'),
+                icon: "/static/my/shejiao.png",
+                color: "#5B9BD5",
+                type: "answer",
+            },
+            {
+                label: t('poster.crushCheck'),
+                icon: "/static/my/shiwu.png",
+                color: "#66BB6A",
+                type: "crushcheck",
+            },
+        ];
     },
 
     methods: {

@@ -53,21 +53,21 @@
             <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
             <view class="del-popup-actions">
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
-                <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view>
+                <!-- <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view> -->
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
             </view>
         </view>
     </up-popup>
-    <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
+    <!-- <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
         <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
             @close="onadclose" @error="onaderror">
             <button :disabled="loading" :loading="loading" class="ad-button">{{ t('answerBook.openAd') }}</button>
             <view v-if="error" class="ad-error">{{ error }}</view>
             <view v-else class="ad-text">{{ t('answerBook.adFinishTip') }}</view>
         </ad-rewarded-video>
-    </view>
+    </view> -->
 </template>
 
 <script setup>
