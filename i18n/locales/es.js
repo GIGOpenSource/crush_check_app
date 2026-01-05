@@ -381,5 +381,8 @@ export default {
     wxTimeline: 'Momentos',
     shareSummary: 'Invita a tus amigos a probar juntos',
     copySuccess: 'Enlace copiado al portapapeles'
+  },
+  choosebook: {
+    noFreeTimes: 'Se han agotado las veces gratuitas de hoy'
   }
 }

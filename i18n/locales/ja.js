@@ -381,6 +381,9 @@ export default {
     wxTimeline: 'モーメンツ',
     shareSummary: '友達を招待して一緒にテストしましょう',
     copySuccess: 'リンクがクリップボードにコピーされました'
+  },
+  choosebook: {
+    noFreeTimes: '本日の無料回数が使い果たされました'
   }
 }
 

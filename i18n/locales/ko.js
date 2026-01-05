@@ -381,6 +381,9 @@ export default {
     wxTimeline: '모멘츠',
     shareSummary: '친구를 초대하여 함께 테스트하세요',
     copySuccess: '링크가 클립보드에 복사되었습니다'
+  },
+  choosebook: {
+    noFreeTimes: '오늘의 무료 횟수가 소진되었습니다'
   }
 }
 

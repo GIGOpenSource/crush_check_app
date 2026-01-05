@@ -381,5 +381,8 @@ export default {
     wxTimeline: 'Moments',
     shareSummary: 'Invite friends to test together',
     copySuccess: 'Link copied to clipboard'
+  },
+  choosebook: {
+    noFreeTimes: 'Today\'s free times have been used up'
   }
 }

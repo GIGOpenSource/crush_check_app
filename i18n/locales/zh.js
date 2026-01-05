@@ -386,6 +386,6 @@ noMore: '没有更多了'
     copySuccess: '链接已复制到剪贴板'
   },
   choosebook:{
-    noFreeTimes:'本月免费次数已用完，邀请好友可获得更多免费次数',
+    noFreeTimes:'今日免费次数已用完',
   }
 }
