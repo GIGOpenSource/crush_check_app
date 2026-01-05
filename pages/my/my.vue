@@ -10,7 +10,7 @@
           </view>
         </template>
         <template v-else>
-          <button open-type="chooseAvatar" @chooseavatar="onChooseAvatar" class="avatar-btn logged-in"
+          <button open-type="chooseAvatar" @click="onChooseAvatar" class="avatar-btn logged-in"
             hover-class="none">
             <image class="avatar-image" :src="userInfo.user_avatar || '/static/my/user_no.png'" mode="aspectFill">
             </image>
@@ -217,6 +217,7 @@ import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import { t } from '@/i18n/index.js';
 import { ref } from 'vue'
+import { host } from '@/config/config.js'
 export default {
   components: {
     IndexProup,
@@ -982,55 +983,105 @@ export default {
         });
       }
     },
-    async onChooseAvatar(e) {
-      console.log("选择头像", e);
-      const avatarUrl = e.detail.avatarUrl;
-
-      // 先显示本地选择的头像
-      this.userInfo.user_avatar = avatarUrl;
-      uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
-
-      try {
-        // 上传头像到服务器
-        const uploadRes = await uploadAvatar(avatarUrl);
-        console.log("上传头像成功", uploadRes);
-
-        // 获取服务器返回的头像URL
-        const serverAvatarUrl =
-          uploadRes.data?.url ||
-          uploadRes.data?.fileUrl ||
-          uploadRes.data?.avatar ||
-          uploadRes.data;
-
-        if (serverAvatarUrl) {
-          // 更新本地头像为服务器返回的URL
-          this.userInfo.user_avatar = serverAvatarUrl;
+    async onChooseAvatar() {
+      // 使用 uni.chooseImage 选择图片
+      uni.chooseImage({
+        count: 1, // 只选择一张图片
+        sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: async (res) => {
+          const tempFilePath = res.tempFilePaths[0];
+          
+          // 先显示本地选择的头像
+          this.userInfo.user_avatar = tempFilePath;
           uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
 
-          // 调用更新用户信息接口，使用服务器返回的URL
-          await this.updateUserInfoToServer({ user_avatar: serverAvatarUrl });
-
-          uni.showToast({
-            title: this.$t('common.avatarUploadSuccess'),
-            icon: "success",
+          // 显示上传中提示
+          uni.showLoading({
+            title: this.$t('common.uploading') || '上传中...',
+            mask: true
           });
-        } else {
-          console.warn("服务器未返回头像URL", uploadRes);
+
+          // 使用 uni.uploadFile 上传头像，与 opeare.vue 中的方式一致
+          let params = {
+            type: 'img',
+            file_name: tempFilePath,
+          };
+          const systemInfo = uni.getSystemInfoSync();
+          if (systemInfo.platform === 'android') {
+            console.log('Android设备');
+            params.file = tempFilePath;
+          } else if (systemInfo.platform === 'ios') {
+            console.log('iOS设备');
+          }
+
+          uni.uploadFile({
+            url: host + '/upload/',
+            filePath: tempFilePath,
+            name: 'file',
+            formData: params,
+            header: {
+              'content-type': 'multipart/form-data'
+            },
+            success: async (uploadFileRes) => {
+              uni.hideLoading();
+              try {
+                // 解析返回的JSON数据，格式与 opeare.vue 一致
+                const uploadRes = JSON.parse(uploadFileRes.data);
+                const serverAvatarUrl = uploadRes.data?.url || uploadRes.data?.fileUrl || uploadRes.data?.avatar;
+
+                if (serverAvatarUrl) {
+                  console.log("上传头像成功", serverAvatarUrl);
+                  // 更新本地头像为服务器返回的URL
+                  this.userInfo.user_avatar = serverAvatarUrl;
+                  uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
+
+                  // 调用更新用户信息接口，使用服务器返回的URL
+                  await this.updateUserInfoToServer({ user_avatar: serverAvatarUrl });
+
+                  uni.showToast({
+                    title: this.$t('common.avatarUploadSuccess'),
+                    icon: "success",
+                  });
+                } else {
+                  console.warn("服务器未返回头像URL", uploadRes);
+                  uni.showToast({
+                    title: this.$t('common.avatarUploadSuccessButNoUrl'),
+                    icon: "none",
+                  });
+                }
+              } catch (error) {
+                console.error("解析上传结果失败:", error);
+                uni.showToast({
+                  title: this.$t('common.avatarUploadFailed'),
+                  icon: "none",
+                });
+                // 上传失败，恢复默认头像
+                this.userInfo.user_avatar = "/static/my/user_no.png";
+                uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
+              }
+            },
+            fail: (error) => {
+              uni.hideLoading();
+              console.error("上传头像失败:", error);
+              uni.showToast({
+                title: error.errMsg || this.$t('common.avatarUploadFailed'),
+                icon: "none",
+              });
+              // 上传失败，恢复默认头像
+              this.userInfo.user_avatar = "/static/my/user_no.png";
+              uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
+            }
+          });
+        },
+        fail: (error) => {
+          console.error("选择图片失败:", error);
           uni.showToast({
-            title: this.$t('common.avatarUploadSuccessButNoUrl'),
+            title: this.$t('common.avatarUploadFailed'),
             icon: "none",
           });
         }
-      } catch (error) {
-        console.error("上传头像失败:", error);
-        uni.showToast({
-          title: error.msg || error.message || this.$t('common.avatarUploadFailed'),
-          icon: "none",
-        });
-        // 上传失败，恢复默认头像
-        this.userInfo.user_avatar = "/static/my/user_no.png";
-        uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
-      }
+      });
     },
     async onNicknameBlur(e) {
       const nickname = e.detail.value.trim();
