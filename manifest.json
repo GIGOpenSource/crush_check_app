@@ -3,7 +3,7 @@
     "appid" : "__UNI__52A3010",
     "description" : "CrushCheck",
     "versionName" : "1.0.1",
-    "versionCode" : 110,
+    "versionCode" : 111,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -122,6 +122,13 @@
                         "spotlight@2x" : "unpackage/res/icons/80x80.png",
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
+                }
+            },
+            "splashscreen" : {
+                "iosStyle" : "storyboard",
+                "androidStyle" : "common",
+                "ios" : {
+                    "storyboard" : "/Users/daijiayingzuihaokan/Desktop/zhiliao/CustomStoryboard.zip"
                 }
             }
         }
