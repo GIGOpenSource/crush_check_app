@@ -113,7 +113,19 @@ export default {
     logoutAppleID() {
       // 1. 平台校验：仅iOS支持Apple ID授权
       if (uni.getSystemInfoSync().platform !== 'ios') {
-        uni.showToast({ title: '仅iOS支持该操作', icon: 'none' });
+        delesuser({}).then((result) => {
+          this.showDelPopup2 = false
+          uni.removeStorageSync("token");
+          uni.removeStorageSync("openId");
+          uni.removeStorageSync("userInfo");
+          uni.removeStorageSync("inviter_openid");
+          uni.showToast({ title: result.message, icon: 'none' });
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1500);
+        }).catch((err) => {
+          uni.showToast({ title: err.message, icon: 'none' });
+        });
         return;
       }
 
