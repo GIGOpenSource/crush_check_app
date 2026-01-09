@@ -47,11 +47,30 @@ export default {
         label: this.$t('settings.aboutUs'),
         type: "about",
       },
+      {
+        label: '注销账号',
+        type: "user",
+      },
     ];
     this.pageName = this.$t('settings.title');
   },
   methods: {
     handleItemClick(item) {
+      if (item.type === 'user') {
+        uni.showModal({
+          title: '注销账号',
+          content: '确定注销账号吗？',
+          showCancel: true,
+          success: ({ confirm, cancel }) => {
+            if (confirm) {
+              this.logoutAppleID()
+            } else if (cancel) {
+              // 用户取消操作
+            }
+          }
+        })
+        return;
+      }
       uni.navigateTo({
         url: "/pages/my/richtext?label=" + encodeURIComponent(item.label) + "&type=" + encodeURIComponent(item.type),
       });
@@ -82,12 +101,68 @@ export default {
 
             // 延迟跳转到登录页面
             setTimeout(() => {
-               uni.navigateTo({ url: '/pages/login/login' })
+              uni.navigateTo({ url: '/pages/login/login' })
             }, 1500);
           }
         },
       });
     },
+    logoutAppleID() {
+      // 1. 平台校验：仅iOS支持Apple ID授权
+      if (uni.getSystemInfoSync().platform !== 'ios') {
+        uni.showToast({ title: '仅iOS支持该操作', icon: 'none' });
+        return;
+      }
+
+      try {
+        // 2. 获取所有授权服务
+        plus.oauth.getServices(
+          (services) => {
+            if (!services || services.length === 0) {
+              uni.showToast({ title: '未获取到授权服务', icon: 'none' });
+              return;
+            }
+
+            // 3. 查找apple授权服务（兼容不同命名：apple / AppleID）
+            let appleService = null;
+            for (let service of services) {
+              if (service.id.toLowerCase() === 'apple') {
+                appleService = service;
+                break;
+              }
+            }
+
+            // 4. 检查是否找到Apple ID授权服务
+            if (!appleService) {
+              uni.showToast({ title: '未配置Apple ID授权服务', icon: 'none' });
+              return;
+            }
+
+            // 5. 执行Apple ID注销
+            appleService.logout(
+              (res) => {
+                uni.removeStorageSync("token");
+                uni.removeStorageSync("openId");
+                uni.removeStorageSync("userInfo");
+                uni.removeStorageSync("inviter_openid");
+                uni.showToast({ title: '注销成功', icon: 'success' });
+                //  注销账号接口调用
+
+              },
+              (err) => {
+                const errMsg = err.message || err.errorMessage || '注销失败';
+                uni.showToast({ title: errMsg, icon: 'none' });
+              }
+            );
+          },
+          (err) => {
+            uni.showToast({ title: '获取授权服务失败，请重试', icon: 'none' });
+          }
+        );
+      } catch (e) {
+        uni.showToast({ title: '注销操作异常，请重试', icon: 'none' });
+      }
+    }
   },
 };
 </script>

@@ -3,7 +3,7 @@
     "appid" : "__UNI__52A3010",
     "description" : "CrushCheck",
     "versionName" : "1.0.1",
-    "versionCode" : 111,
+    "versionCode" : 112,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -66,7 +66,8 @@
                     }
                 },
                 "urltypes" : "crushcheck",
-                "privacyRegisterMode" : "manual"
+                "privacyRegisterMode" : "manual",
+                "idfa" : false
             },
             /* SDK配置 */
             "sdkConfigs" : {
@@ -125,8 +126,8 @@
                 }
             },
             "splashscreen" : {
-                "iosStyle" : "storyboard",
-                "androidStyle" : "common",
+                "iosStyle" : "common",
+                "androidStyle" : "default",
                 "ios" : {
                     "storyboard" : "/Users/daijiayingzuihaokan/Desktop/zhiliao/CustomStoryboard.zip"
                 }
@@ -145,7 +146,7 @@
         },
         "usingComponents" : true,
         "uniStatistics" : {
-            "enable" : true
+            "enable" : false
         }
     },
     "mp-alipay" : {
