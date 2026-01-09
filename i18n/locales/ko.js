@@ -3,7 +3,7 @@ export default {
     zhuxiao:'계정 삭제 후 귀하의 계정 정보는 영구적으로 삭제되며 복구할 수 없습니다.',
     deleteuser:'계정 삭제',
     read:'읽었으며 동의합니다',
-    vipServiceAgreement:'《멤버십 서비스 약관》',
+    vipServiceAgreement:'멤버십 서비스 약관',
     confirm: '확인',
     cancel: '취소',
     save: '저장',

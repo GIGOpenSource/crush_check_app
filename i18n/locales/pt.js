@@ -3,7 +3,7 @@ export default {
     zhuxiao:'Após a exclusão da conta, suas informações de conta serão removidas permanentemente e não poderão ser recuperadas',
      deleteuser:'Excluir conta',
      read:'Li e concordo',
-    vipServiceAgreement:'《Contrato de Serviço de Associação》',
+    vipServiceAgreement:'Contrato de Serviço de Associação',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
     save: 'Salvar',

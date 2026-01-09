@@ -3,7 +3,7 @@ export default {
     zhuxiao:'After the account is deleted, your account information will be permanently removed and cannot be recovered',
     deleteuser:'Delete account',
      read:'I have read and agree to',
-    vipServiceAgreement:'《Membership Service Agreement》',
+    vipServiceAgreement:'Membership Service Agreement',
     confirm: 'Confirm',
     cancel: 'Cancel',
     save: 'Save',

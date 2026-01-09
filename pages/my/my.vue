@@ -218,7 +218,7 @@
         <view class="radio2">
           <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
             @click="choose2 = !choose2" /><text>{{ $t('common.read') }}<text
-              style="color: #B370FF;font-weight: bold;" @click="vipxiyi">{{ $t('common.vipServiceAgreement') }}</text></text>
+              style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《{{ $t('common.vipServiceAgreement') }}》</text></text>
         </view>
       </view>
     </view>
