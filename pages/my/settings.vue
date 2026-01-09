@@ -12,31 +12,31 @@
         {{ $t('settings.logout') }}
       </button>
     </view>
-        <up-popup :show="showDelPopup2" mode="center">
-            <view class="del-popup-content">
-                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-                <view class="title1">注销账号后，您的账号信息将被删除且无法恢复</view>
-                <view class="del-popup-actions">
-                <view class="del-popup-btn cancel" @click="showDelPopup = false">{{ $t('common.cancel') }}</view>
-                <view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
-            </view>
-                <view class="icon" @click="showDelPopup2 = false">
-                    <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
-                </view>
-            </view>
-        </up-popup>
+    <up-popup :show="showDelPopup2" mode="center">
+      <view class="del-popup-content">
+        <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+        <view class="title1">{{ $t('common.zhuxiao') }}</view>
+        <view class="del-popup-actions">
+          <view class="del-popup-btn cancel" @click="showDelPopup = false">{{ $t('common.cancel') }}</view>
+          <view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+        </view>
+        <view class="icon" @click="showDelPopup2 = false">
+          <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+        </view>
+      </view>
+    </up-popup>
   </view>
 </template>
 
 <script>
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import { t } from '@/i18n/index.js';
-
+import { delesuser } from '@/api/login.js'
 export default {
   mixins: [pageStayMixin],
   data() {
     return {
-      showDelPopup2:false,
+      showDelPopup2: false,
       pageName: '',
       settingsList: [],
     };
@@ -62,7 +62,7 @@ export default {
         type: "about",
       },
       {
-        label: '注销账号',
+        label: this.$t('common.deleteuser'),
         type: "user",
       },
     ];
@@ -144,12 +144,19 @@ export default {
             // 5. 执行Apple ID注销
             appleService.logout(
               (res) => {
-                uni.removeStorageSync("token");
-                uni.removeStorageSync("openId");
-                uni.removeStorageSync("userInfo");
-                uni.removeStorageSync("inviter_openid");
-                uni.showToast({ title: '注销成功', icon: 'success' });
-                //  注销账号接口调用-------
+                delesuser({}).then((result) => {
+                  this.showDelPopup2 = false
+                  uni.removeStorageSync("token");
+                  uni.removeStorageSync("openId");
+                  uni.removeStorageSync("userInfo");
+                  uni.removeStorageSync("inviter_openid");
+                  uni.showToast({ title: result.message, icon: 'none' });
+                  setTimeout(() => {
+                    uni.navigateBack()
+                  }, 1500);
+                }).catch((err) => {
+                  uni.showToast({ title: err.message, icon: 'none' });
+                });
 
               },
               (err) => {
@@ -178,81 +185,82 @@ page {
 </style>
 
 <style scoped lang="scss">
-  .del-popup-content {
-    position: relative;
-    width: 560rpx;
-    padding: 160rpx 40rpx 48rpx;
-    box-sizing: border-box;
-    border-radius: 36rpx;
-    background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
-    box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
-    text-align: center;
+.del-popup-content {
+  position: relative;
+  width: 560rpx;
+  padding: 160rpx 40rpx 48rpx;
+  box-sizing: border-box;
+  border-radius: 36rpx;
+  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+  text-align: center;
+  color: #000;
+
+  .del-popup-icon {
+    position: absolute;
+    top: -90rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+  }
+
+  .title1 {
     color: #000;
+    margin-top: -50rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+  }
 
-    .del-popup-icon {
-        position: absolute;
-        top: -90rpx;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 200rpx;
-        height: 200rpx;
+  .num {
+    font-size: 26rpx;
+    margin-top: 20rpx;
+  }
+
+
+
+  .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
-
-    .title1 {
-        color: #000;
-        margin-top: -50rpx;
-        font-size: 30rpx;
-        font-weight: 400;
-    }
-
-    .num {
-        font-size: 26rpx;
-        margin-top: 20rpx;
-    }
-
-    
-
-    .icon {
-        position: absolute;
-        transform: translateX(-50%);
-        left: 50%;
-        bottom: -100rpx;
-        color: #000;
-        cursor: pointer;
-
-        &.icon-disabled {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-    }
+  }
 }
 
 .del-popup-actions {
-    display: flex;
-    gap: 24rpx;
-    margin-top: 20rpx;
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
 }
 
 .del-popup-btn {
-    flex: 1;
-    height: 88rpx;
-    border-radius: 44rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 30rpx;
-    font-weight: 600;
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
 }
 
 .del-popup-btn.cancel {
-    background: #eeedff;
-    color: #b370ff;
+  background: #eeedff;
+  color: #b370ff;
 }
 
 .del-popup-btn.confirm {
-    background: #b370ff;
-    color: #ffffff;
+  background: #b370ff;
+  color: #ffffff;
 }
+
 .settings-page {
   min-height: 100vh;
   background: #12111f;

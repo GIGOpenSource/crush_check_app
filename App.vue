@@ -66,23 +66,24 @@
 		let savedLanguage = uni.getStorageSync('currentLanguage');
 		let systemInfo = uni.getSystemInfoSync().language
 		if (!savedLanguage) {
-			if (systemInfo == 'zh-Hans-CN') {
+			if (systemInfo.includes('zh')) {
 				savedLanguage = 'zh'
-			} else if (systemInfo == 'en-CN') {
+			} else if (systemInfo.includes('en')) {
 				savedLanguage = 'en'
-			} else if (systemInfo == 'es-CN') {
+			} else if (systemInfo.includes('es')) {
 				savedLanguage = 'es'
-			} else if (systemInfo == 'pt-PT') {
+			} else if (systemInfo.includes('pt')) {
 				savedLanguage = 'pt'
-			} else if (systemInfo == 'ja-CN') {
+			} else if (systemInfo.includes('ja')) {
 				savedLanguage = 'ja'
-			} else if (systemInfo == 'ko-CN') {
+			} else if (systemInfo.includes('ko')) {
 				savedLanguage = 'ko'
 			} else {
 				savedLanguage = 'en'
 			}
 		} 
-		console.log(systemInfo,'systemInfo')
+		console.log(systemInfo.includes('zh'),'1111')
+		console.log(savedLanguage,'savedLanguage')
 		setLocale(savedLanguage);
 		
 		

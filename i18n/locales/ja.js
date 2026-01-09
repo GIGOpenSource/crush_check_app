@@ -1,5 +1,9 @@
 export default {
   common: {
+    zhuxiao:'アカウントを削除すると、アカウント情報は完全に削除され、復元することはできません',
+     deleteuser:'アカウントを削除',
+     read:'読みましたので同意します',
+    vipServiceAgreement:'《読みましたので同意します》',
     confirm: '確認',
     cancel: 'キャンセル',
     save: '保存',

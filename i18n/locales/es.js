@@ -1,5 +1,9 @@
 export default {
   common: {
+     zhuxiao:'Después de eliminar la cuenta, su información de cuenta será borrada permanentemente y no podrá ser recuperada.',
+    deleteuser:'Eliminar cuenta',
+     read:'He leído y acepto',
+    vipServiceAgreement:'《Acuerdo de Servicio de Membresía》',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
     save: 'Guardar',

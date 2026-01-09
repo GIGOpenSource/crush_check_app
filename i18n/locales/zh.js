@@ -1,5 +1,9 @@
 export default {
   common: {
+    zhuxiao:'注销账号后，您的账号信息将被删除且无法恢复',
+    deleteuser:'注销账号',
+    read:'已阅读并同意',
+    vipServiceAgreement:'《会员服务协议》',
     confirm: '确定',
     cancel: '取消',
     save: '保存',

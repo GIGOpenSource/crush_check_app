@@ -426,3 +426,18 @@ export function iosLogin(params, inviter_openid) {
     }
   );
 }
+
+export function delesuser(params) {
+  return postRequest(
+    "/ios/ios_account_deletion",
+    params,
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "注销中...",
+    }
+  );
+}
