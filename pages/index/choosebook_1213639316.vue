@@ -35,6 +35,10 @@
                     <view @click="pay">{{ mouth.price }}{{ t('index.perMonth') }} {{ t('index.openNow') }}</view>
                     <!-- <view @click="watchAdInPopup">{{ t('choosebook.watchAdUnlock') }}</view> -->
                 </view>
+				<view class="radio2">
+					<radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
+						@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;">《会员服务协议》</text> </text>
+				</view>
                 <view class="icon" @click="showDelPopup2 = false">
                     <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
                 </view>
@@ -71,6 +75,7 @@ const showDelPopup2 = ref(false) // 解锁弹窗
 const showAdInPopup = ref(false) // 弹窗内是否显示广告
 const pendingChooseParams = ref(null) // 存储待执行的choose参数
 const mouth = ref({})
+const choose2 = ref(false)
 // 获取用户信息，处理可能为空的情况
 let userinfo = null
 try {
@@ -211,7 +216,10 @@ const onaderror = (e) => {
 }
 // 支付
 const pay = () => {
-
+if(!choose2.value) return uni.showToast({
+		title:'请阅读会员服务协议',
+		icon:'none'
+	})
     const systemInfo = uni.getSystemInfoSync();
     if (systemInfo.platform === 'ios') {
         iosOrder({
@@ -308,7 +316,14 @@ const pay = () => {
     font-weight: 100 !important;
     overflow: hidden;
 }
-
+	.radio2{
+	margin-top: 30rpx;
+	font-size: 24rpx;
+	display:flex;
+	font-weight: 300;
+	align-items: center;
+	justify-content: center;
+	}
 .ad-button {
     width: 600rpx;
     height: 80rpx;

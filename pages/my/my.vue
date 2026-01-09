@@ -10,8 +10,7 @@
           </view>
         </template>
         <template v-else>
-          <button open-type="chooseAvatar" @click="onChooseAvatar" class="avatar-btn logged-in"
-            hover-class="none">
+          <button open-type="chooseAvatar" @click="onChooseAvatar" class="avatar-btn logged-in" hover-class="none">
             <image class="avatar-image" :src="userInfo.user_avatar || '/static/my/user_no.png'" mode="aspectFill">
             </image>
           </button>
@@ -121,7 +120,7 @@
         <view class="function-list">
           <template v-for="(item, index) in functionList" :key="index">
             <button v-if="item.type === 'share'" class="function-item share-button" hover-class="none"
-              @click="friend  = true">
+              @click="friend = true">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
             </button>
@@ -196,7 +195,34 @@
     </view>
   </up-popup>
   <!-- 分享 -->
-			 <InvitationFriend :show="friend" @close="friend = false"/>
+  <InvitationFriend :show="friend" @close="friend = false" />
+  <!-- 会员拦截 -->
+  <up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+    <view class="vipProup">
+      <image :src="$getImg('index/bg')" class="bg" />
+      <view class="content">
+        <view class="top-title">
+          <text class="t1">{{ $t('index.becomeMember') }}</text>
+          <text class="t2">{{ $t('index.enjoyPrivileges') }}</text>
+        </view>
+        <view class="btns">
+          <view v-for="(item, index) in viplist" :key="index">
+            <image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
+            <text>{{ item }}</text>
+          </view>
+        </view>
+        <view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{
+          $t('index.openNow')
+        }}
+        </view>
+        <view class="radio2">
+          <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
+            @click="choose2 = !choose2" /><text>已阅读并同意<text
+              style="color: #B370FF;font-weight: bold;">《会员服务协议》</text></text>
+        </view>
+      </view>
+    </view>
+  </up-popup>
 </template>
 
 <script>
@@ -226,7 +252,16 @@ export default {
   mixins: [pageStayMixin],
   data() {
     return {
-      friend:false,
+      choose2: false,
+      mouth: {},
+      viplist: [
+        t('index.vipFeature1'),
+        t('index.vipFeature2'),
+        t('index.vipFeature3'),
+        t('index.vipFeature4'),
+        t('index.vipFeature5')
+      ],
+      friend: false,
       pageName: '',
       isLoggedIn: false,
       userInfo: {
@@ -258,10 +293,13 @@ export default {
       showProgress: false, // 显示进度条弹窗
       progress: 0, // 进度百分比
       progressTimer: null, // 进度条定时器
+      vipProup: false
     };
   },
   onLoad() {
-
+    getProductsList().then(res => {
+      this.mouth = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
+    })
   },
   onShow() {
     this.functionList = [
@@ -287,6 +325,9 @@ export default {
       uni.stopPullDownRefresh();
     }
     this.refreshUserInfoForPullDown();
+    getProductsList().then(res => {
+      this.mouth = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
+    })
   },
   computed: {
     // 性别选项（使用计算属性，语言切换时自动更新）
@@ -546,7 +587,14 @@ export default {
         })
         return;
       }
-
+        this.vipProup = true
+        this.choose2 = false
+    },
+    async pay() {
+       if (!this.choose2) return uni.showToast({
+        title: '请阅读会员服务协议',
+        icon: 'none'
+      })
       try {
         // 获取产品列表
         const res = await getProductsList();
@@ -635,9 +683,11 @@ export default {
                               icon: 'none'
                             });
                             _this.refreshUserInfo();
+                             _this.vipProup = false
                           })
                             .catch(err => {
                               console.log(err, 'eee')
+                                _this.vipProup = false
                             })
                         },
                         fail: (err) => {
@@ -874,7 +924,7 @@ export default {
         this.handleUnlockClick();
         return;
       }
-	  this.handleUnlockClick();
+      this.handleUnlockClick();
       // const allowCount = Number(this.userInfo.allow_count || 0);
       // if (allowCount > 0) {
       //   uni.navigateTo({
@@ -991,7 +1041,7 @@ export default {
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: async (res) => {
           const tempFilePath = res.tempFilePaths[0];
-          
+
           // 先显示本地选择的头像
           this.userInfo.user_avatar = tempFilePath;
           uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
@@ -1412,6 +1462,91 @@ page {
 </style>
 
 <style scoped lang="scss">
+.radio2 {
+  margin-top: 30rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.vipProup {
+  width: 100%;
+  height: 95vh;
+  position: relative;
+
+  .bg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    .top-title {
+      width: 85%;
+      display: flex;
+      flex-direction: column;
+      margin-top: 160rpx;
+
+      .name {
+        margin: 0 10rpx;
+      }
+
+      .t1 {
+        font-weight: bold;
+        font-size: 42rpx;
+      }
+
+      .t2 {
+        margin-top: 10rpx;
+        font-size: 26rpx;
+        font-weight: 200;
+      }
+    }
+
+    .btns {
+      width: 85%;
+      margin-top: 80rpx;
+
+      view {
+        width: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 99%);
+        font-weight: 100;
+        height: 100rpx;
+        margin-bottom: 20rpx;
+        line-height: 100rpx;
+        border-radius: 100rpx;
+        padding-left: 45rpx;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+
+        image {
+          width: 60rpx;
+          height: 60rpx;
+          vertical-align: middle;
+          margin-right: 15rpx;
+          margin-left: -10rpx;
+        }
+      }
+    }
+
+    .bottom {
+      width: 92%;
+      background: linear-gradient(90deg, #6273FD 0%, #EE72FD 100%);
+      margin-top: 30rpx;
+      height: 95rpx;
+      border-radius: 30rpx;
+      line-height: 95rpx;
+      text-align: center;
+    }
+  }
+}
+
 .my-page {
   min-height: 100vh;
   padding: 48rpx 30rpx 60rpx;

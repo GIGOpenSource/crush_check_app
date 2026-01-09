@@ -148,6 +148,10 @@
 						$t('index.openNow')
 					}}
 					</view>
+					<view class="radio2">
+						<radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
+							@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;">《会员服务协议》</text></text>
+					</view>
 				</view>
 			</view>
 		</up-popup>
@@ -195,6 +199,7 @@ import {
 	getLocale
 } from '@/i18n/index.js'
 const version = uni.getStorageSync('version')
+const choose2 = ref(false)
 const {
 	t
 } = useI18n()
@@ -417,6 +422,10 @@ const editimage = (index) => {
 }
 //支付
 const pay = () => {
+	if(!choose2.value) return uni.showToast({
+		title:'请阅读会员服务协议',
+		icon:'none'
+	})
 	click_monthpay()
 	const systemInfo = uni.getSystemInfoSync();
 	if (systemInfo.platform === 'ios') {
@@ -870,6 +879,12 @@ const updateTabBarI18n = () => {
 </script>
 
 <style lang="scss" scoped>
+	.radio2{
+	margin-top: 30rpx;
+	font-size: 24rpx;
+	display:flex;
+	align-items: center;
+	}
 .page {
 	width: 100vw;
 	height: auto;
