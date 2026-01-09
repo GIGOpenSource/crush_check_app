@@ -1,6 +1,6 @@
 export default {
   common: {
-    zhuxiao:'After the account is deleted, your account information will be permanently removed and cannot be recovered',
+    zhuxiao:'Your account has been applied for cancellation. If you log in within seven days, the cancellation will be cancelled.',
     deleteuser:'Delete account',
      read:'I have read and agree to',
     vipServiceAgreement:'Membership Service Agreement',

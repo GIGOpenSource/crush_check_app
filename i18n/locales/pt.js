@@ -1,6 +1,6 @@
 export default {
   common: {
-    zhuxiao:'Após a exclusão da conta, suas informações de conta serão removidas permanentemente e não poderão ser recuperadas',
+    zhuxiao:'Sua conta já solicitou o cancelamento. Se você fizer login dentro de sete dias, o cancelamento será cancelado.',
      deleteuser:'Excluir conta',
      read:'Li e concordo',
     vipServiceAgreement:'Contrato de Serviço de Associação',

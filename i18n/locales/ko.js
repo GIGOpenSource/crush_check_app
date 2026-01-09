@@ -1,6 +1,6 @@
 export default {
   common: {
-    zhuxiao:'계정 삭제 후 귀하의 계정 정보는 영구적으로 삭제되며 복구할 수 없습니다.',
+    zhuxiao:'계정이 이미 해지 신청되었습니다. 7일 이내에 로그인하면 해지 신청이 취소됩니다.',
     deleteuser:'계정 삭제',
     read:'읽었으며 동의합니다',
     vipServiceAgreement:'멤버십 서비스 약관',

@@ -302,6 +302,13 @@ export default {
     })
   },
   onShow() {
+	this.viplist = [
+        t('index.vipFeature1'),
+        t('index.vipFeature2'),
+        t('index.vipFeature3'),
+        t('index.vipFeature4'),
+        t('index.vipFeature5')
+      ]
     this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
       { label: this.$t('my.share'), type: "share" },
