@@ -67,6 +67,8 @@ export default {
               this.content = data.user_agreement || "";
             } else if (type === "about") {
               this.content = data.about_us || "";
+            } else if (type === "pay_agreement") {
+              this.content = data.pay_agreement || "";
             } else {
               this.content = "";
             }
