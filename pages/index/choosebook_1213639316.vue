@@ -37,7 +37,7 @@
                 </view>
 				<view class="radio2">
 					<radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
-						@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;">《会员服务协议》</text> </text>
+						@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《会员服务协议》</text> </text>
 				</view>
                 <view class="icon" @click="showDelPopup2 = false">
                     <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
@@ -98,7 +98,11 @@ const getLatestUserInfo = () => {
     const userInfoStr = uni.getStorageSync('userInfo')
     return JSON.parse(userInfoStr)
 }
-
+   const vipxiyi = () =>{
+  uni.navigateTo({
+        url: "/pages/my/richtext?label=" + encodeURIComponent('会员服务协议') + "&type=" + encodeURIComponent('about'),
+      });
+    }
 // 检查是否需要看广告
 const needWatchAd = async () => {
     const latestUserInfo = getLatestUserInfo()

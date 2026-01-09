@@ -218,7 +218,7 @@
         <view class="radio2">
           <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
             @click="choose2 = !choose2" /><text>已阅读并同意<text
-              style="color: #B370FF;font-weight: bold;">《会员服务协议》</text></text>
+              style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《会员服务协议》</text></text>
         </view>
       </view>
     </view>
@@ -405,6 +405,11 @@ export default {
   },
   // #endif
   methods: {
+    vipxiyi(){
+  uni.navigateTo({
+        url: "/pages/my/richtext?label=" + encodeURIComponent('会员服务协议') + "&type=" + encodeURIComponent('about'),
+      });
+    },
     checkLoginStatus() {
       // 检查是否有token来判断登录状态
       const token = uni.getStorageSync("token");

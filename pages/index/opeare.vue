@@ -150,7 +150,7 @@
 					</view>
 					<view class="radio2">
 						<radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
-							@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;">《会员服务协议》</text></text>
+							@click="choose2 = !choose2" /><text>已阅读并同意<text style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《会员服务协议》</text></text>
 					</view>
 				</view>
 			</view>
@@ -217,7 +217,11 @@ const formatDateTime = (date = new Date()) => {
 	const seconds = String(date.getSeconds()).padStart(2, '0')
 	return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
-
+   const vipxiyi = () =>{
+  uni.navigateTo({
+        url: "/pages/my/richtext?label=" + encodeURIComponent('会员服务协议') + "&type=" + encodeURIComponent('about'),
+      });
+    }
 const params = ref({
 	userId: uni.getStorageSync('userInfo') ? JSON.parse(uni.getStorageSync('userInfo')).id : '',
 	appVersion: "1.0.0",
