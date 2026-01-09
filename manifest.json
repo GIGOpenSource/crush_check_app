@@ -126,10 +126,10 @@
                 }
             },
             "splashscreen" : {
-                "iosStyle" : "common",
+                "iosStyle" : "storyboard",
                 "androidStyle" : "default",
                 "ios" : {
-                    "storyboard" : "/Users/daijiayingzuihaokan/Desktop/zhiliao/CustomStoryboard.zip"
+                    "storyboard" : "CustomStoryboard.zip"
                 }
             }
         }
@@ -176,3 +176,5 @@
     },
     "_spaceID" : "mp-aee88409-b919-4228-b191-c6b5e6cbddb2"
 }
+/* 快应用特有相关 *//* 小程序特有相关 */
+
