@@ -12,17 +12,31 @@
         {{ $t('settings.logout') }}
       </button>
     </view>
+    <up-popup :show="showDelPopup2" mode="center">
+      <view class="del-popup-content">
+        <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+        <view class="title1">{{ $t('common.zhuxiao') }}</view>
+        <view class="del-popup-actions">
+          <view class="del-popup-btn cancel" @click="showDelPopup = false">{{ $t('common.cancel') }}</view>
+          <view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+        </view>
+        <view class="icon" @click="showDelPopup2 = false">
+          <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+        </view>
+      </view>
+    </up-popup>
   </view>
 </template>
 
 <script>
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import { t } from '@/i18n/index.js';
-
+import { delesuser } from '@/api/login.js'
 export default {
   mixins: [pageStayMixin],
   data() {
     return {
+      showDelPopup2: false,
       pageName: '',
       settingsList: [],
     };
@@ -47,11 +61,19 @@ export default {
         label: this.$t('settings.aboutUs'),
         type: "about",
       },
+      {
+        label: this.$t('common.deleteuser'),
+        type: "user",
+      },
     ];
     this.pageName = this.$t('settings.title');
   },
   methods: {
     handleItemClick(item) {
+      if (item.type === 'user') {
+        this.showDelPopup2 = true
+        return;
+      }
       uni.navigateTo({
         url: "/pages/my/richtext?label=" + encodeURIComponent(item.label) + "&type=" + encodeURIComponent(item.type),
       });
@@ -82,12 +104,27 @@ export default {
 
             // 延迟跳转到登录页面
             setTimeout(() => {
-               uni.navigateTo({ url: '/pages/login/login' })
+              uni.navigateTo({ url: '/pages/login/login' })
             }, 1500);
           }
         },
       });
     },
+    logoutAppleID() {
+      delesuser({}).then((result) => {
+        this.showDelPopup2 = false
+        uni.removeStorageSync("token");
+        uni.removeStorageSync("openId");
+        uni.removeStorageSync("userInfo");
+        uni.removeStorageSync("inviter_openid");
+        uni.showToast({ title: result.message, icon: 'none' });
+        setTimeout(() => {
+          uni.navigateBack()
+        }, 1500);
+      }).catch((err) => {
+        uni.showToast({ title: err.message, icon: 'none' });
+      });
+    }
   },
 };
 </script>
@@ -100,6 +137,82 @@ page {
 </style>
 
 <style scoped lang="scss">
+.del-popup-content {
+  position: relative;
+  width: 560rpx;
+  padding: 160rpx 40rpx 48rpx;
+  box-sizing: border-box;
+  border-radius: 36rpx;
+  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+  text-align: center;
+  color: #000;
+
+  .del-popup-icon {
+    position: absolute;
+    top: -90rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+  }
+
+  .title1 {
+    color: #000;
+    margin-top: -50rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+  }
+
+  .num {
+    font-size: 26rpx;
+    margin-top: 20rpx;
+  }
+
+
+
+  .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.del-popup-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.del-popup-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.del-popup-btn.cancel {
+  background: #eeedff;
+  color: #b370ff;
+}
+
+.del-popup-btn.confirm {
+  background: #b370ff;
+  color: #ffffff;
+}
+
 .settings-page {
   min-height: 100vh;
   background: #12111f;

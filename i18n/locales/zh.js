@@ -1,5 +1,7 @@
 export default {
   common: {
+    deleteuser:'注销账户',
+    zhuxiao:'您的帐号已经申请注销，七天内登录，则取消注销。',
     confirm: '确定',
     cancel: '取消',
     save: '保存',

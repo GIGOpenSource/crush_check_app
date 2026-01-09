@@ -1,5 +1,7 @@
 export default {
   common: {
+    deleteuser:'Cancelar Cuenta',
+    zhuxiao:'Su cuenta ha solicitado la cancelación. Si inicias sesión dentro de siete días, se cancelará la cancelación.',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
     save: 'Guardar',

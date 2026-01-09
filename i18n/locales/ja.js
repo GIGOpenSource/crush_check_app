@@ -1,5 +1,7 @@
 export default {
   common: {
+    deleteuser:'アカウントを削除',
+    zhuxiao:'アカウントは既に削除申請されています。7日以内にログインすると、削除申請がキャンセルされます。',
     confirm: '確認',
     cancel: 'キャンセル',
     save: '保存',

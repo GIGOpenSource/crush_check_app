@@ -1,5 +1,7 @@
 export default {
   common: {
+    deleteuser:'Cancel Account',
+    zhuxiao:'Your account has been applied for cancellation. If you log in within seven days, the cancellation will be cancelled.', 
     confirm: 'Confirm',
     cancel: 'Cancel',
     save: 'Save',

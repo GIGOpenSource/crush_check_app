@@ -1,5 +1,7 @@
 export default {
   common: {
+    deleteuser:'계정 삭제',
+    zhuxiao:'계정이 이미 해지 신청되었습니다. 7일 이내에 로그인하면 해지 신청이 취소됩니다.', 
     confirm: '확인',
     cancel: '취소',
     save: '저장',
