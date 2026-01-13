@@ -15,9 +15,9 @@
     <up-popup :show="showDelPopup2" mode="center">
       <view class="del-popup-content">
         <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-        <view class="title1">{{ $t('common.zhuxiao') }}</view>
+        <view class="title1">{{ $t('common.queding') }}</view>
         <view class="del-popup-actions">
-          <view class="del-popup-btn cancel" @click="showDelPopup = false">{{ $t('common.cancel') }}</view>
+          <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}</view>
           <view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
         </view>
         <view class="icon" @click="showDelPopup2 = false">

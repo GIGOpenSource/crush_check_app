@@ -16,22 +16,23 @@
 				</view>
 			</view>
 
-			<button @click="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed && systemInfo !== 'ios'" hover-class="none">
+			<button @click="onGetPhoneNumber" class="login-button-wrapper" v-if="isAgreed && systemInfo !== 'ios'"
+				hover-class="none">
 				<view class="login-button">
 					<text class="login-button-text">{{ $t('login.wechatLogin') }}</text>
 				</view>
 			</button>
-           
-		   <!-- 苹果登录 -->
-		   <view class="iosLogin chooseapple" v-if="!isAgreed && systemInfo == 'ios'" @click.stop="checkDisabled">
-		   			   <image src="/static/my/no-Apple.png" mode=""></image>
-		   	    <text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
-		   </view>
-		   <view class="iosLogin"  v-if="isAgreed && systemInfo == 'ios'" @click="onGetPhoneNumber">
-			   <image src="/static/my/yes-Apple.png" mode=""></image>
-		   	    <text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
-		   </view>
-		  
+
+			<!-- 苹果登录 -->
+			<view class="iosLogin chooseapple" v-if="!isAgreed && systemInfo == 'ios'" @click.stop="checkDisabled">
+				<image src="/static/my/no-Apple.png" mode=""></image>
+				<text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
+			</view>
+			<view class="iosLogin" v-if="isAgreed && systemInfo == 'ios'" @click="onGetPhoneNumber">
+				<image src="/static/my/yes-Apple.png" mode=""></image>
+				<text>{{ $t('login.via') }} Apple {{ $t('login.login') }}</text>
+			</view>
+
 			<!-- 协议同意区域 -->
 			<view class="agreement-section">
 				<view class="agreement-checkbox" @click="toggleAgreement">
@@ -52,7 +53,21 @@
 			<view class="skip-login" @click="handleSkipLogin">
 				<text class="skip-text">{{ $t('common.skipLogin') }}</text>
 			</view>
+				<up-popup :show="showDelPopup2" mode="center">
+			<view class="del-popup-content">
+				<image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+				<view class="title1">{{ $t('common.zhuxiao') }}</view>
+				<view class="del-popup-actions">
+					<view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}</view>
+					<view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+				</view>
+				<view class="icon" @click="showDelPopup2 = false">
+					<up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+				</view>
+			</view>
+		</up-popup>
 		</view>
+	
 	</view>
 </template>
 
@@ -62,7 +77,8 @@ import {
 	getUserInfo,
 	getUserPhone,
 	apkLogin,
-	iosLogin
+	iosLogin,
+	checkstatus
 } from "@/api/login.js";
 import {
 	pageStayMixin
@@ -75,7 +91,8 @@ export default {
 	mixins: [pageStayMixin],
 	data() {
 		return {
-			systemInfo:uni.getSystemInfoSync().platform,
+			showDelPopup2: false,
+			systemInfo: uni.getSystemInfoSync().platform,
 			pageName: '',
 			isAgreed: false,
 			phoneCode: "", // 保存手机号授权的code
@@ -110,25 +127,53 @@ export default {
 		onGetPhoneNumber() {
 			this.clickLogin();
 		},
+		logoutAppleID() {
+			uni.login({
+				provider: 'apple',
+				success: (loginRes) => {
+					// 登录成功
+					uni.getUserInfo({
+						provider: 'apple',
+						success: async (info) => {
+						this.loginWithCode(info.userInfo, {});
+						}
+					})
+				},
+				fail: (err) => {
 
-		clickLogin() {
+				}
+			});
+		},
+		//获取登录状态
+		async loginstatus(openId) {
+			let res = checkstatus(openId)
+			return res.data.in_deletion_process
+
+		},
+		async clickLogin() {
 			const systemInfo = uni.getSystemInfoSync();
 			if (systemInfo.platform === 'ios') {
 				uni.login({
-				    provider: 'apple',
-				    success: (loginRes)=> {
-				        // 登录成功
-				        uni.getUserInfo({
-				            provider: 'apple',
-				            success: (info) => {
-								console.log(info,'infoRes.')
-								this.loginWithCode(info.userInfo,{});
-				            }
-				        })
-				    },
-				    fail:  (err) =>{
-				       
-				    }
+					provider: 'apple',
+					success: (loginRes) => {
+						// 登录成功
+						uni.getUserInfo({
+							provider: 'apple',
+							success: async (info) => {
+								let status = await this.loginstatus(info.userInfo.openId)
+								console.log(status, 'status')
+								if (status) {
+									this.showDelPopup2 = true
+								} else {
+									this.loginWithCode(info.userInfo, {});
+								}
+
+							}
+						})
+					},
+					fail: (err) => {
+
+					}
 				});
 				return
 			}
@@ -159,13 +204,13 @@ export default {
 				const systemInfo = uni.getSystemInfoSync();
 				let res = {}
 				if (systemInfo.platform === 'ios') {
-				let params = {
-					authorizationCode:message.authorizationCode,
-					username:message.fullName.familyName + message.fullName.giveName,
-					identityToken:message.identityToken,
-					openId:message.openId
-				}
-				console.log(params,'params')
+					let params = {
+						authorizationCode: message.authorizationCode,
+						username: message.fullName.familyName + message.fullName.giveName,
+						identityToken: message.identityToken,
+						openId: message.openId
+					}
+					console.log(params, 'params')
 					res = await iosLogin(params, inviterOpenId)
 				} else {
 					let params = {
@@ -179,7 +224,7 @@ export default {
 					}
 					res = await apkLogin(params)
 				}
-				console.log(res,'reee')
+				console.log(res, 'reee')
 				// 检查登录是否成功
 				if (res.code !== 200 && res.code !== 201) {
 					uni.showToast({
@@ -313,7 +358,8 @@ page {
 	background: #1d182e;
 	height: 100vh;
 }
-.iosLogin{
+
+.iosLogin {
 	width: 360rpx;
 	height: 80rpx;
 	border-radius: 12rpx;
@@ -324,17 +370,20 @@ page {
 	color: #000;
 	font-weight: bold;
 	margin-bottom: 40rpx;
-	image{
+
+	image {
 		width: 35rpx;
 		height: 35rpx;
 		margin-right: 20rpx;
 	}
-	
+
 }
-.chooseapple{
+
+.chooseapple {
 	background: #000;
 	color: #fff;
 }
+
 /* 核心：去除默认样式 */
 button {
 	/* 重置背景和边框 */

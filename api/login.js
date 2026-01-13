@@ -441,3 +441,17 @@ export function delesuser(params) {
     }
   );
 }
+export function checkstatus(params) {
+  return postRequest(
+    "/ios/ios_account_check_del",
+    params,
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "注销中...",
+    }
+  );
+}
