@@ -281,7 +281,11 @@ export default {
   },
 };
 </script>
-
+<style>
+   .u-popup__content{
+        background: transparent !important;
+    }
+</style>
 <style lang="scss">
 page {
   background: #1d182e;
@@ -524,3 +528,4 @@ button::after {
   }
 }
 </style>
+

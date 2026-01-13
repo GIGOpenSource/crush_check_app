@@ -134,6 +134,9 @@ page {
   background: #12111f;
   height: 100vh;
 }
+ .u-popup__content{
+        background: transparent !important;
+    }
 </style>
 
 <style scoped lang="scss">
