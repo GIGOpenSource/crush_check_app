@@ -7,6 +7,7 @@ import { postRequest, getRequest, deleteRequest, uploadFile_wpy } from "@/utils/
  */
 export function wechatLogin(inviter_openid) {
   // const params = { code };
+  const params = {};
   if (inviter_openid) {
     params.inviter_openid = inviter_openid;
   }

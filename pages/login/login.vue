@@ -121,6 +121,7 @@ export default {
     //检查一下登录状态
     async loginStatus(code) {
       let res = await delecheck({ code })
+      uni.setStorageSync("token", res.data.token);
       return res.data.in_deletion_process
     },
     logoutAppleID() {
