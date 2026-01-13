@@ -133,6 +133,7 @@
 		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
 			<view class="vipProup">
 				<image :src="$getImg('index/bg')" class="bg" />
+				<scroll-view scroll-y="true" class="scroll-box">
 				<view class="content">
 					<view class="top-title">
 						<text class="t1">{{ $t('index.becomeMember') }}</text>
@@ -153,6 +154,7 @@
 							@click="choose2 = !choose2" /><text>{{ $t('common.read') }}<text style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《{{ $t('common.vipServiceAgreement') }}》</text></text>
 					</view>
 				</view>
+				 </scroll-view>
 			</view>
 		</up-popup>
 		<!-- 分享 -->
@@ -910,6 +912,14 @@ const updateTabBarI18n = () => {
 		width: 100%;
 		height: 100%;
 	}
+	.scroll-box{     
+   position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99; 
+}
 
 	.content {
 		position: absolute;
@@ -917,6 +927,7 @@ const updateTabBarI18n = () => {
 		top: 0;
 		width: 100%;
 		height: 100%;
+		 z-index: 99;
 
 		.top-title {
 			width: 85%;

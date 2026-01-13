@@ -200,27 +200,29 @@
   <up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
     <view class="vipProup">
       <image :src="$getImg('index/bg')" class="bg" />
-      <view class="content">
-        <view class="top-title">
-          <text class="t1">{{ $t('index.becomeMember') }}</text>
-          <text class="t2">{{ $t('index.enjoyPrivileges') }}</text>
-        </view>
-        <view class="btns">
-          <view v-for="(item, index) in viplist" :key="index">
-            <image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
-            <text>{{ item }}</text>
+      <scroll-view scroll-y="true" class="scroll-box">
+        <view class="content">
+          <view class="top-title">
+            <text class="t1">{{ $t('index.becomeMember') }}</text>
+            <text class="t2">{{ $t('index.enjoyPrivileges') }}</text>
+          </view>
+          <view class="btns">
+            <view v-for="(item, index) in viplist" :key="index">
+              <image :src="$getImg('index/message')" v-if="index == 0 || index == 1" />
+              <text>{{ item }}</text>
+            </view>
+          </view>
+          <view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{
+            $t('index.openNow')
+            }}
+          </view>
+          <view class="radio2">
+            <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
+              @click="choose2 = !choose2" /><text>{{ $t('common.read') }}<text style="color: #B370FF;font-weight: bold;"
+                @click="vipxiyi">《{{ $t('common.vipServiceAgreement') }}》</text></text>
           </view>
         </view>
-        <view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{
-          $t('index.openNow')
-        }}
-        </view>
-        <view class="radio2">
-          <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
-            @click="choose2 = !choose2" /><text>{{ $t('common.read') }}<text
-              style="color: #B370FF;font-weight: bold;" @click="vipxiyi">《{{ $t('common.vipServiceAgreement') }}》</text></text>
-        </view>
-      </view>
+      </scroll-view>
     </view>
   </up-popup>
 </template>
@@ -302,13 +304,13 @@ export default {
     })
   },
   onShow() {
-	this.viplist = [
-        t('index.vipFeature1'),
-        t('index.vipFeature2'),
-        t('index.vipFeature3'),
-        t('index.vipFeature4'),
-        t('index.vipFeature5')
-      ]
+    this.viplist = [
+      t('index.vipFeature1'),
+      t('index.vipFeature2'),
+      t('index.vipFeature3'),
+      t('index.vipFeature4'),
+      t('index.vipFeature5')
+    ]
     this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
       { label: this.$t('my.share'), type: "share" },
@@ -412,8 +414,8 @@ export default {
   },
   // #endif
   methods: {
-    vipxiyi(){
-  uni.navigateTo({
+    vipxiyi() {
+      uni.navigateTo({
         url: "/pages/my/richtext?label=" + encodeURIComponent(t('common.vipServiceAgreement')) + "&type=" + encodeURIComponent('pay_agreement'),
       });
     },
@@ -599,11 +601,11 @@ export default {
         })
         return;
       }
-        this.vipProup = true
-        this.choose2 = false
+      this.vipProup = true
+      this.choose2 = false
     },
     async pay() {
-       if (!this.choose2) return uni.showToast({
+      if (!this.choose2) return uni.showToast({
         title: '请阅读会员服务协议',
         icon: 'none'
       })
@@ -695,11 +697,11 @@ export default {
                               icon: 'none'
                             });
                             _this.refreshUserInfo();
-                             _this.vipProup = false
+                            _this.vipProup = false
                           })
                             .catch(err => {
                               console.log(err, 'eee')
-                                _this.vipProup = false
+                              _this.vipProup = false
                             })
                         },
                         fail: (err) => {
@@ -1490,13 +1492,21 @@ page {
     width: 100%;
     height: 100%;
   }
-
+.scroll-box{     
+   position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99; 
+}
   .content {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 99;
 
     .top-title {
       width: 85%;
