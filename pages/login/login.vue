@@ -53,21 +53,22 @@
 			<view class="skip-login" @click="handleSkipLogin">
 				<text class="skip-text">{{ $t('common.skipLogin') }}</text>
 			</view>
-				<up-popup :show="showDelPopup2" mode="center">
-			<view class="del-popup-content">
-				<image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-				<view class="title1">{{ $t('common.zhuxiao') }}</view>
-				<view class="del-popup-actions">
-					<view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}</view>
-					<view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+			<up-popup :show="showDelPopup2" mode="center">
+				<view class="del-popup-content">
+					<image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+					<view class="title1">{{ $t('common.zhuxiao') }}</view>
+					<view class="del-popup-actions">
+						<view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}
+						</view>
+						<view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+					</view>
+					<view class="icon" @click="showDelPopup2 = false">
+						<up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+					</view>
 				</view>
-				<view class="icon" @click="showDelPopup2 = false">
-					<up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
-				</view>
-			</view>
-		</up-popup>
+			</up-popup>
 		</view>
-	
+
 	</view>
 </template>
 
@@ -135,7 +136,7 @@ export default {
 					uni.getUserInfo({
 						provider: 'apple',
 						success: async (info) => {
-						this.loginWithCode(info.userInfo, {});
+							this.loginWithCode(info.userInfo, {});
 						}
 					})
 				},
@@ -146,11 +147,12 @@ export default {
 		},
 		//获取登录状态
 		async loginstatus(openId) {
-			let res = checkstatus(openId)
+			let res = await checkstatus({ openId })
 			return res.data.in_deletion_process
 
 		},
 		async clickLogin() {
+			let that = this
 			const systemInfo = uni.getSystemInfoSync();
 			if (systemInfo.platform === 'ios') {
 				uni.login({
@@ -160,8 +162,8 @@ export default {
 						uni.getUserInfo({
 							provider: 'apple',
 							success: async (info) => {
-								let status = await this.loginstatus(info.userInfo.openId)
-								console.log(status, 'status')
+								let status = await that.loginstatus(info.userInfo.openId)
+								console.log(status, 'status')	
 								if (status) {
 									this.showDelPopup2 = true
 								} else {
@@ -353,12 +355,86 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 page {
 	background: #1d182e;
 	height: 100vh;
 }
+.del-popup-content {
+  position: relative;
+  width: 560rpx;
+  padding: 160rpx 40rpx 48rpx;
+  box-sizing: border-box;
+  border-radius: 36rpx;
+  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+  text-align: center;
+  color: #000;
 
+  .del-popup-icon {
+    position: absolute;
+    top: -90rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+  }
+
+  .title1 {
+    color: #000;
+    margin-top: -50rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+  }
+
+  .num {
+    font-size: 26rpx;
+    margin-top: 20rpx;
+  }
+
+
+
+  .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.del-popup-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.del-popup-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.del-popup-btn.cancel {
+  background: #eeedff;
+  color: #b370ff;
+}
+
+.del-popup-btn.confirm {
+  background: #b370ff;
+  color: #ffffff;
+}
 .iosLogin {
 	width: 360rpx;
 	height: 80rpx;
