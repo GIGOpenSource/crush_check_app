@@ -1,5 +1,6 @@
 export default {
   common: {
+    queding:'Después de eliminar su cuenta, la información de su cuenta se eliminará permanentemente y no se podrá recuperar. Si inicia sesión dentro de siete días, el proceso de cancelación se cancelará automáticamente. ¿Está seguro de que desea eliminar su cuenta?',
     deleteuser:'Cancelar Cuenta',
     zhuxiao:'Su cuenta ha solicitado la cancelación. Si inicias sesión dentro de siete días, se cancelará la cancelación.',
     confirm: 'Confirmar',

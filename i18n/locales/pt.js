@@ -1,5 +1,6 @@
 export default {
   common: {
+    queding:'Após excluir sua conta, as informações da sua conta serão permanentemente excluídas e não poderão ser recuperadas. Se você fizer login dentro de sete dias, o processo de cancelamento será cancelado automaticamente. Tem certeza de que deseja excluir sua conta?',
     deleteuser:'Cancelar Conta',
     zhuxiao:'Sua conta já solicitou o cancelamento. Se você fizer login dentro de sete dias, o cancelamento será cancelado.', 
     confirm: 'Confirmar',

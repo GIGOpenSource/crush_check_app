@@ -1,5 +1,6 @@
 export default {
   common: {
+    queding:'After deleting your account, your account information will be permanently deleted and cannot be recovered. If you log in within seven days, the cancellation process will be automatically canceled. Are you sure you want to delete your account?',
     deleteuser:'Cancel Account',
     zhuxiao:'Your account has been applied for cancellation. If you log in within seven days, the cancellation will be cancelled.', 
     confirm: 'Confirm',

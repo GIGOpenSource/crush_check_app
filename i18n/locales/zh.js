@@ -1,5 +1,6 @@
 export default {
   common: {
+    queding:'注销账号后，您的账号信息将被永久删除且无法恢复。若在七天内登录账号，将自动取消注销流程。确认注销账号吗？',
     deleteuser:'注销账户',
     zhuxiao:'您的帐号已经申请注销，七天内登录，则取消注销。',
     confirm: '确定',

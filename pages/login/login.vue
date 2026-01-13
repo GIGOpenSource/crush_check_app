@@ -41,12 +41,25 @@
       <view class="skip-login" @click="handleSkipLogin">
         <text class="skip-text">{{ $t('common.skipLogin') }}</text>
       </view>
+      <up-popup :show="showDelPopup2" mode="center">
+        <view class="del-popup-content">
+          <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+          <view class="title1">{{ $t('common.zhuxiao') }}</view>
+          <view class="del-popup-actions">
+            <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}</view>
+            <view class="del-popup-btn confirm" @click="logoutAppleID">{{ $t('common.confirm') }}</view>
+          </view>
+          <view class="icon" @click="showDelPopup2 = false">
+            <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+          </view>
+        </view>
+      </up-popup>
     </view>
   </view>
 </template>
 
 <script>
-import { wechatLogin, getUserInfo, getUserPhone } from "@/api/login.js";
+import { wechatLogin, getUserInfo, getUserPhone, delecheck } from "@/api/login.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import {
   share
@@ -56,6 +69,7 @@ export default {
   mixins: [pageStayMixin],
   data() {
     return {
+      showDelPopup2: false,
       pageName: '',
       isAgreed: false,
       phoneCode: "", // 保存手机号授权的code
@@ -79,7 +93,6 @@ export default {
       });
     },
     checkDisabled() {
-      console.log("checkDisabled 被点击了");
       uni.showToast({
         title: this.$t('common.pleaseAgreePolicy'),
         icon: "none",
@@ -105,14 +118,26 @@ export default {
         });
       }
     },
-
-    clickLogin() {
+    //检查一下登录状态
+    async loginStatus(code) {
+      let res = await delecheck({ code })
+      return res.data.in_deletion_process
+    },
+    logoutAppleID() {
+      this.loginWithCode();
+    },
+    async clickLogin() {
       uni.login({
-        success: (res) => {
-          console.log("获取code成功:", res);
+        success: async (res) => {
           if (res.code) {
-            // 调用登录接口
-            this.loginWithCode(res.code);
+            let status = await this.loginStatus(res.code)
+            console.log("登录状态:", status);
+            if (status) {
+              this.showDelPopup2 = true
+            } else {
+              this.loginWithCode();
+            }
+
           } else {
             uni.showToast({
               title: this.$t('common.getLoginCodeFailed'),
@@ -130,11 +155,11 @@ export default {
       });
     },
 
-    async loginWithCode(code) {
+    async loginWithCode() {
       try {
         const inviterOpenId = uni.getStorageSync("inviter_openid");
         // 第一步：调用登录接口，必须等待完成
-        const res = await wechatLogin(code, inviterOpenId);
+        const res = await wechatLogin(inviterOpenId);
         // 检查登录是否成功
         if (res.code !== 200 && res.code !== 201) {
           uni.showToast({
@@ -153,14 +178,13 @@ export default {
           // 验证token是否真正保存成功
           const savedToken = uni.getStorageSync("token");
           tokenSaved = savedToken === res.data.token;
-          console.log("token保存状态:", tokenSaved, savedToken);
         }
 
         if (openId) {
           uni.setStorageSync("openId", openId);
         }
-          if(inviterOpenId){
-          const result = await share({shareId:inviterOpenId})
+        if (inviterOpenId) {
+          const result = await share({ shareId: inviterOpenId })
         }
 
         // 第三步：确保token保存成功后，才进行其他接口请求
@@ -182,9 +206,8 @@ export default {
         // 第四步：如果有手机号授权code，调用获取手机号接口
         if (this.phoneCode && openId) {
           try {
-            console.log("开始调用获取手机号接口");
             const phoneRes = await getUserPhone(this.phoneCode, openId);
-            console.log("获取手机号接口返回:", phoneRes);
+
 
             if (phoneRes.code === 200 || phoneRes.code === 201) {
               console.log("获取手机号成功");
@@ -198,10 +221,7 @@ export default {
         // 第五步：获取用户信息接口
         if (openId) {
           try {
-            console.log("开始调用获取用户信息接口");
             const userInfoRes = await getUserInfo(openId);
-            console.log("获取用户信息接口返回:", userInfoRes);
-
             if (userInfoRes.code === 200 || userInfoRes.code === 201) {
               if (userInfoRes.data) {
                 uni.setStorageSync(
@@ -235,7 +255,7 @@ export default {
               // uni.switchTab({
               //   url: "/pages/my/my",
               // });
-			  uni.navigateBack()
+              uni.navigateBack()
             },
           });
         }, 1000);
@@ -261,10 +281,86 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 page {
   background: #1d182e;
   height: 100vh;
+}
+
+.del-popup-content {
+  position: relative;
+  width: 560rpx;
+  padding: 160rpx 40rpx 48rpx;
+  box-sizing: border-box;
+  border-radius: 36rpx;
+  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+  text-align: center;
+  color: #000;
+
+  .del-popup-icon {
+    position: absolute;
+    top: -90rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+  }
+
+  .title1 {
+    color: #000;
+    margin-top: -50rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+  }
+
+  .num {
+    font-size: 26rpx;
+    margin-top: 20rpx;
+  }
+
+
+
+  .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.del-popup-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.del-popup-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.del-popup-btn.cancel {
+  background: #eeedff;
+  color: #b370ff;
+}
+
+.del-popup-btn.confirm {
+  background: #b370ff;
+  color: #ffffff;
 }
 
 /* 核心：去除默认样式 */

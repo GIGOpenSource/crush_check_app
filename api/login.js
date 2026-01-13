@@ -5,8 +5,8 @@ import { postRequest, getRequest, deleteRequest, uploadFile_wpy } from "@/utils/
  * @param {string} code - 微信登录凭证
  * @returns {Promise}
  */
-export function wechatLogin(code, inviter_openid) {
-  const params = { code };
+export function wechatLogin(inviter_openid) {
+  // const params = { code };
   if (inviter_openid) {
     params.inviter_openid = inviter_openid;
   }
@@ -348,6 +348,21 @@ export function reGeneratePoster(posterId, showLoading = true) {
 export function delesuser(params) {
   return postRequest(
     "/ios/ios_account_deletion",
+    params,
+    {
+      header: {
+        "Content-Type": "application/json",
+        "is-dev": "true",
+      },
+      showLoading: true,
+      loadingText: "注销中...",
+    }
+  );
+}
+
+export function delecheck(params) {
+  return postRequest(
+    "/wechat/wx_account_check_del",
     params,
     {
       header: {
