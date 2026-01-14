@@ -137,6 +137,13 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "tarotcards/choose",
+					"style": {
+						"navigationBarTitleText": "塔罗牌",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
 				}
 			]
 		}
