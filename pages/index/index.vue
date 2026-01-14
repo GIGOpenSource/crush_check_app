@@ -19,11 +19,27 @@
 				</view>
 				<image :src="$getImg('index/answer')" mode="widthFix" />
 			</view>
+				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
+				<view>
+					<view>塔罗牌</view>
+					<view></view>
+				</view>
+				<image :src="$getImg('index/tarotcards')" mode="widthFix" />
+			</view>
+		</view>
+		<!-- <view class="bottom">
+			<view class="left" @click="path('/pages/index/answer')">
+				<view>
+					<view>{{ t('index.answer') }}</view>
+					<view>{{ t('index.book') }}</view>
+				</view>
+				<image :src="$getImg('index/answer')" mode="widthFix" />
+			</view>
 			<view class="right">
 				<view>{{ t('index.moreFeatures') }}</view>
 				<view>{{ t('index.comingSoon') }}</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
