@@ -123,11 +123,17 @@
 	"subPackages": [
 		{
 			"root": "pagesA",
-			"pages": [
-				{
+			"pages": [{
 					"path": "tarotcards/qusetion",
 					"style": {
-						"navigationBarTitleText": "答案之书",
+						"navigationBarTitleText": "塔罗牌",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
+				},{
+					"path": "tarotcards/result",
+					"style": {
+						"navigationBarTitleText": "塔罗牌",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
