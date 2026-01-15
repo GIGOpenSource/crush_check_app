@@ -1,31 +1,74 @@
 <template>
     <view class="page">
         <view class="title">问题：明天会拉屎吗？</view>
-         <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
-            <view  class="con">
-                <view class="clicks">
-                    <view  class="number">3</view>
-                    <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
-                    <view  class="text">{{ title[1] }}</view>
+        <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
+            <view style="width: 160rpx;"></view>
+            <view class="con" @click="current = 3">
+                <view :class="current == 3 ? 'current clicks' : 'clicks'">
+                    <block v-if="!imagelist[3]">
+                        <view class="number">3</view>
+                        <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
+                        <view class="text">{{ title[3] }}</view>
+                    </block>
+                    <block v-else>
+                        <image src="/static/del/one.png" mode="scaleToFill" />
+                    </block>
+                </view>
+            </view>
+            <view style="width: 160rpx;" class="wrapper">
+                <view class="p1" v-if="!imagelist[3]">
+                    <view class="t3">卡牌名称</view>
+                    <view class="type">逆位</view>
+                </view>
+                <view class="p1" v-if="!imagelist[4]">
+                    <view class="t3">卡牌名称</view>
+                    <view class="type">逆位</view>
                 </view>
             </view>
         </view>
-        <view class="clickcon" :style="num == 1 || num == 3 ?'margin-top: 200rpx;':' margin: 15rpx 0;'">
-            <view v-for="(item,index) in num == 5 ? 3:num" :key="index" class="con">
+
+        <view class="clickcon" :style="num == 1 || num == 3 ? 'margin-top: 200rpx;' : ' margin: 15rpx 0;'">
+            <view v-for="(item, index) in num == 5 ? 3 : num" :key="index" class="con">
                 <view class="t1" v-if="num == 3">{{ times[index + 1] }}</view>
-                <view class="clicks">
-                    <view v-if="num == 5" class="number">{{ index == 0 ? '1':index == 2 ?'4':'2' }}</view>
-                    <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
-                    <view v-if="num == 5" class="text">{{ index == 0 ?title[1]:index == 1 ?title[4]:title[2] }}</view>
+                <view
+                    :class="num == 1 && imagelist[1] ? 'clicks oneclick' : current == index ? 'current clicks' : 'clicks'"
+                    @click="current = index">
+                    <block v-if="!imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1]">
+                        <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
+                        <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
+                        <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
+                        }} </view>
+                    </block>
+                    <block v-else>
+                        <image src="/static/del/one.png" mode="scaleToFill" />
+                    </block>
                 </view>
+                <block v-if="num == 1 || num == 3 || (num == 5 && index !== 1)">
+                    <view class="postion" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1]">
+                        <view class="t3">卡牌名称</view>
+                        <view class="type">逆位</view>
+                    </view>
+                </block>
             </view>
         </view>
-         <view class="clickcon" v-if="num == 5">
-            <view  class="con">
-                <view class="clicks">
-                    <view class="number">5</view>
-                    <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
-                    <view class="text">{{ title[5] }}</view>
+        <view class="clickcon clickbottom" v-if="num == 5" @click="current = 5">
+             <view style="width: 160rpx;"></view>
+            <view class="con">
+                <view :class="current == 5 ? 'current clicks' : 'clicks'">
+                    <block v-if="!imagelist[5]">
+                        <view class="number">5</view>
+                        <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
+                        <view class="text">{{ title[5] }}</view>
+                    </block>
+                    <block v-else>
+                        <image src="/static/del/one.png" mode="scaleToFill" />
+                    </block>
+                </view>
+            </view>
+            <view style="width: 160rpx;" class="wrapper2">
+                <view class="p2" v-if="!imagelist[5]">
+                    <view class="t3">卡牌名称</view>
+                    <view class="type">逆位</view>
                 </view>
             </view>
         </view>
@@ -43,13 +86,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 const CARD_COUNT = 20
 const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
 const num = 5 //牌数
-const times = {1:'过去',2:'现在',3:'未来'}
-const title = {1:'你的想法',2:'Ta的想法',3:'',4:'双方状态',5:'未来发展'}
+const times = { 1: '过去', 2: '现在', 3: '未来' }
+const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
+const current = ref(0)
+const imagelist = ref({ 1: '', 2: '', 3: '', 4: '', 5: '' })
 const cardRect = computed(() => {
     const maxWidth = 750
     const cardWidth = maxWidth / (CARD_COUNT - (CARD_COUNT - 1) * OVERLAP_RATIO)
@@ -93,18 +138,48 @@ function cardStyle(index) {
     margin-top: 50rpx;
     font-size: 30rpx;
 }
-
+.clickbottom{
+    margin-top: -90rpx;
+}
 .clickcon {
     width: 85%;
     display: flex;
     justify-content: space-around;
-    
+  .wrapper{
+      font-size: 24rpx !important;
+      display: flex;
+        align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+    .p1{
+        .type{
+                color: #FF0000;
+            // color: #00AEFF;
+        }
+    }
 
+  }
+   .wrapper2{
+      font-size: 24rpx;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    .p2{
+
+        .type{
+                color: #FF0000;
+            // color: #00AEFF;
+        }
+    }
+
+  }
     .con {
         display: flex;
         flex-direction: column;
         align-items: center;
-        .t1{
+
+        .t1 {
             margin-bottom: 10rpx;
             color: rgba(255, 255, 255, 0.52);
             font-size: 26rpx;
@@ -113,9 +188,10 @@ function cardStyle(index) {
 
     .clicks {
         background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.56);
         width: 160rpx;
         height: 260rpx;
+
+        border: 1px solid rgba(255, 255, 255, 0.56);
         border-radius: 15rpx;
         display: flex;
         align-items: center;
@@ -123,13 +199,50 @@ function cardStyle(index) {
         flex-direction: column;
         font-size: 22rpx;
         color: rgba(255, 255, 255, 0.52);
-        .number{
-           margin-bottom: 20rpx;
+
+        image {
+            width: 100%;
+            height: 100%;
+            vertical-align: middle;
         }
-        .text{
+
+        .number {
+            margin-bottom: 20rpx;
+        }
+
+        .text {
             margin-top: 20rpx;
         }
+
     }
+
+    .current {
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    .oneclick {
+        width: 250rpx;
+        height: 400rpx;
+    }
+
+    .postion {
+        font-size: 24rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .t3 {
+            margin: 10rpx 0;
+        }
+
+        .type {
+            color: #FF0000;
+            // color: #00AEFF;
+        }
+    }
+
+
 }
 
 
