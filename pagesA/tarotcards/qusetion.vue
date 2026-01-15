@@ -14,7 +14,7 @@
             <view>不同的牌阵适用于不同的类型问题，请</view>
             <view>根据你的问题选择哦～</view>
         </view>
-         <view v-for="(item, index) in list" :key="index" class="list">
+         <view v-for="(item, index) in list" :key="index" :class="item.num == num ? 'list current':'list'" @click="num = item.num">
                 <view class="left">
                     <image :src="$getImg('index/tarotcards')" mode="scaleToFill" />
                     <view>
@@ -35,8 +35,8 @@
 import { ref, onMounted } from 'vue';
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
-
 const { t } = useI18n()
+const num = ref(-1)
 const list = [{
     t1:'单张牌阵',
     t2:'适用于简单问题或每日运势',
@@ -87,7 +87,7 @@ const path = () => {
     }
     uni.setStorageSync('question', value1.value.trim());
     uni.navigateTo({
-        url: '/pages/index/choosebook_1213639316'
+        url: '/pagesA/tarotcards/choose'
     });
 };
 </script>
@@ -187,6 +187,9 @@ const path = () => {
         margin-right: 20rpx;
     }
 }
+.current {
+      background: #2B2848;
+   }
 .btn {
     background: rgba(255, 255, 255, 0.04);
     height: 90rpx;
