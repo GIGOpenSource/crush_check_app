@@ -1,33 +1,31 @@
 <template>
    <view class="page">
-      <view>问题：明天会拉屎吗？</view>
+      <view>问题：{{ details.summary }}</view>
       <view class="cards">
          <view class="left">
-            <!-- <view class="one">
-                 <image :src="$getImg('del/one')" mode="scaleToFill" />
-             </view> -->
-            <!-- <view class="three">
-                 <image :src="$getImg('del/one')" mode="scaleToFill" />
-                 <image :src="$getImg('del/one')" mode="scaleToFill" />
-                 <image :src="$getImg('del/one')" mode="scaleToFill" />
-             </view> -->
-            <view class="fire">
+            <view class="one" v-if="details.parse_type == 'once_single_card'">
+                 <image v-for="(item,index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+             </view>
+            <view class="three" v-if="details.parse_type == 'once_three_card'">
+              <image v-for="(item,index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+             </view>
+            <view class="fire" v-if="details.parse_type == 'once_multi_card'">
                <view class="img1">
-                  <image :src="$getImg('del/one')" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill" />
                </view>
                <view>
-                  <image :src="$getImg('del/one')" mode="scaleToFill" />
-                  <image :src="$getImg('del/one')" mode="scaleToFill" />
-                  <image :src="$getImg('del/one')" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[1].image_url" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[2].image_url" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[3].image_url" mode="scaleToFill" />
                </view>
                <view class="img1">
-                  <image :src="$getImg('del/one')" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[4].image_url" mode="scaleToFill" />
                </view>
             </view>
          </view>
          <view class="right">
-            <view>阵位类型：关系牌阵</view>
-            <view>阵位说明：用于深入剖析两人关系 如：恋爱、友情、合作、婚姻等</view>
+            <view>阵位类型：{{ type[details.parse_type] }}</view>
+            <view>阵位说明：{{ desc[details.parse_type] }}</view>
          </view>
       </view>
       <view class="tarbar">
@@ -35,60 +33,128 @@
          <view :class="current == 1 ? 'current' : ''" @click="current = 1">系统解读</view>
       </view>
       <view class="content" v-if="current == 0">
-         <view v-for="(item, index) in list" :key="index" class="list">
+         <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
             <view class="left">
                <view class="num">{{ '0' + (index + 1) }}</view>
-               <image :src="$getImg('del/one')" mode="scaleToFill" />
+               <image :src="item.image_url" mode="scaleToFill" />
                <view class="right">
-                  <view class="t2">{{ item.t1 }} <text>逆位</text> </view>
-                  <view>{{ item.t2 }}{{ item.t3 }}</view>
+                  <view class="t2">{{ item.name }} <text :style="item.is_reversed == 0 ?'color: #00AEFF;':'color: #FF0000;'">{{ item.is_reversed == 0 ?'正位':'逆位' }}</text> </view>
+                  <view>{{ item.description.join(',') || '--'}}</view>
                </view>
             </view>
          </view>
       </view>
       <view class="text" v-if="current == 1">
-         <view class="mengceng">
-            <view class="pay">支付10.00元 AI解读</view>
+         <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
+            <view class="pay" @click="pay">支付{{object.price}}元/次 AI解读</view>
          </view>
-         <view class="title"> 这里是AI解读这里是AI解读这里是AI解 这里是AI解读这里是AI解读这里是AI解 这里是AI解读这里</view>
+         <view class="title" v-if="details.child_list[0]?.content.summary">{{  details.child_list[0]?.content.summary }}</view>
+          <view class="title1" v-else>这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读</view>
       </view>
    </view>
    <view style="height: 130rpx;"></view>
    <view class="btns">
       <view class="border">
-         <view class="share">分享结果</view>
-         <view>再来一次</view>
+         <view @click="share" class="share">分享结果</view>
+         <view @click="again">再来一次</view>
       </view>
    </view>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
+import { tarotcardDetails,tarotcardnswer } from '@/api/tarotcards.js'
+import {
+	getProducts,
+	createOrder,
+} from '@/api/index.js'
+import uma from '@/uma.js'
 const current = ref(0)
-const list = [{
-   t1: '单张牌阵',
-   t2: '适用于简单问题或每日运势',
-   t3: '快速获取答案',
-   num: 1
-}, {
-   t1: '三张牌阵',
-   t2: '基于过去、现在、未来，了解问题',
-   t3: '的发展脉络',
-   num: 3
+const id = ref('')
+const details = ref({})
+const object = ref({})
+const type = {'once_single_card':'单张牌阵','once_three_card':'三张牌阵','once_multi_card':'关系牌阵'}
+const desc = {'once_single_card':'适用于简单问题或每日运势，快速获取答案','once_three_card':'基于过去、现在、未来，了解问题，的发展脉络','once_multi_card':'专门用于人机关系、情感问题，全面分析'}
+onLoad((e) => {
+   id.value = e.id
+   getdetails()
+})
+const getdetails = () => {
+   getProducts().then(res => {
+      object.value = res.data.results.filter(item => item.product_type == 'tarot_once')[0]
+   })
+   tarotcardDetails(id.value).then(res => {
+      details.value = res.data
+   })
+}
+const again = () => {
+    uni.removeStorageSync('question')
+    uni.reLaunch({ url: '/pagesA/index/qusetion' })
+}
+const share = () => {
+   uni.showToast({
+      title:'暂未开放',
+      icon:'none'
+   })
+}
+const pay = () => {
+     createOrder({
+		description: object.value.description,
+		productId: object.value.id,
+		openId: uni.getStorageSync('openId'),
+		posterId: details.value.id
+	}).then(res => {
+		uni.requestPayment({
+			"provider": "wxpay",
+			...res.data,
+			"signType": "RSA",
+			"package": `${res.data.prepayid}`,
+			"nonceStr": res.data.noncestr,
+			success(res) {
+				// uni.showToast({
+				// 	title: t('proPoster.paySuccess'),
+				// 	icon: 'success'
+				// })
+				// pay_success()
+            tarotcardnswer({parent_id:id.value}).then(result => {
+              	tarotcardDetails(id.value).then(re => {
+					details.value = re.data
+				})
+            }).catch(res => {
+               uni.showToast({
+                  title:'生成失败',
+                  icon:'none'
+               })
+            })
+			
+			},
+			fail(e) {
+				// pay_fail()
+				// uni.showToast({
+				// 	title: t('proPoster.payFailed'),
+				// 	icon: 'none'
+				// })
+			}
+		})
 
-}, {
-   t1: '关系牌阵',
-   t2: '专门用于人机关系、情感问题',
-   t3: '全面分析',
-   num: 5
+	})
+}
+//购买成功
+// const pay_success = () => {
+// 	params.value.eventTime = formatDateTime()
+// 	if (uma && uma.trackEvent) {
+// 		uma.trackEvent('pay_success', params.value)
+// 	}
+// }
 
-}, {
-   t1: '关系牌阵',
-   t2: '专门用于人机关系、情感问题',
-   t3: '全面分析',
-   num: 5
-
-}]
+//购买失败
+// const pay_fail = () => {
+// 	params.value.eventTime = formatDateTime()
+// 	if (uma && uma.trackEvent) {
+// 		uma.trackEvent('pay_fail', params.value)
+// 	}
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -151,10 +217,11 @@ const list = [{
                height: 100%;
             }
          }
-         .img1{
-           image{
-            margin-left: 30%;
-           }
+
+         .img1 {
+            image {
+               margin-left: 30%;
+            }
          }
 
       }
@@ -292,7 +359,7 @@ const list = [{
       }
    }
 
-   .title {
+   .title1 {
       filter: blur(2px);
       /* 内容模糊（可选） */
       opacity: 0.5;

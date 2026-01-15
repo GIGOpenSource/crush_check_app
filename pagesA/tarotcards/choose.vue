@@ -101,7 +101,7 @@ import { getTarotcard, createResult } from '@/api/tarotcards.js'
 const CARD_COUNT = 20
 const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
-const num = ref(5) //牌数
+const num = ref(3) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
 const current = ref(0)
@@ -110,7 +110,7 @@ const question = uni.getStorageSync('question')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-    //    num.value = e.num
+       num.value = e.num
 })
 onMounted(() => {
     getTarotcard().then(res => {
@@ -153,9 +153,9 @@ const path = (arr) => {
         user_question: question
     }
     createResult(params).then(res => {
-        // uni.reLaunch({
-        //     url:'/pagesA/tarotcards/result?id='+res.data.poster_id
-        // })
+        uni.reLaunch({
+            url:'/pagesA/tarotcards/result?id='+res.data.poster_id
+        })
     })
 }
 const cardRect = computed(() => {

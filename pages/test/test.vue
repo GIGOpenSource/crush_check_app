@@ -40,8 +40,8 @@
                     <view class="left">
 
                         <image
-                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
-                            :src="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
+                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
+                            :src="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
                             mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }">
                         </image>
@@ -68,18 +68,18 @@
                             <view class="num">{{ $t('poster.cheatScore') }}{{ item.score }}%</view>
                             <view class="details">
                                 <text>{{ item.summary }}</text>
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">{{ $t('poster.viewPoster') }} {{
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewPoster') }} {{
                                     '>>' }}</text>
                             </view>
                         </template>
 
-                        <!-- 答案之书类型 -->
-                        <template v-if="item.prompt_template.template_type == 'answer'">
+                        <!-- 答案之书类型和塔罗牌 -->
+                        <template v-if="item.prompt_template.template_type == 'answer' || item.prompt_template.template_type == 'tarot_card'">
                             <view class="num">{{ item.summary }}</view>
-                            <view class="details" style="margin-top: 20rpx;">
+                            <view class="details" style="margin-top: 20rpx;" v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
                                 "{{ item.content || $t('poster.defaultAnswer') }}"
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 2)">{{ $t('poster.viewAnswer') }} {{
+                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewAnswer') }} {{
                                     '>>' }}</text>
                             </view>
                         </template>
@@ -283,6 +283,12 @@ export default {
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "crushcheck",
+            },
+            {
+                label: '塔罗牌',
+                icon: "/static/my/shiwu.png",
+                color: "#66BB6A",
+                type: "tarot_card",
             },
         ];
     },
@@ -564,10 +570,11 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
+            console.log(type,'tttt')
             // 如果状态是已完成，跳转到详情页
             if (item.status === "done") {
                 if (item.id) {
-                    if (type == 1) {
+                    if (type == 'crushcheck') {
                         uni.navigateTo({
                             url: `/pages/index/proProster?id=${item.id}`,
                             fail: (err) => {
@@ -578,9 +585,20 @@ export default {
                                 });
                             },
                         });
-                    } else {
+                    } else if(type == 'answer'){
                           uni.navigateTo({
                             url: '/pages/index/answer-result_1213639316?id='+item.id +'&details='+true,
+                            fail: (err) => {
+                                console.error("跳转失败:", err);
+                                uni.showToast({
+                                    title: this.$t('poster.jumpFailed'),
+                                    icon: "none",
+                                });
+                            },
+                        });
+                    }else{
+                          uni.navigateTo({
+                            url: '/pagesA/tarotcards/result?id='+item.id,
                             fail: (err) => {
                                 console.error("跳转失败:", err);
                                 uni.showToast({
