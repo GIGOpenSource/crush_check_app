@@ -1,61 +1,68 @@
 <template>
     <view class="page">
-        <view class="title">问题：明天会拉屎吗？</view>
+        <view class="title">问题：{{ question }}</view>
         <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
             <view style="width: 160rpx;"></view>
             <view class="con" @click="current = 3">
                 <view :class="current == 3 ? 'current clicks' : 'clicks'">
-                    <block v-if="!imagelist[3]">
+                    <block v-if="!imagelist[3].image_url">
                         <view class="number">3</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view class="text">{{ title[3] }}</view>
                     </block>
                     <block v-else>
-                        <image src="/static/del/one.png" mode="scaleToFill" />
+                        <image :src="imagelist[3].image_url" mode="scaleToFill" />
                     </block>
                 </view>
             </view>
             <view style="width: 160rpx;" class="wrapper">
-                <view class="p1" v-if="!imagelist[3]">
-                    <view class="t3">卡牌名称</view>
-                    <view class="type">逆位</view>
+                <view class="p1" v-if="imagelist[3].image_url">
+                     <view class="t3">3 {{ imagelist[3].name }}</view>
+                    <view class="type0" v-if="imagelist[3].is_reversed == 0">正位</view>
+                    <view class="type1" v-if="imagelist[3].is_reversed == 1">逆位</view>
                 </view>
-                <view class="p1" v-if="!imagelist[4]">
-                    <view class="t3">卡牌名称</view>
-                    <view class="type">逆位</view>
+                <view class="p1" v-if="imagelist[4].image_url">
+                      <view class="t3">4 {{ imagelist[4].name }}</view>
+                    <view class="type0" v-if="imagelist[4].is_reversed == 0">正位</view>
+                    <view class="type1" v-if="imagelist[4].is_reversed == 1">逆位</view>
                 </view>
             </view>
         </view>
-
-        <view class="clickcon" :style="num == 1 || num == 3 ? 'margin-top: 200rpx;' : ' margin: 15rpx 0;'">
+        <view  class="clickcon" :style="num == 1 || num == 3 ? 'margin-top: 200rpx;' : ' margin: 15rpx 0;'">
             <view v-for="(item, index) in num == 5 ? 3 : num" :key="index" class="con">
                 <view class="t1" v-if="num == 3">{{ times[index + 1] }}</view>
                 <view
-                    :class="num == 1 && imagelist[1] ? 'clicks oneclick' : current == index ? 'current clicks' : 'clicks'"
+                    :class="num == 1 && imagelist[1].image_url ? 'clicks oneclick' : current == index ? 'current clicks' : 'clicks'"
                     @click="current = index">
-                    <block v-if="!imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1]">
+                    <block v-if="!imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url">
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
                         }} </view>
                     </block>
                     <block v-else>
-                        <image src="/static/del/one.png" mode="scaleToFill" />
+                        <image :src="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url"
+                            mode="scaleToFill" />
                     </block>
                 </view>
                 <block v-if="num == 1 || num == 3 || (num == 5 && index !== 1)">
-                    <view class="postion" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1]">
-                        <view class="t3">卡牌名称</view>
-                        <view class="type">逆位</view>
+                    <view class="postion"
+                        v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url">
+                        <view class="t3"> <text v-if="num == 5">{{ index == 0 ?'1':'2' }}</text>  {{ imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
+                        }}</view>
+                        <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
+                            1].is_reversed == 1">逆位</view>
+                        <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
+                            1].is_reversed == 0">正位</view>
                     </view>
                 </block>
             </view>
         </view>
-        <view class="clickcon clickbottom" v-if="num == 5" @click="current = 5">
-             <view style="width: 160rpx;"></view>
+        <view  v-if="num == 5" @click="current = 5" :class="imagelist[1].image_url || imagelist[2].image_url ? 'clickcon clickbottom':'clickcon'">
+            <view style="width: 160rpx;"></view>
             <view class="con">
                 <view :class="current == 5 ? 'current clicks' : 'clicks'">
-                    <block v-if="!imagelist[5]">
+                    <block v-if="!imagelist[5].image_url">
                         <view class="number">5</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view class="text">{{ title[5] }}</view>
@@ -66,18 +73,20 @@
                 </view>
             </view>
             <view style="width: 160rpx;" class="wrapper2">
-                <view class="p2" v-if="!imagelist[5]">
-                    <view class="t3">卡牌名称</view>
-                    <view class="type">逆位</view>
+                <view class="p2" v-if="imagelist[5].image_url">
+                    <view class="t3">5 {{ imagelist[5].name }}</view>
+                    <view class="type0" v-if="imagelist[5].is_reversed == 0">正位</view>
+                    <view class="type1" v-if="imagelist[5].is_reversed == 1">逆位</view>
                 </view>
             </view>
         </view>
         <view class="bottom">
             <view class="t1">请默念您心中的疑惑，凭直觉开始抽牌</view>
             <view class="card-stack-container">
-                <view class="card-item" v-for="(_, index) in 20" :key="index" :style="cardStyle(index)">
+                <view class="card-item" v-for="(item, index) in list" :key="index" :style="cardStyle(index)"
+                    @click="choose(index)">
                     <view class="img-box">
-                        <image class="card-img" src="/static/index/tarotcards.png" mode="aspectFill" />
+                        <image class="card-img" :src="$getImg('index/tarotcards')" mode="aspectFill" />
                     </view>
                 </view>
             </view>
@@ -86,15 +95,69 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { getTarotcard, createResult } from '@/api/tarotcards.js'
 const CARD_COUNT = 20
 const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
-const num = 5 //牌数
+const num = ref(5) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
 const current = ref(0)
-const imagelist = ref({ 1: '', 2: '', 3: '', 4: '', 5: '' })
+const question = uni.getStorageSync('question')
+// const imagelist = ref({ 1: '', 2: '', 3: '', 4: '', 5: '' })
+const imagelist = ref([{}, {}, {}, {}, {}, {}])
+const list = ref([{}])
+onLoad((e) => {
+    //    num.value = e.num
+})
+onMounted(() => {
+    getTarotcard().then(res => {
+        list.value = res.data
+    })
+})
+//选择抽牌
+const choose = (index) => {
+
+    if (num.value == 5) {
+        if (current.value == 1) {
+            if(imagelist.value[4].image_url) return
+            imagelist.value.splice(4, 1, list.value[index])
+        } else if (current.value == 2) {
+            if(imagelist.value[2].image_url) return
+            imagelist.value.splice(2, 1, list.value[index])
+        }else if(current.value == 0){
+            if(imagelist.value[current.value + 1].image_url) return
+            imagelist.value.splice(current.value + 1, 1, list.value[index])
+        }else{
+            if(imagelist.value[current.value].image_url) return
+             imagelist.value.splice(current.value , 1, list.value[index])
+        }
+    } else {
+         if(imagelist.value[current.value + 1].image_url) return
+        imagelist.value.splice(current.value + 1, 1, list.value[index])
+    }
+
+    let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
+    setTimeout(() => {
+        if (arr.length == num.value) {
+            path(arr)
+        }
+    }, 1000)
+}
+const path = (arr) => {
+    let choose = arr.map(item => [item.id, item.is_reversed])
+    let params = {
+        tarotCardIds: choose,
+        user_question: question
+    }
+    createResult(params).then(res => {
+        // uni.reLaunch({
+        //     url:'/pagesA/tarotcards/result?id='+res.data.poster_id
+        // })
+    })
+}
 const cardRect = computed(() => {
     const maxWidth = 750
     const cardWidth = maxWidth / (CARD_COUNT - (CARD_COUNT - 1) * OVERLAP_RATIO)
@@ -138,42 +201,57 @@ function cardStyle(index) {
     margin-top: 50rpx;
     font-size: 30rpx;
 }
-.clickbottom{
+
+.clickbottom {
     margin-top: -90rpx;
 }
+
 .clickcon {
     width: 85%;
     display: flex;
     justify-content: space-around;
-  .wrapper{
-      font-size: 24rpx !important;
-      display: flex;
+
+    .wrapper {
+        font-size: 24rpx !important;
+        display: flex;
         align-items: center;
-      flex-direction: column;
-      justify-content: space-between;
-    .p1{
-        .type{
+        flex-direction: column;
+        justify-content: space-between;
+
+        .p1 {
+            .type1 {
                 color: #FF0000;
-            // color: #00AEFF;
+            }
+
+            .type0 {
+                color: #00AEFF;
+
+            }
         }
+
     }
 
-  }
-   .wrapper2{
-      font-size: 24rpx;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-    .p2{
+    .wrapper2 {
+        font-size: 24rpx;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
 
-        .type{
+        .p2 {
+
+            .type1 {
                 color: #FF0000;
-            // color: #00AEFF;
+            }
+
+            .type0 {
+                color: #00AEFF;
+
+            }
         }
+
     }
 
-  }
     .con {
         display: flex;
         flex-direction: column;
@@ -236,9 +314,13 @@ function cardStyle(index) {
             margin: 10rpx 0;
         }
 
-        .type {
+        .type1 {
             color: #FF0000;
-            // color: #00AEFF;
+        }
+
+        .type0 {
+            color: #00AEFF;
+
         }
     }
 
