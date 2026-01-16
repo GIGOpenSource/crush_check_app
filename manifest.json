@@ -3,7 +3,7 @@
     "appid" : "__UNI__52A3010",
     "description" : "CrushCheck",
     "versionName" : "1.0.1",
-    "versionCode" : 112,
+    "versionCode" : 114,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -53,11 +53,7 @@
                 "privacyDescription" : {
                     "NSPhotoLibraryUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
                     "NSPhotoLibraryAddUsageDescription" : "该应用需要读取你的相册，以便你从手机相册中选择并上传符合要求的社交平台截图，用于后续的AI分析服务。我们仅在你主动授权并使用相关功能时读取必要的图片信息，不会擅自获取或存储相册内其他无关内容。",
-                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你通过拍摄方式直接获取社交平台截图，无需先保存至相册即可完成上传操作，提升服务使用的便捷性。相机权限仅在你主动触发拍摄功能时启用，拍摄内容仅用于本次分析服务，不会进行额外留存。",
-                    "NSLocationWhenInUseUsageDescription" : "",
-                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "",
-                    "NSLocationAlwaysUsageDescription" : "",
-                    "NSUserTrackingUsageDescription" : ""
+                    "NSCameraUsageDescription" : "该应用需要你的相机，以便你通过拍摄方式直接获取社交平台截图，无需先保存至相册即可完成上传操作，提升服务使用的便捷性。相机权限仅在你主动触发拍摄功能时启用，拍摄内容仅用于本次分析服务，不会进行额外留存。"
                 },
                 "bundleId" : "com.gig.crushcheck",
                 "capabilities" : {
