@@ -17,18 +17,18 @@
             </view>
             <view style="width: 160rpx;" class="wrapper">
                 <view class="p1" v-if="imagelist[3].image_url">
-                     <view class="t3">3 {{ imagelist[3].name }}</view>
+                    <view class="t3">3 {{ imagelist[3].name }}</view>
                     <view class="type0" v-if="imagelist[3].is_reversed == 0">正位</view>
                     <view class="type1" v-if="imagelist[3].is_reversed == 1">逆位</view>
                 </view>
                 <view class="p1" v-if="imagelist[4].image_url">
-                      <view class="t3">4 {{ imagelist[4].name }}</view>
+                    <view class="t3">4 {{ imagelist[4].name }}</view>
                     <view class="type0" v-if="imagelist[4].is_reversed == 0">正位</view>
                     <view class="type1" v-if="imagelist[4].is_reversed == 1">逆位</view>
                 </view>
             </view>
         </view>
-        <view  class="clickcon" :style="num == 1 || num == 3 ? 'margin-top: 200rpx;' : ' margin: 15rpx 0;'">
+        <view class="clickcon" :style="num == 1 || num == 3 ? 'margin-top: 200rpx;' : ' margin: 15rpx 0;'">
             <view v-for="(item, index) in num == 5 ? 3 : num" :key="index" class="con">
                 <view class="t1" v-if="num == 3">{{ times[index + 1] }}</view>
                 <view
@@ -48,8 +48,10 @@
                 <block v-if="num == 1 || num == 3 || (num == 5 && index !== 1)">
                     <view class="postion"
                         v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url">
-                        <view class="t3"> <text v-if="num == 5">{{ index == 0 ?'1':'2' }}</text>  {{ imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
-                        }}</view>
+                        <view class="t3"> <text v-if="num == 5">{{ index == 0 ? '1' : '2' }}</text> {{ imagelist[num ==
+                            5 ?
+                            index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
+                            }}</view>
                         <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
                             1].is_reversed == 1">逆位</view>
                         <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
@@ -58,7 +60,8 @@
                 </block>
             </view>
         </view>
-        <view  v-if="num == 5" @click="current = 5" :class="imagelist[1].image_url || imagelist[2].image_url ? 'clickcon clickbottom':'clickcon'">
+        <view v-if="num == 5" @click="current = 5"
+            :class="imagelist[1].image_url || imagelist[2].image_url ? 'clickcon clickbottom' : 'clickcon'">
             <view style="width: 160rpx;"></view>
             <view class="con">
                 <view :class="current == 5 ? 'current clicks' : 'clicks'">
@@ -84,15 +87,22 @@
             <view class="t1">请默念您心中的疑惑，凭直觉开始抽牌</view>
             <view class="card-stack-container">
                 <view class="card-item" v-for="(item, index) in list" :key="index" :style="cardStyle(index)"
-                    @click="choose(index)">
+                    @click="choose(index)" :class="{ 'card-hidden': item.isSelected }">
                     <view class="img-box">
                         <image class="card-img" :src="$getImg('index/tarotcards')" mode="aspectFill" />
                     </view>
                 </view>
             </view>
         </view>
+        <!-- 抽牌预览层（居中放大） -->
+        <!-- <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
+            <view class="preview-card">
+                <image class="preview-img" :src="'/static/index/tarotcards.png'" mode="aspectFill" />
+            </view>
+        </view> -->
     </view>
 </template>
+
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
@@ -110,11 +120,16 @@ const question = uni.getStorageSync('question')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-       num.value = e.num
+    //    num.value = e.num
 })
 onMounted(() => {
     getTarotcard().then(res => {
-        list.value = res.data
+        list.value = res.data.map(item => {
+            return {
+                ...item,
+                isSelected: false
+            }
+        })
     })
 })
 //选择抽牌
@@ -122,22 +137,23 @@ const choose = (index) => {
 
     if (num.value == 5) {
         if (current.value == 1) {
-            if(imagelist.value[4].image_url) return
+            if (imagelist.value[4].image_url) return
             imagelist.value.splice(4, 1, list.value[index])
         } else if (current.value == 2) {
-            if(imagelist.value[2].image_url) return
+            if (imagelist.value[2].image_url) return
             imagelist.value.splice(2, 1, list.value[index])
-        }else if(current.value == 0){
-            if(imagelist.value[current.value + 1].image_url) return
+        } else if (current.value == 0) {
+            if (imagelist.value[current.value + 1].image_url) return
             imagelist.value.splice(current.value + 1, 1, list.value[index])
-        }else{
-            if(imagelist.value[current.value].image_url) return
-             imagelist.value.splice(current.value , 1, list.value[index])
+        } else {
+            if (imagelist.value[current.value].image_url) return
+            imagelist.value.splice(current.value, 1, list.value[index])
         }
     } else {
-         if(imagelist.value[current.value + 1].image_url) return
+        if (imagelist.value[current.value + 1].image_url) return
         imagelist.value.splice(current.value + 1, 1, list.value[index])
     }
+    list.value[index].isSelected = true
 
     let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
     setTimeout(() => {
@@ -154,16 +170,19 @@ const path = (arr) => {
     }
     createResult(params).then(res => {
         uni.reLaunch({
-            url:'/pagesA/tarotcards/result?id='+res.data.poster_id
+            url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
         })
     })
 }
+// 计算卡牌尺寸和重叠距离
 const cardRect = computed(() => {
     const maxWidth = 750
     const cardWidth = maxWidth / (CARD_COUNT - (CARD_COUNT - 1) * OVERLAP_RATIO)
     const overlap = cardWidth * OVERLAP_RATIO
     return { cardWidth, overlap }
 })
+
+// 计算卡牌样式
 function cardStyle(index) {
     const { cardWidth, overlap } = cardRect.value
     const dist = Math.abs(index - TOP_INDEX)
@@ -171,6 +190,7 @@ function cardStyle(index) {
     const isDown = index > TOP_INDEX
     const yOffset = isDown ? (index - TOP_INDEX) * 10 : 0
     const x = index == 0 ? 0 : index * (cardWidth - overlap)
+
     return {
         width: `${cardWidth}rpx`,
         left: `${x}rpx`,
@@ -181,6 +201,7 @@ function cardStyle(index) {
         zIndex: index
     }
 }
+
 </script>
 
 <style lang="scss" scoped>
@@ -366,5 +387,10 @@ function cardStyle(index) {
 
         }
     }
+}
+
+.card-hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 </style>
