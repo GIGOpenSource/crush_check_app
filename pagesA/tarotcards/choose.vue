@@ -38,7 +38,7 @@
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
-                        }} </view>
+                            }} </view>
                     </block>
                     <block v-else>
                         <image :src="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url"
@@ -51,7 +51,7 @@
                         <view class="t3"> <text v-if="num == 5">{{ index == 0 ? '1' : '2' }}</text> {{ imagelist[num ==
                             5 ?
                             index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
-                            }}</view>
+                        }}</view>
                         <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
                             1].is_reversed == 1">逆位</view>
                         <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
@@ -94,12 +94,16 @@
                 </view>
             </view>
         </view>
-        <!-- 抽牌预览层（居中放大） -->
-        <!-- <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
-            <view class="preview-card">
-                <image class="preview-img" :src="'/static/index/tarotcards.png'" mode="aspectFill" />
+        <!-- 抽牌预览层 -->
+        <view v-if="showPreview"  class="card-preview-overlay" :class="previewAnimate" >
+            <view class="preview-card-flip" :class="{ 'flipping': previewAnimate == 'flipping'}">
+                <view class="image-wrapper">
+                    <image class="image-front" src="/static/index/tarotcards.png" mode="aspectFill" />
+                    <image class="image-back" src="/static/index/answer.png" mode="aspectFill" />
+                </view>
             </view>
-        </view> -->
+        </view>
+
     </view>
 </template>
 
@@ -108,9 +112,13 @@
 import { computed, ref, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getTarotcard, createResult } from '@/api/tarotcards.js'
+
 const CARD_COUNT = 20
 const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
+const showPreview = ref(false) // 控制预览层显示/隐藏
+const previewAnimate = ref('') // 预览动画类名
+
 const num = ref(3) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
@@ -134,7 +142,21 @@ onMounted(() => {
 })
 //选择抽牌
 const choose = (index) => {
-
+    const item = list.value[index]
+    if (item.isSelected || showPreview.value) return
+    showPreview.value = true
+    previewAnimate.value = 'preview-enter'
+    // setTimeout(() => {
+    //     previewAnimate.value = 'flipping'
+    // }, 4000)
+    
+    setTimeout(() => {
+        previewAnimate.value = 'fade-out'   // 遮罩淡出
+        setTimeout(() => {
+            showPreview.value = false
+            item.isSelected = true
+        }, 1000)
+    },4000)
     if (num.value == 5) {
         if (current.value == 1) {
             if (imagelist.value[4].image_url) return
@@ -153,8 +175,6 @@ const choose = (index) => {
         if (imagelist.value[current.value + 1].image_url) return
         imagelist.value.splice(current.value + 1, 1, list.value[index])
     }
-    list.value[index].isSelected = true
-
     let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
     setTimeout(() => {
         if (arr.length == num.value) {
@@ -392,5 +412,64 @@ function cardStyle(index) {
 .card-hidden {
     opacity: 0;
     pointer-events: none;
+}
+.card-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     z-index: 9999;
+}
+.preview-enter {
+    opacity: 1 !important;
+  animation: fadeIn 1s ease forwards;
+}
+.fade-out {
+   animation: fadeOut 1s linear forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* 3D 容器 */                  
+.preview-card-flip {
+    width: 240px;
+    height: 384px;
+    perspective: 1000px;
+
+    /* 包裹层：真正翻转的元素 */
+    .image-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 3s ease-in-out;
+
+        image {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+        }
+
+        .image-front {
+            transform: rotateY(0deg);
+        }
+
+        .image-back {
+            transform: rotateY(180deg);
+        }
+
+        &.flipping .image-wrapper {
+            transform: rotateY(180deg);
+        }
+    }
 }
 </style>
