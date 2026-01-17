@@ -3,7 +3,7 @@
         <view class="title">问题：{{ question }}</view>
         <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
             <view style="width: 160rpx;"></view>
-            <view class="con" @click="current = 3">
+            <view class="con">
                 <view :class="current == 3 ? 'current clicks' : 'clicks'">
                     <block v-if="!imagelist[3].image_url">
                         <view class="number">3</view>
@@ -32,8 +32,7 @@
             <view v-for="(item, index) in num == 5 ? 3 : num" :key="index" class="con">
                 <view class="t1" v-if="num == 3">{{ times[index + 1] }}</view>
                 <view
-                    :class="num == 1 && imagelist[1].image_url ? 'clicks oneclick' : current == index ? 'current clicks' : 'clicks'"
-                    @click="current = index">
+                    :class="num == 1 && imagelist[1].image_url ? 'clicks oneclick' : current == index ? 'current clicks' : 'clicks'">
                     <block v-if="!imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url">
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
@@ -60,7 +59,7 @@
                 </block>
             </view>
         </view>
-        <view v-if="num == 5" @click="current = 5"
+        <view v-if="num == 5"
             :class="imagelist[1].image_url || imagelist[2].image_url ? 'clickcon clickbottom' : 'clickcon'">
             <view style="width: 160rpx;"></view>
             <view class="con">
@@ -118,9 +117,9 @@ const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
 const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
-const flipped      = ref(false)  // 只负责卡片翻转
+const flipped = ref(false)  // 只负责卡片翻转
 
-const num = ref(3) //牌数
+const num = ref(5) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
 const current = ref(0)
@@ -166,27 +165,40 @@ const choose = (index) => {
 }
 const opear = (index) => {
    if (num.value == 5) {
+      console.log(current.value)
         if (current.value == 1) {
             if (imagelist.value[4].image_url) return
             imagelist.value.splice(4, 1, list.value[index])
+             current.value = 5
         } else if (current.value == 2) {
             if (imagelist.value[2].image_url) return
             imagelist.value.splice(2, 1, list.value[index])
+             current.value = 3
         } else if (current.value == 0) {
             if (imagelist.value[current.value + 1].image_url) return
             imagelist.value.splice(current.value + 1, 1, list.value[index])
+            current.value = 2
         } else {
             if (imagelist.value[current.value].image_url) return
             imagelist.value.splice(current.value, 1, list.value[index])
+            if(current.value == 3){
+                  current.value = 1
+            }else{
+                 current.value = current.value + 1
+            }
+            
         }
     } else {
         if (imagelist.value[current.value + 1].image_url) return
         imagelist.value.splice(current.value + 1, 1, list.value[index])
+        current.value = current.value + 1
     }
+   
      let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
     if (arr.length == num.value) {
             path(arr)
-        }
+     }  
+     
 }
 const path = (arr) => {
     let choose = arr.map(item => [item.id, item.is_reversed])
