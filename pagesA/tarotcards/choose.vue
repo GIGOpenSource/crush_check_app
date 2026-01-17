@@ -96,10 +96,10 @@
         </view>
         <!-- 抽牌预览层 -->
         <view v-if="showPreview"  class="card-preview-overlay" :class="previewAnimate" >
-            <view class="preview-card-flip" :class="{ 'flipping': previewAnimate == 'flipping'}">
+            <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
-                    <image class="image-front" src="/static/index/tarotcards.png" mode="aspectFill" />
-                    <image class="image-back" src="/static/index/answer.png" mode="aspectFill" />
+                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
+                    <image class="image-back" :src="currentimg" mode="aspectFill" />
                 </view>
             </view>
         </view>
@@ -118,13 +118,14 @@ const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
 const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
+const flipped      = ref(false)  // 只负责卡片翻转
 
 const num = ref(3) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
 const current = ref(0)
 const question = uni.getStorageSync('question')
-// const imagelist = ref({ 1: '', 2: '', 3: '', 4: '', 5: '' })
+const currentimg = ref('')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
@@ -146,18 +147,25 @@ const choose = (index) => {
     if (item.isSelected || showPreview.value) return
     showPreview.value = true
     previewAnimate.value = 'preview-enter'
-    // setTimeout(() => {
-    //     previewAnimate.value = 'flipping'
-    // }, 4000)
+    currentimg.value = list.value[index].image_url
+    setTimeout(() => {
+        flipped.value = true
+    }, 1100)
     
     setTimeout(() => {
         previewAnimate.value = 'fade-out'   // 遮罩淡出
         setTimeout(() => {
             showPreview.value = false
             item.isSelected = true
+             flipped.value = false
+             opear(index)
         }, 1000)
     },4000)
-    if (num.value == 5) {
+   
+   
+}
+const opear = (index) => {
+   if (num.value == 5) {
         if (current.value == 1) {
             if (imagelist.value[4].image_url) return
             imagelist.value.splice(4, 1, list.value[index])
@@ -175,12 +183,10 @@ const choose = (index) => {
         if (imagelist.value[current.value + 1].image_url) return
         imagelist.value.splice(current.value + 1, 1, list.value[index])
     }
-    let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
-    setTimeout(() => {
-        if (arr.length == num.value) {
+     let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
+    if (arr.length == num.value) {
             path(arr)
         }
-    }, 1000)
 }
 const path = (arr) => {
     let choose = arr.map(item => [item.id, item.is_reversed])
@@ -189,9 +195,11 @@ const path = (arr) => {
         user_question: question
     }
     createResult(params).then(res => {
-        uni.reLaunch({
+       setTimeout(() => {
+         uni.redirectTo({
             url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
         })
+       },1000)
     })
 }
 // 计算卡牌尺寸和重叠距离
@@ -471,5 +479,8 @@ function cardStyle(index) {
             transform: rotateY(180deg);
         }
     }
+}
+.preview-card-flip.flipping .image-wrapper {
+    transform: rotateY(180deg);
 }
 </style>
