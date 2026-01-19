@@ -39,6 +39,7 @@ import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const num = ref(-1)
+import { getUserInfo } from '@/api/login.js'
 const list = [{
     t1: '单张牌阵',
     t2: '适用于简单问题或每日运势',
@@ -76,13 +77,16 @@ const handleFocus = () => {
 const handleBlur = () => {
     isFocused.value = false;
 };
-const path = () => {
+const path = async () => {
     if (!uni.getStorageSync('token')) {
         uni.navigateTo({
             url: "/pages/login/login"
         })
         return
     }
+    let openid = uni.getStorageSync('openId')
+     let res =  getUserInfo(openid)
+     if(res.code !== 200) return
     if (!value1.value.trim()) {
         uni.showToast({
             title: t('answerBook.pleaseInputQuestion'),
