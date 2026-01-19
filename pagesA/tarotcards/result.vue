@@ -53,7 +53,8 @@
                   t('tarot_result_ai_interpret') }}
             </view>
          </view>
-         <view class="title" v-if="details.child_list[0]?.content.summary">{{ details.child_list[0]?.content.summary }}
+         <view class="title" v-if="details.child_list[0]?.content.summary">
+            <rich-text :nodes="details.child_list[0]?.content.summary"></rich-text>
          </view>
          <view class="title1" v-else>这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读</view>
       </view>
@@ -82,12 +83,12 @@ const current = ref(0)
 const id = ref('')
 const details = ref({})
 const object = ref({})
-const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card':t('tarot_spread_relation_title') }
-const desc = { 'once_single_card': t('tarot_spread_single_desc1')+ ','+t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1')+ ','+t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1')+ ','+t('tarot_spread_relation_desc2') }
+const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card': t('tarot_spread_relation_title') }
+const desc = { 'once_single_card': t('tarot_spread_single_desc1') + ',' + t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1') + ',' + t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1') + ',' + t('tarot_spread_relation_desc2') }
 onLoad((e) => {
-     uni.setNavigationBarTitle({
-        title: t('tarot_name')
-    });
+   uni.setNavigationBarTitle({
+      title: t('tarot_name')
+   });
    id.value = e.id
    getdetails()
 })
@@ -96,7 +97,11 @@ const getdetails = () => {
       object.value = res.data.results.filter(item => item.product_type == 'tarot_once')[0]
    })
    tarotcardDetails(id.value).then(res => {
-      details.value = res.data
+      const data = JSON.parse(JSON.stringify(res.data));
+      if (data.child_list && data.child_list[0] && data.child_list[0].content && data.child_list[0].content.summary) {
+         data.child_list[0].content.summary = data.child_list[0].content.summary.replace(/\/n/g, '<br/>');
+      }
+      details.value = data;
    })
 }
 const again = () => {
@@ -134,7 +139,7 @@ const pay = () => {
                })
             }).catch(res => {
                uni.showToast({
-                 title: t('proPoster.payFailed'),
+                  title: t('proPoster.payFailed'),
                   icon: 'none'
                })
             })
