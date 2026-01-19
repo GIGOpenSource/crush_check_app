@@ -1,6 +1,6 @@
 <template>
     <view class="page">
-        <view class="title">{{ t('tarot_result_question_label') }}：{{ question }}</view>
+        <view class="title">{{ t('tarot_result_question_label') }}{{ question }}</view>
         <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
             <view style="width: 160rpx;"></view>
             <view class="con">
