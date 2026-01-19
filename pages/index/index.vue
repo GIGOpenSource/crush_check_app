@@ -17,14 +17,14 @@
 					<view>{{ t('index.answer') }}</view>
 					<view>{{ t('index.book') }}</view>
 				</view>
-				<image :src="$getImg('index/answer')" mode="widthFix" />
+				<image :src="$getImg('index/answer')"  />
 			</view>
 				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
-				<view>
+				<view style="margin-left: 50rpx;width: 200rpx;">
 					<view>塔罗牌</view>
 					<view></view>
 				</view>
-				<image :src="$getImg('index/tarotcards')" mode="widthFix" />
+				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
 			</view>
 		</view>
 		<!-- <view class="bottom">
@@ -119,6 +119,7 @@ onLoad((e) => {
 
 	image {
 		width: 120rpx;
+		height: 160rpx;
 		margin-left: 50rpx;
 	}
 

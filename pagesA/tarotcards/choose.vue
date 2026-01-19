@@ -393,9 +393,9 @@ function cardStyle(index) {
 .bottom {
     position: fixed;
     left: -10rpx;
-    bottom: -240rpx;
+    bottom: -260rpx;
     width: 100%;
-    height: 550rpx;
+    height: 600rpx;
     font-size: 22rpx;
     .t1 {
         text-align: center;
@@ -414,7 +414,7 @@ function cardStyle(index) {
         .card-item {
             position: absolute;
             top: 0;
-            height: 235rpx;
+            height: 280rpx;
             border-radius: 6rpx;
 
             .img-box {
