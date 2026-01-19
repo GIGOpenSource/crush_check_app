@@ -1,14 +1,14 @@
 <template>
    <view class="page">
-      <view>问题：{{ details.summary }}</view>
+      <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
-                 <image v-for="(item,index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
-             </view>
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+            </view>
             <view class="three" v-if="details.parse_type == 'once_three_card'">
-              <image v-for="(item,index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
-             </view>
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+            </view>
             <view class="fire" v-if="details.parse_type == 'once_multi_card'">
                <view class="img1">
                   <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill" />
@@ -24,13 +24,13 @@
             </view>
          </view>
          <view class="right">
-            <view>阵位类型：{{ type[details.parse_type] }}</view>
-            <view>阵位说明：{{ desc[details.parse_type] }}</view>
+            <view>{{ t('tarot_result_layout_type') }}{{ type[details.parse_type] }}</view>
+            <view>{{ t('tarot_result_layout_desc') }}{{ desc[details.parse_type] }}</view>
          </view>
       </view>
       <view class="tarbar">
-         <view :class="current == 0 ? 'current' : ''" @click="current = 0">结果说明</view>
-         <view :class="current == 1 ? 'current' : ''" @click="current = 1">系统解读</view>
+         <view :class="current == 0 ? 'current' : ''" @click="current = 0">{{ t('tarot_result_tab_explain') }}</view>
+         <view :class="current == 1 ? 'current' : ''" @click="current = 1">{{ t('tarot_result_tab_interpret') }}</view>
       </view>
       <view class="content" v-if="current == 0">
          <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
@@ -38,45 +38,56 @@
                <view class="num">{{ '0' + (index + 1) }}</view>
                <image :src="item.image_url" mode="scaleToFill" />
                <view class="right">
-                  <view class="t2">{{ item.name }} <text :style="item.is_reversed == 0 ?'color: #00AEFF;':'color: #FF0000;'">{{ item.is_reversed == 0 ?'正位':'逆位' }}</text> </view>
-                  <view>{{ item.description.join(',') || '--'}}</view>
+                  <view class="t2">{{ item.name }} <text
+                        :style="item.is_reversed == 0 ? 'color: #00AEFF;' : 'color: #FF0000;'">{{ item.is_reversed == 0
+                           ? t('tarot_card_upright') : t('tarot_card_reversed') }}</text> </view>
+                  <view>{{ item.description.join(',') || '--' }}</view>
                </view>
             </view>
          </view>
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <view class="pay" @click="pay">支付{{object.price}}元/次 AI解读</view>
+            <view class="pay" @click="pay">
+               {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
+                  t('tarot_result_ai_interpret') }}
+            </view>
          </view>
-         <view class="title" v-if="details.child_list[0]?.content.summary">{{  details.child_list[0]?.content.summary }}</view>
-          <view class="title1" v-else>这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读</view>
+         <view class="title" v-if="details.child_list[0]?.content.summary">{{ details.child_list[0]?.content.summary }}
+         </view>
+         <view class="title1" v-else>这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读</view>
       </view>
    </view>
    <view style="height: 130rpx;"></view>
    <view class="btns">
       <view class="border">
-         <view @click="share" class="share">分享结果</view>
-         <view @click="again">再来一次</view>
+         <view @click="share" class="share">{{ t('tarot_result_share') }}</view>
+         <view @click="again">{{ t('tarot_result_again') }}</view>
       </view>
    </view>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { ref } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
-import { tarotcardDetails,tarotcardnswer } from '@/api/tarotcards.js'
+import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
 import {
-	getProducts,
-	createOrder,
+   getProducts,
+   createOrder,
 } from '@/api/index.js'
 import uma from '@/uma.js'
 const current = ref(0)
 const id = ref('')
 const details = ref({})
 const object = ref({})
-const type = {'once_single_card':'单张牌阵','once_three_card':'三张牌阵','once_multi_card':'关系牌阵'}
-const desc = {'once_single_card':'适用于简单问题或每日运势，快速获取答案','once_three_card':'基于过去、现在、未来，了解问题，的发展脉络','once_multi_card':'专门用于人机关系、情感问题，全面分析'}
+const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card':t('tarot_spread_relation_title') }
+const desc = { 'once_single_card': t('tarot_spread_single_desc1')+ ','+t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1')+ ','+t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1')+ ','+t('tarot_spread_relation_desc2') }
 onLoad((e) => {
+     uni.setNavigationBarTitle({
+        title: t('tarot_name')
+    });
    id.value = e.id
    getdetails()
 })
@@ -89,56 +100,56 @@ const getdetails = () => {
    })
 }
 const again = () => {
-    uni.removeStorageSync('question')
-    uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
+   uni.removeStorageSync('question')
+   uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
 }
 const share = () => {
    uni.showToast({
-      title:'暂未开放',
-      icon:'none'
+      title: '暂未开放',
+      icon: 'none'
    })
 }
 const pay = () => {
-     createOrder({
-		description: object.value.description,
-		productId: object.value.id,
-		openId: uni.getStorageSync('openId'),
-		posterId: details.value.id
-	}).then(res => {
-		uni.requestPayment({
-			"provider": "wxpay",
-			...res.data,
-			"signType": "RSA",
-			"package": `${res.data.prepayid}`,
-			"nonceStr": res.data.noncestr,
-			success(res) {
-				// uni.showToast({
-				// 	title: t('proPoster.paySuccess'),
-				// 	icon: 'success'
-				// })
-				// pay_success()
-            tarotcardnswer({parent_id:id.value}).then(result => {
-              	tarotcardDetails(id.value).then(re => {
-					details.value = re.data
-				})
+   createOrder({
+      description: object.value.description,
+      productId: object.value.id,
+      openId: uni.getStorageSync('openId'),
+      posterId: details.value.id
+   }).then(res => {
+      uni.requestPayment({
+         "provider": "wxpay",
+         ...res.data,
+         "signType": "RSA",
+         "package": `${res.data.prepayid}`,
+         "nonceStr": res.data.noncestr,
+         success(res) {
+            // uni.showToast({
+            // 	title: t('proPoster.paySuccess'),
+            // 	icon: 'success'
+            // })
+            // pay_success()
+            tarotcardnswer({ parent_id: id.value }).then(result => {
+               tarotcardDetails(id.value).then(re => {
+                  details.value = re.data
+               })
             }).catch(res => {
                uni.showToast({
-                  title:'生成失败',
-                  icon:'none'
+                 title: t('proPoster.payFailed'),
+                  icon: 'none'
                })
             })
-			
-			},
-			fail(e) {
-				// pay_fail()
-				// uni.showToast({
-				// 	title: t('proPoster.payFailed'),
-				// 	icon: 'none'
-				// })
-			}
-		})
 
-	})
+         },
+         fail(e) {
+            // pay_fail()
+            // uni.showToast({
+            // 	title: t('proPoster.payFailed'),
+            // 	icon: 'none'
+            // })
+         }
+      })
+
+   })
 }
 //购买成功
 // const pay_success = () => {

@@ -1,6 +1,6 @@
 <template>
     <view class="page">
-        <view class="title">问题：{{ question }}</view>
+        <view class="title">{{ t('tarot_result_question_label') }}：{{ question }}</view>
         <view class="clickcon" v-if="num == 5" style="margin-top: 15rpx;">
             <view style="width: 160rpx;"></view>
             <view class="con">
@@ -18,13 +18,13 @@
             <view style="width: 160rpx;" class="wrapper">
                 <view class="p1" v-if="imagelist[3].image_url">
                     <view class="t3">3 {{ imagelist[3].name }}</view>
-                    <view class="type0" v-if="imagelist[3].is_reversed == 0">正位</view>
-                    <view class="type1" v-if="imagelist[3].is_reversed == 1">逆位</view>
+                    <view class="type0" v-if="imagelist[3].is_reversed == 0">{{ t('tarot_card_upright') }}</view>
+                    <view class="type1" v-if="imagelist[3].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                 </view>
                 <view class="p1" v-if="imagelist[4].image_url">
                     <view class="t3">4 {{ imagelist[4].name }}</view>
-                    <view class="type0" v-if="imagelist[4].is_reversed == 0">正位</view>
-                    <view class="type1" v-if="imagelist[4].is_reversed == 1">逆位</view>
+                    <view class="type0" v-if="imagelist[4].is_reversed == 0">{{ t('tarot_card_upright') }}</view>
+                    <view class="type1" v-if="imagelist[4].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                 </view>
             </view>
         </view>
@@ -37,7 +37,7 @@
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
-                            }} </view>
+                        }} </view>
                     </block>
                     <block v-else>
                         <image :src="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url"
@@ -50,11 +50,11 @@
                         <view class="t3"> <text v-if="num == 5">{{ index == 0 ? '1' : '2' }}</text> {{ imagelist[num ==
                             5 ?
                             index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
-                        }}</view>
+                            }}</view>
                         <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
-                            1].is_reversed == 1">逆位</view>
+                            1].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                         <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
-                            1].is_reversed == 0">正位</view>
+                            1].is_reversed == 0">{{ t('tarot_card_upright') }}</view>
                     </view>
                 </block>
             </view>
@@ -77,13 +77,13 @@
             <view style="width: 160rpx;" class="wrapper2">
                 <view class="p2" v-if="imagelist[5].image_url">
                     <view class="t3">5 {{ imagelist[5].name }}</view>
-                    <view class="type0" v-if="imagelist[5].is_reversed == 0">正位</view>
-                    <view class="type1" v-if="imagelist[5].is_reversed == 1">逆位</view>
+                    <view class="type0" v-if="imagelist[5].is_reversed == 0">{{ t('tarot_card_upright') }}</view>
+                    <view class="type1" v-if="imagelist[5].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                 </view>
             </view>
         </view>
         <view class="bottom">
-            <view class="t1">请默念您心中的疑惑，凭直觉开始抽牌</view>
+            <view class="t1">{{ t('tarot_draw_prompt') }}</view>
             <view class="card-stack-container">
                 <view class="card-item" v-for="(item, index) in list" :key="index" :style="cardStyle(index)"
                     @click="choose(index)" :class="{ 'card-hidden': item.isSelected }">
@@ -94,7 +94,7 @@
             </view>
         </view>
         <!-- 抽牌预览层 -->
-        <view v-if="showPreview"  class="card-preview-overlay" :class="previewAnimate" >
+        <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
                     <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
@@ -111,7 +111,8 @@
 import { computed, ref, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { getTarotcard, createResult } from '@/api/tarotcards.js'
-
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const CARD_COUNT = 20
 const OVERLAP_RATIO = 0.4
 const TOP_INDEX = 10
@@ -120,15 +121,24 @@ const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
 
 const num = ref(0) //牌数
-const times = { 1: '过去', 2: '现在', 3: '未来' }
-const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
+const times = { 1: t('tarot_time_past'), 2: t('tarot_time_present'), 3: t('tarot_time_future') }
+const title = {
+    1: t('tarot_title_your_thought'),          // 你的想法
+    2: t('tarot_title_their_thought'),         // Ta的想法
+    3: t('tarot_title_both_status'),           // 双方状态
+    4: t('tarot_title_potential_obstacle'),    // 潜在障碍
+    5: t('tarot_title_future_development')     // 未来发展
+}    
 const current = ref(0)
 const question = uni.getStorageSync('question')
 const currentimg = ref('')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-       num.value = Number(e.num)
+    num.value = Number(e.num)
+      uni.setNavigationBarTitle({
+        title: t('tarot_name')
+    });
 })
 onMounted(() => {
     getTarotcard().then(res => {
@@ -150,30 +160,30 @@ const choose = (index) => {
     setTimeout(() => {
         flipped.value = true
     }, 1100)
-    
+
     setTimeout(() => {
         previewAnimate.value = 'fade-out'   // 遮罩淡出
         setTimeout(() => {
             showPreview.value = false
             item.isSelected = true
-             flipped.value = false
-             opear(index)
+            flipped.value = false
+            opear(index)
         }, 1000)
-    },4000)
-   
-   
+    }, 4000)
+
+
 }
 const opear = (index) => {
-   if (num.value == 5) {
-      console.log(current.value)
+    if (num.value == 5) {
+        console.log(current.value)
         if (current.value == 1) {
             if (imagelist.value[4].image_url) return
             imagelist.value.splice(4, 1, list.value[index])
-             current.value = 5
+            current.value = 5
         } else if (current.value == 2) {
             if (imagelist.value[2].image_url) return
             imagelist.value.splice(2, 1, list.value[index])
-             current.value = 3
+            current.value = 3
         } else if (current.value == 0) {
             if (imagelist.value[current.value + 1].image_url) return
             imagelist.value.splice(current.value + 1, 1, list.value[index])
@@ -181,24 +191,24 @@ const opear = (index) => {
         } else {
             if (imagelist.value[current.value].image_url) return
             imagelist.value.splice(current.value, 1, list.value[index])
-            if(current.value == 3){
-                  current.value = 1
-            }else{
-                 current.value = current.value + 1
+            if (current.value == 3) {
+                current.value = 1
+            } else {
+                current.value = current.value + 1
             }
-            
+
         }
     } else {
         if (imagelist.value[current.value + 1].image_url) return
         imagelist.value.splice(current.value + 1, 1, list.value[index])
         current.value = current.value + 1
     }
-   
-     let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
+
+    let arr = imagelist.value.filter(item => Object.keys(item).length !== 0)
     if (arr.length == num.value) {
-            path(arr)
-     }  
-     
+        path(arr)
+    }
+
 }
 const path = (arr) => {
     let choose = arr.map(item => [item.id, item.is_reversed])
@@ -207,11 +217,11 @@ const path = (arr) => {
         user_question: question
     }
     createResult(params).then(res => {
-       setTimeout(() => {
-         uni.redirectTo({
-            url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
-        })
-       },1000)
+        setTimeout(() => {
+            uni.redirectTo({
+                url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
+            })
+        }, 1000)
     })
 }
 // 计算卡牌尺寸和重叠距离
@@ -397,6 +407,7 @@ function cardStyle(index) {
     width: 100%;
     height: 600rpx;
     font-size: 22rpx;
+
     .t1 {
         text-align: center;
         width: 100%;
@@ -408,7 +419,7 @@ function cardStyle(index) {
     .card-stack-container {
         position: relative;
         width: 750rpx;
-        height: 100%; 
+        height: 100%;
         margin: 50rpx auto;
 
         .card-item {
@@ -435,6 +446,7 @@ function cardStyle(index) {
     opacity: 0;
     pointer-events: none;
 }
+
 .card-preview-overlay {
     position: fixed;
     inset: 0;
@@ -442,25 +454,39 @@ function cardStyle(index) {
     display: flex;
     align-items: center;
     justify-content: center;
-     z-index: 9999;
+    z-index: 9999;
 }
+
 .preview-enter {
     opacity: 1 !important;
-  animation: fadeIn 1s ease forwards;
+    animation: fadeIn 1s ease forwards;
 }
+
 .fade-out {
-   animation: fadeOut 1s linear forwards;
+    animation: fadeOut 1s linear forwards;
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
+
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
-/* 3D 容器 */                  
+
+/* 3D 容器 */
 .preview-card-flip {
     width: 240px;
     height: 384px;
@@ -494,6 +520,7 @@ function cardStyle(index) {
         }
     }
 }
+
 .preview-card-flip.flipping .image-wrapper {
     transform: rotateY(180deg);
 }

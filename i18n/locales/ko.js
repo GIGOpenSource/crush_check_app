@@ -1,4 +1,51 @@
 export default {
+   tarot_result_pay: "", // 韩语习惯把价格放前面，此处留空
+    tarot_result_pay_unit: "원/회",
+    tarot_result_ai_interpret: " AI 해석 결제",
+   tarot_input_question_title: "마음 속 질문을 입력하세요",
+    tarot_input_question_placeholder: "질문을 명확하고 구체적으로 설명해 주세요. 이는 더 정확한 해석을 얻는 데 도움이 됩니다",
+    tarot_spread_select_title: "스프레드 선택",
+    tarot_spread_select_tip1: "다른 스프레드는 다른 유형의 질문에 적합합니다. 제발",
+    tarot_spread_select_tip2: "당신의 질문에 따라 선택하세요～",
+    tarot_card_unit: "장",
+    tarot_draw_card_btn: "카드 뽑기 시작",
+    // 牌阵1：单张牌阵
+    tarot_spread_single_title: "싱글 카드 스프레드",
+    tarot_spread_single_desc1: "간단한 질문이나 일일 운세에 적합",
+    tarot_spread_single_desc2: "빠르게 답변 얻기",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "쓰리 카드 스프레드",
+    tarot_spread_three_desc1: "과거, 현재, 미래를 기반으로 문제 이해",
+    tarot_spread_three_desc2: "발전 맥락",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "관계 스프레드",
+    tarot_spread_relation_desc1: "인간 관계, 정서적 문제에 특화",
+    tarot_spread_relation_desc2: "종합 분석",
+     tarot_result_question_label: "질문：",
+    tarot_card_upright: "정위",
+    tarot_card_reversed: "역위",
+    tarot_draw_prompt: "마음 속 의문을 조용히 생각하고 직감에 따라 카드를 뽑으세요",
+    // times相关
+    tarot_time_past: "과거",
+    tarot_time_present: "현재",
+    tarot_time_future: "미래",
+    // title相关
+    tarot_title_your_thought: "당신의 생각",
+    tarot_title_their_thought: "그의/그녀의 생각",
+    tarot_title_both_status: "양측의 상태",
+    tarot_title_potential_obstacle: "잠재적 장애",
+    tarot_title_future_development: "미래 발전",
+     // 新增配置
+    tarot_result_layout_type: "스프레드 유형：",
+    tarot_result_layout_desc: "스프레드 설명：",
+    tarot_result_tab_explain: "결과 설명",
+    tarot_result_tab_interpret: "시스템 해석",
+    tarot_result_pay_ai_interpret: "{price}원/회 AI 해석 결제",
+    tarot_result_share: "결과 공유",
+    tarot_result_again: "다시 한번",
+    tarot_result_default_interpret: "여기는 해석 내용입니다... (기본 텍스트)",
+     tarot_name: "타로 카드",
+    tarot_please_select_spread: "스프레드를 선택해주세요",
   common: {
     queding:'계정을 삭제하면 계정 정보가 영구적으로 삭제되며 복구할 수 없습니다. 7일 이내에 로그인하면 취소 프로세스가 자동으로 취소됩니다. 계정을 삭제하시겠습니까?',
     deleteuser:'계정 삭제',

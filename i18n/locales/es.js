@@ -1,4 +1,42 @@
 export default {
+  tarot_result_pay: "Pagar ",
+    tarot_result_pay_unit: " CNY/vez",
+    tarot_result_ai_interpret: " por Interpretación AI",
+   tarot_input_question_title: "Ingresa la pregunta que tienes en mente",
+    tarot_input_question_placeholder: "Describe tu pregunta de forma clara y específica, lo que ayudará a obtener una interpretación más precisa",
+    tarot_spread_select_title: "Selecciona una Distribución",
+    tarot_spread_select_tip1: "Diferentes distribuciones son adecuadas para diferentes tipos de preguntas, por favor",
+    tarot_spread_select_tip2: "elige según tu pregunta～",
+    tarot_card_unit: " cartas",
+    tarot_draw_card_btn: "Comenzar a Extraer Cartas",
+    // 牌阵1：单张牌阵
+    tarot_spread_single_title: "Distribución de una sola carta",
+    tarot_spread_single_desc1: "Adecuado para preguntas simples o fortuna diaria",
+    tarot_spread_single_desc2: "Obtén respuestas rápidamente",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "Distribución de tres cartas",
+    tarot_spread_three_desc1: "Comprende el problema basado en pasado, presente y futuro",
+    tarot_spread_three_desc2: "contexto de desarrollo",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "Distribución de Relaciones",
+    tarot_spread_relation_desc1: "Especialmente para relaciones interpersonales y problemas emocionales",
+    tarot_spread_relation_desc2: "Análisis comprehensivo",
+       tarot_result_question_label: "Pregunta: ",
+    tarot_card_upright: "Derecho",
+    tarot_card_reversed: "Reverso",
+    tarot_draw_prompt: "Por favor, piensa en tus dudas en silencio y saca las cartas por intuición",
+     // times相关
+    tarot_time_past: "Pasado",
+    tarot_time_present: "Presente",
+    tarot_time_future: "Futuro",
+    // title相关
+    tarot_title_your_thought: "Tus pensamientos",
+    tarot_title_their_thought: "Sus pensamientos",
+    tarot_title_both_status: "Estado de ambos",
+    tarot_title_potential_obstacle: "Obstáculos potenciales",
+    tarot_title_future_development: "Desarrollo futuro",
+     tarot_name: "Cartas del Tarot",
+    tarot_please_select_spread: "Por Favor Selecciona una Distribución",
   common: {
     queding:'Después de eliminar su cuenta, la información de su cuenta se eliminará permanentemente y no se podrá recuperar. Si inicia sesión dentro de siete días, el proceso de cancelación se cancelará automáticamente. ¿Está seguro de que desea eliminar su cuenta?',
     deleteuser:'Cancelar Cuenta',

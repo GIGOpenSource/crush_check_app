@@ -21,7 +21,7 @@
 			</view>
 				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
 				<view style="margin-left: 50rpx;width: 200rpx;">
-					<view>塔罗牌</view>
+					<view>{{ t('tarot_name') }}</view>
 					<view></view>
 				</view>
 				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>

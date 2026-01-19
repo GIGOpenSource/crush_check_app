@@ -1,19 +1,19 @@
 <template>
     <view class="page">
-        <view class="title">输入你心中的问题</view>
+        <view class="title">{{ t('tarot_input_question_title') }}</view>
         <view class="rich">
             <view class="textarea-wrapper">
                 <up-textarea v-model="value1" :maxlength="300" :count="true" height="100" @focus="handleFocus"
                     @blur="handleBlur"></up-textarea>
                 <view v-if="!value1 && !isFocused" class="custom-placeholder">
-                    <text>请清晰、具体地描述你的问题，这将有助于获得更准确的解读</text>
+                     <text>{{ t('tarot_input_question_placeholder') }}</text>
                 </view>
             </view>
         </view>
         <view class="titlecon">
-            <view class="t1">选择排阵</view>
-            <view>不同的牌阵适用于不同的类型问题，请</view>
-            <view>根据你的问题选择哦～</view>
+             <view class="t1">{{ t('tarot_spread_select_title') }}</view>
+            <view>{{ t('tarot_spread_select_tip1') }}</view>
+            <view>{{ t('tarot_spread_select_tip2') }}</view>
         </view>
         <view v-for="(item, index) in list" :key="index" :class="item.num == num ? 'list current' : 'list'"
             @click="num = item.num">
@@ -26,10 +26,10 @@
                 </view>
             </view>
             <view class="right">
-                {{ item.num }}张
+                 {{ item.num }}{{ t('tarot_card_unit') }}
             </view>
         </view>
-        <view class="btn" @click="path">开始抽牌</view>
+        <view class="btn" @click="path">{{ t('tarot_draw_card_btn') }}</view>
     </view>
 </template>
 
@@ -41,22 +41,22 @@ const { t } = useI18n()
 const num = ref(-1)
 import { getUserInfo } from '@/api/login.js'
 const list = [{
-    t1: '单张牌阵',
-    t2: '适用于简单问题或每日运势',
-    t3: '快速获取答案',
+    t1: t('tarot_spread_single_title'),
+    t2: t('tarot_spread_single_desc1'),
+    t3: t('tarot_spread_single_desc2'),
     img: 'index/tarotcards',
     num: 1
 }, {
-    t1: '三张牌阵',
-    t2: '基于过去、现在、未来，了解问题',
-    t3: '的发展脉络',
+    t1: t('tarot_spread_three_title'),
+    t2: t('tarot_spread_three_desc1'),
+    t3: t('tarot_spread_three_desc2'),
     img: 'index/three',
     num: 3
 
 }, {
-    t1: '关系牌阵',
-    t2: '专门用于人际关系、情感问题',
-    t3: '全面分析',
+    t1: t('tarot_spread_relation_title'),
+    t2: t('tarot_spread_relation_desc1'),
+    t3: t('tarot_spread_relation_desc2'),
     img: 'index/fire',
     num: 5
 
@@ -65,7 +65,7 @@ const value1 = ref('');
 const isFocused = ref(false);
 onLoad(() => {
     uni.setNavigationBarTitle({
-        title: '塔罗牌'
+        title: t('tarot_name')
     });
     value1.value = uni.getStorageSync('question') || '';
 })
@@ -96,7 +96,7 @@ const path = async () => {
     }
     if (num.value == -1) {
         uni.showToast({
-            title: '请选择牌阵',
+            title: t('tarot_please_select_spread'),
             icon: 'none'
         });
         return;
