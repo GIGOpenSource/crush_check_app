@@ -128,15 +128,13 @@ const pay = () => {
          "package": `${res.data.prepayid}`,
          "nonceStr": res.data.noncestr,
          success(res) {
-            // uni.showToast({
-            // 	title: t('proPoster.paySuccess'),
-            // 	icon: 'success'
-            // })
+            uni.showToast({
+            	title: t('proPoster.paySuccess'),
+            	icon: 'success'
+            })
             // pay_success()
             tarotcardnswer({ parent_id: id.value }).then(result => {
-               tarotcardDetails(id.value).then(re => {
-                  details.value = re.data
-               })
+               getdetails()
             }).catch(res => {
                uni.showToast({
                   title: t('proPoster.payFailed'),
@@ -147,10 +145,10 @@ const pay = () => {
          },
          fail(e) {
             // pay_fail()
-            // uni.showToast({
-            // 	title: t('proPoster.payFailed'),
-            // 	icon: 'none'
-            // })
+            uni.showToast({
+            	title: t('proPoster.payFailed'),
+            	icon: 'none'
+            })
          }
       })
 
