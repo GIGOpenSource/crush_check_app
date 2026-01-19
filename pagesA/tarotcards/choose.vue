@@ -129,7 +129,6 @@ const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
        num.value = Number(e.num)
-       console.log(num.value)
 })
 onMounted(() => {
     getTarotcard().then(res => {
@@ -242,6 +241,7 @@ function cardStyle(index) {
         zIndex: index
     }
 }
+
 
 </script>
 
@@ -393,21 +393,22 @@ function cardStyle(index) {
 .bottom {
     position: fixed;
     left: -10rpx;
-    bottom: -160rpx;
+    bottom: -240rpx;
     width: 100%;
-    height: 450rpx;
+    height: 550rpx;
     font-size: 22rpx;
-
     .t1 {
         text-align: center;
         width: 100%;
         margin-top: 20rpx;
+        font-size: 26rpx;
         color: rgba(255, 255, 255, 0.52);
     }
 
     .card-stack-container {
         position: relative;
         width: 750rpx;
+        height: 100%; 
         margin: 50rpx auto;
 
         .card-item {
