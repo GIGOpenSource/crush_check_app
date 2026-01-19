@@ -119,7 +119,7 @@ const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
 
-const num = ref('') //牌数
+const num = ref(0) //牌数
 const times = { 1: '过去', 2: '现在', 3: '未来' }
 const title = { 1: '你的想法', 2: 'Ta的想法', 3: '', 4: '双方状态', 5: '未来发展' }
 const current = ref(0)
@@ -128,7 +128,8 @@ const currentimg = ref('')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-       num.value = e.num
+       num.value = Number(e.num)
+       console.log(num.value)
 })
 onMounted(() => {
     getTarotcard().then(res => {
@@ -392,9 +393,9 @@ function cardStyle(index) {
 .bottom {
     position: fixed;
     left: -10rpx;
-    bottom: -40rpx;
+    bottom: -160rpx;
     width: 100%;
-    height: 300rpx;
+    height: 450rpx;
     font-size: 22rpx;
 
     .t1 {

@@ -90,7 +90,7 @@ const getdetails = () => {
 }
 const again = () => {
     uni.removeStorageSync('question')
-    uni.reLaunch({ url: '/pagesA/index/qusetion' })
+    uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
 }
 const share = () => {
    uni.showToast({
@@ -159,7 +159,7 @@ const pay = () => {
 
 <style lang="scss" scoped>
 .page {
-   height: 86vh;
+   height: 88vh;
    margin: 20rpx 25rpx;
    background: rgba(255, 255, 255, 0.1);
    box-sizing: border-box;
@@ -261,7 +261,7 @@ const pay = () => {
 }
 
 .content {
-   height: 600rpx;
+   height: 56vh;
    overflow-y: scroll;
 }
 
@@ -324,7 +324,7 @@ const pay = () => {
    padding: 20rpx;
    border-radius: 10rpx;
    width: 100%;
-   height: 560rpx;
+   height: 55vh;
    overflow-y: scroll;
    margin-top: 20rpx;
    box-sizing: border-box;

@@ -85,7 +85,7 @@ const path = async () => {
         return
     }
     let openid = uni.getStorageSync('openId')
-     let res =  getUserInfo(openid)
+     let res = await getUserInfo(openid)
      if(res.code !== 200) return
     if (!value1.value.trim()) {
         uni.showToast({
@@ -101,6 +101,7 @@ const path = async () => {
         });
         return;
     }
+   
     uni.setStorageSync('question', value1.value.trim());
     uni.navigateTo({
         url: '/pagesA/tarotcards/choose?num=' + num.value
@@ -130,7 +131,7 @@ const path = async () => {
 
 .rich {
     width: 90%;
-    margin-top: 30rpx;
+    margin-top: 50rpx;
     position: relative;
 }
 
@@ -167,10 +168,10 @@ const path = async () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 40rpx 0;
+    margin: 50rpx 0;
     font-size: 24rpx;
     font-weight: 100;
-    margin-bottom: 10rpx;
+    margin-bottom: 30rpx;
 
     .t1 {
         font-size: 28rpx;
@@ -186,7 +187,7 @@ const path = async () => {
     align-items: center;
     background: rgba(255, 255, 255, 0.1);
     margin-top: 20rpx;
-    padding: 10rpx 0;
+    padding: 20rpx 0;
     border-radius: 20rpx;
     font-size: 22rpx;
     width: 93%;
@@ -221,13 +222,14 @@ const path = async () => {
 
 .btn {
     background: rgba(255, 255, 255, 0.04);
-    height: 90rpx;
-    line-height: 90rpx !important;
-    border-radius: 90rpx;
+    height: 95rpx;
+    line-height: 95rpx !important;
+    border-radius: 95rpx;
     width: 62%;
     text-align: center;
-    margin-top: 20rpx;
+    margin-top: 40rpx;
     font-weight: 200;
+    border: 0.5px solid rgba(255, 255, 255, 0.17);
     font-size: 26rpx;
 
 }
