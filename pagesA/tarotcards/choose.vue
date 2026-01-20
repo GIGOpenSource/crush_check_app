@@ -275,7 +275,7 @@ function cardStyle(index) {
     width: 100%;
 	padding: 0 15rpx;
 	box-sizing: border-box;
-    height: 200rpx;
+    max-height: 200rpx;
     overflow-y: scroll;
 	text-align: center;
 }
