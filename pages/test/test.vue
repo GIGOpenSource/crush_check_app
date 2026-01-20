@@ -29,7 +29,7 @@
             <view class="poster-list-container">
                 <view v-for="(item, index) in posterList" :key="item.id || index"
                     :class="['poster', { 'answer': item.prompt_template.template_type == 'answer' }]"
-                    @click="isType ? handlePosterClick(item, index,item.prompt_template.template_type == 'answer'?2:1) : toggleSelect(item)">
+                    @click="isType ? handlePosterClick(item, index, item.prompt_template.template_type) : toggleSelect(item)">
                     <!-- 选中图标 -->
                     <image v-if="!isType" class="select-icon" :src="item.isActive
                         ? '/static/my/yixuan.png'
@@ -38,12 +38,11 @@
 
                     <!-- 左侧图片 -->
                     <view class="left">
-
                         <image
-                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
-                            :src="item.prompt_template.template_type == 'answer' ? item.file_url : item.character_image_url"
+                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
+                            :src="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
                             mode="scaleToFill"
-                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }">
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error','tarot_card':item.prompt_template.template_type == 'tarot_card'}">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -67,20 +66,26 @@
                             v-if="item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'">
                             <view class="num">{{ $t('poster.cheatScore') }}{{ item.score }}%</view>
                             <view class="details">
-                                <view class="summary">{{ item.summary }}</view>
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 1)">{{ $t('poster.viewPoster') }} {{
-                                    '>>' }}</text>
+                                <text>{{ item.summary }}</text>
+                                <text v-if="isType" class="look"
+                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
+                                    $t('poster.viewPoster') }} {{
+                                        '>>' }}</text>
                             </view>
                         </template>
 
-                        <!-- 答案之书类型 -->
-                        <template v-if="item.prompt_template.template_type == 'answer'">
+                        <!-- 答案之书类型和塔罗牌 -->
+                        <template
+                            v-if="item.prompt_template.template_type == 'answer' || item.prompt_template.template_type == 'tarot_card'">
                             <view class="num">{{ item.summary }}</view>
-                            <view class="details" style="margin-top: 20rpx;">
+                            <view class="details" style="margin-top: 20rpx;"
+                                v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
                                 "{{ item.content || $t('poster.defaultAnswer') }}"
-                                <text v-if="isType" class="look" @click.stop="handlePosterClick(item, index, 2)">{{ $t('poster.viewAnswer') }} {{
-                                    '>>' }}</text>
+                                <text v-if="isType" class="look"
+                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
+                                    $t('poster.viewAnswer') }} {{
+                                        '>>' }}</text>
                             </view>
                         </template>
                     </view>
@@ -136,7 +141,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -185,8 +190,15 @@ export default {
         };
     },
     onLoad() {
+        // 设置导航栏标题
+        // uni.setNavigationBarTitle({
+        //     title: this.$t('poster.title') || '历史海报'
+        // });
+
+        // 初始化分类列表（使用 i18n）
+
         this.pageName = t('poster.title');
-        
+
         // 检查登录状态，如果没有登录，posterList 保持为空数组
         const token = uni.getStorageSync("token");
         const userInfo = uni.getStorageSync("userInfo");
@@ -195,13 +207,13 @@ export default {
             this.hasMore = false;
             return;
         }
-        
+
         this.fetchPosterList();
     },
     onPullDownRefresh() {
-        console.log("========== 下拉刷新 ==========");
         // 下拉刷新
         const openId = uni.getStorageSync('openId')
+
         if (!openId) {
             uni.stopPullDownRefresh()
             return
@@ -234,7 +246,7 @@ export default {
         this.loadMore();
     },
     onShow() {
-            this.categoryList = [
+        this.categoryList = [
             {
                 label: t('poster.all'),
                 icon: "/static/my/quanbu.png",
@@ -277,18 +289,13 @@ export default {
                 color: "#66BB6A",
                 type: "crushcheck",
             },
+            {
+                label: '塔罗牌',
+                icon: "/static/my/shiwu.png",
+                color: "#66BB6A",
+                type: "tarot_card",
+            },
         ];
-        // 每次页面显示时刷新数据（包括从其他页面返回）
-        // 检查登录状态
-        const token = uni.getStorageSync("token");
-        const userInfo = uni.getStorageSync("userInfo");
-        if (!token || !userInfo) {
-            this.posterList = [];
-            this.hasMore = false;
-            return;
-        }
-        // 刷新海报列表，就像下拉刷新一样
-        this.fetchPosterList(true);
     },
 
     methods: {
@@ -332,7 +339,7 @@ export default {
             // 检查登录状态
             const token = uni.getStorageSync("token");
             const userInfo = uni.getStorageSync("userInfo");
-            
+
             // 如果没有登录，将 posterList 设置为空数组
             if (!token || !userInfo) {
                 this.posterList = [];
@@ -568,10 +575,11 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
+            console.log(type, 'tttt')
             // 如果状态是已完成，跳转到详情页
             if (item.status === "done") {
                 if (item.id) {
-                    if (type == 1) {
+                    if (type == 'crushcheck') {
                         uni.navigateTo({
                             url: `/pages/index/proProster?id=${item.id}`,
                             fail: (err) => {
@@ -582,9 +590,20 @@ export default {
                                 });
                             },
                         });
+                    } else if (type == 'answer') {
+                        uni.navigateTo({
+                            url: '/pages/index/answer-result_1213639316?id=' + item.id + '&details=' + true,
+                            fail: (err) => {
+                                console.error("跳转失败:", err);
+                                uni.showToast({
+                                    title: this.$t('poster.jumpFailed'),
+                                    icon: "none",
+                                });
+                            },
+                        });
                     } else {
-                          uni.navigateTo({
-                            url: '/pages/index/answer-result_1213639316?id='+item.id +'&details='+true,
+                        uni.navigateTo({
+                            url: '/pagesA/tarotcards/result?id=' + item.id,
                             fail: (err) => {
                                 console.error("跳转失败:", err);
                                 uni.showToast({
@@ -746,24 +765,6 @@ export default {
             this.selectedCount = this.posterList.filter((p) => p.isActive).length;
         },
         enterManageMode() {
-            // 检查登录状态
-            const token = uni.getStorageSync("token");
-            const userInfo = uni.getStorageSync("userInfo");
-            const isLoggedIn = !!(token && userInfo);
-            
-            // 检查是否有数据
-            const hasData = this.posterList && this.posterList.length > 0;
-            
-            // 如果没有登录或者没有数据，提示用户
-            if (!isLoggedIn || !hasData) {
-                uni.showToast({
-                    title: this.$t('poster.noDataToManage'),
-                    icon: 'none',
-                    duration: 2000
-                });
-                return;
-            }
-            
             this.isType = false;
             this.isSelectAll = false; // 重置全选状态
             this.wasSelectAll = false; // 重置全选标志
@@ -831,7 +832,7 @@ export default {
                     this.categoryList[this.currentCategory]?.type || "all";
                 const posterType =
                     currentCategoryType === "all" ? "" : currentCategoryType;
-                
+
                 let params = {
                     ids: [],
                     poster_type: posterType,
@@ -1196,14 +1197,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        .summary{
-			overflow: hidden;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			text-overflow: ellipsis;
-			// white-space: nowrap;
-			-webkit-line-clamp: 2;
-		}
+
         .details {
             margin-top: 50rpx;
             font-weight: 500;
@@ -1449,5 +1443,10 @@ export default {
     margin-top: 15rpx;
     width: 90%;
     text-align: center;
+}
+.tarot_card{
+    width: 210rpx !important;
+    height: 210rpx !important;
+    margin-top: 20rpx;
 }
 </style>
