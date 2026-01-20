@@ -1,10 +1,56 @@
 export default {
+ tarot_input_question_title: "输入你心中的问题",
+    tarot_input_question_placeholder: "请清晰、具体地描述你的问题，这将有助于获得更准确的解读",
+    tarot_spread_select_title: "选择排阵",
+    tarot_spread_select_tip1: "不同的牌阵适用于不同的类型问题，请",
+    tarot_spread_select_tip2: "根据你的问题选择哦～",
+    tarot_card_unit: "张",
+    tarot_draw_card_btn: "开始抽牌",
+     // 牌阵1：单张牌阵
+    tarot_spread_single_title: "单张牌阵",
+    tarot_spread_single_desc1: "适用于简单问题或每日运势",
+    tarot_spread_single_desc2: "快速获取答案",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "三张牌阵",
+    tarot_spread_three_desc1: "基于过去、现在、未来，了解问题",
+    tarot_spread_three_desc2: "的发展脉络",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "关系牌阵",
+    tarot_spread_relation_desc1: "专门用于人际关系、情感问题",
+    tarot_spread_relation_desc2: "全面分析",
+    tarot_result_question_label: "问题：",
+    tarot_card_upright: "正位",
+    tarot_card_reversed: "逆位",
+    tarot_draw_prompt: "请默念您心中的疑惑，凭直觉开始抽牌",
+        // times相关
+    tarot_time_past: "过去",
+    tarot_time_present: "现在",
+    tarot_time_future: "未来",
+    // title相关
+    tarot_title_your_thought: "你的想法",
+    tarot_title_their_thought: "Ta的想法",
+    tarot_title_both_status: "双方状态",
+    tarot_title_potential_obstacle: "潜在障碍",
+    tarot_title_future_development: "未来发展",
+    // 新增配置
+     // 拆分后的新key
+    tarot_result_pay: "支付",
+    tarot_result_pay_unit: "元/次",
+    tarot_result_ai_interpret: "系统解读",
+    tarot_result_layout_type: "阵位类型：",
+    tarot_result_layout_desc: "阵位说明：",
+    tarot_result_tab_explain: "结果说明",
+    tarot_result_tab_interpret: "系统解读",
+    tarot_result_pay_ai_interpret: "支付{price}元/次 AI解读",
+    tarot_result_share: "分享结果",
+    tarot_result_again: "再来一次",
+    tarot_result_default_interpret: "这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读",
+    tarot_name: "塔罗牌",
+    tarot_please_select_spread: "请选择牌阵",
   common: {
     queding:'注销账号后，您的账号信息将被永久删除且无法恢复。若在七天内登录账号，将自动取消注销流程。确认注销账号吗？',
+    deleteuser:'注销账户',
     zhuxiao:'您的帐号已经申请注销，七天内登录，则取消注销。',
-    deleteuser:'注销账号',
-    read:'已阅读并同意',
-    vipServiceAgreement:'会员服务协议',
     confirm: '确定',
     cancel: '取消',
     save: '保存',
@@ -14,7 +60,6 @@ export default {
     next: '下一步',
     finish: '完成',
     loading: '加载中...',
-    noContent: '暂无内容',
     success: '成功',
     fail: '失败',
     retry: '重试',
@@ -99,7 +144,7 @@ export default {
     unknownType: '未知类型',
     done: '完成',
     deleted: '已删除',
-    currencyUnit: '元/次'
+    currencyUnit: '元'
   },
   language: {
     title: '语言设置',
@@ -175,7 +220,7 @@ export default {
     userAgreement: '用户协议',
     aboutUs: '关于我们',
     monthlyCard: '月卡',
-     renew: '续费',
+    renew: '续费',
     unlock: '解锁',
     times: '次',
     congratulations: '恭喜您',
@@ -183,10 +228,7 @@ export default {
     rewardMessagePrefix: '已获得',
     rewardMessageMiddle: '次高级报告，您本月还有',
     rewardMessageSuffix: '次高级报告',
-    noExpire: '暂无到期',
-    unlockSuccessTitle: '解锁成功',
-    unlockSuccessMessage: '恭喜您成功解锁会员！',
-    unlockSuccessConfirm: '知道了'
+    noExpire: '暂无到期'
   },
   poster: {
     title: '历史海报',
@@ -245,8 +287,7 @@ export default {
     emptyMessage: '目前什么都没有，快去测试吧',
     goToTest: '去测试',
     answerBook: '答案之书',
-    crushCheck: '鉴渣',
-    noDataToManage: '暂无可操作数据'
+    crushCheck: '鉴渣'
   },
   index: {
     crushCheck: '鉴渣',
@@ -333,7 +374,7 @@ export default {
     title: '历史充值记录',
     emptyText: '暂无充值记录',
     loading: '加载中...',
-noMore: '没有更多了'
+    noMore: '没有更多了'
   },
   invite: {
     title: '邀请记录',
@@ -353,21 +394,18 @@ noMore: '没有更多了'
   },
   login: {
     title: '登录',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— 快速测试TA渣不渣 ——',
     wechatLogin: '一键登录',
     loginFailedRetry: '登录失败，请重试',
     agreeUserAgreement: '同意用户协议',
-    disagree: '不同意',
-    login: '登录',
-    via: '通过'
+    disagree: '不同意'
   },
   answerBook: {
     title: '答案之书',
     back: '返回',
     backToModify: '返回修改问题',
-	tell: '告诉',
-    TA: 'TA',
+    tellTA: '告诉TA',
     askAgain: '再次提问',
     aiAnalysis: '系统分析',
     aiAnalyzing: '生成中',
@@ -381,16 +419,10 @@ noMore: '没有更多了'
     unlockAnalysis: '您需要付费来解锁本次分析',
     payNow: '元/次 立即支付'
   },
-  invitationFriend: {
-    title: '转发邀请',
-    desc: '点击复制按钮，复制链接邀请',
-    copyBtn: '复制链接',
-    wxFriend: '微信好友',
-    wxTimeline: '朋友圈',
-    shareSummary: '邀请好友一起来测测自己渣不渣',
-    copySuccess: '链接已复制到剪贴板'
-  },
-  choosebook:{
-    noFreeTimes:'今日免费次数已用完',
+  choosebook: {
+    noFreeTimes: '今日免费次数已用完',
+    watchAdUnlock: '看广告免费解锁本次',
+    openAd: '打开广告',
+    adFinishTip: '观看完成请点击关闭按钮'
   }
 }

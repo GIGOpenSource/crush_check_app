@@ -1,10 +1,55 @@
 export default {
+   tarot_result_pay: "", // 韩语习惯把价格放前面，此处留空
+    tarot_result_pay_unit: "원/회",
+    tarot_result_ai_interpret: " AI 해석 결제",
+   tarot_input_question_title: "마음 속 질문을 입력하세요",
+    tarot_input_question_placeholder: "질문을 명확하고 구체적으로 설명해 주세요. 이는 더 정확한 해석을 얻는 데 도움이 됩니다",
+    tarot_spread_select_title: "스프레드 선택",
+    tarot_spread_select_tip1: "다른 스프레드는 다른 유형의 질문에 적합합니다. 제발",
+    tarot_spread_select_tip2: "당신의 질문에 따라 선택하세요～",
+    tarot_card_unit: "장",
+    tarot_draw_card_btn: "카드 뽑기 시작",
+    // 牌阵1：单张牌阵
+    tarot_spread_single_title: "싱글 카드 스프레드",
+    tarot_spread_single_desc1: "간단한 질문이나 일일 운세에 적합",
+    tarot_spread_single_desc2: "빠르게 답변 얻기",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "쓰리 카드 스프레드",
+    tarot_spread_three_desc1: "과거, 현재, 미래를 기반으로 문제 이해",
+    tarot_spread_three_desc2: "발전 맥락",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "관계 스프레드",
+    tarot_spread_relation_desc1: "인간 관계, 정서적 문제에 특화",
+    tarot_spread_relation_desc2: "종합 분석",
+     tarot_result_question_label: "질문：",
+    tarot_card_upright: "정위",
+    tarot_card_reversed: "역위",
+    tarot_draw_prompt: "마음 속 의문을 조용히 생각하고 직감에 따라 카드를 뽑으세요",
+    // times相关
+    tarot_time_past: "과거",
+    tarot_time_present: "현재",
+    tarot_time_future: "미래",
+    // title相关
+    tarot_title_your_thought: "당신의 생각",
+    tarot_title_their_thought: "그의/그녀의 생각",
+    tarot_title_both_status: "양측의 상태",
+    tarot_title_potential_obstacle: "잠재적 장애",
+    tarot_title_future_development: "미래 발전",
+     // 新增配置
+    tarot_result_layout_type: "스프레드 유형：",
+    tarot_result_layout_desc: "스프레드 설명：",
+    tarot_result_tab_explain: "결과 설명",
+    tarot_result_tab_interpret: "시스템 해석",
+    tarot_result_pay_ai_interpret: "{price}원/회 AI 해석 결제",
+    tarot_result_share: "결과 공유",
+    tarot_result_again: "다시 한번",
+    tarot_result_default_interpret: "여기는 해석 내용입니다... (기본 텍스트)",
+     tarot_name: "타로 카드",
+    tarot_please_select_spread: "스프레드를 선택해주세요",
   common: {
-    queding:'계정을 해지하면 계정 정보가 영구적으로 삭제되며 복구할 수 없습니다. 7일 이내에 로그인하면 해지 프로세스가 자동으로 취소됩니다. 계정을 해지하시겠습니까?',
-    zhuxiao:'계정이 이미 해지 신청되었습니다. 7일 이내에 로그인하면 해지 신청이 취소됩니다.',
+    queding:'계정을 삭제하면 계정 정보가 영구적으로 삭제되며 복구할 수 없습니다. 7일 이내에 로그인하면 취소 프로세스가 자동으로 취소됩니다. 계정을 삭제하시겠습니까?',
     deleteuser:'계정 삭제',
-    read:'읽었으며 동의합니다',
-    vipServiceAgreement:'멤버십 서비스 약관',
+    zhuxiao:'계정이 이미 해지 신청되었습니다. 7일 이내에 로그인하면 해지 신청이 취소됩니다.', 
     confirm: '확인',
     cancel: '취소',
     save: '저장',
@@ -14,7 +59,6 @@ export default {
     next: '다음',
     finish: '완료',
     loading: '로딩 중...',
-    noContent: '내용 없음',
     success: '성공',
     fail: '실패',
     retry: '다시 시도',
@@ -99,7 +143,7 @@ export default {
     unknownType: '알 수 없는 유형',
     done: '완료',
     deleted: '삭제됨',
-    currencyUnit: '위안/회'
+    currencyUnit: '위안'
   },
   language: {
     title: '언어 설정',
@@ -242,8 +286,7 @@ export default {
     emptyMessage: '아직 아무것도 없습니다. 지금 테스트하러 가세요',
     goToTest: '테스트하러 가기',
     answerBook: '답변의 책',
-    crushCheck: '크러시 체크',
-    noDataToManage: '관리할 데이터가 없습니다'
+    crushCheck: '크러시 체크'
   },
   index: {
     crushCheck: '크러시 체크',
@@ -328,7 +371,7 @@ export default {
   },
   recharge: {
     title: '충전 내역',
-    emptyText: '충전 내역이 없습니다',
+    emptyText: '충전 기록 없음',
     loading: '로딩 중...',
     noMore: '더 이상 없음'
   },
@@ -350,23 +393,20 @@ export default {
   },
   login: {
     title: '로그인',
-    appName: 'Crush Check',
-    appDesc: '——  빠른 테스트: TA는 바람둥이인가? ——',
+    appName: 'CrushCheck',
+    appDesc: '—— 빠른 테스트: TA는 바람둥이인가? ——',
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',
-    disagree: '동의하지 않음',
-    login: '로그인',
-    via: '통해'
+    disagree: '동의하지 않음'
   },
   answerBook: {
     title: '답변의 책',
     back: '돌아가기',
     backToModify: '질문 수정으로 돌아가기',
-    tell: '에게 알리기',
-    TA:'TA',
+    tellTA: 'TA에게 알리기',
     askAgain: '다시 질문하기',
-    aiAnalysis: 'System Analysis',
+    aiAnalysis: '시스템 분석',
     aiAnalyzing: '생성 중',
     thinkQuestion: '마음 속으로 질문을 조용히 생각해보세요',
     clickBook: '그런 다음 책을 열기 위해 클릭하세요',
@@ -378,17 +418,11 @@ export default {
     unlockAnalysis: '이 분석을 잠금 해제하려면 결제가 필요합니다',
     payNow: '위안/회 지금 결제'
   },
-  invitationFriend: {
-    title: '초대 공유',
-    desc: '복사 버튼을 클릭하여 링크를 복사하고 초대하세요',
-    copyBtn: '링크 복사',
-    wxFriend: '위챗 친구',
-    wxTimeline: '모멘츠',
-    shareSummary: '친구를 초대하여 함께 테스트하세요',
-    copySuccess: '링크가 클립보드에 복사되었습니다'
-  },
   choosebook: {
-    noFreeTimes: '오늘의 무료 횟수가 소진되었습니다'
+    noFreeTimes: '오늘의 무료 기회가 모두 소진되었습니다',
+    watchAdUnlock: '광고를 보고 이번을 무료로 해제',
+    openAd: '광고 열기',
+    adFinishTip: '시청 후 닫기 버튼을 클릭하세요'
   }
 }
 

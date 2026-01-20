@@ -1,10 +1,55 @@
 export default {
+   tarot_result_pay: "Pay ",
+    tarot_result_pay_unit: " CNY/time",
+    tarot_result_ai_interpret: " for AI Interpretation",
+  tarot_input_question_title: "Enter the question on your mind",
+    tarot_input_question_placeholder: "Please describe your question clearly and specifically, which will help get a more accurate interpretation",
+    tarot_spread_select_title: "Select a Spread",
+    tarot_spread_select_tip1: "Different spreads are suitable for different types of questions, please",
+    tarot_spread_select_tip2: "choose according to your question～",
+    tarot_card_unit: " cards",
+    tarot_draw_card_btn: "Start Drawing Cards",
+    // 牌阵1：单张牌阵
+    tarot_spread_single_title: "Single Card Spread",
+    tarot_spread_single_desc1: "Suitable for simple questions or daily fortune",
+    tarot_spread_single_desc2: "Get answers quickly",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "Three Cards Spread",
+    tarot_spread_three_desc1: "Understand the problem based on past, present and future",
+    tarot_spread_three_desc2: "development context",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "Relationship Spread",
+    tarot_spread_relation_desc1: "Specially for interpersonal relationships and emotional issues",
+    tarot_spread_relation_desc2: "Comprehensive analysis",
+    tarot_result_question_label: "Question: ",
+    tarot_card_upright: "Upright",
+    tarot_card_reversed: "Reversed",
+    tarot_draw_prompt: "Please silently think about your doubts and draw cards by intuition",
+    // times相关
+    tarot_time_past: "Past",
+    tarot_time_present: "Present",
+    tarot_time_future: "Future",
+    // title相关
+    tarot_title_your_thought: "Your Thoughts",
+    tarot_title_their_thought: "Their Thoughts",
+    tarot_title_both_status: "Both Status",
+    tarot_title_potential_obstacle: "Potential Obstacles",
+    tarot_title_future_development: "Future Development",
+     // 新增配置
+    tarot_result_layout_type: "Layout Type: ",
+    tarot_result_layout_desc: "Layout Description: ",
+    tarot_result_tab_explain: "Result Explanation",
+    tarot_result_tab_interpret: "System Interpretation",
+    tarot_result_pay_ai_interpret: "Pay {price} CNY/time for AI Interpretation",
+    tarot_result_share: "Share Result",
+    tarot_result_again: "Try Again",
+    tarot_result_default_interpret: "This is the interpretation... (default text)",
+    tarot_name: "Tarot Cards",
+    tarot_please_select_spread: "Please Select a Spread",
   common: {
-    queding:'After canceling the account, your account information will be permanently deleted and cannot be recovered. If you log in within seven days, the cancellation process will be automatically canceled. Are you sure you want to cancel your account?',
-    zhuxiao:'Your account has been applied for cancellation. If you log in within seven days, the cancellation will be cancelled.',
-    deleteuser:'Delete account',
-     read:'I have read and agree to',
-    vipServiceAgreement:'Membership Service Agreement',
+    queding:'After deleting your account, your account information will be permanently deleted and cannot be recovered. If you log in within seven days, the cancellation process will be automatically canceled. Are you sure you want to delete your account?',
+    deleteuser:'Cancel Account',
+    zhuxiao:'Your account has been applied for cancellation. If you log in within seven days, the cancellation will be cancelled.', 
     confirm: 'Confirm',
     cancel: 'Cancel',
     save: 'Save',
@@ -14,7 +59,6 @@ export default {
     next: 'Next',
     finish: 'Finish',
     loading: 'Loading...',
-    noContent: 'No content',
     success: 'Success',
     fail: 'Failed',
     retry: 'Retry',
@@ -99,7 +143,7 @@ export default {
     unknownType: 'Unknown type',
     done: 'Done',
     deleted: 'Deleted',
-    currencyUnit: 'CNY/time'
+    currencyUnit: 'CNY'
   },
   language: {
     title: 'Language Settings',
@@ -242,8 +286,7 @@ export default {
     emptyMessage: 'Nothing here yet, go test now',
     goToTest: 'Go Test',
     answerBook: 'Book of Answers',
-    crushCheck: 'CrushCheck',
-    noDataToManage: 'No data available to manage'
+    crushCheck: 'CrushCheck'
   },
   index: {
     crushCheck: 'CrushCheck',
@@ -355,16 +398,13 @@ export default {
     wechatLogin: 'One-Click Login',
     loginFailedRetry: 'Login failed, please try again',
     agreeUserAgreement: 'Agree to User Agreement',
-    disagree: 'Disagree',
-    login: 'Login',
-    via: 'Via'
+    disagree: 'Disagree'
   },
   answerBook: {
     title: 'Book of Answers',
     back: 'Back',
     backToModify: 'Back to Modify Question',
-    tellTA: 'Tell',
-    TA:'TA',
+    tellTA: 'Tell TA',
     askAgain: 'Ask Again',
     aiAnalysis: 'System Analysis',
     aiAnalyzing: 'Generating...',
@@ -378,16 +418,10 @@ export default {
     unlockAnalysis: 'You need to pay to unlock this analysis',
     payNow: 'CNY/time Pay Now'
   },
-  invitationFriend: {
-    title: 'Share Invitation',
-    desc: 'Click the copy button to copy the link and invite',
-    copyBtn: 'Copy Link',
-    wxFriend: 'WeChat Friend',
-    wxTimeline: 'Moments',
-    shareSummary: 'Invite friends to test together',
-    copySuccess: 'Link copied to clipboard'
-  },
   choosebook: {
-    noFreeTimes: 'Today\'s free times have been used up'
+    noFreeTimes: "Today's free attempts are used up",
+    watchAdUnlock: "Watch ad to unlock this time for free",
+    openAd: "Open Ad",
+    adFinishTip: "After watching, please click the close button"
   }
 }

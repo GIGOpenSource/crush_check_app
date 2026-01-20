@@ -17,20 +17,36 @@
 					<view>{{ t('index.answer') }}</view>
 					<view>{{ t('index.book') }}</view>
 				</view>
+				<image :src="$getImg('index/answer')"  />
+			</view>
+				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
+				<view style="margin-left: 50rpx;width: 200rpx;">
+					<view>{{ t('tarot_name') }}</view>
+					<view></view>
+				</view>
+				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
+			</view>
+		</view>
+		<!-- <view class="bottom">
+			<view class="left" @click="path('/pages/index/answer')">
+				<view>
+					<view>{{ t('index.answer') }}</view>
+					<view>{{ t('index.book') }}</view>
+				</view>
 				<image :src="$getImg('index/answer')" mode="widthFix" />
 			</view>
 			<view class="right">
 				<view>{{ t('index.moreFeatures') }}</view>
 				<view>{{ t('index.comingSoon') }}</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n';
 import {
-	onLaunch, onShow
+	onLoad
 } from '@dcloudio/uni-app'
 import {
 	share
@@ -41,47 +57,22 @@ const path = (url) => {
 	uni.removeStorageSync('question');
 	uni.navigateTo({ url })
 }
-const handleScheme = (options) => {
-	let url = options && (options.path || options.query?.url || options.url);
-	if (url && url.startsWith('crushcheck://')) {
-		const schemeUrl = url.replace('crushcheck://', '');
-		const [pagePath, queryString] = schemeUrl.split('?');
-		let targetUrl = '/' + pagePath;
-		let scene = '';
-		if (queryString) {
-			targetUrl += '?' + queryString;
-			const params = new URLSearchParams(queryString);
-			scene = params.get('scene');
-		}
-		if (["/pages/index/index", "/pages/my/my", "/pages/test/test"].includes(targetUrl.split('?')[0])) {
-			uni.switchTab({ url: targetUrl });
-		} else {
-			uni.reLaunch({ url: targetUrl });
-		}
-		if (scene) {
-			invite(scene);
-		}
-	}
-}
-// 修改 invite 为接收 scene 参数
-const invite = (scene)  => {
-	if (scene) {
-		uni.setStorageSync("inviter_openid", scene);
+onLoad((e) => {
+	if (e.scene) {
+		uni.setStorageSync("inviter_openid", e.scene);
 		if (!uni.getStorageSync('token')) {
-			uni.navigateTo({ url: "/pages/login/login" });
-			return;
+			uni.navigateTo({
+				url: "/pages/login/login"
+			})
+			return
 		}
-		share({ shareId: scene }).then((res) => {
+		share({
+			shareId: e.scene,
+		}).then((res) => {
 			console.log(res, "share record");
 		});
 	}
-}
-onLaunch((options) => {
-	handleScheme(options);
-});
-onShow((options) => {
-	handleScheme(options);
-});
+})
 </script>
 
 <style lang="scss" scoped>
@@ -128,6 +119,7 @@ onShow((options) => {
 
 	image {
 		width: 120rpx;
+		height: 160rpx;
 		margin-left: 50rpx;
 	}
 

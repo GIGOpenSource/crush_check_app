@@ -1,10 +1,54 @@
 export default {
+  tarot_result_pay: "Pagar ",
+    tarot_result_pay_unit: " CNY/vez",
+    tarot_result_ai_interpret: " por Interpretação AI",
+  tarot_input_question_title: "Insira a pergunta que você tem em mente",
+    tarot_input_question_placeholder: "Descreva sua pergunta de forma clara e específica, o que ajudará a obter uma interpretação mais precisa",
+    tarot_spread_select_title: "Selecione uma Distribuição",
+    tarot_spread_select_tip1: "Diferentes distribuições são adequadas para diferentes tipos de perguntas, por favor",
+    tarot_spread_select_tip2: "escolha de acordo com sua pergunta～",
+    tarot_card_unit: " cartas",
+    tarot_draw_card_btn: "Começar a Retirar Cartas",
+      // 牌阵1：单张牌阵
+    tarot_spread_single_title: "Distribuição de uma única carta",
+    tarot_spread_single_desc1: "Adequado para perguntas simples ou sorte diária",
+    tarot_spread_single_desc2: "Obtenha respostas rapidamente",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "Distribuição de três cartas",
+    tarot_spread_three_desc1: "Compreenda o problema com base no passado, presente e futuro",
+    tarot_spread_three_desc2: "contexto de desenvolvimento",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "Distribuição de Relacionamento",
+    tarot_spread_relation_desc1: "Especialmente para relacionamentos interpessoais e questões emocionais",
+    tarot_spread_relation_desc2: "Análise abrangente",
+    tarot_result_question_label: "Pergunta: ",
+    tarot_card_upright: "Ereto",
+    tarot_card_reversed: "Invertido",
+    tarot_draw_prompt: "Por favor, pense em suas dúvidas em silêncio e tire as cartas por intuição",
+     // times相关
+    tarot_time_past: "Passado",
+    tarot_time_present: "Presente",
+    tarot_time_future: "Futuro",
+    // title相关
+    tarot_title_your_thought: "Seus pensamentos",
+    tarot_title_their_thought: "Pensamentos dele/dela",
+    tarot_title_both_status: "Status de ambos",
+    tarot_title_potential_obstacle: "Obstáculos potenciais",
+    tarot_title_future_development: "Desenvolvimento futuro",
+    tarot_result_layout_type: "Tipo de Disposição: ",
+    tarot_result_layout_desc: "Descrição da Disposição: ",
+    tarot_result_tab_explain: "Explicação do Resultado",
+    tarot_result_tab_interpret: "Interpretação do Sistema",
+    tarot_result_pay_ai_interpret: "Pagar {price} CNY/vez por Interpretação AI",
+    tarot_result_share: "Compartilhar Resultado",
+    tarot_result_again: "Tentar Novamente",
+    tarot_result_default_interpret: "Esta é a interpretação... (texto padrão)",
+    tarot_name: "Cartas de Tarô",
+    tarot_please_select_spread: "Por Favor Selecione uma Distribuição",
   common: {
-    queding:'Após cancelar a conta, suas informações de conta serão permanentemente excluídas e não poderão ser recuperadas. Se você fizer login dentro de sete dias, o processo de cancelamento será automaticamente cancelado. Tem certeza de que deseja cancelar sua conta?',
-    zhuxiao:'Sua conta já solicitou o cancelamento. Se você fizer login dentro de sete dias, o cancelamento será cancelado.',
-     deleteuser:'Excluir conta',
-     read:'Li e concordo',
-    vipServiceAgreement:'Contrato de Serviço de Associação',
+    queding:'Após excluir sua conta, as informações da sua conta serão permanentemente excluídas e não poderão ser recuperadas. Se você fizer login dentro de sete dias, o processo de cancelamento será cancelado automaticamente. Tem certeza de que deseja excluir sua conta?',
+    deleteuser:'Cancelar Conta',
+    zhuxiao:'Sua conta já solicitou o cancelamento. Se você fizer login dentro de sete dias, o cancelamento será cancelado.', 
     confirm: 'Confirmar',
     cancel: 'Cancelar',
     save: 'Salvar',
@@ -14,7 +58,6 @@ export default {
     next: 'Próximo',
     finish: 'Finalizar',
     loading: 'Carregando...',
-    noContent: 'Sem conteúdo',
     success: 'Sucesso',
     fail: 'Falhou',
     retry: 'Tentar Novamente',
@@ -99,7 +142,7 @@ export default {
     unknownType: 'Tipo desconhecido',
     done: 'Concluído',
     deleted: 'Excluído',
-    currencyUnit: 'CNY/vez'
+    currencyUnit: 'CNY'
   },
   language: {
     title: 'Configurações de Idioma',
@@ -137,7 +180,7 @@ export default {
     inviteProgressUnit: '/5 pessoas',
     historyPoster: 'Pôsteres Históricos',
     commonFunctions: 'Funções Comuns',
-    rechargeHistory: 'Histórico de recargas',
+    rechargeHistory: 'Histórico de Recarga',
     share: 'Compartilhar com Amigos',
     settings: 'Configurações',
     inviteRecord: 'Registro de Convites',
@@ -242,8 +285,7 @@ export default {
     emptyMessage: 'Nada aqui ainda, vá testar agora',
     goToTest: 'Ir Testar',
     answerBook: 'Livro de Respostas',
-    crushCheck: 'CrushCheck',
-    noDataToManage: 'Não há dados disponíveis para gerenciar'
+    crushCheck: 'CrushCheck'
   },
   index: {
     crushCheck: 'CrushCheck',
@@ -327,7 +369,7 @@ export default {
     unlockMonthlyUnlimited: 'Desbloquear Passe Mensal para Relatórios Premium Ilimitados'
   },
   recharge: {
-    title: 'Histórico de recargas',
+    title: 'Histórico de Recarga',
     emptyText: 'Sem registros de recarga',
     loading: 'Carregando...',
     noMore: 'Não há mais'
@@ -350,23 +392,20 @@ export default {
   },
   login: {
     title: 'Login',
-    appName: 'Crush Check',
-   appDesc: '—— Teste Rápido de: TA é um Traidor? ——',
+    appName: 'CrushCheck',
+    appDesc: '—— Teste Rápido de: TA é um Traidor? ——',
     wechatLogin: 'Login com Um Clique',
     loginFailedRetry: 'Falha no login, por favor tente novamente',
     agreeUserAgreement: 'Concordar com Acordo do Usuário',
-    disagree: 'Discordar',
-    login: 'Entrar',
-    via: 'Via'
+    disagree: 'Discordar'
   },
   answerBook: {
     title: 'Livro de Respostas',
     back: 'Voltar',
     backToModify: 'Voltar para Modificar Pergunta',
-    tell: 'Dizer para',
-    TA:'TA',
+    tellTA: 'Dizer para TA',
     askAgain: 'Perguntar Novamente',
-    aiAnalysis: 'System Analysis',
+    aiAnalysis: 'Análise do sistema',
     aiAnalyzing: 'Gerando...',
     thinkQuestion: 'Pense silenciosamente em sua pergunta',
     clickBook: 'Depois clique para abrir o livro',
@@ -378,17 +417,11 @@ export default {
     unlockAnalysis: 'Você precisa pagar para desbloquear esta análise',
     payNow: 'CNY/vez Pagar Agora'
   },
-  invitationFriend: {
-    title: 'Compartilhar convite',
-    desc: 'Clique no botão copiar para copiar o link e convidar',
-    copyBtn: 'Copiar link',
-    wxFriend: 'Amigo do WeChat',
-    wxTimeline: 'Momentos',
-    shareSummary: 'Convide amigos para testar juntos',
-    copySuccess: 'Link copiado para a área de transferência'
-  },
   choosebook: {
-    noFreeTimes: 'Os tempos gratuitos de hoje foram esgotados'
+    noFreeTimes: 'As tentativas gratuitas de hoje acabaram',
+    watchAdUnlock: 'Assista ao anúncio para desbloquear gratuitamente desta vez',
+    openAd: 'Abrir anúncio',
+    adFinishTip: 'Após assistir, clique no botão fechar'
   }
 }
 

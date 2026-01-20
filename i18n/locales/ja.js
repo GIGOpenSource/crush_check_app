@@ -1,10 +1,54 @@
 export default {
+  tarot_result_pay: "", // 日语习惯把价格放前面，此处留空
+    tarot_result_pay_unit: "元/回",
+    tarot_result_ai_interpret: " AI解釈を購入",
+   tarot_input_question_title: "心の中の質問を入力してください",
+    tarot_input_question_placeholder: "質問を明確かつ具体的に記述してください。これにより、より正確な解釈が得られます",
+    tarot_spread_select_title: "スプレッドを選択",
+    tarot_spread_select_tip1: "異なるスプレッドは異なる種類の質問に適しています。",
+    tarot_spread_select_tip2: "自分の質問に合わせて選択してください～",
+    tarot_card_unit: "枚",
+    tarot_draw_card_btn: "カードを引き始める",
+     // 牌阵1：单张牌阵
+    tarot_spread_single_title: "シングルカードスプレッド",
+    tarot_spread_single_desc1: "簡単な質問や日々の運勢に適しています",
+    tarot_spread_single_desc2: "迅速に回答を得る",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "スリーカードスプレッド",
+    tarot_spread_three_desc1: "過去、現在、未来に基づいて問題を理解する",
+    tarot_spread_three_desc2: "発展の流れ",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "関係スプレッド",
+    tarot_spread_relation_desc1: "人間関係や感情の問題に特化",
+    tarot_spread_relation_desc2: "総合的な分析",
+     tarot_result_question_label: "質問：",
+    tarot_card_upright: "正位置",
+    tarot_card_reversed: "逆位置",
+    tarot_draw_prompt: "心の疑問を黙想し、直感に従ってカードを引いてください",
+    // times相关
+    tarot_time_past: "過去",
+    tarot_time_present: "現在",
+    tarot_time_future: "未来",
+    // title相关
+    tarot_title_your_thought: "あなたの考え",
+    tarot_title_their_thought: "彼/彼女の考え",
+    tarot_title_both_status: "双方の状態",
+    tarot_title_potential_obstacle: "潜在的な障害",
+    tarot_title_future_development: "未来の発展",
+     tarot_result_layout_type: "スプレッドタイプ：",
+    tarot_result_layout_desc: "スプレッド説明：",
+    tarot_result_tab_explain: "結果の説明",
+    tarot_result_tab_interpret: "システム解釈",
+    tarot_result_pay_ai_interpret: "{price}元/回 AI解釈を購入",
+    tarot_result_share: "結果を共有",
+    tarot_result_again: "もう一度抽牌",
+    tarot_result_default_interpret: "ここは解釈の内容です...（デフォルトテキスト）",
+    tarot_name: "タロットカード",
+    tarot_please_select_spread: "スプレッドを選択してください",
   common: {
-    queding:'アカウントをキャンセルすると、アカウント情報は永久に削除され、回復できなくなります。7日以内にログインすると、キャンセルプロセスは自動的にキャンセルされます。アカウントをキャンセルしてもよろしいですか？',
+    queding:'アカウントを削除すると、アカウント情報は永久に削除され、回復できなくなります。7日以内にログインすると、キャンセルプロセスが自動的にキャンセルされます。アカウントを削除してもよろしいですか？',
+    deleteuser:'アカウントを削除',
     zhuxiao:'アカウントは既に削除申請されています。7日以内にログインすると、削除申請がキャンセルされます。',
-     deleteuser:'アカウントを削除',
-     read:'読みましたので同意します',
-    vipServiceAgreement:'読みましたので同意します',
     confirm: '確認',
     cancel: 'キャンセル',
     save: '保存',
@@ -14,7 +58,6 @@ export default {
     next: '次へ',
     finish: '完了',
     loading: '読み込み中...',
-    noContent: 'コンテンツがありません',
     success: '成功',
     fail: '失敗',
     retry: '再試行',
@@ -99,7 +142,7 @@ export default {
     unknownType: '不明なタイプ',
     done: '完了',
     deleted: '削除されました',
-    currencyUnit: '元/回'
+    currencyUnit: '元'
   },
   language: {
     title: '言語設定',
@@ -242,8 +285,7 @@ export default {
     emptyMessage: 'まだ何もありません。今すぐテストに行きましょう',
     goToTest: 'テストに行く',
     answerBook: '答えの本',
-    crushCheck: 'クラッシュチェック',
-    noDataToManage: '操作可能なデータがありません'
+    crushCheck: 'クラッシュチェック'
   },
   index: {
     crushCheck: 'クラッシュチェック',
@@ -328,7 +370,7 @@ export default {
   },
   recharge: {
     title: 'チャージ履歴',
-    emptyText: 'チャージ履歴がありません',
+    emptyText: 'チャージ記録なし',
     loading: '読み込み中...',
     noMore: 'これ以上ありません'
   },
@@ -350,23 +392,20 @@ export default {
   },
   login: {
     title: 'ログイン',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— クイックテスト：TAは浮気者？——',
     wechatLogin: 'ワンクリックログイン',
     loginFailedRetry: 'ログインに失敗しました。もう一度お試しください',
     agreeUserAgreement: '利用規約に同意',
-    disagree: '同意しない',
-    login: 'ログイン',
-    via: '経由'
+    disagree: '同意しない'
   },
   answerBook: {
     title: '答えの本',
     back: '戻る',
     backToModify: '質問を修正に戻る',
-    tell: 'に伝える',
-    TA:'TA',
+    tellTA: 'TAに伝える',
     askAgain: 'もう一度質問する',
-    aiAnalysis: 'AI分析',
+    aiAnalysis: 'システム分析',
     aiAnalyzing: '生成中',
     thinkQuestion: '心の中で質問を静かに考えてください',
     clickBook: 'その後、本を開くためにクリックしてください',
@@ -378,17 +417,11 @@ export default {
     unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
     payNow: '元/回 今すぐ支払う'
   },
-  invitationFriend: {
-    title: '招待の共有',
-    desc: 'コピー ボタンをクリックしてリンクをコピーして招待',
-    copyBtn: 'リンクをコピー',
-    wxFriend: 'WeChat 友達',
-    wxTimeline: 'モーメンツ',
-    shareSummary: '友達を招待して一緒にテストしましょう',
-    copySuccess: 'リンクがクリップボードにコピーされました'
-  },
   choosebook: {
-    noFreeTimes: '本日の無料回数が使い果たされました'
+    noFreeTimes: '本日の無料回数は使い切りました',
+    watchAdUnlock: '広告を見て今回を無料で解除',
+    openAd: '広告を開く',
+    adFinishTip: '視聴後、閉じるボタンをクリックしてください'
   }
 }
 

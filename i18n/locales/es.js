@@ -1,10 +1,46 @@
 export default {
+  tarot_result_pay: "Pagar ",
+    tarot_result_pay_unit: " CNY/vez",
+    tarot_result_ai_interpret: " por Interpretación AI",
+   tarot_input_question_title: "Ingresa la pregunta que tienes en mente",
+    tarot_input_question_placeholder: "Describe tu pregunta de forma clara y específica, lo que ayudará a obtener una interpretación más precisa",
+    tarot_spread_select_title: "Selecciona una Distribución",
+    tarot_spread_select_tip1: "Diferentes distribuciones son adecuadas para diferentes tipos de preguntas, por favor",
+    tarot_spread_select_tip2: "elige según tu pregunta～",
+    tarot_card_unit: " cartas",
+    tarot_draw_card_btn: "Comenzar a Extraer Cartas",
+    // 牌阵1：单张牌阵
+    tarot_spread_single_title: "Distribución de una sola carta",
+    tarot_spread_single_desc1: "Adecuado para preguntas simples o fortuna diaria",
+    tarot_spread_single_desc2: "Obtén respuestas rápidamente",
+    // 牌阵2：三张牌阵
+    tarot_spread_three_title: "Distribución de tres cartas",
+    tarot_spread_three_desc1: "Comprende el problema basado en pasado, presente y futuro",
+    tarot_spread_three_desc2: "contexto de desarrollo",
+    // 牌阵3：关系牌阵
+    tarot_spread_relation_title: "Distribución de Relaciones",
+    tarot_spread_relation_desc1: "Especialmente para relaciones interpersonales y problemas emocionales",
+    tarot_spread_relation_desc2: "Análisis comprehensivo",
+       tarot_result_question_label: "Pregunta: ",
+    tarot_card_upright: "Derecho",
+    tarot_card_reversed: "Reverso",
+    tarot_draw_prompt: "Por favor, piensa en tus dudas en silencio y saca las cartas por intuición",
+     // times相关
+    tarot_time_past: "Pasado",
+    tarot_time_present: "Presente",
+    tarot_time_future: "Futuro",
+    // title相关
+    tarot_title_your_thought: "Tus pensamientos",
+    tarot_title_their_thought: "Sus pensamientos",
+    tarot_title_both_status: "Estado de ambos",
+    tarot_title_potential_obstacle: "Obstáculos potenciales",
+    tarot_title_future_development: "Desarrollo futuro",
+     tarot_name: "Cartas del Tarot",
+    tarot_please_select_spread: "Por Favor Selecciona una Distribución",
   common: {
-    queding:'After canceling the account, your account information will be permanently deleted and cannot be recovered. If you log in within seven days, the cancellation process will be automatically canceled. Are you sure you want to cancel your account?',
-     zhuxiao:'Su cuenta ha solicitado la cancelación. Si inicias sesión dentro de siete días, se cancelará la cancelación.',
-    deleteuser:'Eliminar cuenta',
-     read:'He leído y acepto',
-    vipServiceAgreement:'Acuerdo de Servicio de Membresía',
+    queding:'Después de eliminar su cuenta, la información de su cuenta se eliminará permanentemente y no se podrá recuperar. Si inicia sesión dentro de siete días, el proceso de cancelación se cancelará automáticamente. ¿Está seguro de que desea eliminar su cuenta?',
+    deleteuser:'Cancelar Cuenta',
+    zhuxiao:'Su cuenta ha solicitado la cancelación. Si inicias sesión dentro de siete días, se cancelará la cancelación.',
     confirm: 'Confirmar',
     cancel: 'Cancelar',
     save: 'Guardar',
@@ -14,7 +50,6 @@ export default {
     next: 'Siguiente',
     finish: 'Finalizar',
     loading: 'Cargando...',
-    noContent: 'Sin contenido',
     success: 'Éxito',
     fail: 'Fallido',
     retry: 'Reintentar',
@@ -99,7 +134,7 @@ export default {
     unknownType: 'Tipo desconocido',
     done: 'Completado',
     deleted: 'Eliminado',
-    currencyUnit: 'CNY/vez'
+    currencyUnit: 'CNY'
   },
   language: {
     title: 'Configuración de Idioma',
@@ -137,7 +172,7 @@ export default {
     inviteProgressUnit: '/5 personas',
     historyPoster: 'Pósters Históricos',
     commonFunctions: 'Funciones Comunes',
-    rechargeHistory: 'Historial de recargas',
+    rechargeHistory: 'Historial de Recarga',
     share: 'Compartir con Amigos',
     settings: 'Configuración',
     inviteRecord: 'Registro de Invitaciones',
@@ -242,8 +277,7 @@ export default {
     emptyMessage: 'Nada aquí todavía, ve a probar ahora',
     goToTest: 'Ir a Probar',
     answerBook: 'Libro de Respuestas',
-    crushCheck: 'CrushCheck',
-    noDataToManage: 'No hay datos disponibles para gestionar'
+    crushCheck: 'CrushCheck'
   },
   index: {
     crushCheck: 'CrushCheck',
@@ -327,7 +361,7 @@ export default {
     unlockMonthlyUnlimited: 'Desbloquear Pase Mensual para Informes Premium Ilimitados'
   },
   recharge: {
-    title: 'Historial de recargas',
+    title: 'Historial de Recarga',
     emptyText: 'Sin registros de recarga',
     loading: 'Cargando...',
     noMore: 'No hay más'
@@ -350,23 +384,20 @@ export default {
   },
   login: {
     title: 'Iniciar Sesión',
-    appName: 'Crush Check',
+    appName: 'CrushCheck',
     appDesc: '—— Prueba Rápida de: ¿Es TA un Tramposo? ——',
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',
     agreeUserAgreement: 'Aceptar Acuerdo de Usuario',
-    disagree: 'No aceptar',
-    login: 'Iniciar sesión',
-    via: 'A través de'
+    disagree: 'No aceptar'
   },
   answerBook: {
     title: 'Libro de Respuestas',
     back: 'Volver',
     backToModify: 'Volver a Modificar Pregunta',
-    tell: 'Decirle a',
-    TA:'TA',
+    tellTA: 'Decirle a TA',
     askAgain: 'Preguntar de Nuevo',
-    aiAnalysis: 'System Analysis',
+    aiAnalysis: 'Análisis del sistema',
     aiAnalyzing: 'Generando...',
     thinkQuestion: 'Piensa en silencio tu pregunta',
     clickBook: 'Luego haz clic para abrir el libro',
@@ -378,16 +409,10 @@ export default {
     unlockAnalysis: 'Necesitas pagar para desbloquear este análisis',
     payNow: 'CNY/vez Pagar Ahora'
   },
-  invitationFriend: {
-    title: 'Invitación para compartir',
-    desc: 'Haz clic en el botón de copiar para copiar el enlace e invitar',
-    copyBtn: 'Copiar enlace',
-    wxFriend: 'Amigo de WeChat',
-    wxTimeline: 'Momentos',
-    shareSummary: 'Invita a tus amigos a probar juntos',
-    copySuccess: 'Enlace copiado al portapapeles'
-  },
   choosebook: {
-    noFreeTimes: 'Se han agotado las veces gratuitas de hoy'
+    noFreeTimes: 'Se han agotado los intentos gratuitos de hoy',
+    watchAdUnlock: 'Ver anuncio para desbloquear gratis esta vez',
+    openAd: 'Abrir anuncio',
+    adFinishTip: 'Después de ver, haz clic en el botón de cerrar'
   }
 }
