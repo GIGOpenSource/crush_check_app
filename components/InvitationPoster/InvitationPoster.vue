@@ -18,7 +18,7 @@
 							<l-painter-text v-else :text="$t('no_nickname')" css="display: block;"></l-painter-text>
 							<l-painter-text text='' css="display: block;">
 								<!-- <l-painter-text :text=""></l-painter-text> -->
-								<l-painter-text :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 430rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
+								<l-painter-text :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 420rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
 							</l-painter-text>
 						</l-painter-view>
 					</l-painter-view>

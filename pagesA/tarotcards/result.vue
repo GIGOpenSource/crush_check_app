@@ -1,6 +1,10 @@
 <template>
-  <view class="page">
+   <view class="page">
       <view>{{ t('tarot_result_question_label') }}{{ details.summary }}</view>
+      <!-- <up-read-more :showHeight="200" :toggle="true" textIndent="0em" :shadowStyle="shadowStyle">
+         <rich-text :nodes="t('tarot_result_question_label') + details.summary"></rich-text>
+      </up-read-more> -->
+
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
@@ -69,8 +73,8 @@
    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
       <view class="del-popup-content">
          <scroll-view scroll-y class="gundong">
-              <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
-         </invitationPoster>
+            <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
+            </invitationPoster>
          </scroll-view>
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
@@ -80,7 +84,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
 import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
@@ -89,6 +93,12 @@ import {
    createOrder,
 } from '@/api/index.js'
 import uma from '@/uma.js'
+const shadowStyle = reactive({
+   backgroundImage: "none",
+   paddingTop: "0",
+   marginTop: "20rpx",
+   maxHeight:'100rpx'
+});
 const current = ref(0)
 const id = ref('')
 const details = ref({})
@@ -124,9 +134,9 @@ const again = () => {
    uni.removeStorageSync('question')
    uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
 }
-const share1= () => {
+const share1 = () => {
    show.value = true,
-   showDelPopup2.value = true
+      showDelPopup2.value = true
 }
 const share = () => {
    uni.downloadFile({
@@ -145,7 +155,7 @@ const share = () => {
                      showDelPopup2.value = false
                   } else {
                      // share_success()
-                      show.value = false
+                     show.value = false
                      showDelPopup2.value = false
                   }
                }
@@ -220,12 +230,13 @@ const pay = () => {
 <style lang="scss" scoped>
 .del-popup-content {
    width: 100%;
-    height: 700rpx;
+   height: 700rpx;
    border-radius: 10rpx;
    background: #2B2848;
    border: 1rpx solid #fff;
    box-sizing: border-box;
    position: relative;
+
    .gaosuta {
       background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
       width: 300rpx;
@@ -235,7 +246,8 @@ const pay = () => {
       margin: 30rpx auto;
       text-align: center;
    }
-   .gundong{
+
+   .gundong {
       height: 550rpx;
       // overflow-y: scroll;
    }
