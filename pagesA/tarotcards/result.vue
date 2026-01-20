@@ -68,10 +68,10 @@
    </view>
    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
       <view class="del-popup-content">
-         <view class="gundong">
-             <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
+         <scroll-view scroll-y class="gundong">
+              <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
          </invitationPoster>
-         </view>
+         </scroll-view>
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
@@ -220,18 +220,12 @@ const pay = () => {
 <style lang="scss" scoped>
 .del-popup-content {
    width: 100%;
-   max-height: 70vh;
-   overflow-y: scroll;
-   // padding: 20rpx 30rpx;
+    height: 700rpx;
    border-radius: 10rpx;
    background: #2B2848;
    border: 1rpx solid #fff;
    box-sizing: border-box;
    position: relative;
- .gundong{
-    max-height: 55vh;
-    overflow-y: scroll;
- }
    .gaosuta {
       background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
       width: 300rpx;
@@ -240,6 +234,10 @@ const pay = () => {
       border-radius: 80rpx;
       margin: 30rpx auto;
       text-align: center;
+   }
+   .gundong{
+      height: 550rpx;
+      // overflow-y: scroll;
    }
 }
 
