@@ -273,8 +273,11 @@ function cardStyle(index) {
     margin-top: 50rpx;
     font-size: 30rpx;
     width: 100%;
+	padding: 0 15rpx;
+	box-sizing: border-box;
     height: 200rpx;
     overflow-y: scroll;
+	text-align: center;
 }
 
 .clickbottom {
