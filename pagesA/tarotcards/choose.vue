@@ -272,6 +272,9 @@ function cardStyle(index) {
 .title {
     margin-top: 50rpx;
     font-size: 30rpx;
+    width: 100%;
+    height: 200rpx;
+    overflow-y: scroll;
 }
 
 .clickbottom {
