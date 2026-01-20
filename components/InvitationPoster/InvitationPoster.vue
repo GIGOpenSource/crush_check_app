@@ -1,7 +1,8 @@
 <template>
 	<view>
 		<image :src="path" mode="widthFix" @load="success"></image>
-		<l-painter ref="painter" @success="path = $event" hidden path-type="url" width="750rpx" height="100%" isCanvasToTempFilePath>
+		<l-painter ref="painter" @success="path = $event" hidden path-type="url" width="750rpx" height="100%"
+			isCanvasToTempFilePath>
 			<l-painter-view
 				css="width: 100%; min-height: 400rpx;color: #fff;background: #2a2936;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
 				<l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -9,51 +10,79 @@
 					<l-painter-view css="display: flex;align-items: center;">
 						<l-painter-image v-if="userinfo.user_avatar" :src="userinfo.user_avatar"
 							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;"></l-painter-image>
-							<l-painter-image v-else :src="$getImg('my/user_no')"
+						<l-painter-image v-else :src="$getImg('my/user_no')"
 							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;"></l-painter-image>
 						<l-painter-view css="line-height: 50rpx;">
-							<l-painter-text v-if="userinfo.username" :text='userinfo.username' css="display: block;"></l-painter-text>
-							<l-painter-text v-else :text="t('no_nickname')" css="display: block;"></l-painter-text>
+							<l-painter-text v-if="userinfo.username" :text='userinfo.username'
+								css="display: block;"></l-painter-text>
+							<l-painter-text v-else :text="$t('no_nickname')" css="display: block;"></l-painter-text>
 							<l-painter-text text='' css="display: block;">
-								<l-painter-text :text="$t('tarot_input_question_title')"></l-painter-text>
+								<l-painter-text :text="$t('tarot_result_question_label')"></l-painter-text>
 								<l-painter-text :text='info.summary'></l-painter-text>
 							</l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
-				<l-painter-view css="height:20rpx"></l-painter-view>
+					<l-painter-view css="height:20rpx"></l-painter-view>
 					<!-- 卡片1 -->
-					<l-painter-view css="display: flex;align-items: center;justify-content: center;" v-if="info.tarot_cards_list.length == 1">
-						<l-painter-view css="width: 200rpx;height: 240rpx;border: 1rpx solid #fff;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
+					<l-painter-view css="display: flex;align-items: center;justify-content: center;"
+						v-if="info.tarot_cards_list.length == 1">
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;border: 1rpx solid #fff;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
 							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text :text='info.tarot_cards_list[0].name' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[0].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
 					<!-- 卡片3 -->
-					<l-painter-view css="display: flex;align-items: center;justify-content: center;" v-if="info.tarot_cards_list.length == 3">
-						<l-painter-view css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+					<l-painter-view css="display: flex;align-items: center;justify-content: center;"
+						v-if="info.tarot_cards_list.length == 3">
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
 							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text :text='info.tarot_cards_list[0].name' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[0].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 						</l-painter-view>
-						<l-painter-view css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
 							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text :text='info.tarot_cards_list[1].name' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[1].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 						</l-painter-view>
-						<l-painter-view css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;">
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;">
 							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text :text='info.tarot_cards_list[2].name' css="display: block;text-align: center;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[2].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
 					<!-- 卡片5 -->
 					<l-painter-view
-						css="display: flex;align-items: center;justify-content: center;flex-direction: column;" v-if="info.tarot_cards_list.length == 5">
+						css="display: flex;align-items: center;justify-content: center;flex-direction: column;"
+						v-if="info.tarot_cards_list.length == 5">
 						<l-painter-view css="display: flex;align-items: center;justify-content: center;">
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
@@ -61,9 +90,14 @@
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-bottom: 0;">
 								<l-painter-text text='3' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text :text='info.tarot_cards_list[2].name' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[2].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 							</l-painter-view>
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
@@ -74,23 +108,38 @@
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
 								<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text :text='info.tarot_cards_list[0].name' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[0].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 							</l-painter-view>
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
 								<l-painter-text text='4' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text :text='info.tarot_cards_list[3].name' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[3].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 							</l-painter-view>
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;">
 								<l-painter-text text='2' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text :text='info.tarot_cards_list[1].name' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[1].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 							</l-painter-view>
 						</l-painter-view>
 						<l-painter-view css="display: flex;align-items: center;justify-content: center;">
@@ -100,9 +149,14 @@
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-top: 0;">
 								<l-painter-text text='5' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text :text='info.tarot_cards_list[4].name' css="display: block;text-align: center;"></l-painter-text>
-								<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 0"  :text="$t('tarot_result_tab_explain')" css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
-							<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 1"  :text="$t('tarot_result_tab_interpret')" css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[4].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 							</l-painter-view>
 							<l-painter-view
 								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
@@ -110,14 +164,16 @@
 							</l-painter-view>
 						</l-painter-view>
 					</l-painter-view>
-						<!-- 解读 -->
+					<!-- 解读 -->
 					<l-painter-view v-if="info.child_list.length == 1">
 						<l-painter-view>
-							<l-painter-text :text="$t('tarot_result_ai_interpret')" css="display: block;"></l-painter-text>
+							<l-painter-text :text="$t('tarot_result_ai_interpret')"
+								css="display: block;"></l-painter-text>
 						</l-painter-view>
 						<l-painter-view
 							css="border: 1rpx solid #fff;border-radius: 10rpx;padding: 20rpx;margin: 20rpx 0;background: #3f3e4a;">
-							<l-painter-text :text='info.child_list[0]?.content.summary' css="display: block;"></l-painter-text>
+							<l-painter-text :text='info.child_list[0]?.content.summary'
+								css="display: block;"></l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
 
@@ -153,14 +209,18 @@ import lPainterQrcode from 'lime-painter/components/l-painter-qrcode/l-painter-q
 import lPainterText from 'lime-painter/components/l-painter-text/l-painter-text.vue'
 import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.vue'
 import { getQroter } from "@/api/tarotcards.js";
+import { t } from '@/i18n/index.js';
 export default {
 	name: "invitationPoster",
 	props: {
-		info: {
-			type: Object,
-			default: () => { }
-		}
-	},
+  info: {
+    type: Object,
+    // 优化1：给默认值初始化child_list，避免访问时报错
+    default: () => ({
+      child_list: []
+    })
+  }
+},
 	components: {
 		lPainter,
 		lPainterImage,
@@ -179,7 +239,23 @@ export default {
 	created() {
 		this.getlist()
 	},
+	mounted() {
+  this.processSummaryContent();
+},
 	methods: {
+		processSummaryContent() {
+    if (!this.info || !Array.isArray(this.info.child_list) || this.info.child_list.length === 0) {
+      return;
+    }
+    const firstChild = { ...this.info.child_list[0] };
+    if (firstChild.content && firstChild.content.summary) {
+      firstChild.content.summary = firstChild.content.summary
+        .replace(/<br\s*\/?>/gi, '\n')  
+        .trim()
+        .replace(/\n+/g, '\n');
+      this.info.child_list[0].content.summary = firstChild.content.summary;
+    }
+  },
 		// 预览图片
 		look() {
 			uni.previewImage({
