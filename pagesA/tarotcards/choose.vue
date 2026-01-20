@@ -266,7 +266,7 @@ function cardStyle(index) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 300;
+    font-weight: 300;//
 }
 
 .title {
