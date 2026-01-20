@@ -36,7 +36,7 @@ export default {
      // 拆分后的新key
     tarot_result_pay: "支付",
     tarot_result_pay_unit: "元/次",
-    tarot_result_ai_interpret: "AI解读",
+    tarot_result_ai_interpret: "系统解读",
     tarot_result_layout_type: "阵位类型：",
     tarot_result_layout_desc: "阵位说明：",
     tarot_result_tab_explain: "结果说明",

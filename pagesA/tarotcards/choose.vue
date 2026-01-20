@@ -97,8 +97,8 @@
         <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
-                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
-                    <image class="image-back" :src="currentimg" mode="aspectFill" />
+                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="'scaleToFill'" />
+                    <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
         </view>
@@ -120,7 +120,7 @@ const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
 
-const num = ref(0) //牌数
+const num = ref(3) //牌数
 const times = { 1: t('tarot_time_past'), 2: t('tarot_time_present'), 3: t('tarot_time_future') }
 const title = {
     1: t('tarot_title_your_thought'),          // 你的想法
@@ -135,7 +135,7 @@ const currentimg = ref('')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-    num.value = Number(e.num)
+    // num.value = Number(e.num)
       uni.setNavigationBarTitle({
         title: t('tarot_name')
     });
@@ -217,11 +217,11 @@ const path = (arr) => {
         user_question: question
     }
     createResult(params).then(res => {
-        setTimeout(() => {
-            uni.redirectTo({
+       setTimeout(() => {
+         uni.redirectTo({
                 url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
             })
-        }, 1000)
+       },300)
     })
 }
 // 计算卡牌尺寸和重叠距离
@@ -353,6 +353,7 @@ function cardStyle(index) {
         image {
             width: 100%;
             height: 100%;
+            object-fit: cover;
             vertical-align: middle;
         }
 
@@ -459,11 +460,11 @@ function cardStyle(index) {
 
 .preview-enter {
     opacity: 1 !important;
-    animation: fadeIn 1s ease forwards;
+    animation: fadeIn 0.6s ease forwards;
 }
 
 .fade-out {
-    animation: fadeOut 1s linear forwards;
+    animation: fadeOut 0.6s linear forwards;
 }
 
 @keyframes fadeIn {
@@ -498,7 +499,7 @@ function cardStyle(index) {
         height: 100%;
         position: relative;
         transform-style: preserve-3d;
-        transition: transform 3s ease-in-out;
+        transition: transform 2s ease-in-out;
 
         image {
             width: 100%;
