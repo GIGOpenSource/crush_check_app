@@ -1,4 +1,6 @@
 <template>
+     <!-- <invitationPoster ref="poster" v-if="true" @success="success">
+   </invitationPoster> -->
    <view class="page">
       <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
       <view class="cards">
@@ -66,6 +68,7 @@
          <view @click="again">{{ t('tarot_result_again') }}</view>
       </view>
    </view>
+ 
 </template>
 
 <script setup>
@@ -74,6 +77,7 @@ const { t } = useI18n()
 import { ref } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
+import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
 import {
    getProducts,
    createOrder,
@@ -92,6 +96,9 @@ onLoad((e) => {
    id.value = e.id
    getdetails()
 })
+const success = (e) => {
+   // this.posterImg = e
+}
 const getdetails = () => {
    getProducts().then(res => {
       object.value = res.data.results.filter(item => item.product_type == 'tarot_once')[0]
@@ -129,8 +136,8 @@ const pay = () => {
          "nonceStr": res.data.noncestr,
          success(res) {
             uni.showToast({
-            	title: t('proPoster.paySuccess'),
-            	icon: 'success'
+               title: t('proPoster.paySuccess'),
+               icon: 'success'
             })
             // pay_success()
             tarotcardnswer({ parent_id: id.value }).then(result => {
@@ -146,8 +153,8 @@ const pay = () => {
          fail(e) {
             // pay_fail()
             uni.showToast({
-            	title: t('proPoster.payFailed'),
-            	icon: 'none'
+               title: t('proPoster.payFailed'),
+               icon: 'none'
             })
          }
       })

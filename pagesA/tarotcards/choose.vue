@@ -97,7 +97,7 @@
         <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
-                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="'scaleToFill'" />
+                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
                     <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
@@ -353,7 +353,6 @@ function cardStyle(index) {
         image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
             vertical-align: middle;
         }
 
@@ -505,7 +504,6 @@ function cardStyle(index) {
             width: 100%;
             height: 100%;
             position: absolute;
-            object-fit: fill;
             backface-visibility: hidden;
         }
 
