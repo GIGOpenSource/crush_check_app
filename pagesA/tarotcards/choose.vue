@@ -120,7 +120,7 @@ const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
 
-const num = ref(3) //牌数
+const num = ref(0) //牌数
 const times = { 1: t('tarot_time_past'), 2: t('tarot_time_present'), 3: t('tarot_time_future') }
 const title = {
     1: t('tarot_title_your_thought'),          // 你的想法
@@ -135,7 +135,7 @@ const currentimg = ref('')
 const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
-    // num.value = Number(e.num)
+    num.value = Number(e.num)
       uni.setNavigationBarTitle({
         title: t('tarot_name')
     });
@@ -505,6 +505,7 @@ function cardStyle(index) {
             width: 100%;
             height: 100%;
             position: absolute;
+            object-fit: fill;
             backface-visibility: hidden;
         }
 
