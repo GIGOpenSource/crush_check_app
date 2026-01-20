@@ -60,6 +60,7 @@ function request(url, params, other) {
 				other.timer = null;
 			}, other.loadingTime);
 		}
+		console.log('hahahahah',params)
 		uni.request({
 			url: host + url,
 			data: params,

@@ -400,6 +400,7 @@ export default {
     agreeUserAgreement: '사용자 약관에 동의',
     disagree: '동의하지 않음',
      login: '로그인',
+     via:'통과하다'
   },
   answerBook: {
     title: '답변의 책',

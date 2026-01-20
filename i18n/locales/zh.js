@@ -401,6 +401,7 @@ export default {
     agreeUserAgreement: '同意用户协议',
     disagree: '不同意',
      login: '登录',
+     via:'通过'
   },
   answerBook: {
     title: '答案之书',

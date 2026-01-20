@@ -400,6 +400,7 @@ export default {
     agreeUserAgreement: 'Agree to User Agreement',
     disagree: 'Disagree',
     login: 'Login',
+    via:'pass'
   },
   answerBook: {
     title: 'Book of Answers',

@@ -399,6 +399,7 @@ export default {
     agreeUserAgreement: '利用規約に同意',
     disagree: '同意しない',
     login: 'ログイン',
+    via:'ごうかく'
   },
   answerBook: {
     title: '答えの本',

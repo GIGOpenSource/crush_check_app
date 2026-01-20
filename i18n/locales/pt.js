@@ -399,6 +399,8 @@ export default {
     agreeUserAgreement: 'Concordar com Acordo do Usuário',
     disagree: 'Discordar',
      login: 'Login',
+     via:'aprovar'
+
   },
   answerBook: {
     title: 'Livro de Respostas',
