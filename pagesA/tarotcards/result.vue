@@ -1,6 +1,5 @@
 <template>
-     <!-- <invitationPoster ref="poster" v-if="true" @success="success">
-   </invitationPoster> -->
+
    <view class="page">
       <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
       <view class="cards">
@@ -64,11 +63,17 @@
    <view style="height: 130rpx;"></view>
    <view class="btns">
       <view class="border">
-         <view @click="share" class="share">{{ t('tarot_result_share') }}</view>
+         <view @click="share1" class="share">{{ t('tarot_result_share') }}</view>
          <view @click="again">{{ t('tarot_result_again') }}</view>
       </view>
    </view>
- 
+   <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+      <view class="del-popup-content">
+         <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
+         </invitationPoster>
+         <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
+      </view>
+   </up-popup>
 </template>
 
 <script setup>
@@ -87,6 +92,9 @@ const current = ref(0)
 const id = ref('')
 const details = ref({})
 const object = ref({})
+const posterImg = ref('')
+const show = ref(false)
+const showDelPopup2 = ref(false)
 const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card': t('tarot_spread_relation_title') }
 const desc = { 'once_single_card': t('tarot_spread_single_desc1') + ',' + t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1') + ',' + t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1') + ',' + t('tarot_spread_relation_desc2') }
 onLoad((e) => {
@@ -97,7 +105,7 @@ onLoad((e) => {
    getdetails()
 })
 const success = (e) => {
-   // this.posterImg = e
+   posterImg.value = e
 }
 const getdetails = () => {
    getProducts().then(res => {
@@ -115,10 +123,40 @@ const again = () => {
    uni.removeStorageSync('question')
    uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
 }
+const share1= () => {
+   show.value = true,
+   showDelPopup2.value = true
+}
 const share = () => {
-   uni.showToast({
-      title: '暂未开放',
-      icon: 'none'
+   uni.downloadFile({
+      url: posterImg.value,
+      success: (res) => {
+         if (res.statusCode === 200) {
+            const inviterOpenId = uni.getStorageSync("openId") || "";
+            const query = `?scene=${inviterOpenId}`
+            wx.showShareImageMenu({
+               path: res.tempFilePath,
+               entrancePath: `/pages/index/index${query}`,
+               complete: (res) => {
+                  if (res.errMsg == 'showShareImageMenu:fail cancel') {
+                     // share_fail()
+                     show.value = false
+                     showDelPopup2.value = false
+                  } else {
+                     // share_success()
+                      show.value = false
+                     showDelPopup2.value = false
+                  }
+               }
+            })
+         }
+      }
+   })
+   wx.showShareImageMenu({
+      path: posterImg.value,
+      complete: (res) => {
+         console.log(res)
+      }
    })
 }
 const pay = () => {
@@ -179,6 +217,26 @@ const pay = () => {
 </script>
 
 <style lang="scss" scoped>
+.del-popup-content {
+   width: 100%;
+   height: 100%;
+   // padding: 20rpx 30rpx;
+   border-radius: 10rpx;
+   background: #2B2848;
+   border: 1rpx solid #fff;
+   box-sizing: border-box;
+
+   .gaosuta {
+      background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
+      width: 300rpx;
+      height: 80rpx;
+      line-height: 80rpx;
+      border-radius: 80rpx;
+      margin: 30rpx auto;
+      text-align: center;
+   }
+}
+
 .page {
    height: 88vh;
    margin: 20rpx 25rpx;
@@ -417,5 +475,10 @@ const pay = () => {
          border-right: 1px solid rgba(255, 255, 255, 0.3);
       }
    }
+}
+</style>
+<style>
+.u-safe-bottom {
+   height: 0 !important;
 }
 </style>

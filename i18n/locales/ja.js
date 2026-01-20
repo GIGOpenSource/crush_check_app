@@ -1,4 +1,5 @@
 export default {
+  no_nickname: 'ニックネーム未設定',
   tarot_result_pay: "", // 日语习惯把价格放前面，此处留空
     tarot_result_pay_unit: "元/回",
     tarot_result_ai_interpret: " AI解釈を購入",

@@ -1,4 +1,5 @@
 export default {
+  no_nickname:'暂无昵称',
  tarot_input_question_title: "输入你心中的问题",
     tarot_input_question_placeholder: "请清晰、具体地描述你的问题，这将有助于获得更准确的解读",
     tarot_spread_select_title: "选择排阵",

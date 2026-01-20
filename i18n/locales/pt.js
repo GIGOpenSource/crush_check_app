@@ -1,4 +1,5 @@
 export default {
+   no_nickname: 'Sem apelido',
   tarot_result_pay: "Pagar ",
     tarot_result_pay_unit: " CNY/vez",
     tarot_result_ai_interpret: " por Interpretação AI",

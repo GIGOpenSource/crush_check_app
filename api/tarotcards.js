@@ -24,3 +24,8 @@ export const tarotcardDetails = (id) => {
 export const tarotcardnswer = (params) => {
 	return getRequest(`/tarotcard/generate_tarotcard_deep/`,params)
 }
+
+//二维码
+export const getQroter = () => {
+	return getRequest(`/wechat/wx_get_QRcode`,{})
+}

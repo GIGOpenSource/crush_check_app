@@ -97,7 +97,7 @@
         <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
-                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
+                    <image class="image-front" :src="$getImg('index/tarotap1')" mode="'scaleToFill'" />
                     <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
