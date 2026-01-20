@@ -1,7 +1,6 @@
 <template>
-
-   <view class="page">
-      <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
+  <view class="page">
+      <view>{{ t('tarot_result_question_label') }}{{ details.summary }}</view>
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
@@ -253,6 +252,7 @@ const pay = () => {
    border-radius: 10rpx;
    font-weight: 300;
    padding: 30rpx;
+   overflow-y: scroll;
 }
 
 .cards {
@@ -347,8 +347,8 @@ const pay = () => {
 }
 
 .content {
-   height: 56vh;
-   overflow-y: scroll;
+   // height: 56vh;
+   // overflow-y: scroll;
 }
 
 .list {

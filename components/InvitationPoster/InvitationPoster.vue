@@ -7,18 +7,18 @@
 				css="width: 100%; min-height: 400rpx;color: #fff;background: #2a2936;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
 				<l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
 					<!-- 头部 -->
-					<l-painter-view css="display: flex;align-items: center;">
+					<l-painter-view css="display: flex;">
 						<l-painter-image v-if="userinfo.user_avatar" :src="userinfo.user_avatar"
 							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;"></l-painter-image>
 						<l-painter-image v-else :src="$getImg('my/user_no')"
-							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;"></l-painter-image>
+							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;margin-top: 20rpx;"></l-painter-image>
 						<l-painter-view css="line-height: 50rpx;">
 							<l-painter-text v-if="userinfo.username" :text='userinfo.username'
 								css="display: block;"></l-painter-text>
 							<l-painter-text v-else :text="$t('no_nickname')" css="display: block;"></l-painter-text>
 							<l-painter-text text='' css="display: block;">
-								<l-painter-text :text="$t('tarot_result_question_label')"></l-painter-text>
-								<l-painter-text :text='info.summary'></l-painter-text>
+								<!-- <l-painter-text :text=""></l-painter-text> -->
+								<l-painter-text :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 430rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
 							</l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
@@ -213,14 +213,14 @@ import { t } from '@/i18n/index.js';
 export default {
 	name: "invitationPoster",
 	props: {
-  info: {
-    type: Object,
-    // 优化1：给默认值初始化child_list，避免访问时报错
-    default: () => ({
-      child_list: []
-    })
-  }
-},
+		info: {
+			type: Object,
+			// 优化1：给默认值初始化child_list，避免访问时报错
+			default: () => ({
+				child_list: []
+			})
+		}
+	},
 	components: {
 		lPainter,
 		lPainterImage,
@@ -232,30 +232,30 @@ export default {
 		return {
 			show: true,
 			img: '',//二维码图片
-			userinfo:JSON.parse(uni.getStorageSync('userInfo')),
-			path:''
+			userinfo: JSON.parse(uni.getStorageSync('userInfo')),
+			path: ''
 		};
 	},
 	created() {
 		this.getlist()
 	},
 	mounted() {
-  this.processSummaryContent();
-},
+		this.processSummaryContent();
+	},
 	methods: {
 		processSummaryContent() {
-    if (!this.info || !Array.isArray(this.info.child_list) || this.info.child_list.length === 0) {
-      return;
-    }
-    const firstChild = { ...this.info.child_list[0] };
-    if (firstChild.content && firstChild.content.summary) {
-      firstChild.content.summary = firstChild.content.summary
-        .replace(/<br\s*\/?>/gi, '\n')  
-        .trim()
-        .replace(/\n+/g, '\n');
-      this.info.child_list[0].content.summary = firstChild.content.summary;
-    }
-  },
+			if (!this.info || !Array.isArray(this.info.child_list) || this.info.child_list.length === 0) {
+				return;
+			}
+			const firstChild = { ...this.info.child_list[0] };
+			if (firstChild.content && firstChild.content.summary) {
+				firstChild.content.summary = firstChild.content.summary
+					.replace(/<br\s*\/?>/gi, '\n')
+					.trim()
+					.replace(/\n+/g, '\n');
+				this.info.child_list[0].content.summary = firstChild.content.summary;
+			}
+		},
 		// 预览图片
 		look() {
 			uni.previewImage({
