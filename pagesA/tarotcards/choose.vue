@@ -216,6 +216,8 @@ const path = (arr) => {
         tarotCardIds: choose,
         user_question: question
     }
+    console.log(params,'paramsparams')
+    // return
     createResult(params).then(res => {
        setTimeout(() => {
          uni.redirectTo({

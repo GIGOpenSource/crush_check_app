@@ -398,7 +398,8 @@ export default {
     wechatLogin: '원클릭 로그인',
     loginFailedRetry: '로그인에 실패했습니다. 다시 시도해주세요',
     agreeUserAgreement: '사용자 약관에 동의',
-    disagree: '동의하지 않음'
+    disagree: '동의하지 않음',
+     login: '로그인',
   },
   answerBook: {
     title: '답변의 책',

@@ -389,7 +389,8 @@ export default {
     wechatLogin: 'Inicio de Sesión con Un Clic',
     loginFailedRetry: 'Error al iniciar sesión, por favor intente de nuevo',
     agreeUserAgreement: 'Aceptar Acuerdo de Usuario',
-    disagree: 'No aceptar'
+    disagree: 'No aceptar',
+    login: 'Iniciar Sesión',
   },
   answerBook: {
     title: 'Libro de Respuestas',

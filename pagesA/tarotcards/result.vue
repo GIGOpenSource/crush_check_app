@@ -1,5 +1,5 @@
 <template>
-     <!-- <invitationPoster ref="poster" v-if="true" @success="success">
+   <!-- <invitationPoster ref="poster" v-if="true" @success="success">
    </invitationPoster> -->
    <view class="page">
       <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
@@ -68,10 +68,14 @@
          <view @click="again">{{ t('tarot_result_again') }}</view>
       </view>
    </view>
- 
+
 </template>
 
 <script setup>
+import {
+   iosOrder,
+   mockOrder
+} from '@/api/index.js';
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import { ref } from 'vue'
@@ -82,7 +86,7 @@ import {
    getProducts,
    createOrder,
 } from '@/api/index.js'
-import uma from '@/uma.js'
+// import uma from '@/uma.js'
 const current = ref(0)
 const id = ref('')
 const details = ref({})
@@ -122,44 +126,95 @@ const share = () => {
    })
 }
 const pay = () => {
-   createOrder({
-      description: object.value.description,
-      productId: object.value.id,
-      openId: uni.getStorageSync('openId'),
-      posterId: details.value.id
-   }).then(res => {
-      uni.requestPayment({
-         "provider": "wxpay",
-         ...res.data,
-         "signType": "RSA",
-         "package": `${res.data.prepayid}`,
-         "nonceStr": res.data.noncestr,
-         success(res) {
-            uni.showToast({
-               title: t('proPoster.paySuccess'),
-               icon: 'success'
-            })
-            // pay_success()
-            tarotcardnswer({ parent_id: id.value }).then(result => {
-               getdetails()
-            }).catch(res => {
-               uni.showToast({
-                  title: t('proPoster.payFailed'),
-                  icon: 'none'
-               })
-            })
-
-         },
-         fail(e) {
-            // pay_fail()
-            uni.showToast({
-               title: t('proPoster.payFailed'),
-               icon: 'none'
-            })
-         }
+   const systemInfo = uni.getSystemInfoSync();
+   if (systemInfo.platform === 'ios') {
+      iosOrder({
+         description: object.value.description,
+         openId: uni.getStorageSync('openId'),
+         productId: object.value.id,
+         posterId: details.value.id
       })
+         .then(res => {
+            let paymentData = res.data
+            plus.payment.getChannels(function (channels) {
+               let iapChannel = channels.find(c => c.id === 'appleiap');
+               if (!iapChannel) {
+                  uni.showToast({
+                     title: '未找到苹果支付通道',
+                     icon: 'none'
+                  });
+                  return;
+               }
+               iapChannel.requestProduct([paymentData.productid], function (res) {
+                  uni.requestPayment({
+                     provider: 'appleiap',
+                     orderInfo: {
+                        productid: res[0].productid,
+                        quantity: 1,
+                        username: paymentData.username,
+                        manualFinishTransaction: false,
+                        paymentDiscount: '否'
+                     },
+                     success: (e) => {
+                        console.log('eeeeeee', e)
+                        ios_receipt(e).then(res => {
+                           tarotcardnswer({ parent_id: id.value }).then(result => {
+                              getdetails()
+                           }).catch(res => {
+                              uni.showToast({
+                                 title: t('proPoster.payFailed'),
+                                 icon: 'none'
+                              })
+                           })
+                        })
+                           .catch(err => {
+                              console.log('weeee', errr)
+                           })
 
-   })
+
+                     },
+                     fail: (err) => {
+                        uni.showToast({
+                           title: t('proPoster.payFailed'),
+                           icon: 'none'
+                        })
+                        // showDelPopup2.value = false
+                     }
+                  })
+
+               }, function (err) {
+                  console.error('IAP 商品信息获取失败:', err);
+                  uni.showToast({
+                     title: '商品信息获取失败',
+                     icon: 'none'
+                  });
+               });
+            }, function (e) {
+               console.error('获取支付通道失败:', e);
+               uni.showToast({
+                  title: '支付通道获取失败',
+                  icon: 'none'
+               });
+            });
+         })
+         .catch(err => {
+            // showDelPopup2.value = false
+         })
+   } else {
+      mockOrder({
+         description: mouth.value.description,
+         openId: uni.getStorageSync('openId'),
+         productId: mouth.value.id,
+         posterId: details.value.poster_id
+      })
+         .then(res => {
+            // showDelPopup2.value = false
+            // submit()
+         })
+         .catch(err => {
+            // showDelPopup2.value = false
+         })
+   }
 }
 //购买成功
 // const pay_success = () => {

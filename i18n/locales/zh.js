@@ -399,7 +399,8 @@ export default {
     wechatLogin: '一键登录',
     loginFailedRetry: '登录失败，请重试',
     agreeUserAgreement: '同意用户协议',
-    disagree: '不同意'
+    disagree: '不同意',
+     login: '登录',
   },
   answerBook: {
     title: '答案之书',

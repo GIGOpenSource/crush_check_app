@@ -397,7 +397,8 @@ export default {
     wechatLogin: 'ワンクリックログイン',
     loginFailedRetry: 'ログインに失敗しました。もう一度お試しください',
     agreeUserAgreement: '利用規約に同意',
-    disagree: '同意しない'
+    disagree: '同意しない',
+    login: 'ログイン',
   },
   answerBook: {
     title: '答えの本',

@@ -397,7 +397,8 @@ export default {
     wechatLogin: 'Login com Um Clique',
     loginFailedRetry: 'Falha no login, por favor tente novamente',
     agreeUserAgreement: 'Concordar com Acordo do Usuário',
-    disagree: 'Discordar'
+    disagree: 'Discordar',
+     login: 'Login',
   },
   answerBook: {
     title: 'Livro de Respostas',
