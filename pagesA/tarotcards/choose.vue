@@ -333,7 +333,7 @@ function cardStyle(index) {
     .con {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center;//
 
         .t1 {
             margin-bottom: 10rpx;
