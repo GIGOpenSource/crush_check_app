@@ -79,7 +79,6 @@
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
-   <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="shareurl" />
    <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
       <template #content>
          <view class="pcontent">
