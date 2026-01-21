@@ -101,8 +101,8 @@
         </scroll-view>
     </view>
 
-    <view class="action-bar">
-        <button v-if="!isType" class="action-btn" hover-class="none" @click="delItems">
+    <view class="action-bar" v-if="!isType">
+        <button  class="action-btn" hover-class="none" @click="delItems">
             {{ selectedCount ?
                 `${$t('poster.deleteSelectedPrefix')}${selectedCount}${$t('poster.deleteSelectedSuffix')}` :
                 $t('poster.delete') }}
