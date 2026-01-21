@@ -11,7 +11,7 @@
                         <view class="text">{{ title[3] }}</view>
                     </block>
                     <block v-else>
-                        <image :src="imagelist[3].image_url" mode="scaleToFill" />
+                        <image :src="imagelist[3].image_url" mode="scaleToFill" :style="{transform: imagelist[3].is_reversed == 1 ? 'rotate(180deg)' : ''}" />
                     </block>
                 </view>
             </view>
@@ -37,11 +37,12 @@
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
-                        }} </view>
+                            }} </view>
                     </block>
                     <block v-else>
                         <image :src="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url"
-                            mode="scaleToFill" />
+                            mode="scaleToFill" :style="{transform: imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1
+                            ].is_reversed == 1 ? 'rotate(180deg)' : ''}" />
                     </block>
                 </view>
                 <block v-if="num == 1 || num == 3 || (num == 5 && index !== 1)">
@@ -50,7 +51,7 @@
                         <view class="t3"> <text v-if="num == 5">{{ index == 0 ? '1' : '2' }}</text> {{ imagelist[num ==
                             5 ?
                             index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
-                            }}</view>
+                        }}</view>
                         <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
                             1].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                         <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
@@ -70,7 +71,7 @@
                         <view class="text">{{ title[5] }}</view>
                     </block>
                     <block v-else>
-                        <image :src="imagelist[5].image_url" mode="scaleToFill" />
+                        <image :src="imagelist[5].image_url" mode="scaleToFill" :style="{transform: imagelist[5].is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
                     </block>
                 </view>
             </view>
@@ -128,7 +129,7 @@ const title = {
     3: t('tarot_title_both_status'),           // 双方状态
     4: t('tarot_title_potential_obstacle'),    // 潜在障碍
     5: t('tarot_title_future_development')     // 未来发展
-}    
+}
 const current = ref(0)
 const question = uni.getStorageSync('question')
 const currentimg = ref('')
@@ -136,7 +137,7 @@ const imagelist = ref([{}, {}, {}, {}, {}, {}])
 const list = ref([{}])
 onLoad((e) => {
     num.value = Number(e.num)
-      uni.setNavigationBarTitle({
+    uni.setNavigationBarTitle({
         title: t('tarot_name')
     });
 })
@@ -217,11 +218,11 @@ const path = (arr) => {
         user_question: question
     }
     createResult(params).then(res => {
-       setTimeout(() => {
-         uni.redirectTo({
+        setTimeout(() => {
+            uni.redirectTo({
                 url: '/pagesA/tarotcards/result?id=' + res.data.poster_id
             })
-       },300)
+        }, 300)
     })
 }
 // 计算卡牌尺寸和重叠距离
@@ -266,18 +267,18 @@ function cardStyle(index) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 300;//
+    font-weight: 300; //
 }
 
 .title {
     margin-top: 50rpx;
     font-size: 30rpx;
     width: 100%;
-	padding: 0 15rpx;
-	box-sizing: border-box;
+    padding: 0 15rpx;
+    box-sizing: border-box;
     max-height: 200rpx;
     overflow-y: scroll;
-	text-align: center;
+    text-align: center;
 }
 
 .clickbottom {
@@ -333,7 +334,7 @@ function cardStyle(index) {
     .con {
         display: flex;
         flex-direction: column;
-        align-items: center;//
+        align-items: center; //
 
         .t1 {
             margin-bottom: 10rpx;

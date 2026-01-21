@@ -8,22 +8,22 @@
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
-               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
             </view>
             <view class="three" v-if="details.parse_type == 'once_three_card'">
-               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" />
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
             </view>
             <view class="fire" v-if="details.parse_type == 'once_multi_card'">
                <view class="img1">
-                  <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[2].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[2].image_url == 1 ? 'rotate(180deg)' : ''}"/>
                </view>
                <view>
-                  <image :src="details.tarot_cards_list[1].image_url" mode="scaleToFill" />
-                  <image :src="details.tarot_cards_list[2].image_url" mode="scaleToFill" />
-                  <image :src="details.tarot_cards_list[3].image_url" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
+                  <image :src="details.tarot_cards_list[3].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
+                  <image :src="details.tarot_cards_list[1].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
                </view>
                <view class="img1">
-                  <image :src="details.tarot_cards_list[4].image_url" mode="scaleToFill" />
+                  <image :src="details.tarot_cards_list[4].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
                </view>
             </view>
          </view>
@@ -40,7 +40,7 @@
          <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
             <view class="left">
                <view class="num">{{ '0' + (index + 1) }}</view>
-               <image :src="item.image_url" mode="scaleToFill" />
+               <image :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
                <view class="right">
                   <view class="t2">{{ item.name }} <text
                         :style="item.is_reversed == 0 ? 'color: #00AEFF;' : 'color: #FF0000;'">{{ item.is_reversed == 0
