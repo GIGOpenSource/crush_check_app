@@ -99,7 +99,7 @@
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
                     <image class="image-front" :src="$getImg('index/tarotap1')" mode="'scaleToFill'" />
-                    <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
+                    <image :class="banck == 1 ?'image-back1':'image-back0'" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
         </view>
@@ -120,7 +120,7 @@ const TOP_INDEX = 10
 const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
-
+const banck = ref(0)
 const num = ref(0) //牌数
 const times = { 1: t('tarot_time_past'), 2: t('tarot_time_present'), 3: t('tarot_time_future') }
 const title = {
@@ -158,6 +158,7 @@ const choose = (index) => {
     showPreview.value = true
     previewAnimate.value = 'preview-enter'
     currentimg.value = list.value[index].image_url
+    banck.value = list.value[index].is_reversed
     setTimeout(() => {
         flipped.value = true
     }, 1100)
@@ -517,9 +518,11 @@ function cardStyle(index) {
         .image-front {
             transform: rotateY(0deg);
         }
-
-        .image-back {
-            transform: rotateY(180deg);
+        .image-back0 {
+             transform: rotateY(180deg); 
+        }
+        .image-back1 {
+             transform: rotateY(180deg) rotate(180deg); 
         }
 
         &.flipping .image-wrapper {
