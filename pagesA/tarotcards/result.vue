@@ -277,7 +277,6 @@ const submit = () => {
       progress.value++
    }, 20)
    let params = { parent_id: id.value }
-
    uni.request({
       url: host + '/tarotcard/generate_tarotcard_deep/',
       data: params,
