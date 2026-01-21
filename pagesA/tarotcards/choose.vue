@@ -11,7 +11,7 @@
                         <view class="text">{{ title[3] }}</view>
                     </block>
                     <block v-else>
-                        <image :src="imagelist[3].image_url" mode="scaleToFill" />
+                        <image :src="imagelist[3].image_url" mode="scaleToFill" :style="{transform: imagelist[3].is_reversed == 1 ? 'rotate(180deg)' : ''}" />
                     </block>
                 </view>
             </view>
@@ -37,11 +37,12 @@
                         <view v-if="num == 5" class="number">{{ index == 0 ? '1' : index == 1 ? '4' : '2' }}</view>
                         <up-icon name="plus" color="#ABAAAF" size="24"></up-icon>
                         <view v-if="num == 5" class="text">{{ index == 0 ? title[1] : index == 1 ? title[4] : title[2]
-                        }} </view>
+                            }} </view>
                     </block>
                     <block v-else>
                         <image :src="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].image_url"
-                            mode="scaleToFill" />
+                            mode="scaleToFill" :style="{transform: imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1
+                            ].is_reversed == 1 ? 'rotate(180deg)' : ''}" />
                     </block>
                 </view>
                 <block v-if="num == 1 || num == 3 || (num == 5 && index !== 1)">
@@ -50,7 +51,7 @@
                         <view class="t3"> <text v-if="num == 5">{{ index == 0 ? '1' : '2' }}</text> {{ imagelist[num ==
                             5 ?
                             index == 0 ? 1 : index == 1 ? 4 : 2 : index + 1].name
-                            }}</view>
+                        }}</view>
                         <view class="type1" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
                             1].is_reversed == 1">{{ t('tarot_card_reversed') }}</view>
                         <view class="type0" v-if="imagelist[num == 5 ? index == 0 ? 1 : index == 1 ? 4 : 2 : index +
@@ -70,7 +71,7 @@
                         <view class="text">{{ title[5] }}</view>
                     </block>
                     <block v-else>
-                        <image :src="imagelist[5].image_url" mode="scaleToFill" />
+                        <image :src="imagelist[5].image_url" mode="scaleToFill" :style="{transform: imagelist[5].is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
                     </block>
                 </view>
             </view>
@@ -98,7 +99,7 @@
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
                     <image class="image-front" :src="$getImg('index/tarotap1')" mode="'scaleToFill'" />
-                    <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
+                    <image :class="banck == 1 ?'image-back1':'image-back0'" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
         </view>
@@ -119,7 +120,7 @@ const TOP_INDEX = 10
 const showPreview = ref(false) // 控制预览层显示/隐藏
 const previewAnimate = ref('') // 预览动画类名
 const flipped = ref(false)  // 只负责卡片翻转
-
+const banck = ref(0)
 const num = ref(0) //牌数
 const times = { 1: t('tarot_time_past'), 2: t('tarot_time_present'), 3: t('tarot_time_future') }
 const title = {
@@ -157,6 +158,7 @@ const choose = (index) => {
     showPreview.value = true
     previewAnimate.value = 'preview-enter'
     currentimg.value = list.value[index].image_url
+    banck.value = list.value[index].is_reversed
     setTimeout(() => {
         flipped.value = true
     }, 1100)
@@ -517,8 +519,11 @@ function cardStyle(index) {
             transform: rotateY(0deg);
         }
 
-        .image-back {
-            transform: rotateY(180deg);
+        .image-back0 {
+             transform: rotateY(180deg); 
+        }
+        .image-back1 {
+             transform: rotateY(180deg) rotate(180deg); 
         }
 
         &.flipping .image-wrapper {
