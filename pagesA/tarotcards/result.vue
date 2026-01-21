@@ -52,7 +52,7 @@
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <view class="pay" @click="pay">
+            <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
                {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
                   t('tarot_result_ai_interpret') }}
             </view>
@@ -79,6 +79,22 @@
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
+   <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
+      <template #content>
+         <view class="pcontent">
+            <view class="num">{{ t('index.analyzingPercent') }} {{ progress }}{{ t('index.analyzingPercentUnit') }}
+            </view>
+            <view class="progress-wrapper">
+               <view class="custom-progress">
+                  <view class="progress-track">
+                     <view class="progress-fill" :style="{ width: progress + '%' }"></view>
+                  </view>
+               </view>
+            </view>
+            <view class="tip">{{ t('index.exitTipTestRecord') }}</view>
+         </view>
+      </template>
+   </IndexProup>
 </template>
 
 <script setup>
@@ -92,6 +108,7 @@ import {
    getProducts,
    createOrder,
 } from '@/api/index.js'
+import { host } from '@/config/config.js';
 import uma from '@/uma.js'
 const shadowStyle = reactive({
    backgroundImage: "none",
@@ -99,6 +116,9 @@ const shadowStyle = reactive({
    marginTop: "20rpx",
    maxHeight:'100rpx'
 });
+const progress = ref(0)
+const showProgress = ref(false)
+const progressTimer = ref(null)
 const current = ref(0)
 const id = ref('')
 const details = ref({})
@@ -170,6 +190,16 @@ const share = () => {
       }
    })
 }
+const handleProgressClose = () => {
+    // 清除进度条定时器
+    if (progressTimer.value) {
+        clearInterval(progressTimer.value)
+        progressTimer.value = null
+    }
+    showProgress.value = false
+    progress.value = 0
+    getdetails()
+}
 const pay = () => {
    createOrder({
       description: object.value.description,
@@ -186,17 +216,18 @@ const pay = () => {
          success(res) {
             uni.showToast({
                title: t('proPoster.paySuccess'),
-               icon: 'success'
+               icon: 'none'
             })
             // pay_success()
-            tarotcardnswer({ parent_id: id.value }).then(result => {
-               getdetails()
-            }).catch(res => {
-               uni.showToast({
-                  title: t('proPoster.payFailed'),
-                  icon: 'none'
-               })
-            })
+            // tarotcardnswer({ parent_id: id.value }).then(result => {
+            //    getdetails()
+            // }).catch(res => {
+            //    uni.showToast({
+            //       title: t('proPoster.payFailed'),
+            //       icon: 'none'
+            //    })
+            // })
+            submit()
 
          },
          fail(e) {
@@ -208,6 +239,50 @@ const pay = () => {
          }
       })
 
+   })
+}
+const submit = () => {
+   showProgress.value = true
+   progress.value = 0
+   if (progressTimer.value) {
+      clearInterval(progressTimer.value)
+      progressTimer.value = null
+   }
+   progressTimer.value = setInterval(() => {
+      if (progress.value >= 99) {
+         clearInterval(progressTimer.value)
+         progressTimer.value = null
+         return
+      }
+      progress.value++
+   }, 20)
+   let params = { parent_id: id.value }
+   console.log(params,'oaiajush')
+   uni.request({
+      url: host + '/tarotcard/generate_tarotcard_deep/',
+      data: params,
+      header: {
+         token: uni.getStorageSync('token'),
+         "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+      },
+      method: 'GET',
+      timeout: 1500000,
+      complete: (data) => {
+         if (progressTimer.value) {
+            clearInterval(progressTimer.value)
+            progressTimer.value = null
+         }
+         if (data.data.code == 200 || data.data.code == 201) {
+            progress.value = 100
+            getdetails()
+            setTimeout(() => {
+               showProgress.value = false
+            }, 500)
+         } else {
+            showProgress.value = false
+            progress.value = 0
+         }
+      }
    })
 }
 //购买成功
@@ -360,7 +435,79 @@ const pay = () => {
    // height: 56vh;
    // overflow-y: scroll;
 }
+.pcontent {
+   width: 420rpx;
+   height: 250rpx;
+   padding: 40rpx 0;
+   padding-bottom: 0;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
 
+   .num {
+      font-size: 26rpx;
+      margin: 20rpx 0;
+      color: #000;
+   }
+
+}
+
+.progress-wrapper {
+   width: 70%;
+   margin: 10rpx auto;
+   margin-bottom: 20rpx;
+}
+
+.custom-progress {
+   width: 100%;
+}
+
+.progress-track {
+   position: relative;
+   width: 100%;
+   height: 40rpx;
+   background-color: #ffffff;
+   border-radius: 40rpx;
+   border: 1px solid #e0e0e0;
+   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+   overflow: hidden;
+}
+
+.progress-fill {
+   height: 100%;
+   background: linear-gradient(90deg, #C084FC 0%, #9333EA 100%);
+   background-image: repeating-linear-gradient(-45deg,
+         #C084FC 0rpx,
+         #D4A5F8 3rpx,
+         #9333EA 7rpx,
+         #9333EA 7rpx,
+         #D4A5F8 10rpx,
+         #C084FC 10rpx,
+         #C084FC 10rpx,
+         #D4A5F8 13rpx,
+         #9333EA 17rpx,
+         #9333EA 17rpx,
+         #D4A5F8 20rpx,
+         #C084FC 20rpx);
+   border-radius: 40rpx;
+   transition: width 0.3s ease;
+   position: relative;
+}
+
+.tip {
+   font-size: 20rpx;
+   color: #a0a0a0;
+   margin-top: 15rpx;
+   width: 90%;
+   text-align: center;
+}
+
+.num {
+   font-size: 36rpx;
+   margin: 20rpx 0;
+   color: #000;
+   font-weight: 100;
+}
 .list {
    display: flex;
    justify-content: space-between;

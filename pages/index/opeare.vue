@@ -131,7 +131,7 @@
 			</template>
 		</IndexProup>
 		<!-- 会员拦截 -->
-		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true" :customStyle="{'background':'transparent'}">
 			<view class="vipProup">
 				<image :src="$getImg('index/bg')" class="bg" />
 				<view class="content">
@@ -864,6 +864,7 @@ const updateTabBarI18n = () => {
 </script>
 
 <style lang="scss" scoped>
+
 .page {
 	width: 100vw;
 	height: auto;
@@ -878,7 +879,7 @@ const updateTabBarI18n = () => {
 
 .vipProup {
 	width: 100%;
-	height: 90vh;
+	height: 80vh;
 	position: relative;
 
 	.bg {
