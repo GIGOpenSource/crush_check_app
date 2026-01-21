@@ -112,6 +112,9 @@ import {
    getProducts,
    createOrder,
 } from '@/api/index.js'
+import {
+		host
+	} from '@/config/config.js';
 // import uma from '@/uma.js'
 const shadowStyle = reactive({
    backgroundImage: "none",
@@ -277,6 +280,7 @@ const submit = () => {
       progress.value++
    }, 20)
    let params = { parent_id: id.value }
+   console.log(params,'oaiajush')
    uni.request({
       url: host + '/tarotcard/generate_tarotcard_deep/',
       data: params,
