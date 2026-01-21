@@ -1,4 +1,13 @@
 export default {
+  invitationFriend: {
+    title: '转发邀请',
+    desc: '点击复制按钮，复制链接邀请',
+    copyBtn: '复制链接',
+    wxFriend: '微信好友',
+    wxTimeline: '朋友圈',
+    shareSummary: '邀请好友一起来测测自己渣不渣',
+    copySuccess: '链接已复制到剪贴板'
+  },
     no_nickname:'暂无昵称',
  tarot_input_question_title: "输入你心中的问题",
     tarot_input_question_placeholder: "请清晰、具体地描述你的问题，这将有助于获得更准确的解读",
@@ -409,6 +418,8 @@ export default {
     back: '返回',
     backToModify: '返回修改问题',
     tellTA: '告诉TA',
+    tell: '告诉',
+    TA: 'TA',
     askAgain: '再次提问',
     aiAnalysis: '系统分析',
     aiAnalyzing: '生成中',

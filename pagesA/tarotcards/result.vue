@@ -79,6 +79,7 @@
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
+    <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="'https://ask.dcloud.net.cn/article/208'"/>
 </template>
 
 <script setup>
@@ -87,8 +88,9 @@ const { t } = useI18n()
 import { ref, reactive } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
-import { ios_receipt } from '@/api/index.js'
+import { ios_receipt,uploadImage } from '@/api/index.js'
 import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import {
    getProducts,
    createOrder,
@@ -100,12 +102,14 @@ const shadowStyle = reactive({
    marginTop: "20rpx",
    maxHeight:'100rpx'
 });
+const shareurl = ref('')
 const current = ref(0)
 const id = ref('')
 const details = ref({})
 const object = ref({})
 const posterImg = ref('')
 const show = ref(false)
+const friend = ref(false)
 const showDelPopup2 = ref(false)
 const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card': t('tarot_spread_relation_title') }
 const desc = { 'once_single_card': t('tarot_spread_single_desc1') + ',' + t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1') + ',' + t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1') + ',' + t('tarot_spread_relation_desc2') }
@@ -133,7 +137,7 @@ const getdetails = () => {
 }
 const again = () => {
    uni.removeStorageSync('question')
-   uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
+   uni.navigateTo({ url: '/pagesA/tarotcards/qusetion' })
 }
 const share1 = () => {
    show.value = true,
@@ -143,33 +147,11 @@ const share = () => {
    uni.downloadFile({
       url: posterImg.value,
       success: (res) => {
-         if (res.statusCode === 200) {
-            const inviterOpenId = uni.getStorageSync("openId") || "";
-            const query = `?scene=${inviterOpenId}`
-            wx.showShareImageMenu({
-               path: res.tempFilePath,
-               entrancePath: `/pages/index/index${query}`,
-               complete: (res) => {
-                  if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                     // share_fail()
-                     show.value = false
-                     showDelPopup2.value = false
-                  } else {
-                     // share_success()
-                     show.value = false
-                     showDelPopup2.value = false
-                  }
-               }
-            })
-         }
+         shareurl.value = res.tempFilePath
+				friend.value = true
       }
    })
-   wx.showShareImageMenu({
-      path: posterImg.value,
-      complete: (res) => {
-         console.log(res)
-      }
-   })
+
 }
 const pay = () => {
    const systemInfo = uni.getSystemInfoSync();

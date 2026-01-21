@@ -1,4 +1,13 @@
 export default {
+   invitationFriend: {
+    title: 'Compartilhar convite',
+    desc: 'Clique no botão copiar para copiar o link e convidar',
+    copyBtn: 'Copiar link',
+    wxFriend: 'Amigo do WeChat',
+    wxTimeline: 'Momentos',
+    shareSummary: 'Convide amigos para testar juntos',
+    copySuccess: 'Link copiado para a área de transferência'
+  },
   no_nickname: 'Sem apelido',
   tarot_result_pay: "Pagar ",
     tarot_result_pay_unit: " CNY/vez",
@@ -404,6 +413,8 @@ export default {
 
   },
   answerBook: {
+    tell: 'Dizer para',
+    TA:'TA',
     title: 'Livro de Respostas',
     back: 'Voltar',
     backToModify: 'Voltar para Modificar Pergunta',

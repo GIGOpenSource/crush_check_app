@@ -27,9 +27,9 @@
 		{
 			"path": "pages/index/answer",
 			"style": {
-				"navigationBarTitleText": "答案之书",
 				"enablePullDownRefresh": false,
-				"disableScroll": false
+				"disableScroll": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -126,9 +126,9 @@
 			"pages": [{
 					"path": "tarotcards/qusetion",
 					"style": {
-						"navigationBarTitleText": "塔罗牌",
 						"enablePullDownRefresh": false,
-						"disableScroll": false
+						"disableScroll": false,
+						"navigationStyle": "custom"
 					}
 				},{
 					"path": "tarotcards/result",

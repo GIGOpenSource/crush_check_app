@@ -1,5 +1,14 @@
 <template>
-    <view class="page">
+    <view class="wrapper">
+     <!-- 自定义导航栏 -->
+        <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
+            <view class="navbar-content">
+                <view @click="back"> <up-icon name="arrow-left" color="#ffffff" size="24"></up-icon></view>
+                <view class="navbar-title">{{ t('answerBook.title') }}</view>
+                <view></view>
+            </view>
+        </view>
+          <view class="page" :style="{ marginTop: (statusBarHeight + 110) + 'rpx' }">
         <view class="title">{{ t('tarot_input_question_title') }}</view>
         <view class="rich">
             <view class="textarea-wrapper">
@@ -30,6 +39,7 @@
             </view>
         </view>
         <view class="btn" @click="path">{{ t('tarot_draw_card_btn') }}</view>
+    </view>
     </view>
 </template>
 
@@ -63,7 +73,12 @@ const list = [{
 }]
 const value1 = ref('');
 const isFocused = ref(false);
+const statusBarHeight = ref(0)
 onLoad(() => {
+      const systemInfo = uni.getSystemInfoSync()
+    const pxToRpx = systemInfo.windowWidth / 375 * 2 || 2
+    statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
+    // 设置导航栏标题
     uni.setNavigationBarTitle({
         title: t('tarot_name')
     });
@@ -73,7 +88,11 @@ onLoad(() => {
 const handleFocus = () => {
     isFocused.value = true;
 };
-
+const back = () => {
+    uni.switchTab({
+        url:'/pages/index/index'
+    })
+}
 const handleBlur = () => {
     isFocused.value = false;
 };
@@ -111,7 +130,7 @@ const path = async () => {
 
 <style lang="scss" scoped>
 .page {
-    height: 96vh;
+    height: 83vh;
     margin: 20rpx 25rpx;
     background: rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
@@ -121,7 +140,35 @@ const path = async () => {
     flex-direction: column;
     align-items: center;
     font-weight: 300;
+}
+.wrapper{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #12111f;
+}
+.custom-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #1d182e;
+   
+    
+    .navbar-content {
+        height: 88rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20rpx;
 
+        .navbar-title {
+            font-size: 32rpx;
+            font-weight: 500;
+            color: #ffffff;
+        }
+    }
 }
 
 .title {

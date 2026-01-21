@@ -1,4 +1,13 @@
 export default {
+    invitationFriend: {
+    title: '招待の共有',
+    desc: 'コピー ボタンをクリックしてリンクをコピーして招待',
+    copyBtn: 'リンクをコピー',
+    wxFriend: 'WeChat 友達',
+    wxTimeline: 'モーメンツ',
+    shareSummary: '友達を招待して一緒にテストしましょう',
+    copySuccess: 'リンクがクリップボードにコピーされました'
+  },
     no_nickname: 'ニックネーム未設定',
   tarot_result_pay: "", // 日语习惯把价格放前面，此处留空
     tarot_result_pay_unit: "元/回",
@@ -418,7 +427,9 @@ export default {
     startBook: '始める',
     pleaseInputQuestion: '質問を入力してください',
     unlockAnalysis: 'この分析をアンロックするには支払いが必要です',
-    payNow: '元/回 今すぐ支払う'
+    payNow: '元/回 今すぐ支払う',
+     tell: 'に伝える',
+    TA:'TA',
   },
   choosebook: {
     noFreeTimes: '本日の無料回数は使い切りました',

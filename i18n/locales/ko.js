@@ -1,4 +1,13 @@
 export default {
+  invitationFriend: {
+    title: '초대 공유',
+    desc: '복사 버튼을 클릭하여 링크를 복사하고 초대하세요',
+    copyBtn: '링크 복사',
+    wxFriend: '위챗 친구',
+    wxTimeline: '모멘츠',
+    shareSummary: '친구를 초대하여 함께 테스트하세요',
+    copySuccess: '링크가 클립보드에 복사되었습니다'
+  },
    no_nickname: '닉네임 없음',
    tarot_result_pay: "", // 韩语习惯把价格放前面，此处留空
     tarot_result_pay_unit: "원/회",
@@ -404,6 +413,8 @@ export default {
      via:'통과하다'
   },
   answerBook: {
+      tell: '에게 알리기',
+    TA:'TA',
     title: '답변의 책',
     back: '돌아가기',
     backToModify: '질문 수정으로 돌아가기',

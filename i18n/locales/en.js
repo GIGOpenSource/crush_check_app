@@ -1,4 +1,13 @@
 export default {
+   invitationFriend: {
+    title: 'Share Invitation',
+    desc: 'Click the copy button to copy the link and invite',
+    copyBtn: 'Copy Link',
+    wxFriend: 'WeChat Friend',
+    wxTimeline: 'Moments',
+    shareSummary: 'Invite friends to test together',
+    copySuccess: 'Link copied to clipboard'
+  },
    no_nickname: 'No nickname',
    tarot_result_pay: "Pay ",
     tarot_result_pay_unit: " CNY/time",
@@ -404,6 +413,8 @@ export default {
     via:'pass'
   },
   answerBook: {
+       tellTA: 'Tell',
+    TA:'TA',
     title: 'Book of Answers',
     back: 'Back',
     backToModify: 'Back to Modify Question',
