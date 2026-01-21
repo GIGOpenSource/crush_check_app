@@ -79,7 +79,8 @@
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
-    <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="'https://ask.dcloud.net.cn/article/208'"/>
+   <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl"
+      :downloadUrl="'https://ask.dcloud.net.cn/article/208'" />
 </template>
 
 <script setup>
@@ -88,7 +89,7 @@ const { t } = useI18n()
 import { ref, reactive } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
-import { ios_receipt,uploadImage } from '@/api/index.js'
+import { ios_receipt, uploadImages } from '@/api/index.js'
 import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
 import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import {
@@ -100,7 +101,7 @@ const shadowStyle = reactive({
    backgroundImage: "none",
    paddingTop: "0",
    marginTop: "20rpx",
-   maxHeight:'100rpx'
+   maxHeight: '100rpx'
 });
 const shareurl = ref('')
 const current = ref(0)
@@ -144,14 +145,8 @@ const share1 = () => {
       showDelPopup2.value = true
 }
 const share = () => {
-   uni.downloadFile({
-      url: posterImg.value,
-      success: (res) => {
-         shareurl.value = res.tempFilePath
-				friend.value = true
-      }
-   })
-
+    shareurl.value = posterImg.value
+   friend.value = true
 }
 const pay = () => {
    const systemInfo = uni.getSystemInfoSync();
@@ -173,7 +168,7 @@ const pay = () => {
                   });
                   return;
                }
-               console.log('paymentData',paymentData)
+               console.log('paymentData', paymentData)
                iapChannel.requestProduct([paymentData.productid], function (res) {
                   uni.requestPayment({
                      provider: 'appleiap',

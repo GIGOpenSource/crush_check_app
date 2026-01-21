@@ -16,10 +16,7 @@
 							<l-painter-text v-if="userinfo.username" :text='userinfo.username'
 								css="display: block;"></l-painter-text>
 							<l-painter-text v-else :text="$t('no_nickname')" css="display: block;"></l-painter-text>
-							<l-painter-text text='' css="display: block;">
-								<!-- <l-painter-text :text=""></l-painter-text> -->
-								<l-painter-text :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 410rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
-							</l-painter-text>
+							<l-painter-text v-if="info && info.summary" :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 410rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
 						</l-painter-view>
 					</l-painter-view>
 					<l-painter-view css="height:20rpx"></l-painter-view>
@@ -190,7 +187,7 @@
 							</l-painter-view>
 						</l-painter-view>
 						<l-painter-view>
-							<l-painter-image :src="img"
+							<l-painter-image :src="$getImg('index/qrote')"
 								css="width: 180rpx; height: 180rpx; display: block;"></l-painter-image>
 						</l-painter-view>
 					</l-painter-view>
@@ -216,7 +213,9 @@ export default {
 			type: Object,
 			// 优化1：给默认值初始化child_list，避免访问时报错
 			default: () => ({
-				child_list: []
+				child_list: [],
+				tarot_cards_list: [],
+				summary: ''
 			})
 		}
 	},
