@@ -52,7 +52,7 @@
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <view class="pay" @click="pay">
+            <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
                {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
                   t('tarot_result_ai_interpret') }}
             </view>
@@ -79,17 +79,33 @@
          <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
       </view>
    </up-popup>
-   <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl"
-      :downloadUrl="shareurl" />
+   <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl" :downloadUrl="shareurl" />
+   <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
+      <template #content>
+         <view class="pcontent">
+            <view class="num">{{ t('index.analyzingPercent') }} {{ progress }}{{ t('index.analyzingPercentUnit') }}
+            </view>
+            <view class="progress-wrapper">
+               <view class="custom-progress">
+                  <view class="progress-track">
+                     <view class="progress-fill" :style="{ width: progress + '%' }"></view>
+                  </view>
+               </view>
+            </view>
+            <view class="tip">{{ t('index.exitTipTestRecord') }}</view>
+         </view>
+      </template>
+   </IndexProup>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+const showProgress = ref(false)
 import { ref, reactive } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
-import { ios_receipt, uploadImages } from '@/api/index.js'
+import { ios_receipt, uploadImages,iosOrder } from '@/api/index.js'
 import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
 import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 import {
@@ -111,7 +127,9 @@ const object = ref({})
 const posterImg = ref('')
 const show = ref(false)
 const friend = ref(false)
+const progress = ref(0)
 const showDelPopup2 = ref(false)
+const progressTimer = ref(null)
 const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card': t('tarot_spread_relation_title') }
 const desc = { 'once_single_card': t('tarot_spread_single_desc1') + ',' + t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1') + ',' + t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1') + ',' + t('tarot_spread_relation_desc2') }
 onLoad((e) => {
@@ -126,7 +144,7 @@ const success = (e) => {
 }
 const getdetails = () => {
    getProducts().then(res => {
-      object.value = res.data.results.filter(item => item.product_type == 'tarot_once')[0]
+      object.value = res.data.results.filter(item => item.product_type == 'ios_tarot_once')[0]
    })
    tarotcardDetails(id.value).then(res => {
       const data = JSON.parse(JSON.stringify(res.data));
@@ -145,7 +163,7 @@ const share1 = () => {
       showDelPopup2.value = true
 }
 const share = () => {
-    shareurl.value = posterImg.value
+   shareurl.value = posterImg.value
    friend.value = true
 }
 const pay = () => {
@@ -180,16 +198,8 @@ const pay = () => {
                         paymentDiscount: '否'
                      },
                      success: (e) => {
-                        console.log('eeeeeee', e)
                         ios_receipt(e).then(res => {
-                           tarotcardnswer({ parent_id: id.value }).then(result => {
-                              getdetails()
-                           }).catch(res => {
-                              uni.showToast({
-                                 title: t('proPoster.payFailed'),
-                                 icon: 'none'
-                              })
-                           })
+                            submit()
                         })
                            .catch(err => {
                               console.log('weeee', errr)
@@ -233,12 +243,67 @@ const pay = () => {
       })
          .then(res => {
             // showDelPopup2.value = false
-            // submit()
          })
          .catch(err => {
             // showDelPopup2.value = false
          })
    }
+}
+
+	const handleProgressClose = () => {
+		// 清除进度条定时器
+		if (progressTimer.value) {
+			clearInterval(progressTimer.value)
+			progressTimer.value = null
+		}
+		showProgress.value = false
+		progress.value = 0
+		getdetails()
+	}
+
+const submit = () => {
+   showProgress.value = true
+   progress.value = 0
+   if (progressTimer.value) {
+      clearInterval(progressTimer.value)
+      progressTimer.value = null
+   }
+   progressTimer.value = setInterval(() => {
+      if (progress.value >= 99) {
+         clearInterval(progressTimer.value)
+         progressTimer.value = null
+         return
+      }
+      progress.value++
+   }, 20)
+   let params = { parent_id: id.value }
+
+   uni.request({
+      url: host + '/tarotcard/generate_tarotcard_deep/',
+      data: params,
+      header: {
+         token: uni.getStorageSync('token'),
+         "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+      },
+      method: 'GET',
+      timeout: 1500000,
+      complete: (data) => {
+         if (progressTimer.value) {
+            clearInterval(progressTimer.value)
+            progressTimer.value = null
+         }
+         if (data.data.code == 200 || data.data.code == 201) {
+            progress.value = 100
+            getdetails()
+            setTimeout(() => {
+               showProgress.value = false
+            }, 500)
+         } else {
+            showProgress.value = false
+            progress.value = 0
+         }
+      }
+   })
 }
 //购买成功
 // const pay_success = () => {
@@ -522,6 +587,80 @@ const pay = () => {
          border-right: 1px solid rgba(255, 255, 255, 0.3);
       }
    }
+}
+
+.pcontent {
+   width: 420rpx;
+   height: 250rpx;
+   padding: 40rpx 0;
+   padding-bottom: 0;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+   .num {
+      font-size: 26rpx;
+      margin: 20rpx 0;
+      color: #000;
+   }
+
+}
+
+.progress-wrapper {
+   width: 70%;
+   margin: 10rpx auto;
+   margin-bottom: 20rpx;
+}
+
+.custom-progress {
+   width: 100%;
+}
+
+.progress-track {
+   position: relative;
+   width: 100%;
+   height: 40rpx;
+   background-color: #ffffff;
+   border-radius: 40rpx;
+   border: 1px solid #e0e0e0;
+   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+   overflow: hidden;
+}
+
+.progress-fill {
+   height: 100%;
+   background: linear-gradient(90deg, #C084FC 0%, #9333EA 100%);
+   background-image: repeating-linear-gradient(-45deg,
+         #C084FC 0rpx,
+         #D4A5F8 3rpx,
+         #9333EA 7rpx,
+         #9333EA 7rpx,
+         #D4A5F8 10rpx,
+         #C084FC 10rpx,
+         #C084FC 10rpx,
+         #D4A5F8 13rpx,
+         #9333EA 17rpx,
+         #9333EA 17rpx,
+         #D4A5F8 20rpx,
+         #C084FC 20rpx);
+   border-radius: 40rpx;
+   transition: width 0.3s ease;
+   position: relative;
+}
+
+.tip {
+   font-size: 20rpx;
+   color: #a0a0a0;
+   margin-top: 15rpx;
+   width: 90%;
+   text-align: center;
+}
+
+.num {
+   font-size: 36rpx;
+   margin: 20rpx 0;
+   color: #000;
+   font-weight: 100;
 }
 </style>
 <style>

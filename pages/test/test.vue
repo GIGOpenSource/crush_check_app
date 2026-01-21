@@ -39,8 +39,8 @@
                     <!-- 左侧图片 -->
                     <view class="left">
                         <image
-                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
-                            :src="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'crushcheck' ? item.character_image_url : $getImg('index/tarotcards')"
+                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'? item.character_image_url : $getImg('index/tarotcards')"
+                            :src="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical' ? item.character_image_url : $getImg('index/tarotcards')"
                             mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error','tarot_card':item.prompt_template.template_type == 'tarot_card'}">
                         </image>
@@ -296,6 +296,7 @@ export default {
                 type: "tarot_card",
             },
         ];
+        this.fetchPosterList();
     },
 
     methods: {
@@ -579,7 +580,7 @@ export default {
             // 如果状态是已完成，跳转到详情页
             if (item.status === "done") {
                 if (item.id) {
-                    if (type == 'crushcheck') {
+                    if (type == 'social' || type == 'physical') {
                         uni.navigateTo({
                             url: `/pages/index/proProster?id=${item.id}`,
                             fail: (err) => {
