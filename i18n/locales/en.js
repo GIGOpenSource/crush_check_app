@@ -1,4 +1,5 @@
 export default {
+   no_nickname: 'No nickname',
    tarot_result_pay: "Pay ",
     tarot_result_pay_unit: " CNY/time",
     tarot_result_ai_interpret: " for AI Interpretation",

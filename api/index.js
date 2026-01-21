@@ -76,7 +76,7 @@ export const getCard = (params) => {
 	return getRequest(`/answerbook/flip_card/`, params)
 }
 
-//
+//验证苹果支付
 export const ios_receipt = (params) => {
 	return postRequest('/ios/ios_receipt',params)
 }

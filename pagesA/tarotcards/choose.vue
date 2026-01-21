@@ -97,7 +97,7 @@
         <view v-if="showPreview" class="card-preview-overlay" :class="previewAnimate">
             <view class="preview-card-flip" :class="{ flipping: flipped }">
                 <view class="image-wrapper">
-                    <image class="image-front" :src="$getImg('index/tarotcards')" mode="aspectFill" />
+                    <image class="image-front" :src="$getImg('index/tarotap1')" mode="'scaleToFill'" />
                     <image class="image-back" :src="currentimg" mode="'scaleToFill'" />
                 </view>
             </view>
@@ -216,8 +216,6 @@ const path = (arr) => {
         tarotCardIds: choose,
         user_question: question
     }
-    console.log(params,'paramsparams')
-    // return
     createResult(params).then(res => {
        setTimeout(() => {
          uni.redirectTo({
@@ -268,12 +266,18 @@ function cardStyle(index) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 300;
+    font-weight: 300;//
 }
 
 .title {
     margin-top: 50rpx;
     font-size: 30rpx;
+    width: 100%;
+	padding: 0 15rpx;
+	box-sizing: border-box;
+    max-height: 200rpx;
+    overflow-y: scroll;
+	text-align: center;
 }
 
 .clickbottom {
@@ -329,7 +333,7 @@ function cardStyle(index) {
     .con {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center;//
 
         .t1 {
             margin-bottom: 10rpx;

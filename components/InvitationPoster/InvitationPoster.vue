@@ -1,96 +1,200 @@
 <template>
 	<view>
-		<l-painter ref="painter" @success="handleSuccess" width="520rpx" height="1000rpx" isCanvasToTempFilePath>
-			<!-- 背景渐变 -->
-			<l-painter-view css="width: 520rpx; height: 1000rpx; position: relative;">
-				<!-- 浅蓝色卡片背景 -->
-				<l-painter-view
-					css="width: 520rpx; height: 900rpx; position: absolute; left: 0rpx; top: 0rpx; border-radius: 15rpx; background: #ffffff; overflow: visible;">
-					<!-- 白色内容区域 -->
-					<l-painter-view
-						css="width:500rpx; height: 900rpx; position: absolute; left: 0rpx; top: 0rpx; border-radius: 10rpx;background: #ffffff; overflow: visible;">
-						<!-- 顶部数字图标 -->
-						<l-painter-view 
-							css="position: absolute; top: 30rpx; left:0; z-index: 9999; width:520rpx; height: 82rpx;background:#ffcef3;">
-							<l-painter-image :src="posterIcon" css="width: 120rpx; height: 120rpx; object-fit: contain;margin-left: 160rpx;"></l-painter-image>
+		<image :src="path" mode="widthFix" @load="success"></image>
+		<l-painter ref="painter" @success="path = $event" hidden path-type="url" width="750rpx" height="100%"
+			isCanvasToTempFilePath>
+			<l-painter-view
+				css="width: 100%; min-height: 400rpx;color: #fff;background: #2a2936;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
+				<l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
+					<!-- 头部 -->
+					<l-painter-view css="display: flex;">
+						<l-painter-image v-if="userinfo.user_avatar" :src="userinfo.user_avatar"
+							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;"></l-painter-image>
+						<l-painter-image v-else :src="$getImg('my/user_no')"
+							css="width: 100rpx; height: 100rpx; display: block;border-radius: 50%;margin-right: 20rpx;margin-top: 20rpx;"></l-painter-image>
+						<l-painter-view css="line-height: 50rpx;">
+							<l-painter-text v-if="userinfo.username" :text='userinfo.username'
+								css="display: block;"></l-painter-text>
+							<l-painter-text v-else :text="$t('no_nickname')" css="display: block;"></l-painter-text>
+							<l-painter-text text='' css="display: block;">
+								<!-- <l-painter-text :text=""></l-painter-text> -->
+								<l-painter-text :text="$t('tarot_result_question_label') + info.summary" css="display: block;max-width: 410rpx;word-wrap: break-word; word-break: break-all; white-space: normal;"></l-painter-text>
+							</l-painter-text>
 						</l-painter-view>
-						<!-- 顶部蓝色横幅 -->
+					</l-painter-view>
+					<l-painter-view css="height:20rpx"></l-painter-view>
+					<!-- 卡片1 -->
+					<l-painter-view css="display: flex;align-items: center;justify-content: center;"
+						v-if="info.tarot_cards_list.length == 1">
 						<l-painter-view
-							css="background:#bcefff; width: 500rpx; height: 80rpx; border-radius: 10rpx 10rpx 0 0; text-align: center; padding-top: 30rpx; position: absolute; left: 0; top: 100rpx; z-index: 1;padding-right: 100rpx;">
-							<l-painter-text text="感情测试挑战"
-								css="font-size: 24rpx; color: #333333; font-weight: bold;line-height: 80rpx;"></l-painter-text>
+							css="width: 200rpx;height: 240rpx;border: 1rpx solid #fff;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
+							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[0].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
 						</l-painter-view>
-
-						<!-- 主要内容区域 -->
+					</l-painter-view>
+					<!-- 卡片3 -->
+					<l-painter-view css="display: flex;align-items: center;justify-content: center;"
+						v-if="info.tarot_cards_list.length == 3">
 						<l-painter-view
-							css="width: 500rpx; padding: 10rpx 20rpx; margin-top: 190rpx; display: flex; box-sizing: border-box; position: relative;">
-							<!-- 左侧角色区域 -->
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[0].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+						</l-painter-view>
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[1].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+						</l-painter-view>
+						<l-painter-view
+							css="width: 200rpx;height: 240rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;">
+							<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text :text='info.tarot_cards_list[2].name'
+								css="display: block;text-align: center;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"
+								:text="$t('tarot_card_upright')"
+								css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+							<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"
+								:text="$t('tarot_card_reversed')"
+								css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+						</l-painter-view>
+					</l-painter-view>
+					<!-- 卡片5 -->
+					<l-painter-view
+						css="display: flex;align-items: center;justify-content: center;flex-direction: column;"
+						v-if="info.tarot_cards_list.length == 5">
+						<l-painter-view css="display: flex;align-items: center;justify-content: center;">
 							<l-painter-view
-								css="width: 220rpx; height: 380rpx;border-radius: 10rpx; margin-right: 20rpx; display: inline-block;">
-								<l-painter-image :src="$getImg('index/people')"
-									css="width: 220rpx; height: 380rpx; object-fit: contain; border-radius: 10rpx;"></l-painter-image>
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
 							</l-painter-view>
-
-							<!-- 右侧特质列表 -->
 							<l-painter-view
-								css="width: 280rpx; display: inline-block; vertical-align: top; margin-top: 50rpx;margin-left: 30rpx;">
-								<l-painter-view v-for="(item, index) in traitList" :key="index"
-									css="margin-bottom: 5rpx; display: flex; align-items: center; flex-wrap: nowrap;">
-									<!-- 圆形图标 -->
-									<l-painter-image :src="`/static/index/dui${index + 1}.png`"
-										css="width: 30rpx; height: 30rpx; display: inline-block; margin-right: 15rpx; flex-shrink: 0;"></l-painter-image>
-									<l-painter-view css="display: flex; flex-direction: column;">
-										<!-- 特质文字 -->
-										<l-painter-text :text="item.name"
-											css="font-size: 20rpx; color: #333333; display: block; margin-bottom: 0rpx; white-space: nowrap;display:block;width: 180rpx;"></l-painter-text>
-										<!-- 进度条图片 -->
-										<l-painter-image :src="`/static/index/p${index + 1}.png`"
-											css="width: 130rpx; height: 40rpx; display: block; object-fit: contain; flex-shrink: 0;"></l-painter-image>
-									</l-painter-view>
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-bottom: 0;">
+								<l-painter-text text='3' css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[2].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[2].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							</l-painter-view>
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
 
-								</l-painter-view>
+							</l-painter-view>
+						</l-painter-view>
+						<l-painter-view css="display: flex;align-items: center;justify-content: center;">
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+								<l-painter-text text='1' css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[0].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[0].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							</l-painter-view>
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-right: 0;">
+								<l-painter-text text='4' css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[3].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[3].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							</l-painter-view>
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;">
+								<l-painter-text text='2' css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[1].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[1].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							</l-painter-view>
+						</l-painter-view>
+						<l-painter-view css="display: flex;align-items: center;justify-content: center;">
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
+							</l-painter-view>
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;border: 1rpx solid #fff;border-top: 0;">
+								<l-painter-text text='5' css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text :text='info.tarot_cards_list[4].name'
+									css="display: block;text-align: center;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 0"
+									:text="$t('tarot_card_upright')"
+									css="display: block;text-align: center;color: #00AEFF;"></l-painter-text>
+								<l-painter-text v-if="info.tarot_cards_list[4].is_reversed == 1"
+									:text="$t('tarot_card_reversed')"
+									css="display: block;text-align: center;color: #FF0000;"></l-painter-text>
+							</l-painter-view>
+							<l-painter-view
+								css="width: 150rpx;height: 140rpx;display: flex;flex-direction: column;align-items: center;justify-content: space-around;">
+
 							</l-painter-view>
 						</l-painter-view>
 					</l-painter-view>
-				</l-painter-view>
+					<!-- 解读 -->
+					<l-painter-view v-if="info.child_list.length == 1">
+						<l-painter-view>
+							<l-painter-text :text="$t('tarot_result_ai_interpret')"
+								css="display: block;"></l-painter-text>
+						</l-painter-view>
+						<l-painter-view
+							css="border: 1rpx solid #fff;border-radius: 10rpx;padding: 20rpx;margin: 20rpx 0;background: #3f3e4a;">
+							<l-painter-text :text='info.child_list[0]?.content.summary'
+								css="display: block;"></l-painter-text>
+						</l-painter-view>
+					</l-painter-view>
 
-				<!-- 底部信息区域（带边框） -->
-				<l-painter-view
-					css="width: 457rpx; position: absolute; top: 600rpx; left: 20rpx; border: 1rpx solid #000000; border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
-					<!-- 免责声明 -->
-					<l-painter-text text='"本海报由AI生成,所有风险指数、性格分析仅为趣味参考"'
-						css="font-size: 16rpx; color: #666666; text-align: center; width: 100%; line-height: 20rpx; margin-bottom: 20rpx; display: block;"></l-painter-text>
 
-					<!-- 分隔线 -->
+
+					<!-- 底部 -->
 					<l-painter-view
-						css="width: 100%; height: 2rpx; background:#000; margin-bottom: 20rpx;"></l-painter-view>
-
-					<!-- 分数 -->
-					<l-painter-view css="margin-bottom: 10rpx;display: flex;align-items: center;margin-left: 20rpx;">
-						<l-painter-text text="可信赖分数值 : "
-							css="font-size: 20rpx; color: #333333; display: inline;"></l-painter-text>
-						<l-painter-text text="50分"
-							css="font-size: 28rpx; color: #ff0000;display: inline;margin-left: 5rpx;"></l-painter-text>
+						css="display: flex;align-items: center;justify-content: space-between;margin-top: 20rpx;">
+						<l-painter-view css="width: 300rpx;">
+							<l-painter-image :src="$getImg('my/logo')"
+								css="width: 120rpx; height: 80rpx;margin-bottom: 20rpx;"></l-painter-image>
+							<l-painter-view>
+								<l-painter-text text='CrushCheck' css="display: block;"></l-painter-text>
+							</l-painter-view>
+						</l-painter-view>
+						<l-painter-view>
+							<l-painter-image :src="img"
+								css="width: 180rpx; height: 180rpx; display: block;"></l-painter-image>
+						</l-painter-view>
 					</l-painter-view>
 
-					<!-- 星级 -->
-					<l-painter-view css="margin-bottom: 10rpx;margin-left: 20rpx;display: flex;align-items: center;">
-						<l-painter-text text="星级 : "
-							css="font-size: 24rpx; color: #333333; display: inline;"></l-painter-text>
-						<l-painter-text v-for="n in 5" :key="n" :text="'★'"
-							css="font-size: 32rpx; color: #FFD700; margin-right: 5rpx; display: inline;"></l-painter-text>
-					</l-painter-view>
-
-					<!-- 分析文字 -->
-					<l-painter-text text='"TA可能是一个提供情绪价值 但拒绝负责的暧昧体验家"'
-						css="font-size: 22rpx; color: #333333; text-align: left; margin-bottom: 20rpx; line-height: 40rpx; display: block;margin-left: 15rpx;width:300rpx;font-weight: bold;text-align: center;"></l-painter-text>
-
-					<!-- 二维码（右下角） -->
-					<l-painter-view
-						css="position: absolute; right: 20rpx; bottom: 20rpx; width: 80rpx; height: 80rpx;top:190rpx">
-						<l-painter-image :src="$getImg('index/qrote')"
-							css="width: 80rpx; height: 80rpx; object-fit: contain; border-radius: 5rpx;"></l-painter-image>
-					</l-painter-view>
 				</l-painter-view>
 			</l-painter-view>
 		</l-painter>
@@ -104,12 +208,16 @@ import lPainterImage from 'lime-painter/components/l-painter-image/l-painter-ima
 import lPainterQrcode from 'lime-painter/components/l-painter-qrcode/l-painter-qrcode.vue'
 import lPainterText from 'lime-painter/components/l-painter-text/l-painter-text.vue'
 import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.vue'
+import { t } from '@/i18n/index.js';
 export default {
 	name: "invitationPoster",
 	props: {
 		info: {
 			type: Object,
-			default: () => { }
+			// 优化1：给默认值初始化child_list，避免访问时报错
+			default: () => ({
+				child_list: []
+			})
 		}
 	},
 	components: {
@@ -122,36 +230,46 @@ export default {
 	data() {
 		return {
 			show: true,
-			img: '',
-			code: '',
-			previewImage: '',
-			path: '',
-			posterIcon: '/static/index/postericon.png',
-			traitList: [
-				{ name: '成本管控大师', color: '#87CEEB', progress: 85 },
-				{ name: '氛围感高手', color: '#90EE90', progress: 75 },
-				{ name: '热情体验官', color: '#FFA500', progress: 55 },
-				{ name: '薛定谔的单身', color: '#87CEEB', progress: 35 }
-			],
-			stars: [true, true, true, false, false]
+			img: '',//二维码图片
+			userinfo: JSON.parse(uni.getStorageSync('userInfo')),
+			path: ''
 		};
 	},
 	created() {
 	},
+	mounted() {
+		this.processSummaryContent();
+	},
 	methods: {
+		processSummaryContent() {
+			if (!this.info || !Array.isArray(this.info.child_list) || this.info.child_list.length === 0) {
+				return;
+			}
+			const firstChild = { ...this.info.child_list[0] };
+			if (firstChild.content && firstChild.content.summary) {
+				firstChild.content.summary = firstChild.content.summary
+					.replace(/<br\s*\/?>/gi, '\n')
+					.trim()
+					.replace(/\n+/g, '\n');
+				this.info.child_list[0].content.summary = firstChild.content.summary;
+			}
+		},
 		// 预览图片
 		look() {
 			uni.previewImage({
 				urls: [this.path]
 			})
 		},
-		handleSuccess(path) {
-			this.path = path
-			this.$emit('success', this.path)
-		},
 		success() {
 			this.$emit('success', this.path)
 		},
+		getlist() {
+			getQroter()
+				.then(res => {
+					this.img = res.data.qrcode_base64
+				})
+		}
+
 	}
 
 }
@@ -162,6 +280,7 @@ export default {
 	justify-content: space-between;
 	box-sizing: border-box;
 	border-radius: 8rpx;
+
 
 
 

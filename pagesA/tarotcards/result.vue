@@ -1,8 +1,10 @@
 <template>
-   <!-- <invitationPoster ref="poster" v-if="true" @success="success">
-   </invitationPoster> -->
    <view class="page">
-      <view>{{ t('tarot_input_question_title') }}：{{ details.summary }}</view>
+      <view>{{ t('tarot_result_question_label') }}{{ details.summary }}</view>
+      <!-- <up-read-more :showHeight="200" :toggle="true" textIndent="0em" :shadowStyle="shadowStyle">
+         <rich-text :nodes="t('tarot_result_question_label') + details.summary"></rich-text>
+      </up-read-more> -->
+
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
@@ -64,33 +66,47 @@
    <view style="height: 130rpx;"></view>
    <view class="btns">
       <view class="border">
-         <view @click="share" class="share">{{ t('tarot_result_share') }}</view>
+         <view @click="share1" class="share">{{ t('tarot_result_share') }}</view>
          <view @click="again">{{ t('tarot_result_again') }}</view>
       </view>
    </view>
-
+   <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+      <view class="del-popup-content">
+         <scroll-view scroll-y class="gundong">
+            <invitationPoster ref="poster" v-if="show" @success="success" :info="details">
+            </invitationPoster>
+         </scroll-view>
+         <view class="gaosuta" @click="share">{{ t('answerBook.tellTA') }}</view>
+      </view>
+   </up-popup>
 </template>
 
 <script setup>
-import {
-   iosOrder,
-   mockOrder
-} from '@/api/index.js';
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { tarotcardDetails, tarotcardnswer } from '@/api/tarotcards.js'
+import { ios_receipt } from '@/api/index.js'
 import invitationPoster from '@/components/invitationPoster/invitationPoster.vue';
 import {
    getProducts,
    createOrder,
 } from '@/api/index.js'
 // import uma from '@/uma.js'
+const shadowStyle = reactive({
+   backgroundImage: "none",
+   paddingTop: "0",
+   marginTop: "20rpx",
+   maxHeight:'100rpx'
+});
 const current = ref(0)
 const id = ref('')
 const details = ref({})
 const object = ref({})
+const posterImg = ref('')
+const show = ref(false)
+const showDelPopup2 = ref(false)
 const type = { 'once_single_card': t('tarot_spread_single_title'), 'once_three_card': t('tarot_spread_three_title'), 'once_multi_card': t('tarot_spread_relation_title') }
 const desc = { 'once_single_card': t('tarot_spread_single_desc1') + ',' + t('tarot_spread_single_desc2'), 'once_three_card': t('tarot_spread_three_desc1') + ',' + t('tarot_spread_three_desc2'), 'once_multi_card': t('tarot_spread_relation_desc1') + ',' + t('tarot_spread_relation_desc2') }
 onLoad((e) => {
@@ -101,7 +117,7 @@ onLoad((e) => {
    getdetails()
 })
 const success = (e) => {
-   // this.posterImg = e
+   posterImg.value = e
 }
 const getdetails = () => {
    getProducts().then(res => {
@@ -119,10 +135,40 @@ const again = () => {
    uni.removeStorageSync('question')
    uni.reLaunch({ url: '/pagesA/tarotcards/qusetion' })
 }
+const share1 = () => {
+   show.value = true,
+      showDelPopup2.value = true
+}
 const share = () => {
-   uni.showToast({
-      title: '暂未开放',
-      icon: 'none'
+   uni.downloadFile({
+      url: posterImg.value,
+      success: (res) => {
+         if (res.statusCode === 200) {
+            const inviterOpenId = uni.getStorageSync("openId") || "";
+            const query = `?scene=${inviterOpenId}`
+            wx.showShareImageMenu({
+               path: res.tempFilePath,
+               entrancePath: `/pages/index/index${query}`,
+               complete: (res) => {
+                  if (res.errMsg == 'showShareImageMenu:fail cancel') {
+                     // share_fail()
+                     show.value = false
+                     showDelPopup2.value = false
+                  } else {
+                     // share_success()
+                     show.value = false
+                     showDelPopup2.value = false
+                  }
+               }
+            })
+         }
+      }
+   })
+   wx.showShareImageMenu({
+      path: posterImg.value,
+      complete: (res) => {
+         console.log(res)
+      }
    })
 }
 const pay = () => {
@@ -145,6 +191,7 @@ const pay = () => {
                   });
                   return;
                }
+               console.log('paymentData',paymentData)
                iapChannel.requestProduct([paymentData.productid], function (res) {
                   uni.requestPayment({
                      provider: 'appleiap',
@@ -234,6 +281,31 @@ const pay = () => {
 </script>
 
 <style lang="scss" scoped>
+.del-popup-content {
+   width: 100%;
+   height: 700rpx;
+   border-radius: 10rpx;
+   background: #2B2848;
+   border: 1rpx solid #fff;
+   box-sizing: border-box;
+   position: relative;
+
+   .gaosuta {
+      background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
+      width: 300rpx;
+      height: 80rpx;
+      line-height: 80rpx;
+      border-radius: 80rpx;
+      margin: 30rpx auto;
+      text-align: center;
+   }
+
+   .gundong {
+      height: 550rpx;
+      // overflow-y: scroll;
+   }
+}
+
 .page {
    height: 88vh;
    margin: 20rpx 25rpx;
@@ -243,6 +315,7 @@ const pay = () => {
    border-radius: 10rpx;
    font-weight: 300;
    padding: 30rpx;
+   overflow-y: scroll;
 }
 
 .cards {
@@ -337,8 +410,8 @@ const pay = () => {
 }
 
 .content {
-   height: 56vh;
-   overflow-y: scroll;
+   // height: 56vh;
+   // overflow-y: scroll;
 }
 
 .list {
@@ -472,5 +545,10 @@ const pay = () => {
          border-right: 1px solid rgba(255, 255, 255, 0.3);
       }
    }
+}
+</style>
+<style>
+.u-safe-bottom {
+   height: 0 !important;
 }
 </style>

@@ -1,4 +1,5 @@
 export default {
+   no_nickname: '닉네임 없음',
    tarot_result_pay: "", // 韩语习惯把价格放前面，此处留空
     tarot_result_pay_unit: "원/회",
     tarot_result_ai_interpret: " AI 해석 결제",
