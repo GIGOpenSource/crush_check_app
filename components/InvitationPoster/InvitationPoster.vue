@@ -4,7 +4,7 @@
 		<l-painter ref="painter" @success="path = $event" hidden path-type="url" width="750rpx" height="100%"
 			isCanvasToTempFilePath>
 			<l-painter-view
-				css="width: 100%; min-height: 400rpx;color: #fff;background: #2a2936;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
+				css="width: 750rpx; min-height: 400rpx;color: #fff;background: #2a2936;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
 				<l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
 					<!-- 头部 -->
 					<l-painter-view css="display: flex;">

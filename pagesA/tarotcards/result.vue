@@ -80,7 +80,7 @@
       </view>
    </up-popup>
    <InvitationFriend :show="friend" @close="friend = false" :imageUrl="shareurl"
-      :downloadUrl="'https://ask.dcloud.net.cn/article/208'" />
+      :downloadUrl="shareurl" />
 </template>
 
 <script setup>
