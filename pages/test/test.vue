@@ -1450,3 +1450,9 @@ export default {
     margin-top: 20rpx;
 }
 </style>
+<style>
+
+       .u-safe-bottom{
+      height: 0 !important;
+    }
+</style>
