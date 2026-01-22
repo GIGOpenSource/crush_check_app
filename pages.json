@@ -151,6 +151,13 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "mbti/dati",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
 				}
 			]
 		}
