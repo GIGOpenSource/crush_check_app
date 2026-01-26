@@ -159,6 +159,13 @@
 						"disableScroll": false
 					}
 				},{
+					"path": "mbti/poster",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
+				},{
 					"path": "loveCourt/index",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",

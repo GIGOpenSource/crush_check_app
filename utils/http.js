@@ -186,6 +186,7 @@ function deleteRequest(url, params = {}, other = {}) {
 	})
 }
 function getImg(url) {
+	// return `https://www.crashcheck.net/static/${url}.png`
 	return `/static/${url}.png`
 }
 
