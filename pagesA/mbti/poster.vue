@@ -2,10 +2,15 @@
     <view class="page">
         <view class="top">
             <view class="title">MBTI测试结果</view>
-            <view class="userinfo"><up-avatar :src="src" size="36"></up-avatar> <text>用户昵称</text></view>
+            <!-- <view class="userinfo1"><up-avatar :src="src" size="36"></up-avatar> <text>用户昵称</text></view> -->
+            <view class="userinfo2">
+                <view><up-avatar :src="src" size="36"></up-avatar> <text>用户昵称</text></view>
+                <view> <text>用户昵称</text><up-avatar :src="src" size="36"></up-avatar></view>
+            </view>
         </view>
         <view class="center">
-          <Mbtiposter/>
+            <!-- <Mbtiposter /> -->
+            <Twombtiposter/>
         </view>
         <view class="bottom">
             <view class="btns">
@@ -19,6 +24,7 @@
 <script setup>
 import { ref } from 'vue'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
+import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
 const src = ref('')
 const topath = () => {
     uni.switchTab({ url: '/pages/index/index' })
@@ -41,23 +47,45 @@ const topath = () => {
         margin: 30rpx 0;
     }
 
-    .userinfo {
+    .userinfo1 {
         display: flex;
         align-items: center;
-        font-size: 26rpx;
+        
 
         text {
             margin-left: 20rpx;
         }
     }
+
+    .userinfo2 {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 30rpx;
+        box-sizing: border-box;
+
+        view {
+            display: flex;
+            align-items: center;
+
+            text {
+                margin:0 20rpx;
+            }
+        }
+    }
+    text{
+        font-size: 26rpx;
+    }
 }
-.center{
-   width: 100%;
-   height: 80vh;
-   overflow-y: scroll;
-   padding:20rpx;
-   box-sizing: border-box;
+
+.center {
+    width: 100%;
+    height: 80vh;
+    overflow-y: scroll;
+    padding: 20rpx;
+    box-sizing: border-box;
 }
+
 .bottom {
     display: flex;
     background: #3F3E49;
@@ -78,15 +106,17 @@ const topath = () => {
         display: flex;
         align-items: center;
         line-height: 90rpx;
-        view{
+
+        view {
             width: 100%;
             height: 100%;
             text-align: center;
         }
-        .share{
-             border-right: 1rpx solid #fff;
+
+        .share {
+            border-right: 1rpx solid #fff;
         }
-      
+
     }
 }
 </style>

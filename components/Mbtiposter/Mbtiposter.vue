@@ -221,7 +221,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='是谁' css=""></l-painter-text>
+                            <l-painter-text text='是谁' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
@@ -251,7 +251,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='的烦恼' css=""></l-painter-text>
+                            <l-painter-text text='的烦恼' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
@@ -262,7 +262,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='对待感情...' css=""></l-painter-text>
+                            <l-painter-text text='对待感情...' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
@@ -287,7 +287,7 @@ import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.
 import { getQroter } from "@/api/tarotcards.js";
 import { t } from '@/i18n/index.js';
 export default {
-    name: "invitationPoster",
+    name: "Mbtiposter",
     props: {
         info: {
             type: Object,
