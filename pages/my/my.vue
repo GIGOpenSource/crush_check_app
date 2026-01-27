@@ -538,7 +538,7 @@ export default {
 
       try {
         // 获取产品列表
-        const res = await getProductsList();
+        const res = await getProductsList('vip');
         console.log("获取产品列表成功", res);
 
         if (res.code === 200 || res.code === 201) {
@@ -547,6 +547,7 @@ export default {
           const vipProduct = results.find(
             (product) => product.product_type === "vip"
           );
+          console.log(vipProduct,'vipProductvipProduct')
 
           if (vipProduct) {
             console.log("找到VIP产品:", vipProduct);

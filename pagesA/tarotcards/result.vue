@@ -139,7 +139,7 @@ const success = (e) => {
    posterImg.value = e
 }
 const getdetails = () => {
-   getProducts().then(res => {
+   getProducts('tarot_once').then(res => {
       object.value = res.data.results.filter(item => item.product_type == 'tarot_once')[0]
    })
    tarotcardDetails(id.value).then(res => {

@@ -27,18 +27,14 @@
 				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
 			</view>
 		</view>
-		<view class="bottom">
+		<!-- <view class="bottom">
 			<view class="left" @click="path('/pagesA/mbti/index')">
 				<view>
 					<view>MBTI</view>
-					<!-- <view>{{ t('index.book') }}</view> -->
 				</view>
 				<image :src="$getImg('add/mbti')" mode="widthFix" />
 			</view>
-			<!-- <view class="right">
-			
-			</view> -->
-		</view>
+		</view> -->
 	</view>
 </template>
 
