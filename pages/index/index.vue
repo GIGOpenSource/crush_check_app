@@ -27,19 +27,19 @@
 				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
 			</view>
 		</view>
-		<!-- <view class="bottom">
+		<view class="bottom">
 			<view class="left" @click="path('/pagesA/mbti/index')">
 				<view>
 					<view>MBTI</view>
 				</view>
 				<image :src="$getImg('add/mbti')" mode="widthFix" />
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 
 <script setup>
-import { aesEncrypt} from '@/utils/crypto.js';
+import { aesEncrypt ,aesDecrypt} from '@/utils/crypto.js';
 import { useI18n } from 'vue-i18n';
 import {
 	onLoad
@@ -69,12 +69,19 @@ onLoad((e) => {
 		});
 	}
 	handleEncrypt()
+	hanleaesDecrypt()
 })
 //加密
-const handleEncrypt = async () => {
-	const encryptedData = '123456'
+const handleEncrypt =  () => {
+	const encryptedData = 'oP1xC128XILbCnU_hOhfV19Eyr4Q'
 	const end = aesEncrypt(encryptedData)
-    console.log(end,'eeee')
+    console.log(end,'加密')
+}
+
+const hanleaesDecrypt =  () => {
+	const encryptedData = 'J1IQkLVH9fsZgAMwyn+Mxg=='
+	const end = aesDecrypt(encryptedData)
+    console.log(end,'eeee333333')
 }
 </script>
 

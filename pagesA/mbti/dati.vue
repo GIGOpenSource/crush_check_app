@@ -1,32 +1,125 @@
 <template>
     <view class="page">
         <view class="titlecon">
-            <view class="t1">MBTI测试 (版本) <text>1/144</text> </view>
-            <view class="t2">提示：请根据您的第一反应选择，无需过度思考。 所有题目均需回答才能生成准确报告。</view>
+            <view class="t1">{{ t('mbti.testTitle') }} ({{ t('mbti.version') }}) <text>{{ page }} / {{ total }}</text> </view>
+            <view class="t2">{{ t('mbti.tip') }}</view>
         </view>
-        <view class="content">
-            <view class="con" v-for="(item, index) in 6">
-                <view>01 这里是一个问题</view>
+        <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
+            @scroll="onScroll">
+            <view class="con" v-for="(item, index) in list" :key="index" :id="'question-' + index">
+                <view>0{{ index + 1 }} {{ item.content }}</view>
                 <view class="borderwrapper">
-                    <view v-for="(item, index) in 5"></view>
+                    <view v-for="(ite) in fen" :key="ite" @click="choosestatus(index, ite)"
+                        :class="item.current == ite ? 'current' : ''"></view>
                 </view>
                 <view class="status">
-                    <text>非常不同意</text>
-                    <text>非常同意</text>
+                    <text>{{ t('mbti.stronglyDisagree') }}</text>
+                    <text>{{ t('mbti.stronglyAgree') }}</text>
                 </view>
             </view>
-        </view>
+        </scroll-view>
         <view class="btns">
-            <!-- <view class="btn1">下一页</view> -->
-            <view class="btn2">
-                <view>上一页</view>
-                <view>下一页</view>
+            <view class="btn1" v-if="page == 1" @click="down">{{ t('mbti.nextPage') }}</view>
+            <view class="btn1" v-else-if="page == total" @click="look">{{ t('mbti.viewResult') }}</view>
+            <view class="btn2" v-else>
+                <view @click="up">{{ t('mbti.prevPage') }}</view>
+                <view @click="down">{{ t('mbti.nextPage') }}</view>
             </view>
         </view>
     </view>
 </template>
 
 <script setup>
+import { onMounted, ref, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { getList } from '@/api/mbti.js'
+import { onLoad } from '@dcloudio/uni-app'
+const { t } = useI18n()
+const test_type = ref('simple')
+const list = ref([])
+const page = ref(1)
+const fen = [5, 4, 3, 2, 1]
+const scrollIntoView = ref('') 
+const isScrolling = ref(false)
+const total = ref('')
+onLoad((e) => {
+    // test_type.value = e.test_type
+})
+onMounted(() => {
+    getlistTi()
+})
+const getlistTi = () => {
+    isScrolling.value = false
+    getList(page.value, 4, test_type.value)
+        .then(res => {
+            list.value = res.data.results.map(item => {
+                return {
+                    ...item,
+                    current: -1
+                }
+            })
+            total.value = res.data.pagination.total_pages
+
+        })
+}
+const up = () => {
+    page.value--
+    getlistTi()
+}
+const down = () => {
+    nextTick(() => {
+        setTimeout(() => {
+            const firstUnansweredIndex = list.value.findIndex(item => item.current === -1)
+            if (firstUnansweredIndex !== -1) {
+                scrollToQuestion(firstUnansweredIndex)
+            } else {
+                scrollIntoView.value = ''
+                page.value++
+                getlistTi()
+            }
+        }, 200)
+    })
+
+}
+const onScroll = (e) => {
+    if (!isScrolling.value) {
+    }
+}
+const scrollToQuestion = (index) => {
+    if (isScrolling.value) {
+        return
+    }
+    isScrolling.value = true
+    scrollIntoView.value = ''
+    nextTick(() => {
+        setTimeout(() => {
+            scrollIntoView.value = `question-${index}`
+            setTimeout(() => {
+                isScrolling.value = false
+                scrollIntoView.value = ''
+            }, 300)
+        }, 50)
+    })
+}
+
+//答题
+const choosestatus = (index, ite) => {
+    const wasAnswered = list.value[index].current !== -1
+
+    list.value[index].current = ite
+    if (!wasAnswered) {
+        const nextIndex = index + 1
+        if (nextIndex < list.value.length) {
+            scrollToQuestion(nextIndex)
+        }
+    }
+}
+
+//查看结果
+const look = () => {
+     uni.redirectTo({ url: `/pagesA/mbti/poster` })
+}
+
 
 </script>
 
@@ -53,11 +146,12 @@
 
     .t1 {
         margin-top: 40rpx;
-        text{
-           position: absolute;
-           right: 50rpx;
-           top: 85rpx;
-           font-size: 24rpx;
+
+        text {
+            position: absolute;
+            right: 50rpx;
+            top: 85rpx;
+            font-size: 24rpx;
         }
     }
 
@@ -124,6 +218,10 @@
                 height: 20rpx;
 
             }
+
+            .current {
+                background: #A0FFE7;
+            }
         }
     }
 }
@@ -131,6 +229,7 @@
 .btns {
     width: 90%;
     margin: 40rpx auto;
+
     .btn1 {
         width: 80%;
         height: 95rpx;
@@ -140,16 +239,18 @@
         text-align: center;
         margin: 0 auto;
     }
-    .btn2{
+
+    .btn2 {
         display: flex;
         justify-content: space-between;
-        view{
+
+        view {
             background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
-               width: 45%;
-        height: 95rpx;
-         text-align: center;
-         line-height: 95rpx;
-         border-radius: 95rpx;
+            width: 45%;
+            height: 95rpx;
+            text-align: center;
+            line-height: 95rpx;
+            border-radius: 95rpx;
         }
     }
 }

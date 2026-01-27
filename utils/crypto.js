@@ -1,7 +1,10 @@
 import CryptoJS from 'crypto-js';
-//和后端保持一致
+const keyStr = 'zhiliao';
+const keyHashHex = CryptoJS.MD5(keyStr).toString();
+const key = keyHashHex.substring(0, 16);
+
 const AES_CONFIG = {
-  key: CryptoJS.enc.Utf8.parse('zhiliao'), 
+  key: CryptoJS.enc.Utf8.parse(key), 
   iv: CryptoJS.enc.Utf8.parse('1234567890123456'),  
   mode: CryptoJS.mode.CBC,
   padding: CryptoJS.pad.Pkcs7
@@ -28,11 +31,7 @@ export function aesEncrypt(data) {
   }
 }
 
-/**
- * AES 解密
- * @param {string} encryptedStr 加密后的字符串
- * @returns {string} 解密后的原始字符串
- */
+//解密
 export function aesDecrypt(encryptedStr) {
   if (!encryptedStr || typeof encryptedStr !== 'string') {
     throw new Error('解密数据必须是非空字符串');
@@ -47,8 +46,13 @@ export function aesDecrypt(encryptedStr) {
         padding: AES_CONFIG.padding
       }
     );
-    // 把解密后的二进制数据转回 UTF8 字符串
-    return decrypted.toString(CryptoJS.enc.Utf8);
+    const result = decrypted.toString(CryptoJS.enc.Utf8);
+
+    if (!result) {
+      console.warn('解密结果为空，请检查key和iv是否与后端一致');
+    }
+    
+    return result;
   } catch (error) {
     console.error('AES 解密失败：', error);
     throw error;
