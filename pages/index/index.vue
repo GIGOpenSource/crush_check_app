@@ -27,19 +27,18 @@
 				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
 			</view>
 		</view>
-		<!-- <view class="bottom">
-			<view class="left" @click="path('/pages/index/answer')">
+		<view class="bottom">
+			<view class="left" @click="path('/pagesA/mbti/index')">
 				<view>
-					<view>{{ t('index.answer') }}</view>
-					<view>{{ t('index.book') }}</view>
+					<view>MBTI</view>
+					<!-- <view>{{ t('index.book') }}</view> -->
 				</view>
-				<image :src="$getImg('index/answer')" mode="widthFix" />
+				<image :src="$getImg('add/mbti')" mode="widthFix" />
 			</view>
-			<view class="right">
-				<view>{{ t('index.moreFeatures') }}</view>
-				<view>{{ t('index.comingSoon') }}</view>
-			</view>
-		</view> -->
+			<!-- <view class="right">
+			
+			</view> -->
+		</view>
 	</view>
 </template>
 
@@ -73,11 +72,11 @@ onLoad((e) => {
 			console.log(res, "share record");
 		});
 	}
-	// handleEncrypt()
+	handleEncrypt()
 })
 //加密
 const handleEncrypt = async () => {
-	const encryptedData = 'oP1xC128XILbCnU_hOhfV19Eyr4Q'
+	const encryptedData = '123456'
 	const end = aesEncrypt(encryptedData)
     console.log(end,'eeee')
 }

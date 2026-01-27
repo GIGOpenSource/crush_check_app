@@ -6,12 +6,7 @@ const AES_CONFIG = {
   mode: CryptoJS.mode.CBC,
   padding: CryptoJS.pad.Pkcs7
 };
-
-/**
- * AES 加密
- * @param {string} data 要加密的原始字符串
- * @returns {string} 加密后的字符串
- */
+//加密
 export function aesEncrypt(data) {
   if (!data || typeof data !== 'string') {
     throw new Error('加密数据必须是非空字符串');
@@ -26,7 +21,6 @@ export function aesEncrypt(data) {
         padding: AES_CONFIG.padding
       }
     );
-    // 输出 Base64 格式的加密结果
     return encrypted.toString();
   } catch (error) {
     console.error('AES 加密失败：', error);
