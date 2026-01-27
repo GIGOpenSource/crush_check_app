@@ -72,6 +72,7 @@ export default {
     needAuth: '認証が必要です',
     saveSuccess: '保存成功',
     saveFailed: '保存失敗',
+    copySuccess: 'コピー成功',
     uploadSuccess: 'アップロード成功',
     uploadFailed: 'アップロード失敗',
     downloadFailed: 'ダウンロード失敗',

@@ -74,6 +74,7 @@ export default {
     needAuth: '需要授权',
     saveSuccess: '保存成功',
     saveFailed: '保存失败',
+    copySuccess: '复制成功',
     uploadSuccess: '上传成功',
     uploadFailed: '上传失败',
     downloadFailed: '下载失败',

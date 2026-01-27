@@ -73,6 +73,7 @@ export default {
     needAuth: '권한이 필요합니다',
     saveSuccess: '저장 성공',
     saveFailed: '저장 실패',
+    copySuccess: '복사 성공',
     uploadSuccess: '업로드 성공',
     uploadFailed: '업로드 실패',
     downloadFailed: '다운로드 실패',

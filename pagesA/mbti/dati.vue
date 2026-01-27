@@ -12,7 +12,8 @@
 
         <view class="page-content" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="titlecon">
-                <view class="t1">{{ t('mbti.testTitle') }} ({{ t('mbti.version') }}) <text>{{ page }} / {{ total }}</text> </view>
+                <view class="t1">{{ t('mbti.testTitle') }} ({{ t('mbti.version') }}) <text>{{ page }} / {{ total
+                }}</text> </view>
                 <view class="t2">{{ t('mbti.tip') }}</view>
             </view>
             <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
@@ -21,7 +22,7 @@
                     <view>0{{ index + 1 }} {{ item.content }}</view>
                     <view class="borderwrapper">
                         <view v-for="(ite) in fen" :key="ite" @click="choosestatus(index, ite)"
-                            :class="item.current == ite ? 'current' : ''"></view>
+                            :class="item.question_value == ite ? 'current' : ''"></view>
                     </view>
                     <view class="status">
                         <text>{{ t('mbti.stronglyDisagree') }}</text>
@@ -39,39 +40,41 @@
             </view>
         </view>
         <up-popup :show="showDelPopup2" mode="center">
-      <view class="del-popup-content">
-        <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-        <view class="title1">{{ t('mbti.exitConfirmTip') }}</view>
-        <view class="del-popup-actions">
-          <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ t('common.cancel') }}</view>
-          <view class="del-popup-btn confirm" @click="submit">{{ t('common.confirm') }}</view>
-        </view>
-        <view class="icon" @click="showDelPopup2 = false">
-          <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
-        </view>
-      </view>
-    </up-popup>
+            <view class="del-popup-content">
+                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <view class="title1">{{ t('mbti.exitConfirmTip') }}</view>
+                <view class="del-popup-actions">
+                    <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ t('common.cancel') }}</view>
+                    <view class="del-popup-btn confirm" @click="submit">{{ t('common.confirm') }}</view>
+                </view>
+                <view class="icon" @click="showDelPopup2 = false">
+                    <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+                </view>
+            </view>
+        </up-popup>
     </view>
 </template>
 
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getList } from '@/api/mbti.js'
+import { getList, createPoster } from '@/api/mbti.js'
 import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('simple')
+const question_mode = ref('single_mode')
 const list = ref([])
 const page = ref(1)
-const fen = [5, 4, 3, 2, 1]
-const scrollIntoView = ref('') 
+const fen = [1,2,3,4,5]
+const scrollIntoView = ref('')
 const isScrolling = ref(false)
 const total = ref('')
 const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
-
+const poster_id = ref(null)
 onLoad((e) => {
     // test_type.value = e.test_type
+    // question_mode.value = e.question_mode
 })
 
 onMounted(() => {
@@ -79,7 +82,7 @@ onMounted(() => {
     const systemInfo = uni.getSystemInfoSync()
     const pxToRpx = systemInfo.windowWidth / 375 * 2 || 2
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
-    
+
     getlistTi()
 })
 
@@ -88,36 +91,51 @@ const goBack = () => {
 }
 const getlistTi = () => {
     isScrolling.value = false
-    getList(page.value, 4, test_type.value)
+    getList(page.value, 4, test_type.value, question_mode.value, poster_id.value)
         .then(res => {
-            list.value = res.data.results.map(item => {
-                return {
-                    ...item,
-                    current: -1
-                }
-            })
+            list.value = res.data.results.map(item => ({
+                ...item,
+                question_value: item.question_value || 0
+            }))
             total.value = res.data.pagination.total_pages
+            poster_id.value = res.data.poster_id
 
         })
 }
-const up = () => {
-    page.value--
+const up = async () => {
+   await create()
+     page.value--
     getlistTi()
+
 }
-const down = () => {
+const down = async () => {
     nextTick(() => {
-        setTimeout(() => {
-            const firstUnansweredIndex = list.value.findIndex(item => item.current === -1)
+        setTimeout(async () => {
+            const firstUnansweredIndex = list.value.findIndex(item => !item.question_value || item.question_value == 0)
             if (firstUnansweredIndex !== -1) {
+                 uni.showToast({
+                title: '请勿空题',
+                icon: 'none'
+            })
                 scrollToQuestion(firstUnansweredIndex)
             } else {
                 scrollIntoView.value = ''
-                page.value++
-                getlistTi()
+                await create()
+                 page.value++
+                    getlistTi()
+
             }
         }, 200)
     })
 
+}
+const create = async () => {
+    let answer = Object.fromEntries(
+        list.value.map(item => [item.id, item.question_value])
+    );
+    let timestamp = new Date()
+    const res= await createPoster(page.value, 4, poster_id.value, answer, timestamp)
+    console.log(res,'rds')
 }
 const onScroll = (e) => {
     if (!isScrolling.value) {
@@ -142,9 +160,9 @@ const scrollToQuestion = (index) => {
 
 //答题
 const choosestatus = (index, ite) => {
-    const wasAnswered = list.value[index].current !== -1
+    const wasAnswered = list.value[index].question_value && list.value[index].question_value !== 0
 
-    list.value[index].current = ite
+    list.value[index].question_value = ite
     if (!wasAnswered) {
         const nextIndex = index + 1
         if (nextIndex < list.value.length) {
@@ -155,7 +173,7 @@ const choosestatus = (index, ite) => {
 
 //查看结果
 const look = () => {
-     uni.redirectTo({ url: `/pagesA/mbti/poster` })
+    uni.redirectTo({ url: `/pagesA/mbti/poster` })
 }
 //确定退出
 const submit = () => {
@@ -206,6 +224,7 @@ const submit = () => {
         }
     }
 }
+
 .page-content {
     height: calc(100vh - 200rpx);
     margin: 0 25rpx 20rpx;
@@ -335,84 +354,85 @@ const submit = () => {
         }
     }
 }
+
 .del-popup-content {
-  position: relative;
-  width: 560rpx;
-  padding: 160rpx 40rpx 48rpx;
-  box-sizing: border-box;
-  border-radius: 36rpx;
-  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
-  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
-  text-align: center;
-  color: #000;
-
-  .del-popup-icon {
-    position: absolute;
-    top: -90rpx;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200rpx;
-    height: 200rpx;
-  }
-
-  .title1 {
+    position: relative;
+    width: 560rpx;
+    padding: 160rpx 40rpx 48rpx;
+    box-sizing: border-box;
+    border-radius: 36rpx;
+    background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+    box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+    text-align: center;
     color: #000;
-    margin-top: -50rpx;
-    font-size: 30rpx;
-    font-weight: 400;
-  }
 
-  .num {
-    font-size: 26rpx;
-    margin-top: 20rpx;
-  }
-
-
-
-  .icon {
-    position: absolute;
-    transform: translateX(-50%);
-    left: 50%;
-    bottom: -100rpx;
-    color: #000;
-    cursor: pointer;
-
-    &.icon-disabled {
-      opacity: 0.5;
-      pointer-events: none;
+    .del-popup-icon {
+        position: absolute;
+        top: -90rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200rpx;
+        height: 200rpx;
     }
-  }
+
+    .title1 {
+        color: #000;
+        margin-top: -50rpx;
+        font-size: 30rpx;
+        font-weight: 400;
+    }
+
+    .num {
+        font-size: 26rpx;
+        margin-top: 20rpx;
+    }
+
+
+
+    .icon {
+        position: absolute;
+        transform: translateX(-50%);
+        left: 50%;
+        bottom: -100rpx;
+        color: #000;
+        cursor: pointer;
+
+        &.icon-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
 }
 
 .del-popup-actions {
-  display: flex;
-  gap: 24rpx;
-  margin-top: 20rpx;
+    display: flex;
+    gap: 24rpx;
+    margin-top: 20rpx;
 }
 
 .del-popup-btn {
-  flex: 1;
-  height: 88rpx;
-  border-radius: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30rpx;
-  font-weight: 600;
+    flex: 1;
+    height: 88rpx;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30rpx;
+    font-weight: 600;
 }
 
 .del-popup-btn.cancel {
-  background: #eeedff;
-  color: #b370ff;
+    background: #eeedff;
+    color: #b370ff;
 }
 
 .del-popup-btn.confirm {
-  background: #b370ff;
-  color: #ffffff;
+    background: #b370ff;
+    color: #ffffff;
 }
 </style>
 <style>
-     .u-popup__content{
-        background: transparent !important;
-    } 
+.u-popup__content {
+    background: transparent !important;
+}
 </style>

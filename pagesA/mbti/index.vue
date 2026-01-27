@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                }}</view>
+                    }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -82,6 +82,7 @@ const choose = ref([{
     title: '',
     text: ''
 }])
+const mode = ref('')
 // 初始化时设置翻译文本
 choose.value[0].title = t('mbti.singleTest')
 choose.value[0].text = t('mbti.singleTestDesc')
@@ -114,15 +115,12 @@ const content = ref('')
 content.value = t('mbti.personalityDesc')
 //选择测试
 const ceshiproup = ref(false)
-const ceshicontent = ref('MBTI(迈尔斯-布里格斯类型指标)基于荣 格心理类型理论，通过“精力来源(E/I)、 认知方式(S/N)、决策方式(T/F)、生活方 式(J/P)”4组维度，划分出16种人格类型。 它能帮你认知自我优势、理解他人差异适 配职业选择与人际沟通，需注意本测试的 分析结果主要针对于恋爱方向的解析与建 议。 专业测试(90题以上)更具参考性，简易版 仅作探索起点，关键是用它找到舒适的相 处与成长方式。')
-const ceshibtns = [{ title: '28题 简易版', type: 'simple' }, { title: '93题 专业版', type: 'major' }, { title: '114题 进阶版', type: 'devanced' }]
+const ceshicontent = ref(t('mbti.testContent'))
+const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: t('mbti.majorVersion'), type: 'major' }, { title: t('mbti.advancedVersion'), type: 'devanced' }]
+
 //匹配
 const pipeiproup = ref(false)
-const pipeicontent = ref(['', '', '', ''])
-pipeicontent.value[0] = t('mbti.step1')
-pipeicontent.value[1] = t('mbti.step2')
-pipeicontent.value[2] = t('mbti.step3')
-pipeicontent.value[3] = t('mbti.step4')
+const pipeicontent = ref([t('mbti.step1'),  t('mbti.step2'), t('mbti.step3'), t('mbti.step4')])
 
 //邀请码
 const inviewma = ref('')
@@ -131,9 +129,12 @@ const inviewma = ref('')
 const choosetype = (index) => {
     if (index == 0) {
         ceshiproup.value = true
+        mode.value = 'single_mode'
     } else if (index == 1) {
         pipeiproup.value = true
+        mode.value = 'double_mode'
     }
+
 }
 
 //加密邀请码
@@ -149,7 +150,7 @@ const copy = () => {
         data: handleEncrypt(),
         success: function () {
             uni.showToast({
-                title: '复制成功',
+                title: t('common.copySuccess'),
                 icon: 'none'
             });
         }
@@ -170,7 +171,9 @@ const layout = () => {
 
 //进入答题
 const join = (type) => {
-    uni.redirectTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
+    uni.redirectTo({
+        url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
+    })
     ceshiproup.value = false
     pipeiproup.value = false
 }

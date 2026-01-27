@@ -73,6 +73,7 @@ export default {
     needAuth: 'Authorization required',
     saveSuccess: 'Save successful',
     saveFailed: 'Save failed',
+    copySuccess: 'Copy successful',
     uploadSuccess: 'Upload successful',
     uploadFailed: 'Upload failed',
     downloadFailed: 'Download failed',

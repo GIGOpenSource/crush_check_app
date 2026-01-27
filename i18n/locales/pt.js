@@ -72,6 +72,7 @@ export default {
     needAuth: 'Autorização necessária',
     saveSuccess: 'Salvo com sucesso',
     saveFailed: 'Falha ao salvar',
+    copySuccess: 'Copiado com sucesso',
     uploadSuccess: 'Upload bem-sucedido',
     uploadFailed: 'Falha no upload',
     downloadFailed: 'Falha no download',
