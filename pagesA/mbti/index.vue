@@ -10,8 +10,8 @@
         </view>
         <view class="con">
             <view class="t2">{{ t('mbti.personalityDetail') }}</view>
-            <up-read-more showHeight="100" textIndent="0em" :toggle="true" color="#9A90FF" :closeText="t('mbti.viewAll')"
-                :shadowStyle="shadowStyle">
+            <up-read-more showHeight="100" textIndent="0em" :toggle="true" color="#9A90FF"
+                :closeText="t('mbti.viewAll')" :shadowStyle="shadowStyle">
                 <rich-text :nodes="content"></rich-text>
             </up-read-more>
             <view v-for="(item, index) in renge" :key="index" class="renge" :style="{ background: borderColor[index] }">
@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                    }}</view>
+                }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -45,8 +45,9 @@
                 <view class="titles">{{ t('mbti.inviteFriend') }}</view>
                 <!-- 操作 -->
                 <view class="opera">
-                    <view class="myma">M08N5</view>
-                    <view class="copy">{{ t('mbti.clickCopy') }}</view>
+                    <view class="myma"><input type="text" :placeholder="handleEncrypt()"
+                            placeholder-style="color:#9A90FF;" :disabled="true"></view>
+                    <view class="copy" @click="copy">{{ t('mbti.clickCopy') }}</view>
                     <view class="and">{{ t('mbti.or') }}</view>
                     <view class="shuru"><input type="text" v-model="inviewma" :placeholder="t('mbti.inputInviteCode')"
                             placeholder-style="color:#9A90FF;"></view>
@@ -64,6 +65,7 @@
 </template>
 
 <script setup>
+import { aesEncrypt } from '@/utils/crypto.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
@@ -134,6 +136,26 @@ const choosetype = (index) => {
     }
 }
 
+//加密邀请码
+const handleEncrypt = () => {
+    const encryptedData = uni.getStorageSync('openId')
+    const end = aesEncrypt(encryptedData)
+    return end
+}
+
+//复制邀请码
+const copy = () => {
+    uni.setClipboardData({
+        data: handleEncrypt(),
+        success: function () {
+            uni.showToast({
+                title: '复制成功',
+                icon: 'none'
+            });
+        }
+    });
+
+}
 //双人模式开始测试
 const start = () => {
     if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
@@ -143,11 +165,12 @@ const start = () => {
 const layout = () => {
     ceshiproup.value = false
     pipeiproup.value = false
+    inviewma.value = ''
 }
 
 //进入答题
 const join = (type) => {
-     uni.redirectTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
+    uni.redirectTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
     // uni.navigateTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
     ceshiproup.value = false
     pipeiproup.value = false
@@ -244,7 +267,8 @@ rich-text {
 
         .myma,
         .shuru {
-            width: 450rpx;
+            width: 410rpx;
+            padding: 0 20rpx;
             height: 90rpx;
             line-height: 90rpx;
             text-align: center;

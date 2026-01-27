@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import { aesEncrypt ,aesDecrypt} from '@/utils/crypto.js';
 import { useI18n } from 'vue-i18n';
 import {
 	onLoad
@@ -68,21 +67,8 @@ onLoad((e) => {
 			console.log(res, "share record");
 		});
 	}
-	handleEncrypt()
-	hanleaesDecrypt()
 })
-//加密
-const handleEncrypt =  () => {
-	const encryptedData = 'oP1xC128XILbCnU_hOhfV19Eyr4Q'
-	const end = aesEncrypt(encryptedData)
-    console.log(end,'加密')
-}
 
-const hanleaesDecrypt =  () => {
-	const encryptedData = 'J1IQkLVH9fsZgAMwyn+Mxg=='
-	const end = aesDecrypt(encryptedData)
-    console.log(end,'eeee333333')
-}
 </script>
 
 <style lang="scss" scoped>
