@@ -171,7 +171,6 @@ const layout = () => {
 //进入答题
 const join = (type) => {
     uni.redirectTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
-    // uni.navigateTo({ url: `/pagesA/mbti/dati?test_type=${type}` })
     ceshiproup.value = false
     pipeiproup.value = false
 }

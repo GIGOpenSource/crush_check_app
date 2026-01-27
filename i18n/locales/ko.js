@@ -459,7 +459,11 @@ export default {
     step4: '시스템이 성격 매칭 보고서를 생성합니다',
     startTest: '테스트 시작',
     pleaseInputInviteCode: '다른 사람의 초대 코드를 입력하세요',
-    viewAll: '전체 보기'
+    viewAll: '전체 보기',
+    posterTitle: 'MBTI 테스트 결과',
+    shareResult: '결과 공유',
+    backToHome: '홈으로 돌아가기',
+    exitConfirmTip: '종료하면 현재 기록이 저장되지 않으며 처음부터 다시 시작해야 합니다. 이 페이지를 종료하시겠습니까?'
   }
 }
 

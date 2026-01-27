@@ -450,6 +450,10 @@ export default {
     step4: 'El sistema genera tu informe de compatibilidad de personalidad',
     startTest: 'Comenzar Test',
     pleaseInputInviteCode: 'Por favor ingresa el código de invitación de otra persona',
-    viewAll: 'Ver todo'
+    viewAll: 'Ver todo',
+    posterTitle: 'Resultado del Test MBTI',
+    shareResult: 'Compartir Resultado',
+    backToHome: 'Volver al Inicio',
+    exitConfirmTip: 'El progreso actual no se guardará después de salir, y necesitarás comenzar de nuevo. ¿Estás seguro de que quieres salir de esta página?'
   }
 }

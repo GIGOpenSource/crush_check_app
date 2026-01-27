@@ -1,11 +1,11 @@
 <template>
     <view class="page">
         <view class="top">
-            <view class="title">MBTI测试结果</view>
-            <!-- <view class="userinfo1"><up-avatar :src="src" size="36"></up-avatar> <text>用户昵称</text></view> -->
+            <view class="title">{{ t('mbti.posterTitle') }}</view>
+            <!-- <view class="userinfo1"><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view> -->
             <view class="userinfo2">
-                <view><up-avatar :src="src" size="36"></up-avatar> <text>用户昵称</text></view>
-                <view> <text>用户昵称</text><up-avatar :src="src" size="36"></up-avatar></view>
+                <view><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view>
+                <view> <text>{{ t('my.userNickname') }}</text><up-avatar :src="src" size="36"></up-avatar></view>
             </view>
         </view>
         <view class="center">
@@ -14,8 +14,8 @@
         </view>
         <view class="bottom">
             <view class="btns">
-                <view class="share">分享结果</view>
-                <view @click="topath">返回首页</view>
+                <view class="share">{{ t('mbti.shareResult') }}</view>
+                <view @click="topath">{{ t('mbti.backToHome') }}</view>
             </view>
         </view>
     </view>
@@ -23,8 +23,10 @@
 
 <script setup>
 import { ref, onUnmounted, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
 import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
+const { t } = useI18n()
 const src = ref('')
 const posterKey = ref(Date.now()) 
 const oldTempFiles = ref([])

@@ -460,6 +460,10 @@ export default {
     step4: '系统生成你们的性格匹配度报告',
     startTest: '开始测试',
     pleaseInputInviteCode: '请输入他人邀请码',
-    viewAll: '查看全部'
+    viewAll: '查看全部',
+    posterTitle: 'MBTI测试结果',
+    shareResult: '分享结果',
+    backToHome: '返回首页',
+    exitConfirmTip: '退出后当前记录不会被保存，且需重新开始，确定退出当前页面吗？'
   }
 }

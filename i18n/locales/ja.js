@@ -458,7 +458,11 @@ export default {
     step4: 'システムがあなたの性格マッチングレポートを生成する',
     startTest: 'テストを開始',
     pleaseInputInviteCode: '他の人の招待コードを入力してください',
-    viewAll: 'すべて表示'
+    viewAll: 'すべて表示',
+    posterTitle: 'MBTIテスト結果',
+    shareResult: '結果を共有',
+    backToHome: 'ホームに戻る',
+    exitConfirmTip: '終了すると現在の記録は保存されず、最初からやり直す必要があります。このページを終了してもよろしいですか？'
   }
 }
 

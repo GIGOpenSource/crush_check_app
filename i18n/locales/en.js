@@ -459,6 +459,10 @@ export default {
     step4: 'The system generates your personality matching report',
     startTest: 'Start Test',
     pleaseInputInviteCode: 'Please enter other\'s invitation code',
-    viewAll: 'View All'
+    viewAll: 'View All',
+    posterTitle: 'MBTI Test Result',
+    shareResult: 'Share Result',
+    backToHome: 'Back to Home',
+    exitConfirmTip: 'Current progress will not be saved after exiting, and you will need to start over. Are you sure you want to exit this page?'
   }
 }

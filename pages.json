@@ -156,7 +156,8 @@
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
 						"enablePullDownRefresh": false,
-						"disableScroll": false
+						"disableScroll": false,
+						"navigationStyle": "custom"
 					}
 				},{
 					"path": "mbti/poster",
