@@ -76,18 +76,13 @@ const shadowStyle = reactive({
     }
 })
 const choose = ref([{
-    title: '',
-    text: ''
+    title: t('mbti.singleTest'),
+    text: t('mbti.singleTestDesc')
 }, {
-    title: '',
-    text: ''
+    title:  t('mbti.doubleTest'),
+    text: t('mbti.doubleTestDesc')
 }])
 const mode = ref('')
-// 初始化时设置翻译文本
-choose.value[0].title = t('mbti.singleTest')
-choose.value[0].text = t('mbti.singleTestDesc')
-choose.value[1].title = t('mbti.doubleTest')
-choose.value[1].text = t('mbti.doubleTestDesc')
 
 const renge = [{
     t1: 'ENTJ >',
