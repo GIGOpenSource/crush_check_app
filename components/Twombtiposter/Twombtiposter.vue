@@ -1,8 +1,8 @@
 <template>
     <view>
         <image :src="path" mode="widthFix" @load="success"></image>
-        <l-painter ref="painter" @success="path = $event" hidden path-type="url" width="750rpx" height="100%"
-            isCanvasToTempFilePath>
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="750rpx" height="100%"
+            :canvas-id="canvasId" isCanvasToTempFilePath>
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -129,6 +129,7 @@ export default {
         return {
             show: true,
             path: '',
+            canvasId: `mbti-poster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // 唯一的canvasId
             list: [{
                 t1: '爱情关系匹配',
                 t2: '恋爱伴侣关系匹配度分析'
@@ -146,7 +147,66 @@ export default {
     },
     mounted() {
     },
+    beforeDestroy() {
+        // 组件销毁前清理canvas资源
+        this.cleanupCanvas()
+    },
     methods: {
+        // 清理canvas资源
+        cleanupCanvas() {
+            try {
+                const painter = this.$refs.painter
+                if (painter) {
+                    // 清理canvas上下文
+                    if (painter.canvas) {
+                        try {
+                            const ctx = painter.canvas.getContext('2d')
+                            if (ctx) {
+                                ctx.clearRect(0, 0, painter.canvas.width || 0, painter.canvas.height || 0)
+                            }
+                        } catch (e) {
+                            console.log('清理canvas 2d上下文异常:', e)
+                        }
+                    }
+                    // 清理旧的canvas上下文（非2d）
+                    if (painter.ctx && painter.ctx.clearRect) {
+                        try {
+                            painter.ctx.clearRect(0, 0, painter.canvasWidth || 0, painter.canvasHeight || 0)
+                        } catch (e) {
+                            console.log('清理canvas上下文异常:', e)
+                        }
+                    }
+                    // 重置状态
+                    if (painter.done !== undefined) {
+                        painter.done = false
+                    }
+                    if (painter.inited !== undefined) {
+                        painter.inited = false
+                    }
+                    // 清理定时器
+                    if (painter.rendertimer) {
+                        clearTimeout(painter.rendertimer)
+                        painter.rendertimer = null
+                    }
+                }
+            } catch (e) {
+                console.log('清理canvas资源异常:', e)
+            }
+        },
+        // 处理生成成功
+        handleSuccess(filePath) {
+            this.path = filePath
+            this.$emit('success', filePath)
+            // 延迟清理，确保图片已加载和显示
+            setTimeout(() => {
+                this.cleanupCanvas()
+            }, 2000)
+        },
+        // 处理生成失败
+        handleFail(error) {
+            console.error('海报生成失败:', error)
+            this.cleanupCanvas()
+        },
         // 预览图片
         look() {
             uni.previewImage({
