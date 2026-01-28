@@ -131,7 +131,7 @@ export function base64ToPath(base64) {
 		const filePath = `${pre.getEnvInfoSync().common.USER_DATA_PATH}/${time}.${format}`
 		// #endif
 		// #ifndef MP-TOUTIAO
-		const filePath = `${pre.env.USER_DATA_PATH}/${time}.${format}`
+		// const filePath = `${pre.env.USER_DATA_PATH}/${time}.${format}`
 		// #endif
 		fs.writeFile({
 			filePath,
@@ -165,26 +165,282 @@ export function base64ToPath(base64) {
 		// #endif
 
 		// #ifdef APP-PLUS
-		const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-		bitmap.loadBase64Data(base64, () => {
-			if (!format) {
-				reject(new Error('ERROR_BASE64SRC_PARSE'))
-			}
-			const time = new Date().getTime();
-			const filePath = `_doc/uniapp_temp/${time}.${format}`
-			bitmap.save(filePath, {},
-				() => {
+		// 在保存前清理所有旧文件（APP环境更激进）
+		try {
+			const tempDirPath = '_doc/uniapp_temp'
+			plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+				if (dirEntry.isDirectory) {
+					const reader = dirEntry.createReader()
+					reader.readEntries((entries) => {
+						// 清理所有图片文件
+						const imageFiles = entries.filter(entry => {
+							const name = entry.name || ''
+							return /\.(jpg|jpeg|png|gif)$/i.test(name)
+						})
+						
+						let cleaned = 0
+						const totalFiles = imageFiles.length
+						
+						const cleanupAndSave = () => {
+							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+							bitmap.loadBase64Data(base64, () => {
+								if (!format) {
+									bitmap.clear()
+									reject(new Error('ERROR_BASE64SRC_PARSE'))
+									return
+								}
+								const time = new Date().getTime();
+								const filePath = `_doc/uniapp_temp/${time}.${format}`
+								bitmap.save(filePath, {},
+									() => {
+										bitmap.clear()
+										resolve(filePath)
+									},
+									(error) => {
+										bitmap.clear()
+										reject(error)
+									})
+							}, (error) => {
+								bitmap.clear()
+								reject(error)
+							})
+						}
+						
+						if (totalFiles === 0) {
+							cleanupAndSave()
+							return
+						}
+						
+						imageFiles.forEach(fileEntry => {
+							fileEntry.remove(() => {
+								cleaned++
+								if (cleaned === totalFiles) {
+									// 清理完成后保存
+									setTimeout(() => {
+										cleanupAndSave()
+									}, 50)
+								}
+							}, () => {
+								cleaned++
+								if (cleaned === totalFiles) {
+									setTimeout(() => {
+										cleanupAndSave()
+									}, 50)
+								}
+							})
+						})
+					}, (readErr) => {
+						// 读取失败，直接保存（目录可能不存在或为空）
+						const cleanupAndSave = () => {
+							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+							bitmap.loadBase64Data(base64, () => {
+								if (!format) {
+									bitmap.clear()
+									reject(new Error('ERROR_BASE64SRC_PARSE'))
+									return
+								}
+								const time = new Date().getTime();
+								const filePath = `_doc/uniapp_temp/${time}.${format}`
+								bitmap.save(filePath, {},
+									() => {
+										bitmap.clear()
+										resolve(filePath)
+									},
+									(error) => {
+										bitmap.clear()
+										reject(error)
+									})
+							}, (error) => {
+								bitmap.clear()
+								reject(error)
+							})
+						}
+						cleanupAndSave()
+					})
+				} else {
+					// 不是目录，直接保存
+					const cleanupAndSave = () => {
+						const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+						bitmap.loadBase64Data(base64, () => {
+							if (!format) {
+								bitmap.clear()
+								reject(new Error('ERROR_BASE64SRC_PARSE'))
+								return
+							}
+							const time = new Date().getTime();
+							const filePath = `_doc/uniapp_temp/${time}.${format}`
+							bitmap.save(filePath, {},
+								() => {
+									bitmap.clear()
+									resolve(filePath)
+								},
+								(error) => {
+									bitmap.clear()
+									reject(error)
+								})
+						}, (error) => {
+							bitmap.clear()
+							reject(error)
+						})
+					}
+					cleanupAndSave()
+				}
+			}, (resolveErr) => {
+				// 解析路径失败（目录不存在），尝试创建目录后保存
+				if (resolveErr && resolveErr.code === 1) {
+					// 目录不存在，尝试创建
+					try {
+						plus.io.resolveLocalFileSystemURL('_doc', (docEntry) => {
+							docEntry.getDirectory('uniapp_temp', { create: true, exclusive: false }, () => {
+								// 目录创建成功，直接保存
+								const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+								bitmap.loadBase64Data(base64, () => {
+									if (!format) {
+										bitmap.clear()
+										reject(new Error('ERROR_BASE64SRC_PARSE'))
+										return
+									}
+									const time = new Date().getTime();
+									const filePath = `_doc/uniapp_temp/${time}.${format}`
+									bitmap.save(filePath, {},
+										() => {
+											bitmap.clear()
+											resolve(filePath)
+										},
+										(error) => {
+											bitmap.clear()
+											reject(error)
+										})
+								}, (error) => {
+									bitmap.clear()
+									reject(error)
+								})
+							}, () => {
+								// 创建失败，直接保存（bitmap.save会自动创建目录）
+								const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+								bitmap.loadBase64Data(base64, () => {
+									if (!format) {
+										bitmap.clear()
+										reject(new Error('ERROR_BASE64SRC_PARSE'))
+										return
+									}
+									const time = new Date().getTime();
+									const filePath = `_doc/uniapp_temp/${time}.${format}`
+									bitmap.save(filePath, {},
+										() => {
+											bitmap.clear()
+											resolve(filePath)
+										},
+										(error) => {
+											bitmap.clear()
+											reject(error)
+										})
+								}, (error) => {
+									bitmap.clear()
+									reject(error)
+								})
+							})
+						}, () => {
+							// 解析_doc失败，直接保存（bitmap.save会自动创建目录）
+							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+							bitmap.loadBase64Data(base64, () => {
+								if (!format) {
+									bitmap.clear()
+									reject(new Error('ERROR_BASE64SRC_PARSE'))
+									return
+								}
+								const time = new Date().getTime();
+								const filePath = `_doc/uniapp_temp/${time}.${format}`
+								bitmap.save(filePath, {},
+									() => {
+										bitmap.clear()
+										resolve(filePath)
+									},
+									(error) => {
+										bitmap.clear()
+										reject(error)
+									})
+							}, (error) => {
+								bitmap.clear()
+								reject(error)
+							})
+						})
+					} catch (e) {
+						// 创建目录失败，直接保存（bitmap.save会自动创建目录）
+						const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+						bitmap.loadBase64Data(base64, () => {
+							if (!format) {
+								bitmap.clear()
+								reject(new Error('ERROR_BASE64SRC_PARSE'))
+								return
+							}
+							const time = new Date().getTime();
+							const filePath = `_doc/uniapp_temp/${time}.${format}`
+							bitmap.save(filePath, {},
+								() => {
+									bitmap.clear()
+									resolve(filePath)
+								},
+								(error) => {
+									bitmap.clear()
+									reject(error)
+								})
+						}, (error) => {
+							bitmap.clear()
+							reject(error)
+						})
+					}
+				} else {
+					// 其他错误，直接保存
+					const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+					bitmap.loadBase64Data(base64, () => {
+						if (!format) {
+							bitmap.clear()
+							reject(new Error('ERROR_BASE64SRC_PARSE'))
+							return
+						}
+						const time = new Date().getTime();
+						const filePath = `_doc/uniapp_temp/${time}.${format}`
+						bitmap.save(filePath, {},
+							() => {
+								bitmap.clear()
+								resolve(filePath)
+							},
+							(error) => {
+								bitmap.clear()
+								reject(error)
+							})
+					}, (error) => {
+						bitmap.clear()
+						reject(error)
+					})
+				}
+			})
+		} catch (e) {
+			// 异常情况，直接保存
+			const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+			bitmap.loadBase64Data(base64, () => {
+				if (!format) {
 					bitmap.clear()
-					resolve(filePath)
-				},
-				(error) => {
-					bitmap.clear()
-					reject(error)
-				})
-		}, (error) => {
-			bitmap.clear()
-			reject(error)
-		})
+					reject(new Error('ERROR_BASE64SRC_PARSE'))
+					return
+				}
+				const time = new Date().getTime();
+				const filePath = `_doc/uniapp_temp/${time}.${format}`
+				bitmap.save(filePath, {},
+					() => {
+						bitmap.clear()
+						resolve(filePath)
+					},
+					(error) => {
+						bitmap.clear()
+						reject(error)
+					})
+			}, (error) => {
+				bitmap.clear()
+				reject(error)
+			})
+		}
 		// #endif
 	})
 }
