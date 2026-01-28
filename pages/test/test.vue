@@ -99,18 +99,18 @@
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
                                 <text v-if="isType" class="look"
-                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看答案
+                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewAnswer') }}
                                     {{
                                         '>>' }}</text>
                             </view>
                         </template>
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.test_type == 'simple'">
-                                <view class="num" style="margin-left:-10rpx">你的人格是：{{ item.mbti_list[0]?.mbti_type ||
+                                <view class="num" style="margin-left:-10rpx">{{ $t('poster.personalityIs') }}{{ item.mbti_list[0]?.mbti_type ||
                                     '--' }}</view>
                                 <view class="details" style="margin-top: 20rpx;">
                                     <text v-if="isType" class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看详情
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewDetails') }}
                                         {{
                                             '>>' }}</text>
                                 </view>
@@ -227,7 +227,7 @@ import { getPosterList, deletePosters, reGeneratePoster, getUserInfo } from "@/a
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
-import { aesEncrypt } from '@/utils/crypto.js';
+import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
 
 export default {
     components: {
@@ -316,6 +316,7 @@ export default {
         this.loadMore();
     },
     onShow() {
+        this.generateTimestampMD5()
         this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')]
         this.categoryList = [
             {
@@ -362,13 +363,13 @@ export default {
                 type: "answer",
             },
             {
-                label: '塔罗牌',
+                label: t('poster.tarotCard'),
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "tarot_card",
             },
             {
-                label: 'MBTI',
+                label: t('poster.mbti'),
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "mbti",
@@ -391,7 +392,7 @@ export default {
 
         },
         handleEncrypt() {
-            const encryptedData = uni.getStorageSync('openId')
+            const encryptedData = uni.getStorageSync('openId') + '@' +this.generateTimestampMD5()
             const end = aesEncrypt(encryptedData)
             return end
         },
@@ -628,6 +629,13 @@ export default {
             return `${this.$t('poster.yearsAgo')}${years}${this.$t('poster.yearsAgoUnit')}`;
         },
 
+        // 生成时间戳并进行MD5加密
+        generateTimestampMD5() {
+            const timestamp = Date.now();
+            const md5Hash = md5Encrypt(String(timestamp));
+            return md5Hash
+        },
+
         // 获取状态文本
         getStatusText(status) {
             const statusMap = {
@@ -785,7 +793,7 @@ export default {
                 fail: (err) => {
                     console.error("登录失败:", err);
                     uni.showToast({
-                        title: "登录失败: " + (err.errMsg || "未知错误"),
+                        title: this.$t('common.loginFailed') + (err.errMsg ? ': ' + err.errMsg : ''),
                         icon: "none",
                     });
                 },

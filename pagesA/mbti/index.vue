@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                }}</view>
+                    }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -53,7 +53,7 @@
                             placeholder-style="color:#9A90FF;"></view>
                 </view>
                 <view class="titlescon">
-                    <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index + 1}}.{{ item }}
+                    <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index + 1 }}.{{ item }}
                     </view>
                 </view>
                 <view class="btn" @click="start">{{ t('mbti.startTest') }}</view>
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { aesEncrypt } from '@/utils/crypto.js';
+import { aesEncrypt, md5Encrypt } from '@/utils/crypto.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
@@ -137,11 +137,17 @@ const choosetype = (index) => {
 
 //加密邀请码
 const handleEncrypt = () => {
-    const encryptedData = uni.getStorageSync('openId')
+    const encryptedData = uni.getStorageSync('openId') + '@' + generateTimestampMD5()
     const end = aesEncrypt(encryptedData)
     return end
 }
 
+// 生成时间戳并进行MD5加密
+const generateTimestampMD5 = () => {
+    const timestamp = Date.now();
+    const md5Hash = md5Encrypt(String(timestamp));
+    return md5Hash
+}
 //复制邀请码
 const copy = () => {
     uni.setClipboardData({
@@ -158,12 +164,12 @@ const copy = () => {
 //双人模式开始测试
 const start = () => {
     if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
-    getList(1,4,test_type.value,mode.value,null,inviewma.value).then(res => {
-         uni.redirectTo({
+    getList(1, 4, test_type.value, mode.value, null, inviewma.value).then(res => {
+        uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
     }).catch(err => {
-        console.log(err,'eee')
+        console.log(err, 'eee')
     })
 }
 
@@ -181,7 +187,7 @@ const join = (type) => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })
-    }else {
+    } else {
         pipeiproup.value = true
     }
 }

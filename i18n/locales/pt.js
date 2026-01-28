@@ -282,12 +282,16 @@ export default {
     cheatScore: 'Pontuação de Traidor:',
     viewPoster: 'Ver Pôster',
     viewAnswer: 'Ver Resposta',
+    viewDetails: 'Ver Detalhes',
+    personalityIs: 'Sua personalidade é:',
     answerLabel: 'Resposta:',
     defaultAnswer: 'A oportunidade está bem na sua frente',
     emptyMessage: 'Nada aqui ainda, vá testar agora',
     goToTest: 'Ir Testar',
     answerBook: 'Livro de Respostas',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Cartas de Tarô',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: 'CrushCheck',

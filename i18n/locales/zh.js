@@ -284,12 +284,16 @@ export default {
     cheatScore: '含渣量：',
     viewPoster: '查看海报',
     viewAnswer: '查看答案',
+    viewDetails: '查看详情',
+    personalityIs: '你的人格是：',
     answerLabel: '回答：',
     defaultAnswer: '机会就在眼前',
     emptyMessage: '目前什么都没有，快去测试吧',
     goToTest: '去测试',
     answerBook: '答案之书',
-    crushCheck: '鉴渣'
+    crushCheck: '鉴渣',
+    tarotCard: '塔罗牌',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: '鉴渣',

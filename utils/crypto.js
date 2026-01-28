@@ -33,28 +33,51 @@ export function aesEncrypt(data) {
 
 //解密
 export function aesDecrypt(encryptedStr) {
-  if (!encryptedStr || typeof encryptedStr !== 'string') {
-    throw new Error('解密数据必须是非空字符串');
-  }
-  try {
-    const decrypted = CryptoJS.AES.decrypt(
-      encryptedStr,
-      AES_CONFIG.key,
-      {
-        iv: AES_CONFIG.iv,
-        mode: AES_CONFIG.mode,
-        padding: AES_CONFIG.padding
-      }
-    );
-    const result = decrypted.toString(CryptoJS.enc.Utf8);
-
-    if (!result) {
-      console.warn('解密结果为空，请检查key和iv是否与后端一致');
+    if (!encryptedStr || typeof encryptedStr !== 'string') {
+        throw new Error('解密数据必须是非空字符串');
     }
-    
-    return result;
-  } catch (error) {
-    console.error('AES 解密失败：', error);
-    throw error;
-  }
+    try {
+        const decrypted = CryptoJS.AES.decrypt(
+            encryptedStr,
+            AES_CONFIG.key,
+            {
+                iv: AES_CONFIG.iv,
+                mode: AES_CONFIG.mode,
+                padding: AES_CONFIG.padding
+            }
+        );
+        const result = decrypted.toString(CryptoJS.enc.Utf8);
+
+        if (!result) {
+            console.warn('解密结果为空，请检查key和iv是否与后端一致');
+        }
+        
+        return result;
+    } catch (error) {
+        console.error('AES 解密失败：', error);
+        throw error;
+    }
+}
+
+// MD5加密
+export function md5Encrypt(data) {
+    if (data === null || data === undefined) {
+        throw new Error('MD5加密数据不能为空');
+    }
+    try {
+        const dataStr = typeof data === 'string' ? data : String(data);
+        return CryptoJS.MD5(dataStr).toString();
+    } catch (error) {
+        console.error('MD5 加密失败：', error);
+        throw error;
+    }
+}
+
+// 生成时间戳并MD5加密
+export function generateTimestampMD5() {
+    const timestamp = Date.now();
+    return {
+        timestamp,
+        md5: md5Encrypt(String(timestamp))
+    };
 }

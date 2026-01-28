@@ -274,12 +274,16 @@ export default {
     cheatScore: 'Puntuación de Tramposo:',
     viewPoster: 'Ver Póster',
     viewAnswer: 'Ver Respuesta',
+    viewDetails: 'Ver Detalles',
+    personalityIs: 'Tu personalidad es:',
     answerLabel: 'Respuesta:',
     defaultAnswer: 'La oportunidad está justo frente a ti',
     emptyMessage: 'Nada aquí todavía, ve a probar ahora',
     goToTest: 'Ir a Probar',
     answerBook: 'Libro de Respuestas',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Cartas del Tarot',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: 'CrushCheck',

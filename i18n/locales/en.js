@@ -283,12 +283,16 @@ export default {
     cheatScore: 'Cheat Score:',
     viewPoster: 'View Poster',
     viewAnswer: 'View Answer',
+    viewDetails: 'View Details',
+    personalityIs: 'Your personality is:',
     answerLabel: 'Answer:',
     defaultAnswer: 'Opportunity is right in front of you',
     emptyMessage: 'Nothing here yet, go test now',
     goToTest: 'Go Test',
     answerBook: 'Book of Answers',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Tarot Cards',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: 'CrushCheck',

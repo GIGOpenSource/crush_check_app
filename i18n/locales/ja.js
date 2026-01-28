@@ -282,12 +282,16 @@ export default {
     cheatScore: '浮気スコア：',
     viewPoster: 'ポスターを見る',
     viewAnswer: '答えを見る',
+    viewDetails: '詳細を見る',
+    personalityIs: 'あなたの性格は：',
     answerLabel: '答え：',
     defaultAnswer: '機会は目の前にあります',
     emptyMessage: 'まだ何もありません。今すぐテストに行きましょう',
     goToTest: 'テストに行く',
     answerBook: '答えの本',
-    crushCheck: 'クラッシュチェック'
+    crushCheck: 'クラッシュチェック',
+    tarotCard: 'タロットカード',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: 'クラッシュチェック',

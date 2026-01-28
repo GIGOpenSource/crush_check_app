@@ -283,12 +283,16 @@ export default {
     cheatScore: '바람둥이 점수：',
     viewPoster: '포스터 보기',
     viewAnswer: '답변 보기',
+    viewDetails: '상세 보기',
+    personalityIs: '당신의 성격은：',
     answerLabel: '답변：',
     defaultAnswer: '기회가 바로 눈앞에 있습니다',
     emptyMessage: '아직 아무것도 없습니다. 지금 테스트하러 가세요',
     goToTest: '테스트하러 가기',
     answerBook: '답변의 책',
-    crushCheck: '크러시 체크'
+    crushCheck: '크러시 체크',
+    tarotCard: '타로 카드',
+    mbti: 'MBTI'
   },
   index: {
     crushCheck: '크러시 체크',
