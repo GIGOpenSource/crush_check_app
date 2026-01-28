@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                    }}</view>
+                }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -69,6 +69,7 @@ import { aesEncrypt } from '@/utils/crypto.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
+import { getList } from '@/api/mbti.js'
 const { t } = useI18n()
 const shadowStyle = reactive({
     shadowStyle: {
@@ -79,7 +80,7 @@ const choose = ref([{
     title: t('mbti.singleTest'),
     text: t('mbti.singleTestDesc')
 }, {
-    title:  t('mbti.doubleTest'),
+    title: t('mbti.doubleTest'),
     text: t('mbti.doubleTestDesc')
 }])
 const mode = ref('')
@@ -115,10 +116,12 @@ const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: 
 
 //匹配
 const pipeiproup = ref(false)
-const pipeicontent = ref([t('mbti.step1'),  t('mbti.step2'), t('mbti.step3'), t('mbti.step4')])
+const pipeicontent = ref([t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')])
 
 //邀请码
 const inviewma = ref('')
+
+const test_type = ref('')
 
 //选择模式
 const choosetype = (index) => {
@@ -126,7 +129,7 @@ const choosetype = (index) => {
         ceshiproup.value = true
         mode.value = 'single_mode'
     } else if (index == 1) {
-        pipeiproup.value = true
+        ceshiproup.value = true
         mode.value = 'double_mode'
     }
 
@@ -155,6 +158,13 @@ const copy = () => {
 //双人模式开始测试
 const start = () => {
     if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
+    getList(1,4,test_type.value,mode.value,null,inviewma.value).then(res => {
+         uni.redirectTo({
+            url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
+        })
+    }).catch(err => {
+        console.log(err,'eee')
+    })
 }
 
 //退出测试
@@ -166,11 +176,14 @@ const layout = () => {
 
 //进入答题
 const join = (type) => {
-    uni.redirectTo({
-        url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
-    })
-    ceshiproup.value = false
-    pipeiproup.value = false
+    test_type.value = type
+    if (mode.value == 'single_mode') {
+        uni.redirectTo({
+            url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
+        })
+    }else {
+        pipeiproup.value = true
+    }
 }
 </script>
 

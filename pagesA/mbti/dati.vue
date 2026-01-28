@@ -61,8 +61,8 @@ import { useI18n } from 'vue-i18n'
 import { getList, createPoster } from '@/api/mbti.js'
 import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
-const test_type = ref('simple')
-const question_mode = ref('single_mode')
+const test_type = ref('')
+const question_mode = ref('')
 const list = ref([])
 const page = ref(1)
 const fen = [1,2,3,4,5]
@@ -73,8 +73,9 @@ const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
 const poster_id = ref(null)
 onLoad((e) => {
-    // test_type.value = e.test_type
-    // question_mode.value = e.question_mode
+    test_type.value = e.test_type
+    question_mode.value = e.question_mode
+    poster_id.value = e.poster_id || null
 })
 
 onMounted(() => {
@@ -250,7 +251,7 @@ const submit = () => {
         text {
             position: absolute;
             right: 50rpx;
-            top: 85rpx;
+            top: 250rpx;
             font-size: 24rpx;
         }
     }

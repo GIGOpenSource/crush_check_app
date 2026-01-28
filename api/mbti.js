@@ -1,11 +1,12 @@
 import { postRequest, getRequest } from "@/utils/http.js";
 
 //获取题库
-export const getList = (currentPage,pageSize,test_type,question_mode,poster_id) => {
+export const getList = (currentPage,pageSize,test_type,question_mode,poster_id,inviter) => {
 	let params = {
-      currentPage,pageSize,test_type,question_mode,poster_id
+      currentPage,pageSize,test_type,question_mode,poster_id,inviter
 	}
 	if(!poster_id) delete params.poster_id
+	if(!inviter) delete params.inviter //邀请码
 	return getRequest(`/mbtiquestion/get_questions/`,params)
 }
 
