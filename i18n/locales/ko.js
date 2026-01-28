@@ -292,7 +292,9 @@ export default {
     answerBook: '답변의 책',
     crushCheck: '크러시 체크',
     tarotCard: '타로 카드',
-    mbti: 'MBTI'
+    mbti: 'MBTI',
+    storageLimitExceeded: '저장 공간이 부족합니다. 캐시를 지운 후 다시 시도하세요',
+    generateFailed: '포스터 생성에 실패했습니다. 다시 시도해주세요'
   },
   index: {
     crushCheck: '크러시 체크',

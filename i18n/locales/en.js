@@ -292,7 +292,9 @@ export default {
     answerBook: 'Book of Answers',
     crushCheck: 'CrushCheck',
     tarotCard: 'Tarot Cards',
-    mbti: 'MBTI'
+    mbti: 'MBTI',
+    storageLimitExceeded: 'Storage limit exceeded, please clear cache and try again',
+    generateFailed: 'Poster generation failed, please try again'
   },
   index: {
     crushCheck: 'CrushCheck',

@@ -291,7 +291,9 @@ export default {
     answerBook: 'Livro de Respostas',
     crushCheck: 'CrushCheck',
     tarotCard: 'Cartas de Tarô',
-    mbti: 'MBTI'
+    mbti: 'MBTI',
+    storageLimitExceeded: 'Limite de armazenamento excedido, por favor limpe o cache e tente novamente',
+    generateFailed: 'Falha ao gerar o pôster, por favor tente novamente'
   },
   index: {
     crushCheck: 'CrushCheck',

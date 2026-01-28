@@ -293,7 +293,9 @@ export default {
     answerBook: '答案之书',
     crushCheck: '鉴渣',
     tarotCard: '塔罗牌',
-    mbti: 'MBTI'
+    mbti: 'MBTI',
+    storageLimitExceeded: '存储空间不足，请清理缓存后重试',
+    generateFailed: '海报生成失败，请重试'
   },
   index: {
     crushCheck: '鉴渣',

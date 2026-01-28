@@ -105,7 +105,7 @@
                             </view>
                         </template>
                         <template v-if="item.prompt_template.template_type == 'mbti'">
-                            <block v-if="item.mbti_list[0]?.test_type == 'simple'">
+                            <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left:-10rpx">{{ $t('poster.personalityIs') }}{{ item.mbti_list[0]?.mbti_type ||
                                     '--' }}</view>
                                 <view class="details" style="margin-top: 20rpx;">
@@ -705,7 +705,7 @@ export default {
                                 });
                             },
                         });
-                    } else {
+                    } else if(type == 'tarot_card'){
                         uni.navigateTo({
                             url: '/pagesA/tarotcards/result?id=' + item.id,
                             fail: (err) => {
@@ -716,6 +716,18 @@ export default {
                                 });
                             },
                         });
+                    }else{
+                          uni.navigateTo({
+                            url: '/pagesA/mbti/poster?id=' + item.id,
+                            fail: (err) => {
+                                console.error("跳转失败:", err);
+                                uni.showToast({
+                                    title: this.$t('poster.jumpFailed'),
+                                    icon: "none",
+                                });
+                            },
+                        });
+                        
                     }
 
                 } else {

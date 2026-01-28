@@ -291,7 +291,9 @@ export default {
     answerBook: '答えの本',
     crushCheck: 'クラッシュチェック',
     tarotCard: 'タロットカード',
-    mbti: 'MBTI'
+    mbti: 'MBTI',
+    storageLimitExceeded: 'ストレージ容量が不足しています。キャッシュをクリアしてから再試行してください',
+    generateFailed: 'ポスターの生成に失敗しました。もう一度お試しください'
   },
   index: {
     crushCheck: 'クラッシュチェック',

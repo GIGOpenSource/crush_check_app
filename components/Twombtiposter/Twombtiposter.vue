@@ -1,8 +1,8 @@
 <template>
     <view>
         <image :src="path" mode="widthFix" @load="success"></image>
-        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="750rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath>
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="600rpx" height="100%"
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.5" :pixel-ratio="1">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -146,12 +146,149 @@ export default {
 
     },
     mounted() {
+        // 在生成海报前清理小程序缓存
+        this.clearTempFiles()
     },
     beforeDestroy() {
         // 组件销毁前清理canvas资源
         this.cleanupCanvas()
     },
     methods: {
+        // 清理临时文件（支持小程序和APP）
+        clearTempFiles() {
+            try {
+                // #ifdef MP-WEIXIN
+                // 清理小程序文件系统中的临时文件
+                const fs = uni.getFileSystemManager()
+                if (fs) {
+                    try {
+                        // 获取用户数据路径（使用新的 API）
+                        let userDataPath = ''
+                        if (wx && wx.getWindowInfo) {
+                            userDataPath = wx.getWindowInfo().pixelRatio ? wx.env.USER_DATA_PATH : ''
+                        }
+                        if (!userDataPath && wx && wx.env) {
+                            userDataPath = wx.env.USER_DATA_PATH
+                        }
+                        if (!userDataPath) {
+                            // 降级方案
+                            const systemInfo = uni.getSystemInfoSync()
+                            userDataPath = systemInfo.USER_DATA_PATH || ''
+                        }
+                        
+                        if (userDataPath) {
+                            // 尝试读取目录并清理旧文件
+                            fs.readdir({
+                                dirPath: userDataPath,
+                                success: (res) => {
+                                    // 清理所有图片文件（jpg, png等），最多清理10个
+                                    const imageExts = ['.jpg', '.jpeg', '.png', '.gif']
+                                    const imageFiles = res.files
+                                        .filter(file => {
+                                            const ext = file.substring(file.lastIndexOf('.'))
+                                            return imageExts.includes(ext.toLowerCase())
+                                        })
+                                        .sort()
+                                        .slice(0, 10) // 最多清理10个旧文件
+                                    
+                                    imageFiles.forEach(file => {
+                                        fs.unlink({
+                                            filePath: `${userDataPath}/${file}`,
+                                            success: () => {
+                                                console.log('已清理临时文件:', file)
+                                            },
+                                            fail: () => {
+                                                // 忽略删除失败
+                                            }
+                                        })
+                                    })
+                                },
+                                fail: () => {
+                                    // 目录不存在或无法读取，忽略
+                                }
+                            })
+                        }
+                    } catch (e) {
+                        console.log('清理临时文件异常:', e)
+                    }
+                }
+                // #endif
+                
+                // #ifdef APP-PLUS
+                // 清理APP临时文件目录
+                try {
+                    const tempDirPath = '_doc/uniapp_temp'
+                    // 使用 plus.io 读取目录
+                    plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+                        // 检查是否是目录
+                        if (dirEntry.isDirectory) {
+                            const reader = dirEntry.createReader()
+                            reader.readEntries((entries) => {
+                                // 过滤图片文件并按时间排序
+                                const imageFiles = entries
+                                    .filter(entry => {
+                                        const name = entry.name || ''
+                                        return /\.(jpg|jpeg|png|gif)$/i.test(name)
+                                    })
+                                    .sort((a, b) => {
+                                        // 按修改时间排序，旧的在前
+                                        const aTime = a.lastModifiedDate || 0
+                                        const bTime = b.lastModifiedDate || 0
+                                        return aTime - bTime
+                                    })
+                                    .slice(0, 10) // 最多清理10个旧文件
+                                
+                                imageFiles.forEach(fileEntry => {
+                                    fileEntry.remove(() => {
+                                        console.log('已清理APP临时文件:', fileEntry.name)
+                                    }, (err) => {
+                                        // 忽略删除失败
+                                        console.log('删除文件失败:', err)
+                                    })
+                                })
+                            }, (err) => {
+                                // 读取目录失败，忽略
+                                console.log('读取目录失败:', err)
+                            })
+                        }
+                    }, (err) => {
+                        // 解析路径失败，尝试使用文件系统管理器
+                        try {
+                            const fs = uni.getFileSystemManager()
+                            if (fs) {
+                                fs.readdir({
+                                    dirPath: tempDirPath,
+                                    success: (res) => {
+                                        const imageFiles = res.files
+                                            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+                                            .sort()
+                                            .slice(0, 10)
+                                        
+                                        imageFiles.forEach(file => {
+                                            fs.unlink({
+                                                filePath: `${tempDirPath}/${file}`,
+                                                success: () => {
+                                                    console.log('已清理APP临时文件:', file)
+                                                },
+                                                fail: () => {}
+                                            })
+                                        })
+                                    },
+                                    fail: () => {}
+                                })
+                            }
+                        } catch (e) {
+                            console.log('清理APP临时文件异常:', e)
+                        }
+                    })
+                } catch (e) {
+                    console.log('清理APP临时文件失败:', e)
+                }
+                // #endif
+            } catch (e) {
+                console.log('清理临时文件失败:', e)
+            }
+        },
         // 清理canvas资源
         cleanupCanvas() {
             try {
@@ -206,6 +343,37 @@ export default {
         handleFail(error) {
             console.error('海报生成失败:', error)
             this.cleanupCanvas()
+            
+            // 检查是否是存储空间不足的错误
+            let errorMsg = ''
+            if (error && error.errMsg) {
+                if (error.errMsg.includes('maximum size') || error.errMsg.includes('storage limit')) {
+                    errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                } else {
+                    errorMsg = error.errMsg
+                }
+            } else if (typeof error === 'string') {
+                try {
+                    const errorObj = JSON.parse(error)
+                    if (errorObj.errMsg && (errorObj.errMsg.includes('maximum size') || errorObj.errMsg.includes('storage limit'))) {
+                        errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                    } else {
+                        errorMsg = errorObj.errMsg || error
+                    }
+                } catch (e) {
+                    errorMsg = error
+                }
+            } else {
+                errorMsg = t('poster.generateFailed') || '海报生成失败，请重试'
+            }
+            
+            uni.showToast({
+                title: errorMsg,
+                icon: 'none',
+                duration: 3000
+            })
+            
+            this.$emit('fail', error)
         },
         // 预览图片
         look() {

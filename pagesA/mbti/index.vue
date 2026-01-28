@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                    }}</view>
+                }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -164,7 +164,8 @@ const copy = () => {
 //双人模式开始测试
 const start = () => {
     if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
-    getList(1, 4, test_type.value, mode.value, null, inviewma.value).then(res => {
+    if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
+     getList(1, 4, test_type.value, mode.value, null, inviewma.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
@@ -184,6 +185,7 @@ const layout = () => {
 const join = (type) => {
     test_type.value = type
     if (mode.value == 'single_mode') {
+        if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })

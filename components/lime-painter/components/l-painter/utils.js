@@ -133,6 +133,67 @@ export function base64ToPath(base64) {
 		// #ifndef MP-TOUTIAO
 		const filePath = `${pre.env.USER_DATA_PATH}/${time}.${format}`
 		// #endif
+		
+		// 在写入前尝试清理一些旧文件（最多清理5个）
+		// #ifdef MP-WEIXIN
+		try {
+			const userDataPath = pre.env.USER_DATA_PATH
+			fs.readdir({
+				dirPath: userDataPath,
+				success: (res) => {
+					// 只清理图片文件，按时间排序，清理最旧的
+					const imageFiles = res.files
+						.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+						.sort()
+						.slice(0, 5) // 最多清理5个旧文件
+					
+					imageFiles.forEach(file => {
+						fs.unlink({
+							filePath: `${userDataPath}/${file}`,
+							success: () => {},
+							fail: () => {}
+						})
+					})
+				},
+				fail: () => {}
+			})
+		} catch (e) {
+			// 清理失败不影响主流程
+		}
+		// #endif
+		
+		// #ifdef APP-PLUS
+		// 清理APP临时文件目录中的旧文件
+		try {
+			const tempDirPath = '_doc/uniapp_temp'
+			plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+				// 检查是否是目录
+				if (dirEntry.isDirectory) {
+					const reader = dirEntry.createReader()
+					reader.readEntries((entries) => {
+						const imageFiles = entries
+							.filter(entry => {
+								const name = entry.name || ''
+								return /\.(jpg|jpeg|png|gif)$/i.test(name)
+							})
+							.sort((a, b) => {
+								const aTime = a.lastModifiedDate || 0
+								const bTime = b.lastModifiedDate || 0
+								return aTime - bTime
+							})
+							.slice(0, 5) // 最多清理5个旧文件
+						
+						imageFiles.forEach(fileEntry => {
+							fileEntry.remove(() => {}, () => {})
+						})
+					}, () => {})
+				}
+			}, () => {})
+		} catch (e) {
+			// 清理失败不影响主流程
+		}
+		// #endif
+		
 		fs.writeFile({
 			filePath,
 			data: base64.split(',')[1],
@@ -142,7 +203,138 @@ export function base64ToPath(base64) {
 			},
 			fail(err) {
 				console.error(err)
-				reject(err)
+				// 如果是存储空间不足的错误，尝试清理后重试一次
+				if (err.errMsg && (err.errMsg.includes('maximum size') || err.errMsg.includes('storage limit'))) {
+					// #ifdef MP-WEIXIN
+					try {
+						const userDataPath = pre.env.USER_DATA_PATH
+						fs.readdir({
+							dirPath: userDataPath,
+							success: (res) => {
+								// 清理更多文件（10个）
+								const imageFiles = res.files
+									.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+									.sort()
+									.slice(0, 10)
+								
+								let cleaned = 0
+								imageFiles.forEach(file => {
+									fs.unlink({
+										filePath: `${userDataPath}/${file}`,
+										success: () => {
+											cleaned++
+											// 清理完成后重试写入
+											if (cleaned === imageFiles.length) {
+												fs.writeFile({
+													filePath,
+													data: base64.split(',')[1],
+													encoding: 'base64',
+													success() {
+														resolve(filePath)
+													},
+													fail(err) {
+														reject(err)
+													}
+												})
+											}
+										},
+										fail: () => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												reject(err)
+											}
+										}
+									})
+								})
+							},
+							fail: () => {
+								reject(err)
+							}
+						})
+					} catch (e) {
+						reject(err)
+					}
+					// #endif
+					// #ifdef APP-PLUS
+					try {
+						const tempDirPath = '_doc/uniapp_temp'
+						plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+							// 检查是否是目录
+							if (dirEntry.isDirectory) {
+								const reader = dirEntry.createReader()
+								reader.readEntries((entries) => {
+									const imageFiles = entries
+										.filter(entry => {
+											const name = entry.name || ''
+											return /\.(jpg|jpeg|png|gif)$/i.test(name)
+										})
+										.sort((a, b) => {
+											const aTime = a.lastModifiedDate || 0
+											const bTime = b.lastModifiedDate || 0
+											return aTime - bTime
+										})
+										.slice(0, 10)
+									
+									let cleaned = 0
+									if (imageFiles.length === 0) {
+										reject(err)
+										return
+									}
+									
+									imageFiles.forEach(fileEntry => {
+										fileEntry.remove(() => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												// 清理完成后重试保存
+												const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+												bitmap.loadBase64Data(base64, () => {
+													if (!format) {
+														bitmap.clear()
+														reject(new Error('ERROR_BASE64SRC_PARSE'))
+														return
+													}
+													const time = new Date().getTime();
+													const retryFilePath = `_doc/uniapp_temp/${time}.${format}`
+													bitmap.save(retryFilePath, {},
+														() => {
+															bitmap.clear()
+															resolve(retryFilePath)
+														},
+														(error) => {
+															bitmap.clear()
+															reject(error)
+														})
+												}, (error) => {
+													bitmap.clear()
+													reject(error)
+												})
+											}
+										}, () => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												reject(err)
+											}
+										})
+									})
+								}, () => {
+									reject(err)
+								})
+							} else {
+								reject(err)
+							}
+						}, () => {
+							reject(err)
+						})
+					} catch (e) {
+						reject(err)
+					}
+					// #endif
+					// #ifndef MP-WEIXIN || APP-PLUS
+					reject(err)
+					// #endif
+				} else {
+					reject(err)
+				}
 			}
 		})
 		// #endif

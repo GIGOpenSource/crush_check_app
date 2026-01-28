@@ -39,7 +39,7 @@
       <view class="content" v-if="current == 0">
          <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
             <view class="left">
-               <view class="num">{{ '0' + (index + 1) }}</view>
+               <view class="num" style="color:#fff">{{ '0' + (index + 1) }}</view>
                <image :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
                <view class="right">
                   <view class="t2">{{ item.name }} <text
@@ -546,7 +546,9 @@ const submit = () => {
       }
 
       .num {
-         font-weight: bold;
+         // font-weight: bold;
+         font-weight: 300 !important;
+         font-size: 28rpx;
       }
 
       .right {
