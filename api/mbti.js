@@ -14,3 +14,9 @@ export const getList = (currentPage,pageSize,test_type,question_mode,poster_id,i
 export const createPoster = (currentPage,pageSize,poster_id,answers,timestamp) => {
 	return postRequest('/mbtiquestion/record_question/',{currentPage,pageSize,poster_id,answers,timestamp})
 }
+
+//答题完毕
+export const finsh = (poster_id) => {
+	return getRequest(`/mbtiquestion/generate_report/`,{poster_id})
+}
+

@@ -32,7 +32,7 @@
             </scroll-view>
             <view class="btns">
                 <view class="btn1" v-if="page == 1" @click="down">{{ t('mbti.nextPage') }}</view>
-                <view class="btn1" v-else-if="page == total" @click="look">{{ t('mbti.viewResult') }}</view>
+                <view class="btn1" v-else-if="page == total" @click="down">{{ t('mbti.viewResult') }}</view>
                 <view class="btn2" v-else>
                     <view @click="up">{{ t('mbti.prevPage') }}</view>
                     <view @click="down">{{ t('mbti.nextPage') }}</view>
@@ -58,7 +58,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getList, createPoster } from '@/api/mbti.js'
+import { getList, createPoster ,finsh} from '@/api/mbti.js'
 import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('')
@@ -73,6 +73,7 @@ const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
 const poster_id = ref(null)
 onLoad((e) => {
+    console.log(e,'eee')
     test_type.value = e.test_type
     question_mode.value = e.question_mode
     poster_id.value = e.poster_id || null
@@ -122,8 +123,13 @@ const down = async () => {
             } else {
                 scrollIntoView.value = ''
                 await create()
-                 page.value++
+                if(page.value == total.value) {
+                    look()
+                }else{
+                  page.value++
                     getlistTi()
+                }
+                 
 
             }
         }, 200)
@@ -174,7 +180,16 @@ const choosestatus = (index, ite) => {
 
 //查看结果
 const look = () => {
-    uni.redirectTo({ url: `/pagesA/mbti/poster` })
+    finsh(poster_id.value).then(res => {
+        if(question_mode.value == 'single_mode'){//单人
+           uni.redirectTo({ url: `/pagesA/mbti/poster` })
+        }else{
+            uni.switchTab({ url: '/pages/test/test' })
+        }
+    }).catch(err => {
+        console.log(err,'eee')
+    })
+   
 }
 //确定退出
 const submit = () => {
