@@ -53,7 +53,7 @@
                             placeholder-style="color:#9A90FF;"></view>
                 </view>
                 <view class="titlescon">
-                    <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index }}.{{ item }}
+                    <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index + 1}}.{{ item }}
                     </view>
                 </view>
                 <view class="btn" @click="start">{{ t('mbti.startTest') }}</view>

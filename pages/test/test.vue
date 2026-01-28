@@ -38,11 +38,22 @@
 
                     <!-- 左侧图片 -->
                     <view class="left">
-                        <image
-                            v-if="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical' ? item.character_image_url : $getImg('index/tarotcards')"
-                            :src="item.prompt_template.template_type == 'answer' ? item.file_url :  item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical' ? item.character_image_url : $getImg('index/tarotcards')"
+                        <image v-if="item.prompt_template.template_type == 'answer'" :src="item.file_url"
                             mode="scaleToFill"
-                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error','tarot_card':item.prompt_template.template_type == 'tarot_card'}">
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', }">
+                        </image>
+                        <image
+                            v-else-if="item.prompt_template.template_type == 'social' || item.prompt_template.template_type == 'physical'"
+                            :src="item.character_image_url" mode="scaleToFill"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }">
+                        </image>
+                        <image v-else-if="item.prompt_template.template_type == 'tarot_card'"
+                            :src="$getImg('index/tarotcards')" mode="scaleToFill"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
+                        </image>
+                        <image v-else-if="item.prompt_template.template_type == 'mbti'"
+                            :src="item.mbti_list[0]?.templates[0]?.image_url || $getImg('add/mbti')" mode="scaleToFill"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -50,7 +61,6 @@
                     </view>
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
-                    <!--  -->
                     <view class="status-overlay" v-if="item.status === 'waiting' || item.status === 'error'">
                         <!-- 右上角状态标签 -->
                         <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
@@ -69,7 +79,7 @@
                                 <text>{{ item.summary }}</text>
                                 <text v-if="isType" class="look"
                                     @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                    $t('poster.viewPoster') }} {{
+                                        $t('poster.viewPoster') }} {{
                                         '>>' }}</text>
                             </view>
                         </template>
@@ -84,9 +94,47 @@
                                 "{{ item.content || $t('poster.defaultAnswer') }}"
                                 <text v-if="isType" class="look"
                                     @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                    $t('poster.viewAnswer') }} {{
+                                        $t('poster.viewAnswer') }} {{
                                         '>>' }}</text>
                             </view>
+                            <view class="details" style="margin-top: 20rpx;" v-else>
+                                <text v-if="isType" class="look"
+                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看答案
+                                    {{
+                                        '>>' }}</text>
+                            </view>
+                        </template>
+                        <template v-if="item.prompt_template.template_type == 'mbti'">
+                            <block v-if="item.mbti_list[0]?.test_type == 'simple'">
+                                <view class="num" style="margin-left:-10rpx">你的人格是：{{ item.mbti_list[0]?.mbti_type ||
+                                    '--' }}</view>
+                                <view class="details" style="margin-top: 20rpx;">
+                                    <text v-if="isType" class="look"
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看详情
+                                        {{
+                                            '>>' }}</text>
+                                </view>
+                            </block>
+                            <!-- <block v-else>
+                                <view class="double">
+                                    <view class="num" style="margin-left:-10rpx">{{ item.mbti_list[0]?.mbti_type || '--' }}-A <text
+                                            style="margin-left:15rpx">X</text></view>
+                                    <view class="xi">
+                                        <view class="num" style="width:120rpx;text-align: center;">?</view>
+                                         <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill" class="mbti1">
+                                            </image>
+                                            <view class="wating">等待对方结果</view>
+                                    </view>
+
+                                </view>
+                                <view class="details">
+                                    <text v-if="isType" class="look"
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看详情
+                                        {{ '>>' }}</text>
+                                </view>
+                            </block> -->
+
+
                         </template>
                     </view>
                 </view>
@@ -102,7 +150,7 @@
     </view>
 
     <view class="action-bar" v-if="!isType">
-        <button  class="action-btn" hover-class="none" @click="delItems">
+        <button class="action-btn" hover-class="none" @click="delItems">
             {{ selectedCount ?
                 `${$t('poster.deleteSelectedPrefix')}${selectedCount}${$t('poster.deleteSelectedSuffix')}` :
                 $t('poster.delete') }}
@@ -141,7 +189,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -153,6 +201,25 @@
             </view>
         </template>
     </IndexProup>
+    <IndexProup :show="pipeiproup" @close="pipeiproup = false">
+        <template #content>
+            <view class="tishi">
+                <view class="title">{{ $t('mbti.doubleMatch') }}</view>
+                <view class="titles">{{ $t('mbti.inviteFriend') }}</view>
+                <!-- 操作 -->
+                <view class="opera">
+                    <view class="myma"><input type="text" :placeholder="handleEncrypt()"
+                            placeholder-style="color:#9A90FF;" :disabled="true"></view>
+                    <view class="copy" @click="copy">{{ $t('mbti.clickCopy') }}</view>
+                </view>
+                <view class="titlescon">
+                    <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index + 1 }}.{{ item }}
+                    </view>
+                </view>
+            </view>
+
+        </template>
+    </IndexProup>
 </template>
 
 <script>
@@ -160,6 +227,7 @@ import { getPosterList, deletePosters, reGeneratePoster, getUserInfo } from "@/a
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
+import { aesEncrypt } from '@/utils/crypto.js';
 
 export default {
     components: {
@@ -187,6 +255,8 @@ export default {
             loading: false,
             isSelectAll: false, // 是否全选状态
             wasSelectAll: false, // 是否曾经全选过（用于判断反选）
+            pipeiproup: false,
+            pipeicontent: []
         };
     },
     onLoad() {
@@ -246,6 +316,7 @@ export default {
         this.loadMore();
     },
     onShow() {
+        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')]
         this.categoryList = [
             {
                 label: t('poster.all'),
@@ -277,12 +348,7 @@ export default {
             //   color: "#F2C448",
             //   type: "consume",
             // },
-            {
-                label: t('poster.answerBook'),
-                icon: "/static/my/shejiao.png",
-                color: "#5B9BD5",
-                type: "answer",
-            },
+
             {
                 label: t('poster.crushCheck'),
                 icon: "/static/my/shiwu.png",
@@ -290,15 +356,45 @@ export default {
                 type: "crushcheck",
             },
             {
+                label: t('poster.answerBook'),
+                icon: "/static/my/shejiao.png",
+                color: "#5B9BD5",
+                type: "answer",
+            },
+            {
                 label: '塔罗牌',
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "tarot_card",
             },
+            {
+                label: 'MBTI',
+                icon: "/static/my/shiwu.png",
+                color: "#66BB6A",
+                type: "mbti",
+            },
         ];
     },
 
     methods: {
+        //复制邀请码
+        copy() {
+            uni.setClipboardData({
+                data: this.handleEncrypt(),
+                success: function () {
+                    uni.showToast({
+                        title: t('common.copySuccess'),
+                        icon: 'none'
+                    });
+                }
+            });
+
+        },
+        handleEncrypt() {
+            const encryptedData = uni.getStorageSync('openId')
+            const end = aesEncrypt(encryptedData)
+            return end
+        },
         path() {
             uni.switchTab({ url: '/pages/index/index' })
         },
@@ -1010,6 +1106,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .poster-page {
+
     min-height: 100vh;
     background: #12111f;
     box-sizing: border-box;
@@ -1193,7 +1290,6 @@ export default {
     .right {
         width: 70%;
         font-size: 36rpx !important;
-        padding-left: 20rpx;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1444,15 +1540,305 @@ export default {
     width: 90%;
     text-align: center;
 }
-.tarot_card{
+
+.tarot_card {
     width: 210rpx !important;
     height: 210rpx !important;
     margin-top: 20rpx;
 }
+
+.mbti1 {
+    width: 150rpx !important;
+    height: 180rpx !important;
+    margin-right: 10rpx;
+    margin-left: 20rpx !important;
+
+}
+
+.mbti {
+    width: 150rpx !important;
+    height: 180rpx !important;
+    margin-left: 20rpx !important;
+    margin-top: 25rpx;
+}
+
+.double {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .xi {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .wating {
+        font-size: 24rpx;
+    }
+}
+
+.tishi {
+    width: 600rpx;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40rpx 45rpx;
+    box-sizing: border-box;
+
+    .opera {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .myma,
+        .shuru {
+            width: 410rpx;
+            padding: 0 20rpx;
+            height: 90rpx;
+            line-height: 90rpx;
+            text-align: center;
+            border-radius: 90rpx;
+            border: 1px solid #9A90FF;
+            background: #F8F4FF;
+            color: #9A90FF;
+            margin-top: 40rpx;
+            margin-bottom: 20rpx;
+
+            input {
+                width: 100%;
+                height: 100%;
+                line-height: 100%;
+                color: #D5D1FF;
+            }
+
+
+        }
+
+        .copy {
+            color: rgba(61, 61, 61, 0.3);
+            font-size: 26rpx;
+            margin-bottom: 20rpx;
+        }
+
+        .and {
+            font-size: 26rpx;
+        }
+
+        .shuru {
+            margin-top: 20rpx;
+        }
+    }
+
+    .layout {
+        color: #B370FF;
+        margin-top: 30rpx;
+    }
+
+    .titles {
+        font-size: 26rpx;
+        line-height: 45rpx;
+        color: #3D3D3D;
+    }
+
+    .titlescon {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10rpx;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-bottom: 30rpx;
+        text-align: center;
+        width: 100%;
+    }
+
+    .agreement-content {
+        width: 100%;
+        max-height: 500rpx;
+        margin-bottom: 20rpx;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .richtext-content {
+        width: 100%;
+        font-size: 28rpx;
+        line-height: 1.8;
+        // color: rgba(0, 0, 0, 0.85);
+        word-wrap: break-word;
+    }
+
+    .loading,
+    .empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40rpx 0;
+        font-size: 28rpx;
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        margin-top: 20rpx;
+        height: 100rpx;
+        line-height: 100rpx;
+        width: 100%;
+        border-radius: 100rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+    }
+
+    .disagree-btn {
+        margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 100%;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 28rpx;
+    }
+}
+
+.tishi {
+    width: 600rpx;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40rpx 45rpx;
+    box-sizing: border-box;
+
+    .opera {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .myma,
+        .shuru {
+            width: 410rpx;
+            padding: 0 20rpx;
+            height: 90rpx;
+            line-height: 90rpx;
+            text-align: center;
+            border-radius: 90rpx;
+            border: 1px solid #9A90FF;
+            background: #F8F4FF;
+            color: #9A90FF;
+            margin-top: 40rpx;
+            margin-bottom: 20rpx;
+
+            input {
+                width: 100%;
+                height: 100%;
+                line-height: 100%;
+                color: #D5D1FF;
+            }
+
+
+        }
+
+        .copy {
+            color: rgba(61, 61, 61, 0.3);
+            font-size: 26rpx;
+            margin-bottom: 20rpx;
+        }
+
+        .and {
+            font-size: 26rpx;
+        }
+
+        .shuru {
+            margin-top: 20rpx;
+        }
+    }
+
+    .layout {
+        color: #B370FF;
+        margin-top: 30rpx;
+    }
+
+    .titles {
+        font-size: 26rpx;
+        line-height: 45rpx;
+        color: #3D3D3D;
+    }
+
+    .titlescon {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10rpx;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-bottom: 30rpx;
+        text-align: center;
+        width: 100%;
+    }
+
+    .agreement-content {
+        width: 100%;
+        max-height: 500rpx;
+        margin-bottom: 20rpx;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .richtext-content {
+        width: 100%;
+        font-size: 28rpx;
+        line-height: 1.8;
+        // color: rgba(0, 0, 0, 0.85);
+        word-wrap: break-word;
+    }
+
+    .loading,
+    .empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40rpx 0;
+        font-size: 28rpx;
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        margin-top: 20rpx;
+        height: 100rpx;
+        line-height: 100rpx;
+        width: 100%;
+        border-radius: 100rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+    }
+
+    .disagree-btn {
+        margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 100%;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 28rpx;
+    }
+}
 </style>
 <style>
-
-       .u-safe-bottom{
-      height: 0 !important;
-    }
+.u-safe-bottom {
+    height: 0 !important;
+}
 </style>
