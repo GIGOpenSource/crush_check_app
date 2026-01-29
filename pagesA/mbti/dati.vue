@@ -18,15 +18,18 @@
             </view>
             <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
                 @scroll="onScroll">
+               
                 <view class="con" v-for="(item, index) in list" :key="index" :id="'question-' + index">
-                    <view>0{{ index + 1 }} {{ item.content }}</view>
+                    <view>{{ 6 * (page - 1) + (index + 1) >= 10 ? 6 * (page - 1) + (index + 1) : '0' + (6 * (page - 1) + (index + 1)) }} {{ item.content }}</view>
                     <view class="borderwrapper">
-                        <view v-for="(ite) in fen" :key="ite" @click="choosestatus(index, ite)"
-                            :class="item.question_value == ite ? 'current' : ''"></view>
+                        <view class="kong" v-for="(ite) in fen" :key="ite" @click="choosestatus(index, ite)">
+                            <view :class="item.question_value == ite ? 'current' : ''"></view>
+                        </view>
                     </view>
                     <view class="status">
-                        <text>{{ t('mbti.stronglyDisagree') }}</text>
+
                         <text>{{ t('mbti.stronglyAgree') }}</text>
+                        <text>{{ t('mbti.stronglyDisagree') }}</text>
                     </view>
                 </view>
             </scroll-view>
@@ -58,14 +61,14 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getList, createPoster ,finsh} from '@/api/mbti.js'
+import { getList, createPoster, finsh } from '@/api/mbti.js'
 import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
 const list = ref([])
 const page = ref(1)
-const fen = [1,2,3,4,5]
+const fen = [5, 4, 3, 2, 1]
 const scrollIntoView = ref('')
 const isScrolling = ref(false)
 const total = ref('')
@@ -73,7 +76,7 @@ const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
 const poster_id = ref(null)
 onLoad((e) => {
-    console.log(e,'eee')
+    console.log(e, 'eee')
     test_type.value = e.test_type
     question_mode.value = e.question_mode
     poster_id.value = e.poster_id || null
@@ -93,7 +96,7 @@ const goBack = () => {
 }
 const getlistTi = () => {
     isScrolling.value = false
-    getList(page.value, 4, test_type.value, question_mode.value, poster_id.value)
+    getList(page.value, 6, test_type.value, question_mode.value, poster_id.value)
         .then(res => {
             list.value = res.data.results.map(item => ({
                 ...item,
@@ -102,11 +105,21 @@ const getlistTi = () => {
             total.value = res.data.pagination.total_pages
             poster_id.value = res.data.poster_id
 
+            // 重置滚动位置到第一条数据
+            nextTick(() => {
+                scrollIntoView.value = ''
+                setTimeout(() => {
+                    scrollIntoView.value = 'question-0'
+                    setTimeout(() => {
+                        scrollIntoView.value = ''
+                    }, 300)
+                }, 100)
+            })
         })
 }
 const up = async () => {
-   await create()
-     page.value--
+    await create()
+    page.value--
     getlistTi()
 
 }
@@ -115,21 +128,21 @@ const down = async () => {
         setTimeout(async () => {
             const firstUnansweredIndex = list.value.findIndex(item => !item.question_value || item.question_value == 0)
             if (firstUnansweredIndex !== -1) {
-                 uni.showToast({
-                title: '请勿空题',
-                icon: 'none'
-            })
+                uni.showToast({
+                    title: '请勿空题',
+                    icon: 'none'
+                })
                 scrollToQuestion(firstUnansweredIndex)
             } else {
                 scrollIntoView.value = ''
                 await create()
-                if(page.value == total.value) {
+                if (page.value == total.value) {
                     look()
-                }else{
-                  page.value++
+                } else {
+                    page.value++
                     getlistTi()
                 }
-                 
+
 
             }
         }, 200)
@@ -141,8 +154,8 @@ const create = async () => {
         list.value.map(item => [item.id, item.question_value])
     );
     let timestamp = new Date()
-    const res= await createPoster(page.value, 4, poster_id.value, answer, timestamp)
-    console.log(res,'rds')
+    const res = await createPoster(page.value, 4, poster_id.value, answer, timestamp)
+    console.log(res, 'rds')
 }
 const onScroll = (e) => {
     if (!isScrolling.value) {
@@ -181,15 +194,15 @@ const choosestatus = (index, ite) => {
 //查看结果
 const look = () => {
     finsh(poster_id.value).then(res => {
-        if(question_mode.value == 'single_mode'){//单人
-           uni.redirectTo({ url: `/pagesA/mbti/poster` })
-        }else{
+        if (question_mode.value == 'single_mode') {//单人
+            uni.redirectTo({ url: `/pagesA/mbti/poster` })
+        } else {
             uni.switchTab({ url: '/pages/test/test' })
         }
     }).catch(err => {
-        console.log(err,'eee')
+        console.log(err, 'eee')
     })
-   
+
 }
 //确定退出
 const submit = () => {
@@ -242,7 +255,7 @@ const submit = () => {
 }
 
 .page-content {
-    height: calc(100vh - 250rpx);
+    height: calc(100vh - 200rpx);
     margin: 0 25rpx 20rpx;
     background: rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
@@ -311,36 +324,48 @@ const submit = () => {
             justify-content: space-between;
             align-items: center;
 
-            view {
-                border: 1px solid rgba(255, 255, 255, 0.5);
-                border-radius: 50%;
+            .kong {
+                width:52rpx;
+                text-align: center;
+                height: 52rpx;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                view {
+                    border: 1rpx solid rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                }
             }
-
-            view:nth-of-type(1),
-            view:nth-of-type(5) {
-                width: 50rpx;
-                height: 50rpx;
-
-            }
-
-            view:nth-of-type(2),
-            view:nth-of-type(4) {
-                width: 35rpx;
-                height: 35rpx;
-
-            }
-
-            view:nth-of-type(3) {
-                width: 20rpx;
-                height: 20rpx;
-
-            }
-
             .current {
                 background: #A0FFE7;
             }
+
+
         }
     }
+}
+
+.borderwrapper .kong:nth-of-type(1),.borderwrapper .kong:nth-of-type(5){
+    view{
+          width: 50rpx;
+    height: 50rpx;
+    }
+}
+
+.borderwrapper .kong:nth-of-type(2),.borderwrapper .kong:nth-of-type(4) {
+  view{
+      width: 35rpx;
+    height: 35rpx;
+  }
+
+}
+
+.borderwrapper .kong:nth-of-type(3){
+    view{
+        width: 20rpx;
+    height: 20rpx;
+    }
+
 }
 
 .btns {

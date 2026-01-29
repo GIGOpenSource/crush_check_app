@@ -465,7 +465,7 @@ const adLock = () => {
 
 .content-wrapper {
     margin: 0 25rpx 20rpx;
-    height: calc(100vh - 250rpx);
+    height: calc(100vh - 200rpx);
     box-sizing: border-box;
     background: #d1c1a7;
     border-radius: 10rpx;

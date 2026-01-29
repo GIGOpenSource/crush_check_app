@@ -256,7 +256,8 @@ export default {
             isSelectAll: false, // 是否全选状态
             wasSelectAll: false, // 是否曾经全选过（用于判断反选）
             pipeiproup: false,
-            pipeicontent: []
+            pipeicontent: [],
+            md5:uni.getStorageSync('timestamp') || ''
         };
     },
     onLoad() {
@@ -316,7 +317,10 @@ export default {
         this.loadMore();
     },
     onShow() {
-        this.generateTimestampMD5()
+        // if(!uni.getStorageSync('timestamp')){
+        //     this.generateTimestampMD5()
+        // }
+       
         this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')]
         this.categoryList = [
             {
@@ -392,7 +396,7 @@ export default {
 
         },
         handleEncrypt() {
-            const encryptedData = uni.getStorageSync('openId') + '@' +this.generateTimestampMD5()
+            const encryptedData = uni.getStorageSync('openId') + '@' + this.md5
             const end = aesEncrypt(encryptedData)
             return end
         },
@@ -633,7 +637,8 @@ export default {
         generateTimestampMD5() {
             const timestamp = Date.now();
             const md5Hash = md5Encrypt(String(timestamp));
-            return md5Hash
+            this.md5 = md5Hash
+            uni.setStorageSync('timestamp', this.md5)
         },
 
         // 获取状态文本
