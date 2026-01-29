@@ -24,7 +24,7 @@
                     <!-- 图像 -->
                     <l-painter-view css="display: flex;align-items: center;margin: 30rpx 80rpx;">
                         <l-painter-view css="display: flex;align-items: center;justify-content: center;">
-                            <l-painter-image src="/static/index/bg.png"
+                            <l-painter-image :src="$getImg('index/bg')"
                                 css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
                             <l-painter-view css="display: block;font-size: 36rpx;">
                                 <l-painter-text text='流行图鉴：紫老头' css="display: block;"> </l-painter-text>

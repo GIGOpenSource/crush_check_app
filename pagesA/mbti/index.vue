@@ -165,7 +165,7 @@ const copy = () => {
 const start = () => {
     if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-     getList(1, 4, test_type.value, mode.value, null, inviewma.value).then(res => {
+     getList(1, 4, test_type.value, mode.value, null, inviewma.value,generateTimestampMD5()).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })

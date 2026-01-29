@@ -16,7 +16,7 @@
             <!-- 照片 -->
             <view class="images">
                 <view class="update">
-                    <image src="/static/index/bg.png" mode="scaleToFill" />
+                    <image :src="$getImg('index/bg')" mode="scaleToFill" />
                     <view class="close"><up-icon name="close" color="#ffffff" size="26"></up-icon></view>
                 </view>
                 <view class="update">+</view>

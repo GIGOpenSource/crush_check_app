@@ -35,7 +35,7 @@
                                 <l-painter-text text='彩虹组'
                                     css="display: block;color:#35A374;font-weight:bolder;font-size:50rpx">
                                 </l-painter-text>
-                                <l-painter-image src="/static/index/bg.png"
+                                <l-painter-image :src="$getImg('index/bg')"
                                     css="width: 100rpx; height: 100rpx; display: block;margin-left: 15rpx;"></l-painter-image>
                             </l-painter-view>
                             <l-painter-view
