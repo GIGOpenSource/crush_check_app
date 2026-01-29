@@ -2,7 +2,7 @@
     <view>
         <image :src="path" mode="widthFix" @load="success"></image>
         <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="600rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="1" :pixel-ratio="1">
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg"  :quality="0.95" :pixel-ratio="3">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -12,10 +12,10 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-text text='你的人格类型为：'
                                 css="display: block;width: 100%;text-align: center;font-size: 26rpx;"></l-painter-text>
-                            <l-painter-text text='INTJ-A 建筑师'
+                            <l-painter-text :text="info.mbti_list[0].mbti_type + ' '+info.mbti_list[0].templates[0].popular_name"
                                 css="display: block;width: 100%;text-align: center;margin: 30rpx 0;font-size: 32rpx;color:#955EB1">
                             </l-painter-text>
-                            <l-painter-text text='没关系 发生意外也是计划之内的事情 还好 好像有点那啥 知识囤积癖'
+                            <l-painter-text :text="info.mbti_list[0].templates[0].summary || '--'"
                                 css="display: block;width: 70%;text-align: center;font-size: 24rpx;line-height: 38rpx;">
                             </l-painter-text>
                         </l-painter-view>
@@ -24,11 +24,11 @@
                     <!-- 图像 -->
                     <l-painter-view css="display: flex;align-items: center;margin: 30rpx 80rpx;">
                         <l-painter-view css="display: flex;align-items: center;justify-content: center;">
-                            <l-painter-image :src="$getImg('index/bg')"
+                            <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
                                 css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
                             <l-painter-view css="display: block;font-size: 36rpx;">
-                                <l-painter-text text='流行图鉴：紫老头' css="display: block;"> </l-painter-text>
-                                <l-painter-text text='人数占比：1.26%' css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="'流行图鉴：' + info.mbti_list[0].templates[0].image_url" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="'人数占比：' + info.mbti_list[0].templates[0].population_ratio +'%'" css="display: block;"> </l-painter-text>
                             </l-painter-view>
 
 

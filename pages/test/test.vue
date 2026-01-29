@@ -99,40 +99,54 @@
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
                                 <text v-if="isType" class="look"
-                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewAnswer') }}
+                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
+                                        $t('poster.viewAnswer') }}
                                     {{
                                         '>>' }}</text>
                             </view>
                         </template>
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left:-10rpx">{{ $t('poster.personalityIs') }}{{ item.mbti_list[0]?.mbti_type ||
+                                <view class="num" style="margin-left:-10rpx">{{ $t('poster.personalityIs') }}{{
+                                    item.mbti_list[0]?.mbti_type ||
                                     '--' }}</view>
                                 <view class="details" style="margin-top: 20rpx;">
                                     <text v-if="isType" class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{ $t('poster.viewDetails') }}
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
+                                            $t('poster.viewDetails') }}
                                         {{
                                             '>>' }}</text>
                                 </view>
                             </block>
-                            <!-- <block v-else>
+                            <block v-else>
                                 <view class="double">
-                                    <view class="num" style="margin-left:-10rpx">{{ item.mbti_list[0]?.mbti_type || '--' }}-A <text
-                                            style="margin-left:15rpx">X</text></view>
+                                    <view class="num" style="margin-left:-10rpx">{{
+                                        item.mbti_list[0]?.mbti_type.split('+')[0] || '' }} <text
+                                            style="margin-left:50rpx;font-size: 26rpx;">X</text></view>
                                     <view class="xi">
-                                        <view class="num" style="width:120rpx;text-align: center;">?</view>
-                                         <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill" class="mbti1">
+                                        <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
+                                        <view class="num" style="width:120rpx;text-align: center;">{{
+                                            item.mbti_list[0].other_status == 'done' ?
+                                                item.mbti_list[0]?.mbti_type.split('+')[1] : '?' }}</view>
+                                        <!-- 完成 -->
+                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill" class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
                                             </image>
-                                            <view class="wating">等待对方结果</view>
+                                        <!-- 未完成 -->
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">等待对方结果
+                                        </view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">对方未完成测试
+                                        </view>
                                     </view>
 
                                 </view>
                                 <view class="details">
                                     <text v-if="isType" class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">查看详情
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
+                                        <text>{{ item.mbti_list[0].other_status == 'exit' ? '对方未完成测试' :
+                                            $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
-                            </block> -->
+                            </block>
 
 
                         </template>
@@ -257,7 +271,7 @@ export default {
             wasSelectAll: false, // 是否曾经全选过（用于判断反选）
             pipeiproup: false,
             pipeicontent: [],
-            md5:uni.getStorageSync('timestamp') || ''
+            md5: uni.getStorageSync('timestamp') || ''
         };
     },
     onLoad() {
@@ -320,7 +334,7 @@ export default {
         // if(!uni.getStorageSync('timestamp')){
         //     this.generateTimestampMD5()
         // }
-       
+
         this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')]
         this.categoryList = [
             {
@@ -710,7 +724,7 @@ export default {
                                 });
                             },
                         });
-                    } else if(type == 'tarot_card'){
+                    } else if (type == 'tarot_card') {
                         uni.navigateTo({
                             url: '/pagesA/tarotcards/result?id=' + item.id,
                             fail: (err) => {
@@ -721,18 +735,24 @@ export default {
                                 });
                             },
                         });
-                    }else{
-                          uni.navigateTo({
-                            url: '/pagesA/mbti/poster?id=' + item.id,
-                            fail: (err) => {
-                                console.error("跳转失败:", err);
-                                uni.showToast({
-                                    title: this.$t('poster.jumpFailed'),
-                                    icon: "none",
-                                });
-                            },
-                        });
-                        
+                    } else {
+                        if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
+                            if (item.mbti_list[0].other_status == 'waiting') return
+                            if (item.mbti_list[0].other_status == 'exit') return pipeiproup.value = true
+                        } else {//单人
+                            uni.navigateTo({
+                                url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
+                                fail: (err) => {
+                                    console.error("跳转失败:", err);
+                                    uni.showToast({
+                                        title: this.$t('poster.jumpFailed'),
+                                        icon: "none",
+                                    });
+                                },
+                            });
+                        }
+
+
                     }
 
                 } else {
@@ -1600,7 +1620,10 @@ export default {
     }
 
     .wating {
+        width: 150rpx;
         font-size: 24rpx;
+        margin-top: 10rpx;
+        margin-left: 20rpx;
     }
 }
 

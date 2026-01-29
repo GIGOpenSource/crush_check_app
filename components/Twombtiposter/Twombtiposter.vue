@@ -1,8 +1,8 @@
 <template>
     <view>
         <image :src="path" mode="widthFix" @load="success"></image>
-        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="600rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="1" :pixel-ratio="1">
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx" height="100%"
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -148,6 +148,10 @@ export default {
     mounted() {
         // 在生成海报前清理小程序缓存
         this.clearTempFiles()
+        // 延迟再次清理，确保清理完成
+        setTimeout(() => {
+            this.clearTempFiles()
+        }, 500)
     },
     beforeDestroy() {
         // 组件销毁前清理canvas资源
@@ -181,7 +185,7 @@ export default {
                             fs.readdir({
                                 dirPath: userDataPath,
                                 success: (res) => {
-                                    // 清理所有图片文件（jpg, png等），最多清理10个
+                                    // 清理所有图片文件（jpg, png等），清理更多文件
                                     const imageExts = ['.jpg', '.jpeg', '.png', '.gif']
                                     const imageFiles = res.files
                                         .filter(file => {
@@ -189,7 +193,7 @@ export default {
                                             return imageExts.includes(ext.toLowerCase())
                                         })
                                         .sort()
-                                        .slice(0, 10) // 最多清理10个旧文件
+                                        .slice(0, 20) // 清理更多旧文件（20个）
                                     
                                     imageFiles.forEach(file => {
                                         fs.unlink({
@@ -236,7 +240,7 @@ export default {
                                         const bTime = b.lastModifiedDate || 0
                                         return aTime - bTime
                                     })
-                                    .slice(0, 10) // 最多清理10个旧文件
+                                    .slice(0, 20) // 清理更多旧文件（20个）
                                 
                                 imageFiles.forEach(fileEntry => {
                                     fileEntry.remove(() => {

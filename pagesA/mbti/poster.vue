@@ -2,15 +2,15 @@
     <view class="page">
         <view class="top">
             <view class="title">{{ t('mbti.posterTitle') }}</view>
-            <!-- <view class="userinfo1"><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view> -->
-            <view class="userinfo2">
+            <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar" size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
+            <view class="userinfo2" v-if="type == 'double'">
                 <view><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view>
                 <view> <text>{{ t('my.userNickname') }}</text><up-avatar :src="src" size="36"></up-avatar></view>
             </view>
         </view>
         <view class="center">
-            <!-- <Mbtiposter /> -->
-            <Twombtiposter  @success="handlePosterSuccess"/>
+            <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details"/>
+            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" />
         </view>
         <view class="bottom">
             <view class="btns">
@@ -26,16 +26,83 @@ import { ref, onUnmounted, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
 import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
+import { onLoad } from '@dcloudio/uni-app'
+import { getPosterDetails } from '@/api/index.js'
 const { t } = useI18n()
 const src = ref('')
+const type = ref('')
+const details = ref({})
+const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 
+// 清理临时文件的函数
+const cleanupOldTempFiles = () => {
+    try {
+        // #ifdef MP-WEIXIN
+        const fs = uni.getFileSystemManager()
+        if (fs) {
+            try {
+                let userDataPath = ''
+                if (wx && wx.getWindowInfo) {
+                    userDataPath = wx.getWindowInfo().pixelRatio ? wx.env.USER_DATA_PATH : ''
+                }
+                if (!userDataPath && wx && wx.env) {
+                    userDataPath = wx.env.USER_DATA_PATH
+                }
+                if (!userDataPath) {
+                    const systemInfo = uni.getSystemInfoSync()
+                    userDataPath = systemInfo.USER_DATA_PATH || ''
+                }
+                
+                if (userDataPath) {
+                    fs.readdir({
+                        dirPath: userDataPath,
+                        success: (res) => {
+                            const imageFiles = res.files
+                                .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+                                .sort()
+                                .slice(0, 30) // 清理更多文件
+                            
+                            imageFiles.forEach(file => {
+                                fs.unlink({
+                                    filePath: `${userDataPath}/${file}`,
+                                    success: () => {},
+                                    fail: () => {}
+                                })
+                            })
+                        },
+                        fail: () => {}
+                    })
+                }
+            } catch (e) {
+                console.log('清理临时文件异常:', e)
+            }
+        }
+        // #endif
+    } catch (e) {
+        console.log('清理临时文件失败:', e)
+    }
+}
+
+onLoad((e) => {
+    type.value = e.type
+    cleanupOldTempFiles()
+    getPosterDetails(e.id).then(res => {
+        details.value = res.data
+    })
+})
+
+onMounted(() => {
+    cleanupOldTempFiles()
+})
 
 const topath = () => {
     uni.switchTab({ url: '/pages/index/index' })
 }
 
 const handlePosterSuccess = (filePath) => {
-    console.log(filePath,'eeee')   
+    setTimeout(() => {
+        cleanupOldTempFiles()
+    }, 2000)
 }
 
 </script>
@@ -59,7 +126,7 @@ const handlePosterSuccess = (filePath) => {
     .userinfo1 {
         display: flex;
         align-items: center;
-        
+
 
         text {
             margin-left: 20rpx;
@@ -78,11 +145,12 @@ const handlePosterSuccess = (filePath) => {
             align-items: center;
 
             text {
-                margin:0 20rpx;
+                margin: 0 20rpx;
             }
         }
     }
-    text{
+
+    text {
         font-size: 26rpx;
     }
 }

@@ -145,7 +145,7 @@ export function base64ToPath(base64) {
 					const imageFiles = res.files
 						.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
 						.sort()
-						.slice(0, 5) // 最多清理5个旧文件
+						.slice(0, 15) // 清理更多旧文件（15个）
 					
 					imageFiles.forEach(file => {
 						fs.unlink({
@@ -181,7 +181,7 @@ export function base64ToPath(base64) {
 								const bTime = b.lastModifiedDate || 0
 								return aTime - bTime
 							})
-							.slice(0, 5) // 最多清理5个旧文件
+							.slice(0, 15) // 清理更多旧文件（15个）
 						
 						imageFiles.forEach(fileEntry => {
 							fileEntry.remove(() => {}, () => {})
@@ -211,11 +211,11 @@ export function base64ToPath(base64) {
 						fs.readdir({
 							dirPath: userDataPath,
 							success: (res) => {
-								// 清理更多文件（10个）
+								// 清理更多文件（30个）
 								const imageFiles = res.files
 									.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
 									.sort()
-									.slice(0, 10)
+									.slice(0, 30)
 								
 								let cleaned = 0
 								imageFiles.forEach(file => {
