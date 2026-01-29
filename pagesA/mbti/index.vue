@@ -84,6 +84,7 @@ const choose = ref([{
     text: t('mbti.doubleTestDesc')
 }])
 const mode = ref('')
+const md5 = ref(uni.getStorageSync('timestamp') || '')
 
 const renge = [{
     t1: 'ENTJ >',
@@ -137,16 +138,15 @@ const choosetype = (index) => {
 
 //加密邀请码
 const handleEncrypt = () => {
-    const encryptedData = uni.getStorageSync('openId') + '@' + generateTimestampMD5()
+    const encryptedData = uni.getStorageSync('openId') + '@' + md5.value
     const end = aesEncrypt(encryptedData)
     return end
 }
-
-// 生成时间戳并进行MD5加密
 const generateTimestampMD5 = () => {
     const timestamp = Date.now();
     const md5Hash = md5Encrypt(String(timestamp));
-    return md5Hash
+    md5.value = md5Hash
+    uni.setStorageSync('timestamp', md5.value)
 }
 //复制邀请码
 const copy = () => {
@@ -163,12 +163,13 @@ const copy = () => {
 }
 //双人模式开始测试
 const start = () => {
-    if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
+    // if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-     getList(1, 4, test_type.value, mode.value, null, inviewma.value,generateTimestampMD5()).then(res => {
+     getList(1, 4, test_type.value, mode.value, null, inviewma.value,md5.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
+        uni.removeStorageSync('timestamp')
     }).catch(err => {
         console.log(err, 'eee')
     })
@@ -191,6 +192,9 @@ const join = (type) => {
         })
     } else {
         pipeiproup.value = true
+         if(!uni.getStorageSync('timestamp')){
+            generateTimestampMD5()
+        }
     }
 }
 </script>

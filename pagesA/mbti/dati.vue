@@ -242,7 +242,7 @@ const submit = () => {
 }
 
 .page-content {
-    height: calc(100vh - 200rpx);
+    height: calc(100vh - 250rpx);
     margin: 0 25rpx 20rpx;
     background: rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
@@ -251,7 +251,8 @@ const submit = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+    overflow-y: scroll;
+    // overflow: hidden;
 }
 
 .titlecon {
