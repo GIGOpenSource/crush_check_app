@@ -325,14 +325,15 @@ const submit = () => {
             align-items: center;
 
             .kong {
-                width:52rpx;
+                width:55rpx;
                 text-align: center;
-                height: 52rpx;
+                height: 55rpx;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                background: transparent;
                 view {
-                    border: 1rpx solid rgba(255, 255, 255, 0.5);
+                    border: 1px solid rgba(255, 255, 255, 0.5);
                     border-radius: 50%;
                 }
             }
