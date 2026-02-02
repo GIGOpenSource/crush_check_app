@@ -522,7 +522,8 @@ export default {
     feelingDescription: 'Ao fazer escolhas, prioriza sentimentos, valores e harmonia interpessoal dos outros, valoriza empatia, compreensão e tolerância, presta atenção ao impacto emocional das decisões nos outros. Tendência a equilibrar sentimentos humanos e posições, busca abordagens calorosas e centradas no ser humano.',
     thinkingDescription: 'Ao fazer julgamentos, prioriza lógica, regras objetivas e análise racional, foca em justiça, eficiência e causalidade, menos afetado por emoções pessoais ou sentimentos dos outros. Tendência a medir certo e errado com padrões racionais, busca soluções objetivas e justas.',
     perceivingDescription: 'Gosta de ritmos de vida flexíveis e abertos, acostumado a se adaptar a mudanças e manter opções abertas, desfruta do processo de exploração e improvisação. Não gosta de ser limitado por planos rigorosos, tende a coletar mais informações antes de tomar decisões, tem forte adaptabilidade e está disposto a aceitar novas mudanças.',
-    judgingDescription: 'Prefere padrões de vida ordenados e claramente planejados, gosta de fazer planos com antecedência, esclarecer objetivos e limites, e faz as coisas do início ao fim. Tendência a finalizar planos e tomar ação o mais rápido possível, busca estados estáveis e controláveis, e odeia mudanças súbitas e procrastinação.'
+    judgingDescription: 'Prefere padrões de vida ordenados e claramente planejados, gosta de fazer planos com antecedência, esclarecer objetivos e limites, e faz as coisas do início ao fim. Tendência a finalizar planos e tomar ação o mais rápido possível, busca estados estáveis e controláveis, e odeia mudanças súbitas e procrastinação.',
+    submitSuccess: 'Resposta enviada com sucesso, você pode visualizar no histórico'
   }
 }
 

@@ -523,6 +523,7 @@ export default {
     feelingDescription: 'When making choices, prioritizes others\' feelings, values and interpersonal harmony, values empathy, understanding and tolerance, pays attention to the emotional impact of decisions on others. Tends to balance human feelings and positions, pursues warm and human-centered approaches.',
     thinkingDescription: 'When making judgments, prioritizes logic, objective rules and rational analysis, focuses on fairness, efficiency and causality, less affected by personal emotions or others\' feelings. Tends to measure right and wrong with rational standards, pursues objective and fair solutions.',
     perceivingDescription: 'Likes flexible and open life rhythms, used to adapting to changes and keeping options open, enjoys the process of exploration and improvisation. Doesn\'t like to be bound by strict plans, tends to collect more information before making decisions, has strong adaptability, and is willing to accept new changes.',
-    judgingDescription: 'Prefers orderly and clearly planned life patterns, likes to make plans in advance, clarify goals and boundaries, and does things from beginning to end. Tends to finalize plans and take action as soon as possible, pursues stable and controllable states, and hates sudden changes and procrastination.'
+    judgingDescription: 'Prefers orderly and clearly planned life patterns, likes to make plans in advance, clarify goals and boundaries, and does things from beginning to end. Tends to finalize plans and take action as soon as possible, pursues stable and controllable states, and hates sudden changes and procrastination.',
+    submitSuccess: 'Answer submitted successfully, you can view it in history'
   }
 }

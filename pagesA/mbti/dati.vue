@@ -55,6 +55,15 @@
                 </view>
             </view>
         </up-popup>
+         <up-popup :show="showDelPopup3" mode="center">
+            <view class="del-popup-content">
+                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <view class="title1">{{ t('mbti.submitSuccess') }}</view>
+                <view class="del-popup-actions">
+                    <view class="del-popup-btn confirm" @click="uni.switchTab({ url: '/pages/test/test' })">{{ t('common.confirm') }}</view>
+                </view>
+            </view>
+        </up-popup>
     </view>
 </template>
 
@@ -74,6 +83,7 @@ const isScrolling = ref(false)
 const total = ref('')
 const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
+const showDelPopup3 = ref(false)
 const poster_id = ref(null)
 onLoad((e) => {
     console.log(e, 'eee')
@@ -197,7 +207,7 @@ const look = () => {
         if (question_mode.value == 'single_mode') {//单人
             uni.redirectTo({ url: `/pagesA/mbti/poster?id=`+poster_id.value })
         } else {
-            uni.switchTab({ url: '/pages/test/test' })
+            showDelPopup3.value = true
         }
     }).catch(err => {
         console.log(err, 'eee')
