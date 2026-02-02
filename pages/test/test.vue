@@ -656,10 +656,9 @@ export default {
 
         // 生成时间戳并进行MD5加密
         generateTimestampMD5() {
-            console.log(this.poster_id,'222')
            getcode(this.poster_id).then(res => {
-                pipeiproup.value = true
-                this.md5 = res.data.response_dataresponse_data.unique_key
+                this.pipeiproup = true
+                this.md5 = res.data.unique_key
             })
         },
         // 获取状态文本

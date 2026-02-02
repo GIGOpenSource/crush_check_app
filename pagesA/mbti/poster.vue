@@ -2,7 +2,7 @@
     <view class="page">
         <view class="top">
             <view class="title" v-if="type">{{ t('mbti.posterTitle') }}</view>
-            <view class="title" v-else>{{ details.personality_type }} {{ details.popular_name }}</view>
+            <view class="title" style="font-size:32rpx" v-else>{{ details.personality_type }} {{ details.popular_name }}</view>
             <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar"
                     size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
             <view class="userinfo2" v-if="type == 'double'">
