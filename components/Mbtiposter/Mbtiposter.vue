@@ -27,7 +27,7 @@
                             <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
                                 css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
                             <l-painter-view css="display: block;font-size: 36rpx;">
-                                <l-painter-text :text="'流行图鉴：' + info.mbti_list[0].templates[0].image_url" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="'流行图鉴：' + info.mbti_list[0].templates[0].popular_name" css="display: block;"> </l-painter-text>
                                 <l-painter-text :text="'人数占比：' + info.mbti_list[0].templates[0].population_ratio +'%'" css="display: block;"> </l-painter-text>
                             </l-painter-view>
 
@@ -43,25 +43,25 @@
                                 css="margin: 20rpx 0;display: block;width: 100%;text-align: center;font-size: 26rpx;font-weight: 400;"></l-painter-text>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='外向（E）'> </l-painter-text>
-                                <l-painter-text text='内向（I）' css="color:#4695B4"> </l-painter-text>
+                                <l-painter-text text='外向（E）' :css='getETextStyle()'> </l-painter-text>
+                                <l-painter-text text='内向（I）' :css='getITextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
-                                <l-painter-text text='10%'> </l-painter-text>
+                                <l-painter-text :text='getEPercentage + "%"' :css='getEPercentageStyle()'> </l-painter-text>
                                 <l-painter-view
-                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;">
+                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;position: relative;">
                                     <l-painter-view
-                                        css="position: absolute; right: 0; top: 0; width:90%; height:20rpx; border-radius: 10rpx; background: #4695B4;">
+                                        :css='getProgressBarStyle()'>
                                     </l-painter-view>
                                 </l-painter-view>
-                                <l-painter-text text='90%'> </l-painter-text>
+                                <l-painter-text :text='getIPercentage + "%"' :css='getIPercentageStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F1F6F9;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
                                     <l-painter-text text='与周围关键互动：'> </l-painter-text>
-                                    <l-painter-text text='内向型（Introverted）' css="color:#4D93AD;"> </l-painter-text>
+                                    <l-painter-text :text='getEITitleText()' :css='getEITitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
@@ -77,25 +77,25 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='现实（S）'> </l-painter-text>
-                                <l-painter-text text='直觉（N）' css="color:#E8AC3F"> </l-painter-text>
+                                <l-painter-text text='现实（S）' :css='getSTextStyle()'> </l-painter-text>
+                                <l-painter-text text='直觉（N）' :css='getNTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
-                                <l-painter-text text='10%'> </l-painter-text>
+                                <l-painter-text :text='getSPercentage + "%"' :css='getSPercentageStyle()'> </l-painter-text>
                                 <l-painter-view
-                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;">
+                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;position: relative;">
                                     <l-painter-view
-                                        css="position: absolute; right: 0; top: 0; width:90%; height:20rpx; border-radius: 10rpx; background: #E8AC3F;">
+                                        :css='getSNProgressBarStyle()'>
                                     </l-painter-view>
                                 </l-painter-view>
-                                <l-painter-text text='90%'> </l-painter-text>
+                                <l-painter-text :text='getNPercentage + "%"' :css='getNPercentageStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #FDF9F0;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
                                     <l-painter-text text='与周围关键互动：'> </l-painter-text>
-                                    <l-painter-text text='内向型（Introverted）' css="color:#E8AC3F"> </l-painter-text>
+                                    <l-painter-text :text='getSNTitleText()' :css='getSNTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
@@ -111,25 +111,25 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='逻辑（T）' css="color:#35A374"> </l-painter-text>
-                                <l-painter-text text='感受（F）'> </l-painter-text>
+                                <l-painter-text text='逻辑（T）' :css='getTTextStyle()'> </l-painter-text>
+                                <l-painter-text text='感受（F）' :css='getFTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
-                                <l-painter-text text='10%'> </l-painter-text>
+                                <l-painter-text :text='getTPercentage + "%"' :css='getTPercentageStyle()'> </l-painter-text>
                                 <l-painter-view
-                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;">
+                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;position: relative;">
                                     <l-painter-view
-                                        css="position: absolute; left: 0; top: 0; width:90%; height:20rpx; border-radius: 10rpx; background: #35A374;">
+                                        :css='getTFProgressBarStyle()'>
                                     </l-painter-view>
                                 </l-painter-view>
-                                <l-painter-text text='90%'> </l-painter-text>
+                                <l-painter-text :text='getFPercentage + "%"' :css='getFPercentageStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F0F9F4;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
                                     <l-painter-text text='与周围关键互动：'> </l-painter-text>
-                                    <l-painter-text text='内向型（Introverted）' css="color:#35A374"> </l-painter-text>
+                                    <l-painter-text :text='getTFTitleText()' :css='getTFTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
@@ -145,25 +145,25 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='计划（J）' css="color:#8B5E99"> </l-painter-text>
-                                <l-painter-text text='展望（P）'> </l-painter-text>
+                                <l-painter-text text='计划（J）' :css='getJTextStyle()'> </l-painter-text>
+                                <l-painter-text text='展望（P）' :css='getPTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
-                                <l-painter-text text='10%'> </l-painter-text>
+                                <l-painter-text :text='getJPercentage + "%"' :css='getJPercentageStyle()'> </l-painter-text>
                                 <l-painter-view
-                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;">
+                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;position: relative;">
                                     <l-painter-view
-                                        css="position: absolute; left: 0; top: 0; width:90%; height:20rpx; border-radius: 10rpx; background: #8B5E99;">
+                                        :css='getJPProgressBarStyle()'>
                                     </l-painter-view>
                                 </l-painter-view>
-                                <l-painter-text text='90%'> </l-painter-text>
+                                <l-painter-text :text='getPPercentage + "%"' :css='getPPercentageStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F6F4F7;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
                                     <l-painter-text text='与周围关键互动：'> </l-painter-text>
-                                    <l-painter-text text='内向型（Introverted）' css="color:#8B5E99"> </l-painter-text>
+                                    <l-painter-text :text='getJPTitleText()' :css='getJPTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
@@ -220,52 +220,52 @@
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
                             <l-painter-text text='是谁' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].identity_description'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='优劣势' css=""></l-painter-text>
+                            <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text text='优劣势' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="margin: 20rpx 0;display: flex;width: 100%;justify-content: space-between;">
                             <l-painter-view
                                 css="width: 48%;background: #FAF5FB;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
                                 <l-painter-text text='优势' css="background: #D0B8D8;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
-                                <l-painter-text text='• 新颖的思考方式' css="display: block;line-height: 50rpx;" v-for="value in 5" :key="value"></l-painter-text>
+                                <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.mbti_list[0].templates[0].strengths.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width: 48%;background: #F9F9F9;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
                                 <l-painter-text text='劣势' css="background: #E6E6E6;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
-                                <l-painter-text text='• 不遵守规则' css="display: block;line-height: 50rpx;" v-for="value in 5" :key="value"></l-painter-text>
+                                <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.mbti_list[0].templates[0].weaknesses.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                         </l-painter-view>
 
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
                             <l-painter-text text='的烦恼' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].worries'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='INTJ' css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
                             <l-painter-text text='对待感情...' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].love_attitude'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
@@ -322,7 +322,321 @@ export default {
         // 组件销毁前清理canvas资源
         this.cleanupCanvas()
     },
+    computed: {
+        // 计算外向（E）的百分比，四舍五入为整数，确保与内向相加为100
+        getEPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const E = this.info.mbti_list[0].base_scores.E || 0
+            const I = this.info.mbti_list[0].base_scores.I || 0
+            const total = E + I
+            if (total === 0) return 0
+            
+            // 计算百分比并四舍五入
+            const ePercent = Math.round((E / total) * 100)
+            // 内向百分比 = 100 - 外向百分比，确保和为100
+            const iPercent = 100 - ePercent
+            
+            return ePercent
+        },
+        // 计算内向（I）的百分比，四舍五入为整数，确保与外向相加为100
+        getIPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const E = this.info.mbti_list[0].base_scores.E || 0
+            const I = this.info.mbti_list[0].base_scores.I || 0
+            const total = E + I
+            if (total === 0) return 0
+            
+            // 计算外向百分比并四舍五入
+            const ePercent = Math.round((E / total) * 100)
+            // 内向百分比 = 100 - 外向百分比，确保和为100
+            const iPercent = 100 - ePercent
+            
+            return iPercent
+        },
+        // 判断外向值是否更大
+        isEGreater() {
+            return this.getEPercentage > this.getIPercentage
+        },
+        // 判断内向值是否更大
+        isIGreater() {
+            return this.getIPercentage > this.getEPercentage
+        },
+        // SN相关计算
+        getSPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const S = this.info.mbti_list[0].base_scores.S || 0
+            const N = this.info.mbti_list[0].base_scores.N || 0
+            const total = S + N
+            if (total === 0) return 0
+            return Math.round((S / total) * 100)
+        },
+        getNPercentage() {
+            return 100 - this.getSPercentage
+        },
+        isSGreater() {
+            return this.getSPercentage > this.getNPercentage
+        },
+        isNGreater() {
+            return this.getNPercentage > this.getSPercentage
+        },
+        // TF相关计算
+        getTPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const T = this.info.mbti_list[0].base_scores.T || 0
+            const F = this.info.mbti_list[0].base_scores.F || 0
+            const total = T + F
+            if (total === 0) return 0
+            return Math.round((T / total) * 100)
+        },
+        getFPercentage() {
+            return 100 - this.getTPercentage
+        },
+        isTGreater() {
+            return this.getTPercentage > this.getFPercentage
+        },
+        isFGreater() {
+            return this.getFPercentage > this.getTPercentage
+        },
+        // JP相关计算
+        getJPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const J = this.info.mbti_list[0].base_scores.J || 0
+            const P = this.info.mbti_list[0].base_scores.P || 0
+            const total = J + P
+            if (total === 0) return 0
+            return Math.round((J / total) * 100)
+        },
+        getPPercentage() {
+            return 100 - this.getJPercentage
+        },
+        isJGreater() {
+            return this.getJPercentage > this.getPPercentage
+        },
+        isPGreater() {
+            return this.getPPercentage > this.getJPercentage
+        }
+    },
     methods: {
+        // 获取外向文本样式（相等时显示左边的值）
+        getETextStyle() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            // 如果E大于等于I（包括相等），显示颜色
+            return ePercent >= iPercent ? 'color:#4695B4' : ''
+        },
+        // 获取内向文本样式
+        getITextStyle() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            // 只有I大于E时才显示颜色
+            return iPercent > ePercent ? 'color:#4695B4' : ''
+        },
+        // 获取外向百分比样式（相等时显示左边的值）
+        getEPercentageStyle() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            // 如果E大于等于I（包括相等），显示黑色
+            return ePercent >= iPercent ? 'color:#000000' : ''
+        },
+        // 获取内向百分比样式
+        getIPercentageStyle() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            // 只有I大于E时才显示黑色
+            return iPercent > ePercent ? 'color:#000000' : ''
+        },
+        // 获取进度条样式
+        getProgressBarStyle() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            
+            // 如果外向值大，进度条从左边开始
+            if (ePercent > iPercent) {
+                return `position: absolute; left: 0; top: 0; width:${ePercent}%; height:20rpx; border-radius: 10rpx; background: #4695B4;`
+            } else {
+                // 如果内向值大，进度条从右边开始
+                return `position: absolute; right: 0; top: 0; width:${iPercent}%; height:20rpx; border-radius: 10rpx; background: #4695B4;`
+            }
+        },
+        // SN相关样式方法（相等时显示左边的值）
+        getSTextStyle() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            // 如果S大于等于N（包括相等），显示颜色
+            return sPercent >= nPercent ? 'color:#E8AC3F' : ''
+        },
+        getNTextStyle() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            // 只有N大于S时才显示颜色
+            return nPercent > sPercent ? 'color:#E8AC3F' : ''
+        },
+        getSPercentageStyle() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            // 如果S大于等于N（包括相等），显示黑色
+            return sPercent >= nPercent ? 'color:#000000' : ''
+        },
+        getNPercentageStyle() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            // 只有N大于S时才显示黑色
+            return nPercent > sPercent ? 'color:#000000' : ''
+        },
+        getSNProgressBarStyle() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            
+            if (sPercent > nPercent) {
+                return `position: absolute; left: 0; top: 0; width:${sPercent}%; height:20rpx; border-radius: 10rpx; background: #E8AC3F;`
+            } else {
+                return `position: absolute; right: 0; top: 0; width:${nPercent}%; height:20rpx; border-radius: 10rpx; background: #E8AC3F;`
+            }
+        },
+        // TF相关样式方法（相等时显示左边的值）
+        getTTextStyle() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            // 如果T大于等于F（包括相等），显示颜色
+            return tPercent >= fPercent ? 'color:#35A374' : ''
+        },
+        getFTextStyle() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            // 只有F大于T时才显示颜色
+            return fPercent > tPercent ? 'color:#35A374' : ''
+        },
+        getTPercentageStyle() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            // 如果T大于等于F（包括相等），显示黑色
+            return tPercent >= fPercent ? 'color:#000000' : ''
+        },
+        getFPercentageStyle() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            // 只有F大于T时才显示黑色
+            return fPercent > tPercent ? 'color:#000000' : ''
+        },
+        getTFProgressBarStyle() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            
+            if (tPercent > fPercent) {
+                return `position: absolute; left: 0; top: 0; width:${tPercent}%; height:20rpx; border-radius: 10rpx; background: #35A374;`
+            } else {
+                return `position: absolute; right: 0; top: 0; width:${fPercent}%; height:20rpx; border-radius: 10rpx; background: #35A374;`
+            }
+        },
+        // JP相关样式方法（相等时显示左边的值）
+        getJTextStyle() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            // 如果J大于等于P（包括相等），显示颜色
+            return jPercent >= pPercent ? 'color:#8B5E99' : ''
+        },
+        getPTextStyle() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            // 只有P大于J时才显示颜色
+            return pPercent > jPercent ? 'color:#8B5E99' : ''
+        },
+        getJPercentageStyle() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            // 如果J大于等于P（包括相等），显示黑色
+            return jPercent >= pPercent ? 'color:#000000' : ''
+        },
+        getPPercentageStyle() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            // 只有P大于J时才显示黑色
+            return pPercent > jPercent ? 'color:#000000' : ''
+        },
+        getJPProgressBarStyle() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            
+            if (jPercent > pPercent) {
+                return `position: absolute; left: 0; top: 0; width:${jPercent}%; height:20rpx; border-radius: 10rpx; background: #8B5E99;`
+            } else {
+                return `position: absolute; right: 0; top: 0; width:${pPercent}%; height:20rpx; border-radius: 10rpx; background: #8B5E99;`
+            }
+        },
+        // 获取EI标题文本（根据数值大小动态显示，相等时显示左边的值）
+        getEITitleText() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            if (iPercent > ePercent) {
+                return '内向型（Introverted）'
+            } else {
+                // 相等或E更大时，显示左边的值（外向型）
+                return '外向型（Extroverted）'
+            }
+        },
+        // 获取SN标题文本（根据数值大小动态显示，相等时显示左边的值）
+        getSNTitleText() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            if (nPercent > sPercent) {
+                return '直觉型（Intuitive）'
+            } else {
+                // 相等或S更大时，显示左边的值（现实型）
+                return '现实型（Sensing）'
+            }
+        },
+        // 获取TF标题文本（根据数值大小动态显示，相等时显示左边的值）
+        getTFTitleText() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            if (fPercent > tPercent) {
+                return '感受型（Feeling）'
+            } else {
+                // 相等或T更大时，显示左边的值（逻辑型）
+                return '逻辑型（Thinking）'
+            }
+        },
+        // 获取JP标题文本（根据数值大小动态显示，相等时显示左边的值）
+        getJPTitleText() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            if (pPercent > jPercent) {
+                return '展望型（Perceiving）'
+            } else {
+                // 相等或J更大时，显示左边的值（计划型）
+                return '计划型（Judging）'
+            }
+        },
+        // 获取EI标题样式（与进度条颜色一致）
+        getEITitleStyle() {
+            // EI进度条颜色是 #4695B4
+            return 'color:#4695B4'
+        },
+        // 获取SN标题样式（与进度条颜色一致）
+        getSNTitleStyle() {
+            // SN进度条颜色是 #E8AC3F
+            return 'color:#E8AC3F'
+        },
+        // 获取TF标题样式（与进度条颜色一致）
+        getTFTitleStyle() {
+            // TF进度条颜色是 #35A374
+            return 'color:#35A374'
+        },
+        // 获取JP标题样式（与进度条颜色一致）
+        getJPTitleStyle() {
+            // JP进度条颜色是 #8B5E99
+            return 'color:#8B5E99'
+        },
         // 清理临时文件（支持小程序和APP）
         clearTempFiles() {
             try {
