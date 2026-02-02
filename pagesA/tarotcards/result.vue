@@ -183,12 +183,6 @@ const share = () => {
          }
       }
    })
-   wx.showShareImageMenu({
-      path: posterImg.value,
-      complete: (res) => {
-         console.log(res)
-      }
-   })
 }
 const handleProgressClose = () => {
     // 清除进度条定时器

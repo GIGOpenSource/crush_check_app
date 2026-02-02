@@ -1,17 +1,15 @@
 <template>
     <view>
-        <image :src="path" mode="widthFix" @load="success"></image>
-        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.95" :pixel-ratio="3">
+        <image v-if="path" :src="path" mode="widthFix" @load="success" @error="handleImageError"></image>
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx"
+            height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
                     <!-- 类型 -->
                     <l-painter-view css="display: flex;justify-content: space-between;">
-                        <l-painter-view
-                            css="display: flex;flex-direction: column;width:50%">
-                            <l-painter-text text='你的人格类型为：'
-                                css="display: block;font-size: 32rpx;"></l-painter-text>
+                        <l-painter-view css="display: flex;flex-direction: column;width:50%">
+                            <l-painter-text :text="t('mbti.personalityTypeLabel')" css="display: block;font-size: 32rpx;"></l-painter-text>
                             <l-painter-text text='INTJ-A'
                                 css="display: block;font-size:42rpx;color:#955EB1;margin-top:10rpx">
                             </l-painter-text>
@@ -19,7 +17,7 @@
                         </l-painter-view>
                         <l-painter-view
                             css="margin-left: auto;display: flex;flex-direction: column;width:50%;justify-content: flex-end;align-items:end;">
-                            <l-painter-text text='你的人格类型为：'
+                            <l-painter-text :text="t('mbti.personalityTypeLabel')"
                                 css="display: block;font-size: 32rpx;width:100%; text-align: right;"></l-painter-text>
                             <l-painter-text text='INTJ-A'
                                 css="display: block;font-size: 42rpx;color:#35A374;margin-top:10rpx;width:100%; text-align: right;">
@@ -32,17 +30,19 @@
                         <l-painter-view
                             css=" display: flex;align-items: center;justify-content: center;flex-direction:column;">
                             <l-painter-view css="display: flex;font-size: 36rpx;align-items: center;">
-                                <l-painter-text text='彩虹组'
+                                <l-painter-text :text='info.mbti_list[0].templates[0].popular_name'
                                     css="display: block;color:#35A374;font-weight:bolder;font-size:50rpx">
                                 </l-painter-text>
-                                <l-painter-image :src="$getImg('index/bg')"
+                                <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
                                     css="width: 100rpx; height: 100rpx; display: block;margin-left: 15rpx;"></l-painter-image>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: block;font-size: 24rpx; display: flex;align-items: center;flex-direction: column;justify-content: center">
-                                <l-painter-text text='98%' css="display: block;font-size:28rpx;margin:20rpx 0">
+                                <l-painter-text :text="info.mbti_list[0].templates[0].matching_score + '%'"
+                                    css="display: block;font-size:28rpx;margin:20rpx 0">
                                 </l-painter-text>
-                                <l-painter-text text='琴瑟和鸣，羡煞旁人' css="display: block;color:#3D3D3D"> </l-painter-text>
+                                <l-painter-text :text='info.mbti_list[0].templates[0].summary'
+                                    css="display: block;color:#3D3D3D"> </l-painter-text>
                             </l-painter-view>
                         </l-painter-view>
 
@@ -57,13 +57,13 @@
                             </l-painter-text>
                         </l-painter-view>
                         <l-painter-view>
-                            <l-painter-text text='90%' css="display: block;font-size:38rpx"> </l-painter-text>
+                            <l-painter-text :text="item.score + '%'" css="display: block;font-size:38rpx"> </l-painter-text>
                         </l-painter-view>
                     </l-painter-view>
                     <!-- 分析 -->
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='爱情关系深度分析' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.romanticDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text :text='info.mbti_list[0].templates[0].romantic_relationship'
@@ -73,17 +73,17 @@
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='朋友伙伴关系匹配度分析' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.friendshipDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text :text='info.mbti_list[0].templates[0].friendship_relationshi'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].friendship_relationship'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text text='家庭亲属关系匹配度分析' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.familyDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text :text='info.mbti_list[0].templates[0].family_relationship'
@@ -106,7 +106,7 @@ import lPainterQrcode from 'lime-painter/components/l-painter-qrcode/l-painter-q
 import lPainterText from 'lime-painter/components/l-painter-text/l-painter-text.vue'
 import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.vue'
 import { getQroter } from "@/api/tarotcards.js";
-import { t } from '@/i18n/index.js';
+import { t as i18nT } from '@/i18n/index.js';
 export default {
     name: "Twombtiposter",
     props: {
@@ -129,18 +129,34 @@ export default {
         return {
             show: true,
             path: '',
-            canvasId: `mbti-poster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // 唯一的canvasId
-            list: [{
-                t1: '爱情关系匹配',
-                t2: '恋爱伴侣关系匹配度分析'
-            }, {
-                t1: '友情关系匹配',
-                t2: '朋友伙伴关系匹配度分析'
-            }, {
-                t1: '亲情关系匹配分析',
-                t2: '家庭亲属关系匹配度分析'
-            }]
+            canvasId: `mbti-poster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` // 唯一的canvasId
         };
+    },
+    computed: {
+        // 关系匹配列表（根据info动态计算）
+        list() {
+            const templates = this.info?.mbti_list?.[0]?.templates?.[0]
+            if (!templates) {
+                return []
+            }
+            return [
+                {
+                    t1: this.t('mbti.romanticMatch'),
+                    t2: this.t('mbti.romanticMatchAnalysis'),
+                    score: templates.romantic_relationship_score || 0
+                },
+                {
+                    t1: this.t('mbti.friendshipMatch'),
+                    t2: this.t('mbti.friendshipMatchAnalysis'),
+                    score: templates.friendship_relationship_score || 0
+                },
+                {
+                    t1: this.t('mbti.familyMatch'),
+                    t2: this.t('mbti.familyMatchAnalysis'),
+                    score: templates.family_relationship_score || 0
+                }
+            ]
+        }
     },
     created() {
 
@@ -158,6 +174,10 @@ export default {
         this.cleanupCanvas()
     },
     methods: {
+        // 国际化翻译函数
+        t(key) {
+            return i18nT(key)
+        },
         // 清理临时文件（支持小程序和APP）
         clearTempFiles() {
             try {
@@ -179,7 +199,7 @@ export default {
                             const systemInfo = uni.getSystemInfoSync()
                             userDataPath = systemInfo.USER_DATA_PATH || ''
                         }
-                        
+
                         if (userDataPath) {
                             // 尝试读取目录并清理旧文件
                             fs.readdir({
@@ -194,7 +214,7 @@ export default {
                                         })
                                         .sort()
                                         .slice(0, 20) // 清理更多旧文件（20个）
-                                    
+
                                     imageFiles.forEach(file => {
                                         fs.unlink({
                                             filePath: `${userDataPath}/${file}`,
@@ -217,7 +237,7 @@ export default {
                     }
                 }
                 // #endif
-                
+
                 // #ifdef APP-PLUS
                 // 清理APP临时文件目录
                 try {
@@ -241,7 +261,7 @@ export default {
                                         return aTime - bTime
                                     })
                                     .slice(0, 20) // 清理更多旧文件（20个）
-                                
+
                                 imageFiles.forEach(fileEntry => {
                                     fileEntry.remove(() => {
                                         console.log('已清理APP临时文件:', fileEntry.name)
@@ -267,18 +287,18 @@ export default {
                                             .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
                                             .sort()
                                             .slice(0, 10)
-                                        
+
                                         imageFiles.forEach(file => {
                                             fs.unlink({
                                                 filePath: `${tempDirPath}/${file}`,
                                                 success: () => {
                                                     console.log('已清理APP临时文件:', file)
                                                 },
-                                                fail: () => {}
+                                                fail: () => { }
                                             })
                                         })
                                     },
-                                    fail: () => {}
+                                    fail: () => { }
                                 })
                             }
                         } catch (e) {
@@ -336,23 +356,38 @@ export default {
         },
         // 处理生成成功
         handleSuccess(filePath) {
-            this.path = filePath
-            this.$emit('success', filePath)
-            // 延迟清理，确保图片已加载和显示
-            setTimeout(() => {
-                this.cleanupCanvas()
-            }, 2000)
+            console.log('海报生成成功，路径:', filePath)
+            if (filePath) {
+                this.path = filePath
+                this.$emit('success', filePath)
+                // 延迟清理，确保图片已加载和显示
+                setTimeout(() => {
+                    this.cleanupCanvas()
+                }, 2000)
+            } else {
+                console.error('海报路径为空')
+                this.handleFail({ errMsg: '海报路径为空' })
+            }
+        },
+        // 处理图片加载错误
+        handleImageError(e) {
+            console.error('图片加载失败:', e)
+            uni.showToast({
+                title: '图片加载失败，请重试',
+                icon: 'none',
+                duration: 2000
+            })
         },
         // 处理生成失败
         handleFail(error) {
             console.error('海报生成失败:', error)
             this.cleanupCanvas()
-            
+
             // 检查是否是存储空间不足的错误
             let errorMsg = ''
             if (error && error.errMsg) {
                 if (error.errMsg.includes('maximum size') || error.errMsg.includes('storage limit')) {
-                    errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                    errorMsg = this.t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
                 } else {
                     errorMsg = error.errMsg
                 }
@@ -360,7 +395,7 @@ export default {
                 try {
                     const errorObj = JSON.parse(error)
                     if (errorObj.errMsg && (errorObj.errMsg.includes('maximum size') || errorObj.errMsg.includes('storage limit'))) {
-                        errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                        errorMsg = this.t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
                     } else {
                         errorMsg = errorObj.errMsg || error
                     }
@@ -368,15 +403,15 @@ export default {
                     errorMsg = error
                 }
             } else {
-                errorMsg = t('poster.generateFailed') || '海报生成失败，请重试'
+                errorMsg = this.t('poster.generateFailed') || '海报生成失败，请重试'
             }
-            
+
             uni.showToast({
                 title: errorMsg,
                 icon: 'none',
                 duration: 3000
             })
-            
+
             this.$emit('fail', error)
         },
         // 预览图片
@@ -399,7 +434,7 @@ image {
     width: 100%;
     height: 100%;
     border-radius: 15rpx;
-   
+
 
 
 

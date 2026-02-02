@@ -61,7 +61,7 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getList, createPoster, finsh } from '@/api/mbti.js'
+import { getList, createPoster, finsh,layout } from '@/api/mbti.js'
 import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('')
@@ -129,7 +129,7 @@ const down = async () => {
             const firstUnansweredIndex = list.value.findIndex(item => !item.question_value || item.question_value == 0)
             if (firstUnansweredIndex !== -1) {
                 uni.showToast({
-                    title: '请勿空题',
+                    title: t('mbti.pleaseAnswerAll'),
                     icon: 'none'
                 })
                 scrollToQuestion(firstUnansweredIndex)
@@ -206,7 +206,10 @@ const look = () => {
 }
 //确定退出
 const submit = () => {
-    uni.navigateBack()
+    layout(poster_id.value).then(res => {
+       uni.navigateBack()
+    })
+   
 }
 
 

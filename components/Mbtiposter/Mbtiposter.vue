@@ -1,8 +1,8 @@
 <template>
     <view>
-        <image :src="path" mode="widthFix" @load="success"></image>
+        <image v-if="path" :src="path" mode="widthFix" @load="success" @error="handleImageError"></image>
         <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="600rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg"  :quality="0.95" :pixel-ratio="3">
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -10,7 +10,7 @@
                     <l-painter-view css="display: flex;align-items: center;">
                         <l-painter-view
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
-                            <l-painter-text text='你的人格类型为：'
+                            <l-painter-text :text="t('mbti.personalityTypeLabel')"
                                 css="display: block;width: 100%;text-align: center;font-size: 26rpx;"></l-painter-text>
                             <l-painter-text :text="info.mbti_list[0].mbti_type + ' '+info.mbti_list[0].templates[0].popular_name"
                                 css="display: block;width: 100%;text-align: center;margin: 30rpx 0;font-size: 32rpx;color:#955EB1">
@@ -27,8 +27,8 @@
                             <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
                                 css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
                             <l-painter-view css="display: block;font-size: 36rpx;">
-                                <l-painter-text :text="'流行图鉴：' + info.mbti_list[0].templates[0].popular_name" css="display: block;"> </l-painter-text>
-                                <l-painter-text :text="'人数占比：' + info.mbti_list[0].templates[0].population_ratio +'%'" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.popularCatalog') + info.mbti_list[0].templates[0].popular_name" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.populationRatio') + info.mbti_list[0].templates[0].population_ratio +'%'" css="display: block;"> </l-painter-text>
                             </l-painter-view>
 
 
@@ -39,12 +39,12 @@
                     <l-painter-view css="display: flex;align-items: center; margin: 0 20rpx;">
                         <l-painter-view
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
-                            <l-painter-text text='各项人格占比'
+                            <l-painter-text :text="t('mbti.personalityProportion')"
                                 css="margin: 20rpx 0;display: block;width: 100%;text-align: center;font-size: 26rpx;font-weight: 400;"></l-painter-text>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='外向（E）' :css='getETextStyle()'> </l-painter-text>
-                                <l-painter-text text='内向（I）' :css='getITextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.extroverted')" :css='getETextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.introverted')" :css='getITextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
@@ -60,7 +60,7 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F1F6F9;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='能量获取：'> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.energySource')"> </l-painter-text>
                                     <l-painter-text :text='getEITitleText()' :css='getEITitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
@@ -77,8 +77,8 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='现实（S）' :css='getSTextStyle()'> </l-painter-text>
-                                <l-painter-text text='直觉（N）' :css='getNTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.sensing')" :css='getSTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.intuitive')" :css='getNTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
@@ -94,7 +94,7 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #FDF9F0;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='信息获取：'> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.informationAcquisition')"> </l-painter-text>
                                     <l-painter-text :text='getSNTitleText()' :css='getSNTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
@@ -111,8 +111,8 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='逻辑（T）' :css='getTTextStyle()'> </l-painter-text>
-                                <l-painter-text text='感受（F）' :css='getFTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.thinking')" :css='getTTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.feeling')" :css='getFTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
@@ -128,7 +128,7 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F0F9F4;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='决策方式：'> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.decisionMaking')"> </l-painter-text>
                                     <l-painter-text :text='getTFTitleText()' :css='getTFTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
@@ -145,8 +145,8 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='计划（J）' :css='getJTextStyle()'> </l-painter-text>
-                                <l-painter-text text='展望（P）' :css='getPTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.judging')" :css='getJTextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.perceiving')" :css='getPTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
@@ -162,7 +162,7 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F6F4F7;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='生活态度：'> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.lifestyle')"> </l-painter-text>
                                     <l-painter-text :text='getJPTitleText()' :css='getJPTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
@@ -179,8 +179,8 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text text='坚决（A）' css="color:#F36067"> </l-painter-text>
-                                <l-painter-text text='谨慎（T）'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.assertive')" css="color:#F36067"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.turbulent')"> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
@@ -196,12 +196,12 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background:#FEF4F3;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='自信程度：'> </l-painter-text>
-                                    <l-painter-text text='内向型（Introverted）' css="color:#F36067"> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.confidenceLevel')"> </l-painter-text>
+                                    <l-painter-text :text="t('mbti.introvertedType')" css="color:#F36067"> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        text='善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情 感。倾向于选择有意义社交活动。'> </l-painter-text>
+                                        :text="t('mbti.introvertedDescription')"> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -212,7 +212,7 @@
                     <l-painter-view css="display: flex;align-items: center; margin: 0 20rpx;">
                         <l-painter-view
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
-                            <l-painter-text text='人格类型解析'
+                            <l-painter-text :text="t('mbti.personalityAnalysis')"
                                 css="margin: 20rpx 0;display: block;width: 100%;text-align: center;font-size: 26rpx;font-weight: 400;"></l-painter-text>
 
                         </l-painter-view>
@@ -221,7 +221,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='是谁' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.whoIs')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text :text='info.mbti_list[0].templates[0].identity_description'
@@ -232,17 +232,17 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='优劣势' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.strengthsWeaknesses')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="margin: 20rpx 0;display: flex;width: 100%;justify-content: space-between;">
                             <l-painter-view
                                 css="width: 48%;background: #FAF5FB;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
-                                <l-painter-text text='优势' css="background: #D0B8D8;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
+                                <l-painter-text :text="t('mbti.strengths')" css="background: #D0B8D8;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
                                 <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.mbti_list[0].templates[0].strengths.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width: 48%;background: #F9F9F9;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
-                                <l-painter-text text='劣势' css="background: #E6E6E6;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
+                                <l-painter-text :text="t('mbti.weaknesses')" css="background: #E6E6E6;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
                                 <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.mbti_list[0].templates[0].weaknesses.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                         </l-painter-view>
@@ -251,7 +251,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='的烦恼' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.worries')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text :text='info.mbti_list[0].templates[0].worries'
@@ -262,7 +262,7 @@
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
                             <l-painter-text :text="info.mbti_list[0].mbti_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
-                            <l-painter-text text='对待感情...' css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="t('mbti.loveAttitude')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
                             <l-painter-text :text='info.mbti_list[0].templates[0].love_attitude'
@@ -285,7 +285,7 @@ import lPainterQrcode from 'lime-painter/components/l-painter-qrcode/l-painter-q
 import lPainterText from 'lime-painter/components/l-painter-text/l-painter-text.vue'
 import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.vue'
 import { getQroter } from "@/api/tarotcards.js";
-import { t } from '@/i18n/index.js';
+import { t as i18nT } from '@/i18n/index.js';
 export default {
     name: "Mbtiposter",
     props: {
@@ -321,6 +321,12 @@ export default {
     beforeDestroy() {
         // 组件销毁前清理canvas资源
         this.cleanupCanvas()
+    },
+    methods: {
+        // 国际化翻译函数
+        t(key) {
+            return t(key)
+        }
     },
     computed: {
         // 计算外向（E）的百分比，四舍五入为整数，确保与内向相加为100
@@ -427,6 +433,10 @@ export default {
         }
     },
     methods: {
+        // 国际化翻译函数
+        t(key) {
+            return i18nT(key)
+        },
         // 获取外向文本样式（相等时显示左边的值）
         getETextStyle() {
             const ePercent = this.getEPercentage
@@ -578,10 +588,10 @@ export default {
             const ePercent = this.getEPercentage
             const iPercent = this.getIPercentage
             if (iPercent > ePercent) {
-                return '内向型（Introverted）'
+                return this.t('mbti.introvertedType')
             } else {
                 // 相等或E更大时，显示左边的值（外向型）
-                return '外向型（Extroverted）'
+                return this.t('mbti.extrovertedType')
             }
         },
         // 获取SN标题文本（根据数值大小动态显示，相等时显示左边的值）
@@ -589,10 +599,10 @@ export default {
             const sPercent = this.getSPercentage
             const nPercent = this.getNPercentage
             if (nPercent > sPercent) {
-                return '直觉型（Intuitive）'
+                return this.t('mbti.intuitiveType')
             } else {
                 // 相等或S更大时，显示左边的值（现实型）
-                return '现实型（Sensing）'
+                return this.t('mbti.sensingType')
             }
         },
         // 获取TF标题文本（根据数值大小动态显示，相等时显示左边的值）
@@ -600,10 +610,10 @@ export default {
             const tPercent = this.getTPercentage
             const fPercent = this.getFPercentage
             if (fPercent > tPercent) {
-                return '感受型（Feeling）'
+                return this.t('mbti.feelingType')
             } else {
                 // 相等或T更大时，显示左边的值（逻辑型）
-                return '逻辑型（Thinking）'
+                return this.t('mbti.thinkingType')
             }
         },
         // 获取JP标题文本（根据数值大小动态显示，相等时显示左边的值）
@@ -611,10 +621,10 @@ export default {
             const jPercent = this.getJPercentage
             const pPercent = this.getPPercentage
             if (pPercent > jPercent) {
-                return '展望型（Perceiving）'
+                return this.t('mbti.perceivingType')
             } else {
                 // 相等或J更大时，显示左边的值（计划型）
-                return '计划型（Judging）'
+                return this.t('mbti.judgingType')
             }
         },
         // 获取EI描述文本（根据类型动态显示）
@@ -623,10 +633,10 @@ export default {
             const iPercent = this.getIPercentage
             if (iPercent > ePercent) {
                 // 内向型描述
-                return '善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情感。倾向于选择有意义、低消耗的社交活动，独处时能恢复精力，过度社交会感到疲惫。'
+                return this.t('mbti.introvertedDescription')
             } else {
                 // 外向型描述（包括相等时显示左边的值）
-                return '擅长对外表达与互动，关注外部环境与他人状态，乐于通过交流、行动来梳理思路、获得能量。倾向于主动参与群体活动，在与人互动中感到充实，长时间独处容易觉得无聊。'
+                return this.t('mbti.extrovertedDescription')
             }
         },
         // 获取EI标题样式（与进度条颜色一致）
@@ -640,10 +650,10 @@ export default {
             const nPercent = this.getNPercentage
             if (nPercent > sPercent) {
                 // N型（直觉型）描述
-                return '关注抽象规律与潜在可能，擅长捕捉事物背后的联系、趋势与想象空间，对未来、创意和深层逻辑更敏感。不满足于表面信息，喜欢探索未知、挖掘本质，偏爱宏观框架与创新思路。'
+                return this.t('mbti.intuitiveDescription')
             } else {
                 // S型（现实型）描述（包括相等时显示左边的值）
-                return '注重现实与具体信息，习惯关注眼前可见的事实、细节与经验，偏好清晰、可落地的内容。相信亲身经历与客观数据，做事踏实务实，重视实际效果与当下可行性。'
+                return this.t('mbti.sensingDescription')
             }
         },
         // 获取SN标题样式（与进度条颜色一致）
@@ -657,10 +667,10 @@ export default {
             const fPercent = this.getFPercentage
             if (fPercent > tPercent) {
                 // F型（感受型）描述
-                return '做选择时优先考虑他人感受、价值观念与人际和谐，重视共情、理解与包容，关注决策对他人的情绪影响。倾向于兼顾人情与立场，追求温暖、贴合人心的处理方式。'
+                return this.t('mbti.feelingDescription')
             } else {
                 // T型（逻辑型）描述（包括相等时显示左边的值）
-                return '做判断时优先依靠逻辑、客观规则与理性分析，注重公平、效率与因果关系，较少被个人情绪或他人感受影响。倾向于用理性标准衡量对错，追求客观公正的解决方案。'
+                return this.t('mbti.thinkingDescription')
             }
         },
         // 获取TF标题样式（与进度条颜色一致）
@@ -674,10 +684,10 @@ export default {
             const pPercent = this.getPPercentage
             if (pPercent > jPercent) {
                 // P型（展望型）描述
-                return '喜欢灵活、开放的生活节奏，习惯随机应变、保留选择空间，享受探索与即兴的过程。不喜欢被严格计划束缚，倾向于收集更多信息再做决定，适应力强，乐于接受新鲜变化。'
+                return this.t('mbti.perceivingDescription')
             } else {
                 // J型（计划型）描述（包括相等时显示左边的值）
-                return '偏好有序、规划清晰的生活模式，喜欢提前制定计划、明确目标与边界，做事有始有终。倾向于尽快敲定方案、落实行动，追求稳定可控的状态，讨厌突发变动与拖延。'
+                return this.t('mbti.judgingDescription')
             }
         },
         // 获取JP标题样式（与进度条颜色一致）
@@ -863,12 +873,27 @@ export default {
         },
         // 处理生成成功
         handleSuccess(filePath) {
-            this.path = filePath
-            this.$emit('success', filePath)
-            // 延迟清理，确保图片已加载和显示
-            setTimeout(() => {
-                this.cleanupCanvas()
-            }, 2000)
+            console.log('海报生成成功，路径:', filePath)
+            if (filePath) {
+                this.path = filePath
+                this.$emit('success', filePath)
+                // 延迟清理，确保图片已加载和显示
+                setTimeout(() => {
+                    this.cleanupCanvas()
+                }, 2000)
+            } else {
+                console.error('海报路径为空')
+                this.handleFail({ errMsg: '海报路径为空' })
+            }
+        },
+        // 处理图片加载错误
+        handleImageError(e) {
+            console.error('图片加载失败:', e)
+            uni.showToast({
+                title: '图片加载失败，请重试',
+                icon: 'none',
+                duration: 2000
+            })
         },
         // 处理生成失败
         handleFail(error) {
@@ -879,7 +904,7 @@ export default {
             let errorMsg = ''
             if (error && error.errMsg) {
                 if (error.errMsg.includes('maximum size') || error.errMsg.includes('storage limit')) {
-                    errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                    errorMsg = this.t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
                 } else {
                     errorMsg = error.errMsg
                 }
@@ -887,7 +912,7 @@ export default {
                 try {
                     const errorObj = JSON.parse(error)
                     if (errorObj.errMsg && (errorObj.errMsg.includes('maximum size') || errorObj.errMsg.includes('storage limit'))) {
-                        errorMsg = t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
+                        errorMsg = this.t('poster.storageLimitExceeded') || '存储空间不足，请清理缓存后重试'
                     } else {
                         errorMsg = errorObj.errMsg || error
                     }
@@ -895,7 +920,7 @@ export default {
                     errorMsg = error
                 }
             } else {
-                errorMsg = t('poster.generateFailed') || '海报生成失败，请重试'
+                errorMsg = this.t('poster.generateFailed') || '海报生成失败，请重试'
             }
             
             uni.showToast({

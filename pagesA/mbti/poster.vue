@@ -2,19 +2,20 @@
     <view class="page">
         <view class="top">
             <view class="title">{{ t('mbti.posterTitle') }}</view>
-            <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar" size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
+            <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar"
+                    size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
             <view class="userinfo2" v-if="type == 'double'">
                 <view><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view>
                 <view> <text>{{ t('my.userNickname') }}</text><up-avatar :src="src" size="36"></up-avatar></view>
             </view>
         </view>
         <view class="center">
-            <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details"/>
-            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" :info="details"/>
+            <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details" />
+            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" :info="details" />
         </view>
         <view class="bottom">
             <view class="btns">
-                <view class="share">{{ t('mbti.shareResult') }}</view>
+                <view class="share" @click="share">{{ t('mbti.shareResult') }}</view>
                 <view @click="topath">{{ t('mbti.backToHome') }}</view>
             </view>
         </view>
@@ -33,6 +34,7 @@ const src = ref('')
 const type = ref('')
 const details = ref({})
 const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
+const posterImg = ref('')
 
 // 清理临时文件的函数
 const cleanupOldTempFiles = () => {
@@ -52,7 +54,7 @@ const cleanupOldTempFiles = () => {
                     const systemInfo = uni.getSystemInfoSync()
                     userDataPath = systemInfo.USER_DATA_PATH || ''
                 }
-                
+
                 if (userDataPath) {
                     fs.readdir({
                         dirPath: userDataPath,
@@ -61,16 +63,16 @@ const cleanupOldTempFiles = () => {
                                 .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
                                 .sort()
                                 .slice(0, 30) // 清理更多文件
-                            
+
                             imageFiles.forEach(file => {
                                 fs.unlink({
                                     filePath: `${userDataPath}/${file}`,
-                                    success: () => {},
-                                    fail: () => {}
+                                    success: () => { },
+                                    fail: () => { }
                                 })
                             })
                         },
-                        fail: () => {}
+                        fail: () => { }
                     })
                 }
             } catch (e) {
@@ -100,9 +102,44 @@ const topath = () => {
 }
 
 const handlePosterSuccess = (filePath) => {
+    console.log(filePath, 'fififi')
+    posterImg.value = filePath
     setTimeout(() => {
         cleanupOldTempFiles()
     }, 2000)
+}
+//分享
+const share = () => {
+     if (!posterImg.value) {
+        uni.showToast({
+            title: t('mbti.posterNotReady'),
+            icon: 'none',
+            duration: 2000
+        })
+        return
+    }
+    uni.downloadFile({
+        url: posterImg.value,
+        success: (res) => {
+            console.log(res,'rrr')
+            if (res.statusCode === 200) {
+                const inviterOpenId = uni.getStorageSync("openId") || "";
+                const query = `?scene=${inviterOpenId}`
+                wx.showShareImageMenu({
+                    path:res.tempFilePath,
+                    entrancePath: `/pages/index/index${query}`,
+                    complete: (ressult) => {
+                        console.log(res,'rrr')
+                        if (res.errMsg == 'showShareImageMenu:fail cancel') {
+                            // share_fail()
+                        } else {
+                        }
+                    }
+                })
+
+            }
+        }
+    })
 }
 
 </script>

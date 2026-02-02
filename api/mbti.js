@@ -1,4 +1,4 @@
-import { postRequest, getRequest } from "@/utils/http.js";
+import { postRequest, getRequest,deleteRequest } from "@/utils/http.js";
 
 //获取题库
 export const getList = (currentPage,pageSize,test_type,question_mode,poster_id,inviter,unique_key) => {
@@ -20,4 +20,16 @@ export const createPoster = (currentPage,pageSize,poster_id,answers,timestamp) =
 export const finsh = (poster_id) => {
 	return getRequest(`/mbtiquestion/generate_report/`,{poster_id})
 }
+
+//中途退出
+export const layout = (poster_id) => {
+	return deleteRequest(`/mbtiquestion/quit_test/`,{poster_id})
+}
+
+//重新生成邀请码
+export const code = (poster_id) => {
+	return deleteRequest(`/mbtiquestion/reinvite_report/`,{poster_id})
+}
+
+
 

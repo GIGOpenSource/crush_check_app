@@ -204,7 +204,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -243,6 +243,7 @@ import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
+import { code } from '@/api/mbti.js'
 
 export default {
     components: {
@@ -272,7 +273,8 @@ export default {
             wasSelectAll: false, // 是否曾经全选过（用于判断反选）
             pipeiproup: false,
             pipeicontent: [],
-            md5: uni.getStorageSync('timestamp') || ''
+            md5: '',
+            poster_id:''
         };
     },
     onLoad() {
@@ -650,12 +652,11 @@ export default {
 
         // 生成时间戳并进行MD5加密
         generateTimestampMD5() {
-            const timestamp = Date.now();
-            const md5Hash = md5Encrypt(String(timestamp));
-            this.md5 = md5Hash
-            uni.setStorageSync('timestamp', this.md5)
+            code(this.poster_id).then(res => {
+                pipeiproup.value = true
+                this.md5 = res.data.response_dataresponse_data.unique_key
+            })
         },
-
         // 获取状态文本
         getStatusText(status) {
             const statusMap = {
@@ -739,7 +740,11 @@ export default {
                     } else {
                         if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                             if (item.mbti_list[0].other_status == 'waiting') return
-                            if (item.mbti_list[0].other_status == 'exit') return pipeiproup.value = true
+                            if (item.mbti_list[0].other_status == 'exit') {
+
+                                this.poster_id = item.id
+                                this.generateTimestampMD5()
+                            }
                             if (item.mbti_list[0].other_status == 'done') {
                                 uni.navigateTo({
                                     url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
