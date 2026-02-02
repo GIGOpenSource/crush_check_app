@@ -27,8 +27,9 @@ export const layout = (poster_id) => {
 }
 
 //重新生成邀请码
-export const code = (poster_id) => {
-	return deleteRequest(`/mbtiquestion/reinvite_report/`,{poster_id})
+export const getcode = (poster_id) => {
+	console.log(poster_id,'poster_id')
+	return postRequest(`/mbtiquestion/reinvite_report/`,{poster_id})
 }
 
 //简介

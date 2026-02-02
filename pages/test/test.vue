@@ -53,7 +53,7 @@
                         </image>
                         <image v-else-if="item.prompt_template.template_type == 'mbti'"
                             :src="item.mbti_list[0]?.templates[0]?.image_url || $getImg('add/mbti')" mode="scaleToFill"
-                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'mbti': item.prompt_template.template_type == 'mbti' }">
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -61,7 +61,8 @@
                     </view>
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
-                    <view class="status-overlay" v-if="item.status === 'waiting' || item.status === 'error'">
+                    <view class="status-overlay"
+                        v-if="(item.status === 'waiting' || item.status === 'error') && item.prompt_template.template_type !== 'mbti'">
                         <!-- 右上角状态标签 -->
                         <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
                             @click.stop="index == 1 ? handleRetryClick(item) : null">
@@ -133,16 +134,20 @@
                                             class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
                                         </image>
                                         <!-- 未完成 -->
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{ $t('mbti.waitingForOtherResult') }}</view>
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">{{ $t('mbti.otherNotCompleted') }}</view>
-                                        <view class="wating" v-if="!item.mbti_list[0].other_status">{{ $t('mbti.waitingForOthersToJoin') }}</view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{
+                                            $t('mbti.waitingForOtherResult') }}</view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">{{
+                                            $t('mbti.otherNotCompleted') }}</view>
+                                        <view class="wating" v-if="!item.mbti_list[0].other_status">{{
+                                            $t('mbti.waitingForOthersToJoin') }}</view>
                                     </view>
 
                                 </view>
                                 <view class="details">
                                     <text v-if="isType" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
-                                        <text>{{  item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') : !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode'):
+                                        <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
+                                            !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
                                             $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
@@ -203,7 +208,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -242,7 +247,7 @@ import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
-import { code } from '@/api/mbti.js'
+import { getcode } from '@/api/mbti.js'
 
 export default {
     components: {
@@ -651,7 +656,8 @@ export default {
 
         // 生成时间戳并进行MD5加密
         generateTimestampMD5() {
-            code(this.poster_id).then(res => {
+            console.log(this.poster_id,'222')
+           getcode(this.poster_id).then(res => {
                 pipeiproup.value = true
                 this.md5 = res.data.response_dataresponse_data.unique_key
             })
@@ -699,9 +705,21 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
-            console.log(type, 'tttt')
             // 如果状态是已完成，跳转到详情页
-            if (item.status === "done") {
+            if (type == 'mbti' && item.status == 'waiting') {
+                if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
+                 
+                    if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
+                       
+                        this.poster_id = item.id
+                        this.generateTimestampMD5()
+                    }
+                    
+                } 
+                return
+            }
+            if (item.status == "done") {
+                console.log(item.status)
                 if (item.id) {
                     if (type == 'social' || type == 'physical') {
                         uni.navigateTo({
@@ -736,11 +754,10 @@ export default {
                                 });
                             },
                         });
-                    } else {
+                    } else if (type == 'mbti') {
                         if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                             if (item.mbti_list[0].other_status == 'waiting') return
-                            if (item.mbti_list[0].other_status == 'exit' || !item.mbti_list[0].other_status) {
-
+                            if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
                                 this.poster_id = item.id
                                 this.generateTimestampMD5()
                             }
