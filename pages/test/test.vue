@@ -121,29 +121,28 @@
                             <block v-else>
                                 <view class="double">
                                     <view class="num" style="margin-left:-10rpx">{{
-                                        item.mbti_list[0]?.mbti_type.split('+')[0] || '' }} <text
+                                        item.mbti_list[0]?.owner_mbti_type || '' }} <text
                                             style="margin-left:50rpx;font-size: 26rpx;">X</text></view>
                                     <view class="xi">
                                         <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
                                         <view class="num" style="width:120rpx;text-align: center;">{{
                                             item.mbti_list[0].other_status == 'done' ?
-                                                item.mbti_list[0]?.mbti_type.split('+')[1] : '?' }}</view>
+                                                item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
                                         <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill"
                                             class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
                                         </image>
                                         <!-- 未完成 -->
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">等待对方结果
-                                        </view>
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">对方未完成测试
-                                        </view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{ $t('mbti.waitingForOtherResult') }}</view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">{{ $t('mbti.otherNotCompleted') }}</view>
+                                        <view class="wating" v-if="!item.mbti_list[0].other_status">{{ $t('mbti.waitingForOthersToJoin') }}</view>
                                     </view>
 
                                 </view>
                                 <view class="details">
                                     <text v-if="isType" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
-                                        <text>{{ item.mbti_list[0].other_status == 'exit' ? '对方未完成测试' :
+                                        <text>{{  item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') : !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode'):
                                             $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
@@ -204,7 +203,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -274,7 +273,7 @@ export default {
             pipeiproup: false,
             pipeicontent: [],
             md5: '',
-            poster_id:''
+            poster_id: ''
         };
     },
     onLoad() {
@@ -740,7 +739,7 @@ export default {
                     } else {
                         if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                             if (item.mbti_list[0].other_status == 'waiting') return
-                            if (item.mbti_list[0].other_status == 'exit') {
+                            if (item.mbti_list[0].other_status == 'exit' || !item.mbti_list[0].other_status) {
 
                                 this.poster_id = item.id
                                 this.generateTimestampMD5()

@@ -1,92 +1,82 @@
 <template>
     <view>
         <image v-if="path" :src="path" mode="widthFix" @load="success" @error="handleImageError"></image>
-        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx"
-            height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="600rpx" height="100%"
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
-                    <!-- 类型 -->
-                    <l-painter-view css="display: flex;justify-content: space-between;">
-                        <l-painter-view css="display: flex;flex-direction: column;width:50%">
-                            <l-painter-text :text="t('mbti.personalityTypeLabel')" css="display: block;font-size: 32rpx;"></l-painter-text>
-                            <l-painter-text :text="info.mbti_list[0].owner_mbti_type"
-                                css="display: block;font-size:42rpx;color:#955EB1;margin-top:10rpx">
-                            </l-painter-text>
+                    <!-- 图像 -->
+                    <l-painter-view css="display: flex;align-items: center;margin: 30rpx 80rpx;">
+                        <l-painter-view css="display: flex;align-items: center;justify-content: center;">
+                            <l-painter-image :src="info.image_url"
+                                css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
+                            <l-painter-view css="display: block;font-size: 36rpx;">
+                                <l-painter-text :text="t('mbti.popularCatalog') + info.mbti_nickname" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.populationRatio') + (info.population_ratio || 0) +'%'" css="display: block;"> </l-painter-text>
+                            </l-painter-view>
 
-                        </l-painter-view>
-                        <l-painter-view
-                            css="margin-left: auto;display: flex;flex-direction: column;width:50%;justify-content: flex-end;align-items:end;">
-                            <l-painter-text :text="t('mbti.personalityTypeLabel')"
-                                css="display: block;font-size: 32rpx;width:100%; text-align: right;"></l-painter-text>
-                            <l-painter-text :text="info.mbti_list[0].other_type"
-                                css="display: block;font-size: 42rpx;color:#35A374;margin-top:10rpx;width:100%; text-align: right;">
-                            </l-painter-text>
                         </l-painter-view>
 
                     </l-painter-view>
-                    <!-- 图像 -->
-                    <l-painter-view css="margin: 30rpx 80rpx;">
+                    <!-- 人格类型分析 -->
+                    <l-painter-view css="display: flex;align-items: center; margin: 0 20rpx;">
                         <l-painter-view
-                            css=" display: flex;align-items: center;justify-content: center;flex-direction:column;">
-                            <l-painter-view css="display: flex;font-size: 36rpx;align-items: center;">
-                                <l-painter-text :text='info.mbti_list[0].templates[0].popular_name'
-                                    css="display: block;color:#35A374;font-weight:bolder;font-size:50rpx">
-                                </l-painter-text>
-                                <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
-                                    css="width: 100rpx; height: 100rpx; display: block;margin-left: 15rpx;"></l-painter-image>
+                            css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
+                            <l-painter-text :text="t('mbti.personalityAnalysis')"
+                                css="margin: 20rpx 0;display: block;width: 100%;text-align: center;font-size: 26rpx;font-weight: 400;"></l-painter-text>
+
+                        </l-painter-view>
+
+                    </l-painter-view>
+                    <l-painter-view css="margin: 0 20rpx;">
+                        <l-painter-view>
+                            <l-painter-text :text="info.personality_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="t('mbti.whoIs')" css="color:#000;font-weight:bolder"></l-painter-text>
+                        </l-painter-view>
+                        <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
+                            <l-painter-text :text='info.identity_description'
+                                css=""></l-painter-text>
+                        </l-painter-view>
+
+                    </l-painter-view>
+                    <l-painter-view css="margin: 0 20rpx;">
+                        <l-painter-view>
+                            <l-painter-text :text="info.personality_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="t('mbti.strengthsWeaknesses')" css="color:#000;font-weight:bolder"></l-painter-text>
+                        </l-painter-view>
+                        <l-painter-view css="margin: 20rpx 0;display: flex;width: 100%;justify-content: space-between;">
+                            <l-painter-view
+                                css="width: 48%;background: #FAF5FB;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
+                                <l-painter-text :text="t('mbti.strengths')" css="background: #D0B8D8;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
+                                <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.strengths?.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                             <l-painter-view
-                                css="display: block;font-size: 24rpx; display: flex;align-items: center;flex-direction: column;justify-content: center">
-                                <l-painter-text :text="info.mbti_list[0].templates[0].matching_score + '%'"
-                                    css="display: block;font-size:28rpx;margin:20rpx 0">
-                                </l-painter-text>
-                                <l-painter-text :text='info.mbti_list[0].templates[0].summary'
-                                    css="display: block;color:#3D3D3D"> </l-painter-text>
+                                css="width: 48%;background: #F9F9F9;border-radius: 15rpx; flex-direction: column;align-items: center;justify-content: center;text-align: center;padding:20rpx 0;">
+                                <l-painter-text :text="t('mbti.weaknesses')" css="background: #E6E6E6;display: block;width:150rpx;height:60rpx;line-height:60rpx;text-align:center;border-radius: 30rpx;margin: 0 auto;margin-bottom:20rpx;"></l-painter-text>
+                                <l-painter-text :text='value' css="display: block;line-height: 50rpx;" v-for="value in info.weaknesses?.split('，')" :key="value"></l-painter-text>
                             </l-painter-view>
                         </l-painter-view>
 
                     </l-painter-view>
-                    <!-- 百分比 -->
-                    <l-painter-view
-                        css=" display: flex;align-items: center;justify-content: space-between;background: #F1F6F9;padding:30rpx;width:100%;box-sizing: border-box;border-radius: 15rpx;margin-bottom:20rpx"
-                        v-for="(item, index) in list" :key="index">
-                        <l-painter-view css="line-height:50rpx">
-                            <l-painter-text :text='item.t1' css="display: block;"> </l-painter-text>
-                            <l-painter-text :text='item.t2' css="display: block;color:#3D3D3D;font-size:24rpx">
-                            </l-painter-text>
-                        </l-painter-view>
-                        <l-painter-view>
-                            <l-painter-text :text="item.score + '%'" css="display: block;font-size:38rpx"> </l-painter-text>
-                        </l-painter-view>
-                    </l-painter-view>
-                    <!-- 分析 -->
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text :text="t('mbti.romanticDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="info.personality_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="t('mbti.worries')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text :text='info.mbti_list[0].templates[0].romantic_relationship'
+                            <l-painter-text :text='info.worries'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
                     </l-painter-view>
                     <l-painter-view css="margin: 0 20rpx;">
                         <l-painter-view>
-                            <l-painter-text :text="t('mbti.friendshipDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
+                            <l-painter-text :text="info.personality_type" css="color:#8B5E99;margin-right: 15rpx;"></l-painter-text>
+                            <l-painter-text :text="t('mbti.loveAttitude')" css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text :text='info.mbti_list[0].templates[0].friendship_relationship'
-                                css=""></l-painter-text>
-                        </l-painter-view>
-
-                    </l-painter-view>
-                    <l-painter-view css="margin: 0 20rpx;">
-                        <l-painter-view>
-                            <l-painter-text :text="t('mbti.familyDeepAnalysis')" css="color:#000;font-weight:bolder"></l-painter-text>
-                        </l-painter-view>
-                        <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text :text='info.mbti_list[0].templates[0].family_relationship'
+                            <l-painter-text :text='info.love_attitude'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
@@ -108,7 +98,7 @@ import lPainterView from 'lime-painter/components/l-painter-view/l-painter-view.
 import { getQroter } from "@/api/tarotcards.js";
 import { t as i18nT } from '@/i18n/index.js';
 export default {
-    name: "Twombtiposter",
+    name: "Productposter",
     props: {
         info: {
             type: Object,
@@ -129,34 +119,8 @@ export default {
         return {
             show: true,
             path: '',
-            canvasId: `mbti-poster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` // 唯一的canvasId
+            canvasId: `mbti-poster-single-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` // 唯一的canvasId
         };
-    },
-    computed: {
-        // 关系匹配列表（根据info动态计算）
-        list() {
-            const templates = this.info?.mbti_list?.[0]?.templates?.[0]
-            if (!templates) {
-                return []
-            }
-            return [
-                {
-                    t1: this.t('mbti.romanticMatch'),
-                    t2: this.t('mbti.romanticMatchAnalysis'),
-                    score: templates.romantic_relationship_score || 0
-                },
-                {
-                    t1: this.t('mbti.friendshipMatch'),
-                    t2: this.t('mbti.friendshipMatchAnalysis'),
-                    score: templates.friendship_relationship_score || 0
-                },
-                {
-                    t1: this.t('mbti.familyMatch'),
-                    t2: this.t('mbti.familyMatchAnalysis'),
-                    score: templates.family_relationship_score || 0
-                }
-            ]
-        }
     },
     created() {
 
@@ -164,10 +128,6 @@ export default {
     mounted() {
         // 在生成海报前清理小程序缓存
         this.clearTempFiles()
-        // 延迟再次清理，确保清理完成
-        setTimeout(() => {
-            this.clearTempFiles()
-        }, 500)
     },
     beforeDestroy() {
         // 组件销毁前清理canvas资源
@@ -176,7 +136,117 @@ export default {
     methods: {
         // 国际化翻译函数
         t(key) {
-            return i18nT(key)
+            return t(key)
+        }
+    },
+    computed: {
+        // 计算外向（E）的百分比，四舍五入为整数，确保与内向相加为100
+        getEPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const E = this.info.mbti_list[0].base_scores.E || 0
+            const I = this.info.mbti_list[0].base_scores.I || 0
+            const total = E + I
+            if (total === 0) return 0
+            
+            // 计算百分比并四舍五入
+            const ePercent = Math.round((E / total) * 100)
+            // 内向百分比 = 100 - 外向百分比，确保和为100
+            const iPercent = 100 - ePercent
+            
+            return ePercent
+        },
+        // 计算内向（I）的百分比，四舍五入为整数，确保与外向相加为100
+        getIPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const E = this.info.mbti_list[0].base_scores.E || 0
+            const I = this.info.mbti_list[0].base_scores.I || 0
+            const total = E + I
+            if (total === 0) return 0
+            
+            // 计算外向百分比并四舍五入
+            const ePercent = Math.round((E / total) * 100)
+            // 内向百分比 = 100 - 外向百分比，确保和为100
+            const iPercent = 100 - ePercent
+            
+            return iPercent
+        },
+        // 判断外向值是否更大
+        isEGreater() {
+            return this.getEPercentage > this.getIPercentage
+        },
+        // 判断内向值是否更大
+        isIGreater() {
+            return this.getIPercentage > this.getEPercentage
+        },
+        // SN相关计算
+        getSPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const S = this.info.mbti_list[0].base_scores.S || 0
+            const N = this.info.mbti_list[0].base_scores.N || 0
+            const total = S + N
+            if (total === 0) return 0
+            return Math.round((S / total) * 100)
+        },
+        getNPercentage() {
+            return 100 - this.getSPercentage
+        },
+        isSGreater() {
+            return this.getSPercentage > this.getNPercentage
+        },
+        isNGreater() {
+            return this.getNPercentage > this.getSPercentage
+        },
+        // TF相关计算
+        getTPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const T = this.info.mbti_list[0].base_scores.T || 0
+            const F = this.info.mbti_list[0].base_scores.F || 0
+            const total = T + F
+            if (total === 0) return 0
+            return Math.round((T / total) * 100)
+        },
+        getFPercentage() {
+            return 100 - this.getTPercentage
+        },
+        isTGreater() {
+            return this.getTPercentage > this.getFPercentage
+        },
+        isFGreater() {
+            return this.getFPercentage > this.getTPercentage
+        },
+        // JP相关计算
+        getJPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const J = this.info.mbti_list[0].base_scores.J || 0
+            const P = this.info.mbti_list[0].base_scores.P || 0
+            const total = J + P
+            if (total === 0) return 0
+            return Math.round((J / total) * 100)
+        },
+        getPPercentage() {
+            return 100 - this.getJPercentage
+        },
+        isJGreater() {
+            return this.getJPercentage > this.getPPercentage
+        },
+        isPGreater() {
+            return this.getPPercentage > this.getJPercentage
+        }
+    },
+    methods: {
+        // 国际化翻译函数
+        t(key) {
+            return i18nT(key) 
         },
         // 清理临时文件（支持小程序和APP）
         clearTempFiles() {
@@ -199,13 +269,13 @@ export default {
                             const systemInfo = uni.getSystemInfoSync()
                             userDataPath = systemInfo.USER_DATA_PATH || ''
                         }
-
+                        
                         if (userDataPath) {
                             // 尝试读取目录并清理旧文件
                             fs.readdir({
                                 dirPath: userDataPath,
                                 success: (res) => {
-                                    // 清理所有图片文件（jpg, png等），清理更多文件
+                                    // 清理所有图片文件（jpg, png等），最多清理10个
                                     const imageExts = ['.jpg', '.jpeg', '.png', '.gif']
                                     const imageFiles = res.files
                                         .filter(file => {
@@ -213,8 +283,8 @@ export default {
                                             return imageExts.includes(ext.toLowerCase())
                                         })
                                         .sort()
-                                        .slice(0, 20) // 清理更多旧文件（20个）
-
+                                        .slice(0, 10) // 最多清理10个旧文件
+                                    
                                     imageFiles.forEach(file => {
                                         fs.unlink({
                                             filePath: `${userDataPath}/${file}`,
@@ -237,7 +307,7 @@ export default {
                     }
                 }
                 // #endif
-
+                
                 // #ifdef APP-PLUS
                 // 清理APP临时文件目录
                 try {
@@ -260,8 +330,8 @@ export default {
                                         const bTime = b.lastModifiedDate || 0
                                         return aTime - bTime
                                     })
-                                    .slice(0, 20) // 清理更多旧文件（20个）
-
+                                    .slice(0, 10) // 最多清理10个旧文件
+                                
                                 imageFiles.forEach(fileEntry => {
                                     fileEntry.remove(() => {
                                         console.log('已清理APP临时文件:', fileEntry.name)
@@ -287,18 +357,18 @@ export default {
                                             .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
                                             .sort()
                                             .slice(0, 10)
-
+                                        
                                         imageFiles.forEach(file => {
                                             fs.unlink({
                                                 filePath: `${tempDirPath}/${file}`,
                                                 success: () => {
                                                     console.log('已清理APP临时文件:', file)
                                                 },
-                                                fail: () => { }
+                                                fail: () => {}
                                             })
                                         })
                                     },
-                                    fail: () => { }
+                                    fail: () => {}
                                 })
                             }
                         } catch (e) {
@@ -382,7 +452,7 @@ export default {
         handleFail(error) {
             console.error('海报生成失败:', error)
             this.cleanupCanvas()
-
+            
             // 检查是否是存储空间不足的错误
             let errorMsg = ''
             if (error && error.errMsg) {
@@ -405,13 +475,13 @@ export default {
             } else {
                 errorMsg = this.t('poster.generateFailed') || '海报生成失败，请重试'
             }
-
+            
             uni.showToast({
                 title: errorMsg,
                 icon: 'none',
                 duration: 3000
             })
-
+            
             this.$emit('fail', error)
         },
         // 预览图片
@@ -434,7 +504,7 @@ image {
     width: 100%;
     height: 100%;
     border-radius: 15rpx;
-
+    
 
 
 

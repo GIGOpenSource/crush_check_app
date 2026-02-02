@@ -515,6 +515,11 @@ export default {
     thinkingDescription: 'Al hacer juicios, prioriza la lógica, las reglas objetivas y el análisis racional, se enfoca en la equidad, la eficiencia y la causalidad, menos afectado por emociones personales o sentimientos de los demás. Tiende a medir lo correcto e incorrecto con estándares racionales, busca soluciones objetivas y justas.',
     perceivingDescription: 'Le gustan los ritmos de vida flexibles y abiertos, acostumbrado a adaptarse a los cambios y mantener opciones abiertas, disfruta del proceso de exploración e improvisación. No le gusta estar atado por planes estrictos, tiende a recopilar más información antes de tomar decisiones, tiene una fuerte adaptabilidad y está dispuesto a aceptar nuevos cambios.',
     judgingDescription: 'Prefiere patrones de vida ordenados y claramente planificados, le gusta hacer planes con anticipación, aclarar objetivos y límites, y hace las cosas de principio a fin. Tiende a finalizar planes y tomar acción lo antes posible, busca estados estables y controlables, y odia los cambios repentinos y la procrastinación.',
-    submitSuccess: 'Respuesta enviada con éxito, puedes verla en el historial'
+    submitSuccess: 'Respuesta enviada con éxito, puedes verla en el historial',
+    waitingForOtherResult: 'Esperando el resultado del otro',
+    otherNotCompleted: 'La otra parte no completó la prueba',
+    waitingForOthersToJoin: 'Esperando que otros se unan',
+    reInvite: 'Re-invitar',
+    viewInviteCode: 'Ver código de invitación'
   }
 }

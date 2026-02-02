@@ -31,5 +31,10 @@ export const code = (poster_id) => {
 	return deleteRequest(`/mbtiquestion/reinvite_report/`,{poster_id})
 }
 
+//简介
+export const getTemplate = (mbti_type) => {
+	return getRequest(`/mbtitemplate/`,{mbti_type})
+}
+
 
 

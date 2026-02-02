@@ -1,17 +1,21 @@
 <template>
     <view class="page">
         <view class="top">
-            <view class="title">{{ t('mbti.posterTitle') }}</view>
+            <view class="title" v-if="type">{{ t('mbti.posterTitle') }}</view>
+            <view class="title" v-else>{{ details.personality_type }}  {{ details.popular_name }}</view>
             <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar"
                     size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
             <view class="userinfo2" v-if="type == 'double'">
-                <view><up-avatar :src="src" size="36"></up-avatar> <text>{{ t('my.userNickname') }}</text></view>
-                <view> <text>{{ t('my.userNickname') }}</text><up-avatar :src="src" size="36"></up-avatar></view>
+                <view><up-avatar :src="details.mbti_list[0].owner_avatar" size="36"></up-avatar> <text>{{
+                    details.mbti_list[0].owner_name || t('my.userNickname') }}</text></view>
+                <view> <text>{{ details.mbti_list[0].other_username || t('my.userNickname') }}</text><up-avatar
+                        :src="details.mbti_list[0].other_avatar" size="36"></up-avatar></view>
             </view>
         </view>
         <view class="center">
             <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details" />
-            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" :info="details" />
+            <Twombtiposter @success="handlePosterSuccess" v-else-if="type == 'double'" :info="details" />
+            <Productposter @success="handlePosterSuccess" v-else :info="details" />
         </view>
         <view class="bottom">
             <view class="btns">
@@ -27,8 +31,10 @@ import { ref, onUnmounted, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
 import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
+import Productposter from '@/components/Productposter/Productposter.vue';
 import { onLoad } from '@dcloudio/uni-app'
 import { getPosterDetails } from '@/api/index.js'
+import { getTemplate } from '@/api/mbti.js'
 const { t } = useI18n()
 const src = ref('')
 const type = ref('')
@@ -88,9 +94,18 @@ const cleanupOldTempFiles = () => {
 onLoad((e) => {
     type.value = e.type
     cleanupOldTempFiles()
-    getPosterDetails(e.id).then(res => {
-        details.value = res.data
-    })
+    if (e.id) {
+        getPosterDetails(e.id).then(res => {
+            details.value = res.data
+        })
+    }
+    console.log(e,'eee')
+    if(e.temtype){
+        getTemplate(e.temtype).then(res => {
+            details.value = res.data.results[0]
+        })
+    }
+
 })
 
 onMounted(() => {
@@ -102,15 +117,26 @@ const topath = () => {
 }
 
 const handlePosterSuccess = (filePath) => {
-    console.log(filePath, 'fififi')
-    posterImg.value = filePath
-    setTimeout(() => {
-        cleanupOldTempFiles()
-    }, 2000)
+    console.log('收到海报路径:', filePath, '类型:', typeof filePath)
+    console.log('路径详情:', {
+        path: filePath,
+        startsWithHttpTmp: filePath?.startsWith('http://tmp/'),
+        startsWithFile: filePath?.startsWith('file://'),
+        startsWithSlash: filePath?.startsWith('/'),
+        isNetworkUrl: filePath?.startsWith('http://') || filePath?.startsWith('https://')
+    })
+    if (filePath) {
+        posterImg.value = filePath
+        setTimeout(() => {
+            cleanupOldTempFiles()
+        }, 2000)
+    } else {
+        console.error('海报路径为空')
+    }
 }
 //分享
 const share = () => {
-     if (!posterImg.value) {
+    if (!posterImg.value) {
         uni.showToast({
             title: t('mbti.posterNotReady'),
             icon: 'none',
@@ -118,28 +144,89 @@ const share = () => {
         })
         return
     }
-    uni.downloadFile({
-        url: posterImg.value,
-        success: (res) => {
-            console.log(res,'rrr')
-            if (res.statusCode === 200) {
-                const inviterOpenId = uni.getStorageSync("openId") || "";
-                const query = `?scene=${inviterOpenId}`
-                wx.showShareImageMenu({
-                    path:res.tempFilePath,
-                    entrancePath: `/pages/index/index${query}`,
-                    complete: (ressult) => {
-                        console.log(res,'rrr')
-                        if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                            // share_fail()
-                        } else {
-                        }
-                    }
-                })
-
+    
+    // #ifdef MP-WEIXIN
+    // 判断路径类型：如果是本地临时文件路径（http://tmp/ 或 file:// 开头），直接使用；否则需要下载
+    const isLocalTempPath = posterImg.value.startsWith('http://tmp/') || 
+                            posterImg.value.startsWith('file://') ||
+                            posterImg.value.startsWith('/') ||
+                            !posterImg.value.startsWith('http')
+    
+    console.log('分享路径:', posterImg.value, '是否为本地路径:', isLocalTempPath)
+    
+    if (isLocalTempPath) {
+        // 本地临时文件，直接使用
+        const inviterOpenId = uni.getStorageSync("openId") || "";
+        const query = `?scene=${inviterOpenId}`
+        wx.showShareImageMenu({
+            path: posterImg.value,
+            entrancePath: `/pages/index/index${query}`,
+            complete: (result) => {
+                console.log('分享完成:', result)
+                if (result.errMsg == 'showShareImageMenu:fail cancel') {
+                    // 用户取消分享
+                }
             }
+        })
+    } else {
+        // 网络图片，需要先下载
+        uni.downloadFile({
+            url: posterImg.value,
+            success: (res) => {
+                console.log('下载成功:', res)
+                if (res.statusCode === 200) {
+                    const inviterOpenId = uni.getStorageSync("openId") || "";
+                    const query = `?scene=${inviterOpenId}`
+                    wx.showShareImageMenu({
+                        path: res.tempFilePath,
+                        entrancePath: `/pages/index/index${query}`,
+                        complete: (result) => {
+                            console.log('分享完成:', result)
+                            if (result.errMsg == 'showShareImageMenu:fail cancel') {
+                                // 用户取消分享
+                            }
+                        }
+                    })
+                } else {
+                    uni.showToast({
+                        title: '下载图片失败',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                }
+            },
+            fail: (err) => {
+                console.error('下载图片失败:', err)
+                uni.showToast({
+                    title: '下载图片失败，请重试',
+                    icon: 'none',
+                    duration: 2000
+                })
+            }
+        })
+    }
+    // #endif
+    
+    // #ifdef APP-PLUS
+    // APP 环境使用 uni.share
+    uni.share({
+        provider: 'weixin',
+        scene: 'WXSceneSession',
+        type: 2,
+        imageUrl: posterImg.value,
+        success: (res) => {
+            console.log('分享成功:', res)
+        },
+        fail: (err) => {
+            console.error('分享失败:', err)
+            uni.showToast({
+                title: '分享失败，请重试',
+                icon: 'none',
+                duration: 2000
+            })
         }
     })
+    // #endif
 }
 
 </script>

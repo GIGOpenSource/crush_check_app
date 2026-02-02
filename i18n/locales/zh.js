@@ -527,6 +527,11 @@ export default {
     thinkingDescription: '做判断时优先依靠逻辑、客观规则与理性分析，注重公平、效率与因果关系，较少被个人情绪或他人感受影响。倾向于用理性标准衡量对错，追求客观公正的解决方案。',
     perceivingDescription: '喜欢灵活、开放的生活节奏，习惯随机应变、保留选择空间，享受探索与即兴的过程。不喜欢被严格计划束缚，倾向于收集更多信息再做决定，适应力强，乐于接受新鲜变化。',
     judgingDescription: '偏好有序、规划清晰的生活模式，喜欢提前制定计划、明确目标与边界，做事有始有终。倾向于尽快敲定方案、落实行动，追求稳定可控的状态，讨厌突发变动与拖延。',
-    submitSuccess: '答案提交成功，可在历史记录查看'
+    submitSuccess: '答案提交成功，可在历史记录查看',
+    waitingForOtherResult: '等待对方结果',
+    otherNotCompleted: '对方未完成测试',
+    waitingForOthersToJoin: '等待他人加入',
+    reInvite: '重新邀请',
+    viewInviteCode: '查看邀请码'
   }
 }

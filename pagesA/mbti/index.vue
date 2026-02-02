@@ -15,10 +15,10 @@
                 <rich-text :nodes="content"></rich-text>
             </up-read-more>
             <view v-for="(item, index) in renge" :key="index" class="renge" :style="{ background: borderColor[index] }">
-                <text>{{ item.t1 }}</text>
-                <text>{{ item.t2 }}</text>
-                <text>{{ item.t3 }}</text>
-                <text>{{ item.t4 }}</text>
+                <text @click="clicks(item.t1)">{{ item.t1 }} {{ '>' }}</text>
+                <text @click="clicks(item.t2)">{{ item.t2 }} {{ '>' }}</text>
+                <text @click="clicks(item.t3)">{{ item.t3 }} {{ '>' }}</text>
+                <text @click="clicks(item.t4)">{{ item.t4 }} {{ '>' }}</text>
             </view>
         </view>
     </view>
@@ -87,25 +87,25 @@ const mode = ref('')
 const md5 = ref(uni.getStorageSync('timestamp') || '')
 
 const renge = [{
-    t1: 'ENTJ >',
-    t2: 'ENTP >',
-    t3: 'INTP >',
-    t4: 'INTJ >'
+    t1: 'ENTJ',
+    t2: 'ENTP',
+    t3: 'INTP',
+    t4: 'INTJ'
 }, {
-    t1: 'ENFJ >',
-    t2: 'INFJ >',
-    t3: 'INFP >',
-    t4: 'ENTJ >'
+    t1: 'ENFJ',
+    t2: 'INFJ',
+    t3: 'INFP',
+    t4: 'ENTJ'
 }, {
-    t1: 'ESTJ >',
-    t2: 'ISTJ >',
-    t3: 'ISFJ >',
-    t4: 'ESFJ >'
+    t1: 'ESTJ',
+    t2: 'ISTJ',
+    t3: 'ISFJ',
+    t4: 'ESFJ'
 }, {
-    t1: 'ESTP >',
-    t2: 'ISTP >',
-    t3: 'ISFP >',
-    t4: 'ESFP >'
+    t1: 'ESTP',
+    t2: 'ISTP',
+    t3: 'ISFP',
+    t4: 'ESFP'
 }]
 const borderColor = { 0: '#827DB9', 1: '#7DB983', 2: '#7D9CB9', 3: '#B99C7D' }
 const content = ref('')
@@ -124,6 +124,11 @@ const inviewma = ref('')
 
 const test_type = ref('')
 
+
+//人格
+const  clicks = (type) => {
+    uni.navigateTo({ url: '/pagesA/mbti/poster?temtype='+type })
+}
 //选择模式
 const choosetype = (index) => {
     if (index == 0) {

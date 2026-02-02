@@ -27,7 +27,7 @@
                             <l-painter-image :src="info.mbti_list[0].templates[0].image_url"
                                 css="width: 200rpx; height: 200rpx; display: block;margin-right: 20rpx;"></l-painter-image>
                             <l-painter-view css="display: block;font-size: 36rpx;">
-                                <l-painter-text :text="t('mbti.popularCatalog') + info.mbti_list[0].templates[0].popular_name" css="display: block;"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.popularCatalog') + info.mbti_list[0].templates[0].mbti_nickname" css="display: block;"> </l-painter-text>
                                 <l-painter-text :text="t('mbti.populationRatio') + info.mbti_list[0].templates[0].population_ratio +'%'" css="display: block;"> </l-painter-text>
                             </l-painter-view>
 
