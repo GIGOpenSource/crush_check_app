@@ -60,12 +60,12 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F1F6F9;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='与周围关键互动：'> </l-painter-text>
+                                    <l-painter-text text='能量获取：'> </l-painter-text>
                                     <l-painter-text :text='getEITitleText()' :css='getEITitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        text='善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情 感。倾向于选择有意义社交活动。'> </l-painter-text>
+                                        :text='getEIDescriptionText()'> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -94,12 +94,12 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #FDF9F0;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='与周围关键互动：'> </l-painter-text>
+                                    <l-painter-text text='信息获取：'> </l-painter-text>
                                     <l-painter-text :text='getSNTitleText()' :css='getSNTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        text='善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情 感。倾向于选择有意义社交活动。'> </l-painter-text>
+                                        :text='getSNDescriptionText()'> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -128,12 +128,12 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F0F9F4;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='与周围关键互动：'> </l-painter-text>
+                                    <l-painter-text text='决策方式：'> </l-painter-text>
                                     <l-painter-text :text='getTFTitleText()' :css='getTFTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        text='善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情 感。倾向于选择有意义社交活动。'> </l-painter-text>
+                                        :text='getTFDescriptionText()'> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -162,12 +162,12 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background: #F6F4F7;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='与周围关键互动：'> </l-painter-text>
+                                    <l-painter-text text='生活态度：'> </l-painter-text>
                                     <l-painter-text :text='getJPTitleText()' :css='getJPTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        text='善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情 感。倾向于选择有意义社交活动。'> </l-painter-text>
+                                        :text='getJPDescriptionText()'> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -196,7 +196,7 @@
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background:#FEF4F3;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
-                                    <l-painter-text text='与周围关键互动：'> </l-painter-text>
+                                    <l-painter-text text='自信程度：'> </l-painter-text>
                                     <l-painter-text text='内向型（Introverted）' css="color:#F36067"> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
@@ -617,20 +617,68 @@ export default {
                 return '计划型（Judging）'
             }
         },
+        // 获取EI描述文本（根据类型动态显示）
+        getEIDescriptionText() {
+            const ePercent = this.getEPercentage
+            const iPercent = this.getIPercentage
+            if (iPercent > ePercent) {
+                // 内向型描述
+                return '善于独立思考，关注内心世界，喜欢在内心探索自己的想法和情感。倾向于选择有意义、低消耗的社交活动，独处时能恢复精力，过度社交会感到疲惫。'
+            } else {
+                // 外向型描述（包括相等时显示左边的值）
+                return '擅长对外表达与互动，关注外部环境与他人状态，乐于通过交流、行动来梳理思路、获得能量。倾向于主动参与群体活动，在与人互动中感到充实，长时间独处容易觉得无聊。'
+            }
+        },
         // 获取EI标题样式（与进度条颜色一致）
         getEITitleStyle() {
             // EI进度条颜色是 #4695B4
             return 'color:#4695B4'
+        },
+        // 获取SN描述文本（根据类型动态显示）
+        getSNDescriptionText() {
+            const sPercent = this.getSPercentage
+            const nPercent = this.getNPercentage
+            if (nPercent > sPercent) {
+                // N型（直觉型）描述
+                return '关注抽象规律与潜在可能，擅长捕捉事物背后的联系、趋势与想象空间，对未来、创意和深层逻辑更敏感。不满足于表面信息，喜欢探索未知、挖掘本质，偏爱宏观框架与创新思路。'
+            } else {
+                // S型（现实型）描述（包括相等时显示左边的值）
+                return '注重现实与具体信息，习惯关注眼前可见的事实、细节与经验，偏好清晰、可落地的内容。相信亲身经历与客观数据，做事踏实务实，重视实际效果与当下可行性。'
+            }
         },
         // 获取SN标题样式（与进度条颜色一致）
         getSNTitleStyle() {
             // SN进度条颜色是 #E8AC3F
             return 'color:#E8AC3F'
         },
+        // 获取TF描述文本（根据类型动态显示）
+        getTFDescriptionText() {
+            const tPercent = this.getTPercentage
+            const fPercent = this.getFPercentage
+            if (fPercent > tPercent) {
+                // F型（感受型）描述
+                return '做选择时优先考虑他人感受、价值观念与人际和谐，重视共情、理解与包容，关注决策对他人的情绪影响。倾向于兼顾人情与立场，追求温暖、贴合人心的处理方式。'
+            } else {
+                // T型（逻辑型）描述（包括相等时显示左边的值）
+                return '做判断时优先依靠逻辑、客观规则与理性分析，注重公平、效率与因果关系，较少被个人情绪或他人感受影响。倾向于用理性标准衡量对错，追求客观公正的解决方案。'
+            }
+        },
         // 获取TF标题样式（与进度条颜色一致）
         getTFTitleStyle() {
             // TF进度条颜色是 #35A374
             return 'color:#35A374'
+        },
+        // 获取JP描述文本（根据类型动态显示）
+        getJPDescriptionText() {
+            const jPercent = this.getJPercentage
+            const pPercent = this.getPPercentage
+            if (pPercent > jPercent) {
+                // P型（展望型）描述
+                return '喜欢灵活、开放的生活节奏，习惯随机应变、保留选择空间，享受探索与即兴的过程。不喜欢被严格计划束缚，倾向于收集更多信息再做决定，适应力强，乐于接受新鲜变化。'
+            } else {
+                // J型（计划型）描述（包括相等时显示左边的值）
+                return '偏好有序、规划清晰的生活模式，喜欢提前制定计划、明确目标与边界，做事有始有终。倾向于尽快敲定方案、落实行动，追求稳定可控的状态，讨厌突发变动与拖延。'
+            }
         },
         // 获取JP标题样式（与进度条颜色一致）
         getJPTitleStyle() {

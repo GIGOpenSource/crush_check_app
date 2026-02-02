@@ -129,8 +129,9 @@
                                             item.mbti_list[0].other_status == 'done' ?
                                                 item.mbti_list[0]?.mbti_type.split('+')[1] : '?' }}</view>
                                         <!-- 完成 -->
-                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill" class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
-                                            </image>
+                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill"
+                                            class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
+                                        </image>
                                         <!-- 未完成 -->
                                         <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">等待对方结果
                                         </view>
@@ -203,7 +204,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -739,6 +740,18 @@ export default {
                         if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                             if (item.mbti_list[0].other_status == 'waiting') return
                             if (item.mbti_list[0].other_status == 'exit') return pipeiproup.value = true
+                            if (item.mbti_list[0].other_status == 'done') {
+                                uni.navigateTo({
+                                    url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
+                                    fail: (err) => {
+                                        console.error("跳转失败:", err);
+                                        uni.showToast({
+                                            title: this.$t('poster.jumpFailed'),
+                                            icon: "none",
+                                        });
+                                    },
+                                });
+                            }
                         } else {//单人
                             uni.navigateTo({
                                 url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,

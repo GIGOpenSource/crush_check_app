@@ -10,7 +10,7 @@
         </view>
         <view class="center">
             <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details"/>
-            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" />
+            <Twombtiposter @success="handlePosterSuccess" v-if="type == 'double'" :info="details"/>
         </view>
         <view class="bottom">
             <view class="btns">

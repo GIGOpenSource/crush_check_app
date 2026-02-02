@@ -2,7 +2,7 @@
     <view>
         <image :src="path" mode="widthFix" @load="success"></image>
         <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx" height="100%"
-            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
+            :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.95" :pixel-ratio="3">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
@@ -66,7 +66,7 @@
                             <l-painter-text text='爱情关系深度分析' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].romantic_relationship'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
@@ -76,7 +76,7 @@
                             <l-painter-text text='朋友伙伴关系匹配度分析' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].friendship_relationshi'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
@@ -86,7 +86,7 @@
                             <l-painter-text text='家庭亲属关系匹配度分析' css="color:#000;font-weight:bolder"></l-painter-text>
                         </l-painter-view>
                         <l-painter-view css="padding:20rpx;background: #F6F4F7;border-radius: 15rpx;margin: 20rpx 0;">
-                            <l-painter-text text='hahahahaahhahahahhahahahahahahahhahhhhhhhhhhhhhh'
+                            <l-painter-text :text='info.mbti_list[0].templates[0].family_relationship'
                                 css=""></l-painter-text>
                         </l-painter-view>
 
