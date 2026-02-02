@@ -159,14 +159,10 @@ const share1 = () => {
       showDelPopup2.value = true
 }
 const share = () => {
-   uni.downloadFile({
-      url: posterImg.value,
-      success: (res) => {
-         if (res.statusCode === 200) {
-            const inviterOpenId = uni.getStorageSync("openId") || "";
+     const inviterOpenId = uni.getStorageSync("openId") || "";
             const query = `?scene=${inviterOpenId}`
             wx.showShareImageMenu({
-               path: res.tempFilePath,
+               path: posterImg.value,
                entrancePath: `/pages/index/index${query}`,
                complete: (res) => {
                   if (res.errMsg == 'showShareImageMenu:fail cancel') {
@@ -180,9 +176,6 @@ const share = () => {
                   }
                }
             })
-         }
-      }
-   })
 }
 const handleProgressClose = () => {
     // 清除进度条定时器
