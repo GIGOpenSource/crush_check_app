@@ -113,7 +113,7 @@ content.value = t('mbti.personalityDesc')
 //选择测试
 const ceshiproup = ref(false)
 const ceshicontent = ref(t('mbti.testContent'))
-const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: t('mbti.majorVersion'), type: 'major' }, { title: t('mbti.advancedVersion'), type: 'devanced' }]
+const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: t('mbti.majorVersion'), type: 'major' }, { title: t('mbti.advancedVersion'), type: 'advanced' }]
 
 //匹配
 const pipeiproup = ref(false)
