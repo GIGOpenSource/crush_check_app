@@ -127,6 +127,7 @@ const test_type = ref('')
 
 //人格
 const  clicks = (type) => {
+     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
     uni.navigateTo({ url: '/pagesA/mbti/poster?temtype='+type })
 }
 //选择模式

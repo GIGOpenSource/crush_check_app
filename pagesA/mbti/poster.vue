@@ -2,7 +2,8 @@
     <view class="page">
         <view class="top">
             <view class="title" v-if="type">{{ t('mbti.posterTitle') }}</view>
-            <view class="title" style="font-size:32rpx" v-else>{{ details.personality_type }} {{ details.popular_name }}</view>
+            <view class="title" style="font-size:32rpx" v-else>{{ details.personality_type }} {{ details.popular_name }}
+            </view>
             <view class="userinfo1" v-if="type == 'single'"><up-avatar :src="userinfo.user_avatar"
                     size="36"></up-avatar> <text>{{ userinfo.username || t('my.userNickname') }}</text></view>
             <view class="userinfo2" v-if="type == 'double'">
@@ -32,7 +33,7 @@ import { useI18n } from 'vue-i18n'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
 import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
 import Productposter from '@/components/Productposter/Productposter.vue';
-import { onLoad ,onUnload} from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { getPosterDetails } from '@/api/index.js'
 import { getTemplate } from '@/api/mbti.js'
 const { t } = useI18n()
@@ -42,58 +43,51 @@ const details = ref({})
 const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 const posterImg = ref('')
 
-// 清理临时文件的函数
-const cleanupOldTempFiles = () => {
+
+// 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
+const cleanupOldTempFiles = async () => {
+  try {
+    const fs = wx.getFileSystemManager();
+    
+    // 核心容错：获取文件列表失败时直接返回，不中断流程
+    let fileList = [];
     try {
-        // #ifdef MP-WEIXIN
-        const fs = uni.getFileSystemManager()
-        if (fs) {
-            try {
-                let userDataPath = ''
-                if (wx && wx.getWindowInfo) {
-                    userDataPath = wx.getWindowInfo().pixelRatio ? wx.env.USER_DATA_PATH : ''
-                }
-                if (!userDataPath && wx && wx.env) {
-                    userDataPath = wx.env.USER_DATA_PATH
-                }
-                if (!userDataPath) {
-                    const systemInfo = uni.getSystemInfoSync()
-                    userDataPath = systemInfo.USER_DATA_PATH || ''
-                }
-
-                if (userDataPath) {
-                    fs.readdir({
-                        dirPath: userDataPath,
-                        success: (res) => {
-                            const imageFiles = res.files
-                                .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-                                .sort()
-                                .slice(0, 30) // 清理更多文件
-
-                            imageFiles.forEach(file => {
-                                fs.unlink({
-                                    filePath: `${userDataPath}/${file}`,
-                                    success: () => { },
-                                    fail: () => { }
-                                })
-                            })
-                        },
-                        fail: () => { }
-                    })
-                }
-            } catch (e) {
-                console.log('清理临时文件异常:', e)
-            }
-        }
-        // #endif
-    } catch (e) {
-        console.log('清理临时文件失败:', e)
+      const fileListRes = await new Promise((resolve, reject) => {
+        fs.getSavedFileList({ success: resolve, fail: reject });
+      });
+      fileList = fileListRes.fileList || [];
+    } catch (err) {
+      // 目录不存在/无文件时，打印提示并跳过删除步骤
+      console.log('无已保存文件，无需清理：', err.errMsg);
+      return;
     }
-}
+
+    // 遍历删除所有文件（有文件才执行）
+    if (fileList.length > 0) {
+      for (const file of fileList) {
+        try {
+          await new Promise((resolve, reject) => {
+            fs.unlink({ filePath: file.filePath, success: resolve, fail: reject });
+          });
+          console.log(`清理文件成功：${file.filePath}`);
+        } catch (err) {
+          console.warn(`清理单个文件失败（忽略）：${file.filePath}`);
+        }
+      }
+      console.log('所有文件清理完成');
+    }
+  } catch (err) {
+    console.error('文件清理流程异常（不影响页面）：', err.errMsg);
+  }
+};
+onUnload(() => {
+    cleanupOldTempFiles()
+})
+
 
 onLoad((e) => {
     type.value = e.type
-   
+
     if (e.id) {
         getPosterDetails(e.id).then(res => {
             details.value = res.data
@@ -108,10 +102,7 @@ onLoad((e) => {
 
 })
 
-onUnload(() => { 
-    //离开页面执行的函数
-     cleanupOldTempFiles()
-})
+
 
 const topath = () => {
     uni.switchTab({ url: '/pages/index/index' })
@@ -134,21 +125,21 @@ const share = () => {
         })
         return
     }
-       const inviterOpenId = uni.getStorageSync("openId") || "";
-                const query = `?scene=${inviterOpenId}`
-                wx.showShareImageMenu({
-                    path: posterImg.value,
-                    entrancePath: `/pages/index/index${query}`,
-                    complete: (res) => {
-                        if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                            // share_fail()
+    const inviterOpenId = uni.getStorageSync("openId") || "";
+    const query = `?scene=${inviterOpenId}`
+    wx.showShareImageMenu({
+        path: posterImg.value,
+        entrancePath: `/pages/index/index${query}`,
+        complete: (res) => {
+            if (res.errMsg == 'showShareImageMenu:fail cancel') {
+                // share_fail()
 
-                        } else {
-                            // share_success()
+            } else {
+                // share_success()
 
-                        }
-                    }
-                })
+            }
+        }
+    })
 }
 
 </script>
