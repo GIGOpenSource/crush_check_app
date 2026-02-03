@@ -164,7 +164,7 @@ const create = async () => {
         list.value.map(item => [item.id, item.question_value])
     );
     let timestamp = new Date()
-    const res = await createPoster(page.value, 4, poster_id.value, answer, timestamp)
+    const res = await createPoster(page.value, 4, poster_id.value, answer, timestamp, total.value)
     console.log(res, 'rds')
 }
 const onScroll = (e) => {

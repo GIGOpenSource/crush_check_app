@@ -12,8 +12,8 @@ export const getList = (currentPage,pageSize,test_type,question_mode,poster_id,i
 }
 
 //答题结果
-export const createPoster = (currentPage,pageSize,poster_id,answers,timestamp) => {
-	return postRequest('/mbtiquestion/record_question/',{currentPage,pageSize,poster_id,answers,timestamp})
+export const createPoster = (currentPage,pageSize,poster_id,answers,timestamp,total_pages) => {
+	return postRequest('/mbtiquestion/record_question/',{currentPage,pageSize,poster_id,answers,timestamp,total_pages})
 }
 
 //答题完毕
