@@ -192,7 +192,7 @@ const join = (type) => {
     test_type.value = type
     if (mode.value == 'single_mode') {
         if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-        uni.redirectTo({
+        uni.reLaunch({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })
     } else {
