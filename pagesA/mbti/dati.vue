@@ -13,14 +13,15 @@
         <view class="page-content" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="titlecon">
                 <view class="t1">{{ t('mbti.testTitle') }} ({{ t('mbti.version') }}) <text>{{ page }} / {{ total
-                }}</text> </view>
+                        }}</text> </view>
                 <view class="t2">{{ t('mbti.tip') }}</view>
             </view>
             <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
                 @scroll="onScroll">
-               
+
                 <view class="con" v-for="(item, index) in list" :key="index" :id="'question-' + index">
-                    <view>{{ 6 * (page - 1) + (index + 1) >= 10 ? 6 * (page - 1) + (index + 1) : '0' + (6 * (page - 1) + (index + 1)) }} {{ item.content }}</view>
+                    <view>{{ 6 * (page - 1) + (index + 1) >= 10 ? 6 * (page - 1) + (index + 1) : '0' + (6 * (page - 1) +
+                        (index + 1)) }} {{ item.content }}</view>
                     <view class="borderwrapper">
                         <view class="kong" v-for="(ite) in fen" :key="ite" @click="choosestatus(index, ite)">
                             <view :class="item.question_value == ite ? 'current' : ''"></view>
@@ -55,12 +56,13 @@
                 </view>
             </view>
         </up-popup>
-         <up-popup :show="showDelPopup3" mode="center">
+        <up-popup :show="showDelPopup3" mode="center">
             <view class="del-popup-content">
                 <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
                 <view class="title1">{{ t('mbti.submitSuccess') }}</view>
                 <view class="del-popup-actions">
-                    <view class="del-popup-btn confirm" @click="uni.switchTab({ url: '/pages/test/test' })">{{ t('common.confirm') }}</view>
+                    <view class="del-popup-btn confirm" @click="uni.switchTab({ url: '/pages/test/test' })">{{
+                        t('common.confirm') }}</view>
                 </view>
             </view>
         </up-popup>
@@ -70,9 +72,8 @@
 <script setup>
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { getList, createPoster, finsh,layout } from '@/api/mbti.js'
-import { onLoad ,onUnload} from '@dcloudio/uni-app'
-import { url } from 'uview-plus/libs/function/test'
+import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
+import { onLoad } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
@@ -204,7 +205,7 @@ const choosestatus = (index, ite) => {
 const look = () => {
     finsh(poster_id.value).then(res => {
         if (question_mode.value == 'single_mode') {//单人
-            uni.redirectTo({ url: `/pagesA/mbti/poster?id=`+poster_id.value + '&type=' + 'single'})
+            uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
         } else {
             showDelPopup3.value = true
         }
@@ -216,11 +217,11 @@ const look = () => {
 //确定退出
 const submit = () => {
     layout(poster_id.value).then(res => {
-       uni.switchTab({
-        url:'/pages/index/index'
-       })
+        uni.switchTab({
+            url: '/pages/index/index'
+        })
     })
-   
+
 }
 
 
@@ -339,18 +340,20 @@ const submit = () => {
             align-items: center;
 
             .kong {
-                width:55rpx;
+                width: 55rpx;
                 text-align: center;
                 height: 55rpx;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background: transparent;
+
                 view {
                     border: 1px solid rgba(255, 255, 255, 0.5);
                     border-radius: 50%;
                 }
             }
+
             .current {
                 background: #A0FFE7;
             }
@@ -360,25 +363,27 @@ const submit = () => {
     }
 }
 
-.borderwrapper .kong:nth-of-type(1),.borderwrapper .kong:nth-of-type(5){
-    view{
-          width: 50rpx;
-    height: 50rpx;
+.borderwrapper .kong:nth-of-type(1),
+.borderwrapper .kong:nth-of-type(5) {
+    view {
+        width: 50rpx;
+        height: 50rpx;
     }
 }
 
-.borderwrapper .kong:nth-of-type(2),.borderwrapper .kong:nth-of-type(4) {
-  view{
-      width: 35rpx;
-    height: 35rpx;
-  }
+.borderwrapper .kong:nth-of-type(2),
+.borderwrapper .kong:nth-of-type(4) {
+    view {
+        width: 35rpx;
+        height: 35rpx;
+    }
 
 }
 
-.borderwrapper .kong:nth-of-type(3){
-    view{
+.borderwrapper .kong:nth-of-type(3) {
+    view {
         width: 20rpx;
-    height: 20rpx;
+        height: 20rpx;
     }
 
 }
