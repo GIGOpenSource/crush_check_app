@@ -444,7 +444,7 @@ export default {
     indexTitle: 'MBTI Test',
     indexSubtitle: 'Explore your personality traits, discover a better self, and understand your matching relationship with others',
     singleTest: 'Single MBTI Test',
-    singleTestDesc: 'Through a series of carefully designed questions, explore your personality type, understand personal strengths, weaknesses and potential characteristics',
+    singleTestDesc: 'Common through a series of carefully designed questions, explore your personality type, understand personal strengths, weaknesses and potential characteristics',
     doubleTest: 'Double Match MBTI Test',
     doubleTestDesc: 'Invite your partner to test together, generate exclusive MBTI relationship matching report, explore your interaction patterns',
     personalityDetail: '16 Personality Types Explained',

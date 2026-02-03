@@ -443,7 +443,7 @@ export default {
     indexTitle: 'MBTIテスト',
     indexSubtitle: 'あなたの性格特性を探求し、より良い自分を発見し、他者とのマッチング関係を理解する',
     singleTest: '単独MBTIテスト',
-    singleTestDesc: '一連の慎重に設計された質問を通じて、あなたの性格タイプを探求し、個人的な強み、弱点、潜在的な特徴を理解する',
+    singleTestDesc: '共通で一連の慎重に設計された質問を通じて、あなたの性格タイプを探求し、個人的な強み、弱点、潜在的な特徴を理解する',
     doubleTest: 'ペアマッチMBTIテスト',
     doubleTestDesc: 'パートナーを招待して一緒にテストを行い、専用のMBTI関係マッチングレポートを生成し、あなたの相互作用パターンを探求する',
     personalityDetail: '16人格タイプの詳細説明',

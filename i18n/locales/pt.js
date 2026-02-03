@@ -443,7 +443,7 @@ export default {
     indexTitle: 'Teste MBTI',
     indexSubtitle: 'Explore seus traços de personalidade, descubra um melhor eu e entenda sua relação de compatibilidade com outros',
     singleTest: 'Teste MBTI Individual',
-    singleTestDesc: 'Através de uma série de perguntas cuidadosamente projetadas, explore seu tipo de personalidade, entenda pontos fortes, fraquezas e características potenciais pessoais',
+    singleTestDesc: 'Comum através de uma série de perguntas cuidadosamente projetadas, explore seu tipo de personalidade, entenda pontos fortes, fraquezas e características potenciais pessoais',
     doubleTest: 'Teste MBTI de Compatibilidade Dupla',
     doubleTestDesc: 'Convide seu parceiro para fazer o teste juntos, gere um relatório exclusivo de compatibilidade MBTI, explore seus padrões de interação',
     personalityDetail: 'Explicação dos 16 Tipos de Personalidade',

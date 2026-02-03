@@ -444,7 +444,7 @@ export default {
     indexTitle: 'MBTI 테스트',
     indexSubtitle: '당신의 성격 특성을 탐구하고, 더 나은 자신을 발견하며, 다른 사람과의 매칭 관계를 이해하세요',
     singleTest: '단독 MBTI 테스트',
-    singleTestDesc: '일련의 신중하게 설계된 질문을 통해 성격 유형을 탐구하고, 개인의 강점, 약점 및 잠재적 특성을 이해하세요',
+    singleTestDesc: '공통으로 일련의 신중하게 설계된 질문을 통해 성격 유형을 탐구하고, 개인의 강점, 약점 및 잠재적 특성을 이해하세요',
     doubleTest: '페어 매칭 MBTI 테스트',
     doubleTestDesc: '파트너를 초대하여 함께 테스트하고, 독점 MBTI 관계 매칭 보고서를 생성하며, 상호작용 패턴을 탐구하세요',
     personalityDetail: '16가지 성격 유형 상세 설명',

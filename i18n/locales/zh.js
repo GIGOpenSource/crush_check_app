@@ -447,7 +447,7 @@ export default {
     indexTitle: 'MBTI测试',
     indexSubtitle: '探索你的性格特征，发现更好的自己，了解你与他人的匹配关系',
     singleTest: '单人MBTI测试',
-    singleTestDesc: '过一系列精心设计的问题，探索你的性格类型，了解个人优势、弱点和潜特征',
+    singleTestDesc: '通过一系列精心设计的问题，探索你的性格类型，了解个人优势、弱点和潜特征',
     doubleTest: '双人匹配MBTI测试',
     doubleTestDesc: '邀请你的伙伴一起测试，生成专属的MBTI联系匹配报告，探索你们的相处模式',
     personalityDetail: '16人格详解',
