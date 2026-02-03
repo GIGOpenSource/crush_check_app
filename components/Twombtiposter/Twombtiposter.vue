@@ -2,7 +2,7 @@
     <view>
         <image v-if="path" :src="path" mode="widthFix" @load="success" @error="handleImageError"></image>
         <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx"
-            height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.65" :pixel-ratio="1.5">
+            height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.95" :pixel-ratio="3">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
                 <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">

@@ -43,57 +43,57 @@ const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 const posterImg = ref('')
 
 // 清理临时文件的函数
-const cleanupOldTempFiles = () => {
-    try {
-        // #ifdef MP-WEIXIN
-        const fs = uni.getFileSystemManager()
-        if (fs) {
-            try {
-                let userDataPath = ''
-                if (wx && wx.getWindowInfo) {
-                    userDataPath = wx.getWindowInfo().pixelRatio ? wx.env.USER_DATA_PATH : ''
-                }
-                if (!userDataPath && wx && wx.env) {
-                    userDataPath = wx.env.USER_DATA_PATH
-                }
-                if (!userDataPath) {
-                    const systemInfo = uni.getSystemInfoSync()
-                    userDataPath = systemInfo.USER_DATA_PATH || ''
-                }
+// const cleanupOldTempFiles = () => {
+//     try {
+//         // #ifdef MP-WEIXIN
+//         const fs = uni.getFileSystemManager()
+//         if (fs) {
+//             try {
+//                 let userDataPath = ''
+//                 if (wx && wx.getWindowInfo) {
+//                     userDataPath = wx.getWindowInfo().pixelRatio ? wx.env.USER_DATA_PATH : ''
+//                 }
+//                 if (!userDataPath && wx && wx.env) {
+//                     userDataPath = wx.env.USER_DATA_PATH
+//                 }
+//                 if (!userDataPath) {
+//                     const systemInfo = uni.getSystemInfoSync()
+//                     userDataPath = systemInfo.USER_DATA_PATH || ''
+//                 }
 
-                if (userDataPath) {
-                    fs.readdir({
-                        dirPath: userDataPath,
-                        success: (res) => {
-                            const imageFiles = res.files
-                                .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
-                                .sort()
-                                .slice(0, 30) // 清理更多文件
+//                 if (userDataPath) {
+//                     fs.readdir({
+//                         dirPath: userDataPath,
+//                         success: (res) => {
+//                             const imageFiles = res.files
+//                                 .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+//                                 .sort()
+//                                 .slice(0, 30) // 清理更多文件
 
-                            imageFiles.forEach(file => {
-                                fs.unlink({
-                                    filePath: `${userDataPath}/${file}`,
-                                    success: () => { },
-                                    fail: () => { }
-                                })
-                            })
-                        },
-                        fail: () => { }
-                    })
-                }
-            } catch (e) {
-                console.log('清理临时文件异常:', e)
-            }
-        }
-        // #endif
-    } catch (e) {
-        console.log('清理临时文件失败:', e)
-    }
-}
+//                             imageFiles.forEach(file => {
+//                                 fs.unlink({
+//                                     filePath: `${userDataPath}/${file}`,
+//                                     success: () => { },
+//                                     fail: () => { }
+//                                 })
+//                             })
+//                         },
+//                         fail: () => { }
+//                     })
+//                 }
+//             } catch (e) {
+//                 console.log('清理临时文件异常:', e)
+//             }
+//         }
+//         // #endif
+//     } catch (e) {
+//         console.log('清理临时文件失败:', e)
+//     }
+// }
 
 onLoad((e) => {
     type.value = e.type
-    cleanupOldTempFiles()
+    // cleanupOldTempFiles()
     if (e.id) {
         getPosterDetails(e.id).then(res => {
             details.value = res.data
@@ -109,7 +109,7 @@ onLoad((e) => {
 })
 
 onMounted(() => {
-    cleanupOldTempFiles()
+    // cleanupOldTempFiles()
 })
 
 const topath = () => {
@@ -119,9 +119,9 @@ const topath = () => {
 const handlePosterSuccess = (filePath) => {
     if (filePath) {
         posterImg.value = filePath
-        setTimeout(() => {
-            cleanupOldTempFiles()
-        }, 2000)
+        // setTimeout(() => {
+        //     cleanupOldTempFiles()
+        // }, 2000)
     } else {
         console.error('海报路径为空')
     }
