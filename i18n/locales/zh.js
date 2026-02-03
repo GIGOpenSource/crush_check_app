@@ -441,6 +441,7 @@ export default {
     stronglyAgree: '非常同意',
     pleaseAnswerAll: '请勿空题',
     posterNotReady: '海报还未生成完成，请稍候',
+    posterGenerating: '海报生成中',
     nextPage: '下一页',
     prevPage: '上一页',
     viewResult: '查看结果',

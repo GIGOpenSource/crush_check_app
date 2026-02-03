@@ -438,6 +438,7 @@ export default {
     tip: '팁: 첫 번째 반응에 따라 선택하세요. 너무 많이 생각하지 마세요. 정확한 보고서를 생성하려면 모든 질문에 답해야 합니다.',
     stronglyDisagree: '매우 반대',
     stronglyAgree: '매우 동의',
+    posterGenerating: '포스터 생성 중',
     nextPage: '다음 페이지',
     prevPage: '이전 페이지',
     viewResult: '결과 보기',

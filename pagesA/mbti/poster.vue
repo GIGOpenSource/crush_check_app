@@ -14,9 +14,13 @@
             </view>
         </view>
         <view class="center">
-            <Mbtiposter @success="handlePosterSuccess" v-if="type == 'single'" :info="details" />
-            <Twombtiposter @success="handlePosterSuccess" v-else-if="type == 'double'" :info="details" />
-            <Productposter @success="handlePosterSuccess" v-else :info="details" />
+            <view v-if="!posterImg && !posterError" class="poster-loading">
+                <view class="loading-spinner"></view>
+                <text>{{ t('mbti.posterGenerating') }}</text>
+            </view>
+            <Mbtiposter @success="handlePosterSuccess" @fail="handlePosterFail" v-if="type == 'single'" :info="details" />
+            <Twombtiposter @success="handlePosterSuccess" @fail="handlePosterFail" v-else-if="type == 'double'" :info="details" />
+            <Productposter @success="handlePosterSuccess" @fail="handlePosterFail" v-else :info="details" />
         </view>
         <view class="bottom">
             <view class="btns">
@@ -42,6 +46,7 @@ const type = ref('')
 const details = ref({})
 const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 const posterImg = ref('')
+const posterError = ref(false)
 
 
 // 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
@@ -111,9 +116,16 @@ const topath = () => {
 const handlePosterSuccess = (filePath) => {
     if (filePath) {
         posterImg.value = filePath
+        posterError.value = false
     } else {
         console.error('海报路径为空')
+        posterError.value = true
     }
+}
+
+const handlePosterFail = (error) => {
+    console.error('海报生成失败:', error)
+    posterError.value = true
 }
 //分享
 const share = () => {
@@ -198,6 +210,45 @@ const share = () => {
     overflow-y: scroll;
     padding: 20rpx;
     box-sizing: border-box;
+    position: relative;
+    
+    .poster-loading {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #12111F !important;
+        z-index: 10;
+        
+        .loading-spinner {
+            width: 60rpx;
+            height: 60rpx;
+            border: 4rpx solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20rpx;
+        }
+        
+        text {
+            color: #fff;
+            font-size: 32rpx;
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .bottom {

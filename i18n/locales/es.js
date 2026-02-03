@@ -429,6 +429,7 @@ export default {
     tip: 'Consejo: Por favor elige según tu primera reacción, sin pensar demasiado. Todas las preguntas deben ser respondidas para generar un informe preciso.',
     stronglyDisagree: 'Muy en desacuerdo',
     stronglyAgree: 'Muy de acuerdo',
+    posterGenerating: 'Generando póster',
     nextPage: 'Página siguiente',
     prevPage: 'Página anterior',
     viewResult: 'Ver resultado',

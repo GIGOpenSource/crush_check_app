@@ -438,6 +438,7 @@ export default {
     tip: 'Tip: Please choose based on your first reaction without overthinking. All questions must be answered to generate an accurate report.',
     stronglyDisagree: 'Strongly Disagree',
     stronglyAgree: 'Strongly Agree',
+    posterGenerating: 'Generating poster',
     nextPage: 'Next Page',
     prevPage: 'Previous Page',
     viewResult: 'View Result',

@@ -437,6 +437,7 @@ export default {
     tip: 'Dica: Por favor, escolha com base na sua primeira reação sem pensar demais. Todas as perguntas devem ser respondidas para gerar um relatório preciso.',
     stronglyDisagree: 'Discordo Totalmente',
     stronglyAgree: 'Concordo Totalmente',
+    posterGenerating: 'Gerando pôster',
     nextPage: 'Próxima Página',
     prevPage: 'Página Anterior',
     viewResult: 'Ver Resultado',

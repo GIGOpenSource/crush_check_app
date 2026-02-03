@@ -437,6 +437,7 @@ export default {
     tip: 'ヒント：最初の反応に基づいて選択してください。過度に考え込まないでください。正確なレポートを生成するには、すべての質問に回答する必要があります。',
     stronglyDisagree: '非常に反対',
     stronglyAgree: '非常に賛成',
+    posterGenerating: 'ポスター生成中',
     nextPage: '次のページ',
     prevPage: '前のページ',
     viewResult: '結果を見る',
