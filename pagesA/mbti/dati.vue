@@ -205,7 +205,7 @@ const choosestatus = (index, ite) => {
 const look = () => {
     finsh(poster_id.value).then(res => {
         if (question_mode.value == 'single_mode') {//单人
-            uni.redirectTo({ url: `/pagesA/mbti/poster?id=`+poster_id.value })
+            uni.redirectTo({ url: `/pagesA/mbti/poster?id=`+poster_id.value + '&type=' + 'single'})
         } else {
             showDelPopup3.value = true
         }
