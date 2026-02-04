@@ -239,8 +239,14 @@ export default {
 	},
 	mounted() {
 		this.processSummaryContent();
-		// 在生成海报前清理临时文件和内存
+		// 在生成海报前清理缓存（小程序和APP）
 		this.clearTempFiles();
+		// APP环境：延迟再次清理，确保清理完成
+		// #ifdef APP-PLUS
+		setTimeout(() => {
+			this.clearTempFiles();
+		}, 500);
+		// #endif
 	},
 	watch: {
 		// 监听info变化，每次变化时重新生成canvasId并清理内存
@@ -368,6 +374,7 @@ export default {
 										const totalFiles = imageFiles.length
 										
 										if (totalFiles === 0) {
+											console.log('APP临时目录中没有图片文件')
 											return
 										}
 										
@@ -380,6 +387,10 @@ export default {
 												// 如果清理完成，尝试强制垃圾回收
 												if (cleaned === totalFiles) {
 													setTimeout(() => {
+														// 尝试强制垃圾回收（如果可用）
+														if (global.gc) {
+															global.gc()
+														}
 														this.forceCleanupMemory()
 													}, 100)
 												}
@@ -388,6 +399,9 @@ export default {
 												// 忽略删除失败
 												if (cleaned === totalFiles) {
 													setTimeout(() => {
+														if (global.gc) {
+															global.gc()
+														}
 														this.forceCleanupMemory()
 													}, 100)
 												}
@@ -396,7 +410,7 @@ export default {
 									}
 								}, (err) => {
 									// 读取目录失败，忽略（可能是空目录）
-									// console.log('读取目录失败:', err)
+									console.log('读取APP目录失败:', err)
 								})
 							}
 							readAllEntries()
@@ -409,21 +423,25 @@ export default {
 								plus.io.resolveLocalFileSystemURL('_doc', (docEntry) => {
 									docEntry.getDirectory('uniapp_temp', { create: true, exclusive: false }, () => {
 										// 目录创建成功，不需要清理
+										console.log('APP临时目录创建成功')
 									}, () => {
 										// 创建失败，忽略
+										console.log('APP临时目录创建失败')
 									})
 								}, () => {
 									// 解析_doc失败，忽略
+									console.log('解析_doc目录失败')
 								})
 							} catch (e) {
 								// 创建目录失败，忽略（不影响主流程）
+								console.log('创建APP临时目录异常:', e)
 							}
+						} else {
+							console.log('解析APP临时文件目录失败:', err)
 						}
-						// 其他错误也忽略，不影响主流程
 					})
 				} catch (e) {
-					// 清理失败不影响主流程
-					// console.log('清理APP临时文件失败:', e)
+					console.log('清理APP临时文件失败:', e)
 				}
 				// #endif
 			} catch (e) {
@@ -455,61 +473,41 @@ export default {
 		cleanupCanvas() {
 			try {
 				const painter = this.$refs.painter
-				if (!painter) {
-					return
-				}
-				
-				// 清理canvas上下文（需要检查getContext方法是否存在）
-				if (painter.canvas && typeof painter.canvas.getContext === 'function') {
-					try {
-						const ctx = painter.canvas.getContext('2d')
-						if (ctx && typeof ctx.clearRect === 'function') {
-							ctx.clearRect(0, 0, painter.canvas.width || 0, painter.canvas.height || 0)
-							// 清空canvas内容
-							if (typeof painter.canvas.width !== 'undefined') {
-								painter.canvas.width = 0
+				if (painter) {
+					// 清理canvas上下文
+					if (painter.canvas && typeof painter.canvas.getContext === 'function') {
+						try {
+							const ctx = painter.canvas.getContext('2d')
+							if (ctx && typeof ctx.clearRect === 'function') {
+								ctx.clearRect(0, 0, painter.canvas.width || 0, painter.canvas.height || 0)
 							}
-							if (typeof painter.canvas.height !== 'undefined') {
-								painter.canvas.height = 0
-							}
+						} catch (e) {
+							console.log('清理canvas 2d上下文异常:', e)
 						}
-					} catch (e) {
-						// 忽略清理错误，不同平台的canvas实现可能不同
-						// console.log('清理canvas 2d上下文异常:', e)
 					}
-				}
-				
-				// 清理旧的canvas上下文（非2d）
-				if (painter.ctx && typeof painter.ctx.clearRect === 'function') {
-					try {
-						painter.ctx.clearRect(0, 0, painter.canvasWidth || 0, painter.canvasHeight || 0)
-					} catch (e) {
-						// 忽略清理错误
-						// console.log('清理canvas上下文异常:', e)
+					// 清理旧的canvas上下文（非2d）
+					if (painter.ctx && typeof painter.ctx.clearRect === 'function') {
+						try {
+							painter.ctx.clearRect(0, 0, painter.canvasWidth || 0, painter.canvasHeight || 0)
+						} catch (e) {
+							console.log('清理canvas上下文异常:', e)
+						}
 					}
-				}
-				
-				// 重置状态
-				if (painter.done !== undefined) {
-					painter.done = false
-				}
-				if (painter.inited !== undefined) {
-					painter.inited = false
-				}
-				
-				// 清理定时器
-				if (painter.rendertimer) {
-					clearTimeout(painter.rendertimer)
-					painter.rendertimer = null
-				}
-				
-				// 清理painter对象
-				if (painter.painter) {
-					painter.painter = null
+					// 重置状态
+					if (painter.done !== undefined) {
+						painter.done = false
+					}
+					if (painter.inited !== undefined) {
+						painter.inited = false
+					}
+					// 清理定时器
+					if (painter.rendertimer) {
+						clearTimeout(painter.rendertimer)
+						painter.rendertimer = null
+					}
 				}
 			} catch (e) {
-				// 忽略清理错误，避免影响正常功能
-				// console.log('清理canvas资源异常:', e)
+				console.log('清理canvas资源异常:', e)
 			}
 		},
 		// 处理生成成功

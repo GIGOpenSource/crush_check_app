@@ -28,6 +28,7 @@
                 <view @click="topath">{{ t('mbti.backToHome') }}</view>
             </view>
         </view>
+         <InvitationFriend :show="friend" @close="friend = false" :imageUrl="posterImg" :downloadUrl="posterImg" />
     </view>
 </template>
 
@@ -40,6 +41,7 @@ import Productposter from '@/components/Productposter/Productposter.vue';
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { getPosterDetails } from '@/api/index.js'
 import { getTemplate } from '@/api/mbti.js'
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 const { t } = useI18n()
 const src = ref('')
 const type = ref('')
@@ -47,7 +49,7 @@ const details = ref({})
 const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 const posterImg = ref('')
 const posterError = ref(false)
-
+const friend = ref(false)
 
 // 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
 const cleanupOldTempFiles = async () => {
@@ -137,21 +139,7 @@ const share = () => {
         })
         return
     }
-    const inviterOpenId = uni.getStorageSync("openId") || "";
-    const query = `?scene=${inviterOpenId}`
-    wx.showShareImageMenu({
-        path: posterImg.value,
-        entrancePath: `/pages/index/index${query}`,
-        complete: (res) => {
-            if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                // share_fail()
-
-            } else {
-                // share_success()
-
-            }
-        }
-    })
+    friend.value = true
 }
 
 </script>
