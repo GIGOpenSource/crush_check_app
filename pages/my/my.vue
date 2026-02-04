@@ -1576,7 +1576,6 @@ page {
   background: #12111f;
   display: flex;
   flex-direction: column;
-  gap: 32rpx;
   color: #ffffff;
 }
 
@@ -1587,13 +1586,27 @@ page {
   // box-shadow: 0 18rpx 46rpx rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  
+  > * {
+    margin-bottom: 20rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .profile-content {
   display: flex;
   align-items: center;
-  gap: 24rpx;
+  
+  > * {
+    margin-right: 24rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .avatar {
@@ -1634,9 +1647,10 @@ page {
 .profile-info {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  // flex: 1;
   min-width: 0;
-  gap: 12rpx;
+  // gap: 12rpx;
+  margin-left: 20rpx;
 }
 
 .nickname,
@@ -1694,14 +1708,22 @@ page {
       #39345d 99%);
   box-shadow: 0 20rpx 50rpx rgba(0, 0, 0, 0.35);
   overflow: hidden;
+  margin: 30rpx 0;
 }
 
 .vip-content {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
   z-index: 1;
   width: 75%;
+  
+  > * {
+    margin-bottom: 12rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .vip-header {
@@ -1711,7 +1733,14 @@ page {
 
 .vip-header--member {
   align-items: center;
-  gap: 12rpx;
+  
+  > * {
+    margin-right: 12rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .vip-tag {
@@ -1749,10 +1778,17 @@ page {
 .vip-subtitle {
   display: flex;
   align-items: baseline;
-  gap: 8rpx;
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.75);
   margin-top: 4rpx;
+  
+  > * {
+    margin-right: 8rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .vip-subtitle-text {
@@ -1819,7 +1855,14 @@ page {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 8rpx;
+  
+  > * {
+    margin-bottom: 8rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .invite-title {
@@ -1877,7 +1920,15 @@ page {
   align-items: center;
   height: 144rpx;
   padding: 0 32rpx;
-  gap: 20rpx;
+  margin-top: 30rpx;
+  
+  > * {
+    margin-right: 20rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .public-icon {
@@ -1890,12 +1941,20 @@ page {
 .functions-section {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  
+  > * {
+    margin-bottom: 20rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .section-title {
   font-size: 28rpx;
   color: #ffffff;
+  margin-top: 30rpx;
 }
 
 .card-header {
@@ -1924,8 +1983,14 @@ page {
 .poster-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 20rpx;
   margin-top: 20rpx;
+  margin-right: -20rpx;
+  margin-bottom: -20rpx;
+  
+  > * {
+    margin-right: 20rpx;
+    margin-bottom: 20rpx;
+  }
 }
 
 .poster-item {
@@ -2059,8 +2124,15 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20rpx;
   flex: 1;
+  
+  > * {
+    margin-right: 20rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .public-title {
@@ -2100,8 +2172,15 @@ page {
   margin-bottom: 16rpx;
   display: flex;
   flex-direction: column;
-  gap: 8rpx;
   color: #2b1747;
+  
+  > * {
+    margin-bottom: 8rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .reward-popup-main-line {
@@ -2118,8 +2197,15 @@ page {
 
 .reward-popup-actions {
   display: flex;
-  gap: 24rpx;
   justify-content: center;
+  
+  > * {
+    margin-right: 24rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .reward-popup-btn {
@@ -2193,14 +2279,28 @@ page {
 
 .del-popup-actions {
   display: flex;
-  gap: 24rpx;
+  
+  > * {
+    margin-right: 24rpx;
+    
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .del-popup-btn {
 
   .del-popup-actions {
     display: flex;
-    gap: 24rpx;
+    
+    > * {
+      margin-right: 24rpx;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 }
 
@@ -2303,7 +2403,14 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32rpx;
+  
+  > * {
+    margin-bottom: 32rpx;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .qr-code-popup-title {

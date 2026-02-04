@@ -12,7 +12,7 @@
 
         <view class="page-content" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="titlecon">
-                <view class="t1">{{ t('mbti.testTitle') }} ({{ t('mbti.version') }}) <text>{{ page }} / {{ total
+                <view class="t1">{{ t('mbti.testTitle') }} ({{ title[test_type] }}) <text>{{ page }} / {{ total
                         }}</text> </view>
                 <view class="t2">{{ t('mbti.tip') }}</view>
             </view>
@@ -87,6 +87,7 @@ const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const poster_id = ref(null)
+const title = {'simple':t('mbti.simpleVersion'),'major':t('mbti.majorVersion'),'advanced':t('mbti.advancedVersion')}
 onLoad((e) => {
     test_type.value = e.test_type
     question_mode.value = e.question_mode
@@ -291,11 +292,12 @@ const submit = () => {
 
     .t1 {
         margin-top: 40rpx;
+        position: relative;
 
         text {
             position: absolute;
-            right: 50rpx;
-            top: 250rpx;
+        right: -42%;
+            top: 10rpx;
             font-size: 24rpx;
         }
     }
