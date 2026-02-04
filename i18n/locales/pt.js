@@ -238,7 +238,7 @@ export default {
     rewardMessageSuffix: ' relatórios premium',
     noExpire: 'Sem data de expiração'
   },
-  poster: {
+ poster: {
     title: 'Pôsteres Históricos',
     recentTest: 'Testes Recentes',
     selectAll: 'Selecionar Tudo',
@@ -282,6 +282,7 @@ export default {
     daysAgoUnit: 'dias atrás',
     monthsAgo: '',
     monthsAgoUnit: 'meses atrás',
+     copySuccess: 'Copiado com sucesso',
     yearsAgo: '',
     yearsAgoUnit: 'anos atrás',
     unknownType: 'Tipo desconhecido',
@@ -290,12 +291,18 @@ export default {
     cheatScore: 'Pontuação de Traidor:',
     viewPoster: 'Ver Pôster',
     viewAnswer: 'Ver Resposta',
+    viewDetails: 'Ver Detalhes',
+    personalityIs: 'Sua personalidade é:',
     answerLabel: 'Resposta:',
     defaultAnswer: 'A oportunidade está bem na sua frente',
     emptyMessage: 'Nada aqui ainda, vá testar agora',
     goToTest: 'Ir Testar',
     answerBook: 'Livro de Respostas',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Cartas de Tarô',
+    mbti: 'MBTI',
+    storageLimitExceeded: 'Limite de armazenamento excedido, por favor limpe o cache e tente novamente',
+    generateFailed: 'Falha ao gerar o pôster, por favor tente novamente'
   },
   index: {
     crushCheck: 'CrushCheck',

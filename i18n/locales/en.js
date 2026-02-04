@@ -110,6 +110,7 @@ export default {
     agreePolicy: 'I have read and agree to',
     privacyPolicy: 'Privacy Policy',
     and: 'and',
+     copySuccess: 'Copy successful',
     userAgreement: 'User Agreement',
     needAlbumAuth: 'Album access authorization required to save images',
     qrCodeNotLoaded: 'QR code not loaded',
@@ -239,7 +240,7 @@ export default {
     rewardMessageSuffix: ' premium reports',
     noExpire: 'No expiration date'
   },
-  poster: {
+ poster: {
     title: 'History Posters',
     recentTest: 'Recent Tests',
     selectAll: 'Select All',
@@ -291,12 +292,18 @@ export default {
     cheatScore: 'Cheat Score:',
     viewPoster: 'View Poster',
     viewAnswer: 'View Answer',
+    viewDetails: 'View Details',
+    personalityIs: 'Your personality is:',
     answerLabel: 'Answer:',
     defaultAnswer: 'Opportunity is right in front of you',
     emptyMessage: 'Nothing here yet, go test now',
     goToTest: 'Go Test',
     answerBook: 'Book of Answers',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Tarot Cards',
+    mbti: 'MBTI',
+    storageLimitExceeded: 'Storage limit exceeded, please clear cache and try again',
+    generateFailed: 'Poster generation failed, please try again'
   },
   index: {
     crushCheck: 'CrushCheck',

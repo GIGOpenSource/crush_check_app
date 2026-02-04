@@ -272,6 +272,7 @@ export default {
     hoursAgoUnit: 'horas',
     daysAgo: 'Hace',
     daysAgoUnit: 'días',
+      copySuccess: 'Copiado exitosamente',
     monthsAgo: 'Hace',
     monthsAgoUnit: 'meses',
     yearsAgo: 'Hace',
@@ -282,12 +283,18 @@ export default {
     cheatScore: 'Puntuación de Tramposo:',
     viewPoster: 'Ver Póster',
     viewAnswer: 'Ver Respuesta',
+    viewDetails: 'Ver Detalles',
+    personalityIs: 'Tu personalidad es:',
     answerLabel: 'Respuesta:',
     defaultAnswer: 'La oportunidad está justo frente a ti',
     emptyMessage: 'Nada aquí todavía, ve a probar ahora',
     goToTest: 'Ir a Probar',
     answerBook: 'Libro de Respuestas',
-    crushCheck: 'CrushCheck'
+    crushCheck: 'CrushCheck',
+    tarotCard: 'Cartas del Tarot',
+    mbti: 'MBTI',
+    storageLimitExceeded: 'Límite de almacenamiento excedido, por favor limpie la caché e intente nuevamente',
+    generateFailed: 'Error al generar el póster, por favor intente nuevamente'
   },
   index: {
     crushCheck: 'CrushCheck',

@@ -58,6 +58,7 @@ export default {
     tarot_name: "塔罗牌",
     tarot_please_select_spread: "请选择牌阵",
   common: {
+    copySuccess: '复制成功',
     queding:'注销账号后，您的账号信息将被永久删除且无法恢复。若在七天内登录账号，将自动取消注销流程。确认注销账号吗？',
     deleteuser:'注销账户',
     zhuxiao:'您的帐号已经申请注销，七天内登录，则取消注销。',
@@ -240,7 +241,7 @@ export default {
     rewardMessageSuffix: '次高级报告',
     noExpire: '暂无到期'
   },
-  poster: {
+   poster: {
     title: '历史海报',
     recentTest: '最近测试',
     selectAll: '全选',
@@ -292,12 +293,18 @@ export default {
     cheatScore: '含渣量：',
     viewPoster: '查看海报',
     viewAnswer: '查看答案',
+    viewDetails: '查看详情',
+    personalityIs: '你的人格是：',
     answerLabel: '回答：',
     defaultAnswer: '机会就在眼前',
     emptyMessage: '目前什么都没有，快去测试吧',
     goToTest: '去测试',
     answerBook: '答案之书',
-    crushCheck: '鉴渣'
+    crushCheck: '鉴渣',
+    tarotCard: '塔罗牌',
+    mbti: 'MBTI',
+    storageLimitExceeded: '存储空间不足，请清理缓存后重试',
+    generateFailed: '海报生成失败，请重试'
   },
   index: {
     crushCheck: '鉴渣',

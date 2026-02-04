@@ -95,6 +95,7 @@ export default {
     userInfoNotExist: 'ユーザー情報が存在しません',
     userInfoNotExistRelogin: 'ユーザー情報が存在しません。再度ログインしてください',
     loginSuccess: 'ログイン成功',
+    copySuccess: 'コピー成功',
     loginFailed: 'ログイン失敗',
     logoutSuccess: 'ログアウトしました',
     logoutConfirm: 'ログアウトしてもよろしいですか？',
@@ -238,7 +239,7 @@ export default {
     rewardMessageSuffix: '回のプレミアムレポートを獲得しました',
     noExpire: '有効期限なし'
   },
-  poster: {
+   poster: {
     title: '履歴ポスター',
     recentTest: '最近のテスト',
     selectAll: 'すべて選択',
@@ -290,12 +291,18 @@ export default {
     cheatScore: '浮気スコア：',
     viewPoster: 'ポスターを見る',
     viewAnswer: '答えを見る',
+    viewDetails: '詳細を見る',
+    personalityIs: 'あなたの性格は：',
     answerLabel: '答え：',
     defaultAnswer: '機会は目の前にあります',
     emptyMessage: 'まだ何もありません。今すぐテストに行きましょう',
     goToTest: 'テストに行く',
     answerBook: '答えの本',
-    crushCheck: 'クラッシュチェック'
+    crushCheck: 'クラッシュチェック',
+    tarotCard: 'タロットカード',
+    mbti: 'MBTI',
+    storageLimitExceeded: 'ストレージ容量が不足しています。キャッシュをクリアしてから再試行してください',
+    generateFailed: 'ポスターの生成に失敗しました。もう一度お試しください'
   },
   index: {
     crushCheck: 'クラッシュチェック',
