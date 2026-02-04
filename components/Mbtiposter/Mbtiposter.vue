@@ -179,29 +179,29 @@
                             css="display: flex;align-items: center;flex-direction: column;justify-content: center;width: 100%;">
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width: 80%;margin-top: 20rpx;color:#9C9C9C">
-                                <l-painter-text :text="t('mbti.assertive')" css="color:#F36067"> </l-painter-text>
-                                <l-painter-text :text="t('mbti.turbulent')"> </l-painter-text>
+                                <l-painter-text :text="t('mbti.assertive')" :css='getATextStyle()'> </l-painter-text>
+                                <l-painter-text :text="t('mbti.turbulent')" :css='getATTextStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="display: flex;justify-content: space-between; width:100%;margin: 10rpx 0;align-items: center;">
-                                <l-painter-text text='10%'> </l-painter-text>
+                                <l-painter-text :text='getAPercentage + "%"' :css='getAPercentageStyle()'> </l-painter-text>
                                 <l-painter-view
-                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;">
+                                    css="display:block;width:75%; background: #EBEBEB;height:20rpx;border-radius: 10rpx;position: relative;">
                                     <l-painter-view
-                                        css="position: absolute; left: 0; top: 0; width:90%; height:20rpx; border-radius: 10rpx; background: #F36067;">
+                                        :css='getATProgressBarStyle()'>
                                     </l-painter-view>
                                 </l-painter-view>
-                                <l-painter-text text='90%'> </l-painter-text>
+                                <l-painter-text :text='getATPercentage + "%"' :css='getATPercentageStyle()'> </l-painter-text>
                             </l-painter-view>
                             <l-painter-view
                                 css="width:100%;margin: 10rpx 0;background:#FEF4F3;padding: 20rpx;border-radius: 15rpx;">
                                 <l-painter-view css="display: block;font-size: 26rpx;">
                                     <l-painter-text :text="t('mbti.confidenceLevel')"> </l-painter-text>
-                                    <l-painter-text :text="t('mbti.introvertedType')" css="color:#F36067"> </l-painter-text>
+                                    <l-painter-text :text='getATTitleText()' :css='getATTitleStyle()'> </l-painter-text>
                                 </l-painter-view>
                                 <l-painter-view css="display: block;color:#3D3D3D;margin-top: 15rpx;">
                                     <l-painter-text css="font-size: 22rpx;display: block;"
-                                        :text="t('mbti.introvertedDescription')"> </l-painter-text>
+                                        :text='getATDescriptionText()'> </l-painter-text>
                                 </l-painter-view>
 
                             </l-painter-view>
@@ -430,6 +430,37 @@ export default {
         },
         isPGreater() {
             return this.getPPercentage > this.getJPercentage
+        },
+        // AT相关计算
+        getAPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const A = this.info.mbti_list[0].base_scores.A || 0
+            const T2 = this.info.mbti_list[0].base_scores.T2 || 0
+            const total = A + T2
+            if (total === 0) return 0
+            return Math.round((A / total) * 100)
+        },
+        getATPercentage() {
+            if (!this.info || !this.info.mbti_list || !this.info.mbti_list[0] || !this.info.mbti_list[0].base_scores) {
+                return 0
+            }
+            const A = this.info.mbti_list[0].base_scores.A || 0
+            const T2 = this.info.mbti_list[0].base_scores.T2 || 0
+            const total = A + T2
+            if (total === 0) return 0
+            // 计算A百分比并四舍五入
+            const aPercent = Math.round((A / total) * 100)
+            // T2百分比 = 100 - A百分比，确保和为100
+            const t2Percent = 100 - aPercent
+            return t2Percent
+        },
+        isAGreater() {
+            return this.getAPercentage > this.getATPercentage
+        },
+        isATGreater() {
+            return this.getATPercentage > this.getAPercentage
         }
     },
     methods: {
@@ -694,6 +725,69 @@ export default {
         getJPTitleStyle() {
             // JP进度条颜色是 #8B5E99
             return 'color:#8B5E99'
+        },
+        // AT相关样式方法（相等时显示左边的值）
+        getATextStyle() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            // 如果A大于等于T2（包括相等），显示颜色
+            return aPercent >= t2Percent ? 'color:#F36067' : ''
+        },
+        getATTextStyle() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            // 只有T2大于A时才显示颜色
+            return t2Percent > aPercent ? 'color:#F36067' : ''
+        },
+        getAPercentageStyle() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            // 如果A大于等于T2（包括相等），显示黑色
+            return aPercent >= t2Percent ? 'color:#000000' : ''
+        },
+        getATPercentageStyle() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            // 只有T2大于A时才显示黑色
+            return t2Percent > aPercent ? 'color:#000000' : ''
+        },
+        getATProgressBarStyle() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            
+            if (aPercent > t2Percent) {
+                return `position: absolute; left: 0; top: 0; width:${aPercent}%; height:20rpx; border-radius: 10rpx; background: #F36067;`
+            } else {
+                return `position: absolute; right: 0; top: 0; width:${t2Percent}%; height:20rpx; border-radius: 10rpx; background: #F36067;`
+            }
+        },
+        // 获取AT标题文本（根据数值大小动态显示，相等时显示左边的值）
+        getATTitleText() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            if (t2Percent > aPercent) {
+                return this.t('mbti.turbulent')
+            } else {
+                // 相等或A更大时，显示左边的值（自信型）
+                return this.t('mbti.assertive')
+            }
+        },
+        // 获取AT标题样式（与进度条颜色一致）
+        getATTitleStyle() {
+            // AT进度条颜色是 #F36067
+            return 'color:#F36067'
+        },
+        // 获取AT描述文本（根据类型动态显示）
+        getATDescriptionText() {
+            const aPercent = this.getAPercentage
+            const t2Percent = this.getATPercentage
+            if (t2Percent > aPercent) {
+                // T2型（谨慎型）描述
+                return this.t('mbti.turbulentDescription')
+            } else {
+                // A型（坚决型）描述（包括相等时显示左边的值）
+                return this.t('mbti.assertiveDescription')
+            }
         },
         // 清理临时文件（支持小程序和APP）
         clearTempFiles() {
