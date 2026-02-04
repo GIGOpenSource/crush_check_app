@@ -52,8 +52,8 @@
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
                         </image>
                         <image v-else-if="item.prompt_template.template_type == 'mbti'"
-                            :src="item.mbti_list[0]?.templates[0]?.image_url || $getImg('add/mbti')" mode="scaleToFill"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url"
+                            mode="scaleToFill" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -61,7 +61,7 @@
                     </view>
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
-                   <view class="status-overlay"
+                    <view class="status-overlay"
                         v-if="(item.status === 'waiting' || item.status === 'error') && item.prompt_template.template_type !== 'mbti'">
                         <!-- 右上角状态标签 -->
                         <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
@@ -70,7 +70,7 @@
                         </view>
                     </view>
 
-                      <!-- 右侧内容 -->
+                    <!-- 右侧内容 -->
                     <view class="right">
                         <!-- 鉴渣类型 -->
                         <template
@@ -130,7 +130,7 @@
                                             item.mbti_list[0].other_status == 'done' ?
                                                 item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
-                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill"
+                                        <image :src="item.mbti_list[0]?.other_mbti_image_url" mode="scaleToFill"
                                             class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
                                         </image>
                                         <!-- 未完成 -->
@@ -148,7 +148,7 @@
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
                                         <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
                                             !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
-                                            $t('poster.viewDetails') }}</text>
+                                                $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
                             </block>
@@ -208,7 +208,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -220,7 +220,7 @@
             </view>
         </template>
     </IndexProup>
-      <IndexProup :show="pipeiproup" @close="pipeiproup = false">
+    <IndexProup :show="pipeiproup" @close="pipeiproup = false">
         <template #content>
             <view class="tishi">
                 <view class="title">{{ $t('mbti.doubleMatch') }}</view>
@@ -357,7 +357,7 @@ export default {
                 type: "answer",
             },
             {
-                  label: t('poster.tarotCard'),
+                label: t('poster.tarotCard'),
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "tarot_card",
@@ -1594,6 +1594,7 @@ export default {
     height: 210rpx !important;
     margin-top: 20rpx;
 }
+
 .mbti1 {
     width: 150rpx !important;
     height: 180rpx !important;
