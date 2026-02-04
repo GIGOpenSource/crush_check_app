@@ -52,7 +52,7 @@
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
                         </image>
                         <image v-else-if="item.prompt_template.template_type == 'mbti'"
-                            :src="item.mbti_list[0]?.owner_image_url || $getImg('add/mbti')" mode="scaleToFill"
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill"
                             :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
