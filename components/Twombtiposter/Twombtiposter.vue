@@ -319,10 +319,10 @@ export default {
                 const painter = this.$refs.painter
                 if (painter) {
                     // 清理canvas上下文
-                    if (painter.canvas) {
+                    if (painter.canvas && typeof painter.canvas.getContext === 'function') {
                         try {
                             const ctx = painter.canvas.getContext('2d')
-                            if (ctx) {
+                            if (ctx && typeof ctx.clearRect === 'function') {
                                 ctx.clearRect(0, 0, painter.canvas.width || 0, painter.canvas.height || 0)
                             }
                         } catch (e) {
@@ -330,7 +330,7 @@ export default {
                         }
                     }
                     // 清理旧的canvas上下文（非2d）
-                    if (painter.ctx && painter.ctx.clearRect) {
+                    if (painter.ctx && typeof painter.ctx.clearRect === 'function') {
                         try {
                             painter.ctx.clearRect(0, 0, painter.canvasWidth || 0, painter.canvasHeight || 0)
                         } catch (e) {
