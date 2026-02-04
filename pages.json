@@ -144,6 +144,35 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "mbti/index",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
+				},{
+					"path": "mbti/dati",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false,
+						"navigationStyle": "custom"
+					}
+				},{
+					"path": "mbti/poster",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
+				},{
+					"path": "loveCourt/index",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
 				}
 			]
 		}
