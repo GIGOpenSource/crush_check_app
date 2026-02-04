@@ -120,13 +120,14 @@
                                 </view>
                             </block>
                             <block v-else>
+                            
                                 <view class="double">
-                                    <view class="num" style="margin-left:-10rpx">{{
+                                    <view class="num" style="margin-left:-10rpx;font-size: 30rpx;">{{
                                         item.mbti_list[0]?.owner_mbti_type || '' }} <text
-                                            style="margin-left:50rpx;font-size: 26rpx;">X</text></view>
+                                            style="margin-left:25rpx;font-size: 26rpx;">X</text></view>
                                     <view class="xi">
                                         <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
-                                        <view class="num" style="width:120rpx;text-align: center;">{{
+                                        <view class="num" style="width:120rpx;text-align: center;font-size: 30rpx;">{{
                                             item.mbti_list[0].other_status == 'done' ?
                                                 item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
