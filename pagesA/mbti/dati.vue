@@ -13,7 +13,7 @@
         <view class="page-content" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="titlecon">
                 <view class="t1">{{ t('mbti.testTitle') }} ({{ title[test_type] }}) <text>{{ page }} / {{ total
-                }}</text> </view>
+                        }}</text> </view>
                 <view class="t2">{{ t('mbti.tip') }}</view>
             </view>
             <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
@@ -36,7 +36,10 @@
             </scroll-view>
             <view class="btns">
                 <view class="btn1" v-if="page == 1" @click="down">{{ t('mbti.nextPage') }}</view>
-                <view class="btn1" v-else-if="page == total" @click="down">{{ t('mbti.viewResult') }}</view>
+                <view class="btn2" v-else-if="page == total" @click="down">
+                    <view @click="up">{{ t('mbti.prevPage') }}</view>
+                    <view @click="down">{{ t('mbti.viewResult') }}</view>
+                </view>
                 <view class="btn2" v-else>
                     <view @click="up">{{ t('mbti.prevPage') }}</view>
                     <view @click="down">{{ t('mbti.nextPage') }}</view>
