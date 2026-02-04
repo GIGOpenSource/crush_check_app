@@ -131,8 +131,69 @@ export function base64ToPath(base64) {
 		const filePath = `${pre.getEnvInfoSync().common.USER_DATA_PATH}/${time}.${format}`
 		// #endif
 		// #ifndef MP-TOUTIAO
-		// const filePath = `${pre.env.USER_DATA_PATH}/${time}.${format}`
+		const filePath = `${pre.env.USER_DATA_PATH}/${time}.${format}`
 		// #endif
+		
+		// 在写入前尝试清理一些旧文件（最多清理5个）
+		// #ifdef MP-WEIXIN
+		try {
+			const userDataPath = pre.env.USER_DATA_PATH
+			fs.readdir({
+				dirPath: userDataPath,
+				success: (res) => {
+					// 只清理图片文件，按时间排序，清理最旧的
+					const imageFiles = res.files
+						.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+						.sort()
+						.slice(0, 15) // 清理更多旧文件（15个）
+					
+					imageFiles.forEach(file => {
+						fs.unlink({
+							filePath: `${userDataPath}/${file}`,
+							success: () => {},
+							fail: () => {}
+						})
+					})
+				},
+				fail: () => {}
+			})
+		} catch (e) {
+			// 清理失败不影响主流程
+		}
+		// #endif
+		
+		// #ifdef APP-PLUS
+		// 清理APP临时文件目录中的旧文件
+		try {
+			const tempDirPath = '_doc/uniapp_temp'
+			plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+				// 检查是否是目录
+				if (dirEntry.isDirectory) {
+					const reader = dirEntry.createReader()
+					reader.readEntries((entries) => {
+						const imageFiles = entries
+							.filter(entry => {
+								const name = entry.name || ''
+								return /\.(jpg|jpeg|png|gif)$/i.test(name)
+							})
+							.sort((a, b) => {
+								const aTime = a.lastModifiedDate || 0
+								const bTime = b.lastModifiedDate || 0
+								return aTime - bTime
+							})
+							.slice(0, 15) // 清理更多旧文件（15个）
+						
+						imageFiles.forEach(fileEntry => {
+							fileEntry.remove(() => {}, () => {})
+						})
+					}, () => {})
+				}
+			}, () => {})
+		} catch (e) {
+			// 清理失败不影响主流程
+		}
+		// #endif
+		
 		fs.writeFile({
 			filePath,
 			data: base64.split(',')[1],
@@ -142,7 +203,138 @@ export function base64ToPath(base64) {
 			},
 			fail(err) {
 				console.error(err)
-				reject(err)
+				// 如果是存储空间不足的错误，尝试清理后重试一次
+				if (err.errMsg && (err.errMsg.includes('maximum size') || err.errMsg.includes('storage limit'))) {
+					// #ifdef MP-WEIXIN
+					try {
+						const userDataPath = pre.env.USER_DATA_PATH
+						fs.readdir({
+							dirPath: userDataPath,
+							success: (res) => {
+								// 清理更多文件（30个）
+								const imageFiles = res.files
+									.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+									.sort()
+									.slice(0, 30)
+								
+								let cleaned = 0
+								imageFiles.forEach(file => {
+									fs.unlink({
+										filePath: `${userDataPath}/${file}`,
+										success: () => {
+											cleaned++
+											// 清理完成后重试写入
+											if (cleaned === imageFiles.length) {
+												fs.writeFile({
+													filePath,
+													data: base64.split(',')[1],
+													encoding: 'base64',
+													success() {
+														resolve(filePath)
+													},
+													fail(err) {
+														reject(err)
+													}
+												})
+											}
+										},
+										fail: () => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												reject(err)
+											}
+										}
+									})
+								})
+							},
+							fail: () => {
+								reject(err)
+							}
+						})
+					} catch (e) {
+						reject(err)
+					}
+					// #endif
+					// #ifdef APP-PLUS
+					try {
+						const tempDirPath = '_doc/uniapp_temp'
+						plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+							// 检查是否是目录
+							if (dirEntry.isDirectory) {
+								const reader = dirEntry.createReader()
+								reader.readEntries((entries) => {
+									const imageFiles = entries
+										.filter(entry => {
+											const name = entry.name || ''
+											return /\.(jpg|jpeg|png|gif)$/i.test(name)
+										})
+										.sort((a, b) => {
+											const aTime = a.lastModifiedDate || 0
+											const bTime = b.lastModifiedDate || 0
+											return aTime - bTime
+										})
+										.slice(0, 10)
+									
+									let cleaned = 0
+									if (imageFiles.length === 0) {
+										reject(err)
+										return
+									}
+									
+									imageFiles.forEach(fileEntry => {
+										fileEntry.remove(() => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												// 清理完成后重试保存
+												const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+												bitmap.loadBase64Data(base64, () => {
+													if (!format) {
+														bitmap.clear()
+														reject(new Error('ERROR_BASE64SRC_PARSE'))
+														return
+													}
+													const time = new Date().getTime();
+													const retryFilePath = `_doc/uniapp_temp/${time}.${format}`
+													bitmap.save(retryFilePath, {},
+														() => {
+															bitmap.clear()
+															resolve(retryFilePath)
+														},
+														(error) => {
+															bitmap.clear()
+															reject(error)
+														})
+												}, (error) => {
+													bitmap.clear()
+													reject(error)
+												})
+											}
+										}, () => {
+											cleaned++
+											if (cleaned === imageFiles.length) {
+												reject(err)
+											}
+										})
+									})
+								}, () => {
+									reject(err)
+								})
+							} else {
+								reject(err)
+							}
+						}, () => {
+							reject(err)
+						})
+					} catch (e) {
+						reject(err)
+					}
+					// #endif
+					// #ifndef MP-WEIXIN || APP-PLUS
+					reject(err)
+					// #endif
+				} else {
+					reject(err)
+				}
 			}
 		})
 		// #endif
@@ -165,282 +357,26 @@ export function base64ToPath(base64) {
 		// #endif
 
 		// #ifdef APP-PLUS
-		// 在保存前清理所有旧文件（APP环境更激进）
-		try {
-			const tempDirPath = '_doc/uniapp_temp'
-			plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
-				if (dirEntry.isDirectory) {
-					const reader = dirEntry.createReader()
-					reader.readEntries((entries) => {
-						// 清理所有图片文件
-						const imageFiles = entries.filter(entry => {
-							const name = entry.name || ''
-							return /\.(jpg|jpeg|png|gif)$/i.test(name)
-						})
-						
-						let cleaned = 0
-						const totalFiles = imageFiles.length
-						
-						const cleanupAndSave = () => {
-							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-							bitmap.loadBase64Data(base64, () => {
-								if (!format) {
-									bitmap.clear()
-									reject(new Error('ERROR_BASE64SRC_PARSE'))
-									return
-								}
-								const time = new Date().getTime();
-								const filePath = `_doc/uniapp_temp/${time}.${format}`
-								bitmap.save(filePath, {},
-									() => {
-										bitmap.clear()
-										resolve(filePath)
-									},
-									(error) => {
-										bitmap.clear()
-										reject(error)
-									})
-							}, (error) => {
-								bitmap.clear()
-								reject(error)
-							})
-						}
-						
-						if (totalFiles === 0) {
-							cleanupAndSave()
-							return
-						}
-						
-						imageFiles.forEach(fileEntry => {
-							fileEntry.remove(() => {
-								cleaned++
-								if (cleaned === totalFiles) {
-									// 清理完成后保存
-									setTimeout(() => {
-										cleanupAndSave()
-									}, 50)
-								}
-							}, () => {
-								cleaned++
-								if (cleaned === totalFiles) {
-									setTimeout(() => {
-										cleanupAndSave()
-									}, 50)
-								}
-							})
-						})
-					}, (readErr) => {
-						// 读取失败，直接保存（目录可能不存在或为空）
-						const cleanupAndSave = () => {
-							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-							bitmap.loadBase64Data(base64, () => {
-								if (!format) {
-									bitmap.clear()
-									reject(new Error('ERROR_BASE64SRC_PARSE'))
-									return
-								}
-								const time = new Date().getTime();
-								const filePath = `_doc/uniapp_temp/${time}.${format}`
-								bitmap.save(filePath, {},
-									() => {
-										bitmap.clear()
-										resolve(filePath)
-									},
-									(error) => {
-										bitmap.clear()
-										reject(error)
-									})
-							}, (error) => {
-								bitmap.clear()
-								reject(error)
-							})
-						}
-						cleanupAndSave()
-					})
-				} else {
-					// 不是目录，直接保存
-					const cleanupAndSave = () => {
-						const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-						bitmap.loadBase64Data(base64, () => {
-							if (!format) {
-								bitmap.clear()
-								reject(new Error('ERROR_BASE64SRC_PARSE'))
-								return
-							}
-							const time = new Date().getTime();
-							const filePath = `_doc/uniapp_temp/${time}.${format}`
-							bitmap.save(filePath, {},
-								() => {
-									bitmap.clear()
-									resolve(filePath)
-								},
-								(error) => {
-									bitmap.clear()
-									reject(error)
-								})
-						}, (error) => {
-							bitmap.clear()
-							reject(error)
-						})
-					}
-					cleanupAndSave()
-				}
-			}, (resolveErr) => {
-				// 解析路径失败（目录不存在），尝试创建目录后保存
-				if (resolveErr && resolveErr.code === 1) {
-					// 目录不存在，尝试创建
-					try {
-						plus.io.resolveLocalFileSystemURL('_doc', (docEntry) => {
-							docEntry.getDirectory('uniapp_temp', { create: true, exclusive: false }, () => {
-								// 目录创建成功，直接保存
-								const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-								bitmap.loadBase64Data(base64, () => {
-									if (!format) {
-										bitmap.clear()
-										reject(new Error('ERROR_BASE64SRC_PARSE'))
-										return
-									}
-									const time = new Date().getTime();
-									const filePath = `_doc/uniapp_temp/${time}.${format}`
-									bitmap.save(filePath, {},
-										() => {
-											bitmap.clear()
-											resolve(filePath)
-										},
-										(error) => {
-											bitmap.clear()
-											reject(error)
-										})
-								}, (error) => {
-									bitmap.clear()
-									reject(error)
-								})
-							}, () => {
-								// 创建失败，直接保存（bitmap.save会自动创建目录）
-								const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-								bitmap.loadBase64Data(base64, () => {
-									if (!format) {
-										bitmap.clear()
-										reject(new Error('ERROR_BASE64SRC_PARSE'))
-										return
-									}
-									const time = new Date().getTime();
-									const filePath = `_doc/uniapp_temp/${time}.${format}`
-									bitmap.save(filePath, {},
-										() => {
-											bitmap.clear()
-											resolve(filePath)
-										},
-										(error) => {
-											bitmap.clear()
-											reject(error)
-										})
-								}, (error) => {
-									bitmap.clear()
-									reject(error)
-								})
-							})
-						}, () => {
-							// 解析_doc失败，直接保存（bitmap.save会自动创建目录）
-							const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-							bitmap.loadBase64Data(base64, () => {
-								if (!format) {
-									bitmap.clear()
-									reject(new Error('ERROR_BASE64SRC_PARSE'))
-									return
-								}
-								const time = new Date().getTime();
-								const filePath = `_doc/uniapp_temp/${time}.${format}`
-								bitmap.save(filePath, {},
-									() => {
-										bitmap.clear()
-										resolve(filePath)
-									},
-									(error) => {
-										bitmap.clear()
-										reject(error)
-									})
-							}, (error) => {
-								bitmap.clear()
-								reject(error)
-							})
-						})
-					} catch (e) {
-						// 创建目录失败，直接保存（bitmap.save会自动创建目录）
-						const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-						bitmap.loadBase64Data(base64, () => {
-							if (!format) {
-								bitmap.clear()
-								reject(new Error('ERROR_BASE64SRC_PARSE'))
-								return
-							}
-							const time = new Date().getTime();
-							const filePath = `_doc/uniapp_temp/${time}.${format}`
-							bitmap.save(filePath, {},
-								() => {
-									bitmap.clear()
-									resolve(filePath)
-								},
-								(error) => {
-									bitmap.clear()
-									reject(error)
-								})
-						}, (error) => {
-							bitmap.clear()
-							reject(error)
-						})
-					}
-				} else {
-					// 其他错误，直接保存
-					const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-					bitmap.loadBase64Data(base64, () => {
-						if (!format) {
-							bitmap.clear()
-							reject(new Error('ERROR_BASE64SRC_PARSE'))
-							return
-						}
-						const time = new Date().getTime();
-						const filePath = `_doc/uniapp_temp/${time}.${format}`
-						bitmap.save(filePath, {},
-							() => {
-								bitmap.clear()
-								resolve(filePath)
-							},
-							(error) => {
-								bitmap.clear()
-								reject(error)
-							})
-					}, (error) => {
-						bitmap.clear()
-						reject(error)
-					})
-				}
-			})
-		} catch (e) {
-			// 异常情况，直接保存
-			const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
-			bitmap.loadBase64Data(base64, () => {
-				if (!format) {
+		const bitmap = new plus.nativeObj.Bitmap('bitmap' + Date.now())
+		bitmap.loadBase64Data(base64, () => {
+			if (!format) {
+				reject(new Error('ERROR_BASE64SRC_PARSE'))
+			}
+			const time = new Date().getTime();
+			const filePath = `_doc/uniapp_temp/${time}.${format}`
+			bitmap.save(filePath, {},
+				() => {
 					bitmap.clear()
-					reject(new Error('ERROR_BASE64SRC_PARSE'))
-					return
-				}
-				const time = new Date().getTime();
-				const filePath = `_doc/uniapp_temp/${time}.${format}`
-				bitmap.save(filePath, {},
-					() => {
-						bitmap.clear()
-						resolve(filePath)
-					},
-					(error) => {
-						bitmap.clear()
-						reject(error)
-					})
-			}, (error) => {
-				bitmap.clear()
-				reject(error)
-			})
-		}
+					resolve(filePath)
+				},
+				(error) => {
+					bitmap.clear()
+					reject(error)
+				})
+		}, (error) => {
+			bitmap.clear()
+			reject(error)
+		})
 		// #endif
 	})
 }

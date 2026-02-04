@@ -60,7 +60,25 @@
 				}
 			},
 			dpr() {
-				return this.pixelRatio || uni.getSystemInfoSync().pixelRatio;
+				if (this.pixelRatio) {
+					return this.pixelRatio;
+				}
+				// 使用新的 API 替代已弃用的 getSystemInfoSync
+				try {
+					// #ifdef MP-WEIXIN
+					if (wx && wx.getWindowInfo) {
+						return wx.getWindowInfo().pixelRatio || 1;
+					}
+					// #endif
+					// #ifndef MP-WEIXIN
+					// 兼容其他平台，使用 getSystemInfoSync 作为降级方案
+					const systemInfo = uni.getSystemInfoSync();
+					return systemInfo.pixelRatio || 1;
+					// #endif
+				} catch (e) {
+					console.warn('获取 pixelRatio 失败，使用默认值 1:', e);
+					return 1;
+				}
 			},
 			boardWidth() {
 				const {width = 0} = (this.elements && this.elements.css) || this.elements || this
