@@ -154,6 +154,7 @@ export default {
 		async clickLogin() {
 			let that = this
 			const systemInfo = uni.getSystemInfoSync();
+			console.log('systemInfo.platform',systemInfo.platform)
 			if (systemInfo.platform === 'ios') {
 				uni.login({
 					provider: 'apple',
@@ -183,10 +184,12 @@ export default {
 				provider: 'weixin',
 				// onlyAuthorize: true,
 				success: (res) => {
+					console.log('res',res)
 					uni.getUserInfo({
 						provider: 'weixin',
 						success: (infoRes) => {
-							this.loginWithCode(infoRes.authResult, infoRes.userInfo);
+							console.log('infoRes',infoRes)
+							this.loginWithCode(res.authResult, infoRes.userInfo);
 						}
 					})
 				},
@@ -212,7 +215,6 @@ export default {
 						identityToken: message.identityToken,
 						openId: message.openId
 					}
-					console.log(params, 'params')
 					res = await iosLogin(params, inviterOpenId)
 				} else {
 					let params = {
@@ -224,6 +226,7 @@ export default {
 						avatarUrl: userInfo.avatarUrl,
 						gender: userInfo.gender
 					}
+					console.log('ssss',params)
 					res = await apkLogin(params)
 				}
 				console.log(res, 'reee')
