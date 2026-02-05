@@ -169,9 +169,8 @@ const copy = () => {
 }
 //双人模式开始测试
 const start = () => {
-    // if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-     getList(1, 4, test_type.value, mode.value, null, inviewma.value,md5.value).then(res => {
+     getList(1, 6, test_type.value, mode.value, null, inviewma.value,md5.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
@@ -191,8 +190,8 @@ const layout = () => {
 //进入答题
 const join = (type) => {
     test_type.value = type
+     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
     if (mode.value == 'single_mode') {
-        if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
         uni.reLaunch({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })

@@ -8,7 +8,7 @@ export const getList = (currentPage,pageSize,test_type,question_mode,poster_id,i
 	if(!poster_id) delete params.poster_id
 	if(!inviter) delete params.inviter //邀请码
 	if(!unique_key) delete params.unique_key //记录号
-	return getRequest(`/mbtiquestion/get_questions/`,params)
+	return postRequest(`/mbtiquestion/get_questions/`,params)
 }
 
 //答题结果

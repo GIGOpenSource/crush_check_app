@@ -52,8 +52,8 @@
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
                         </image>
                         <image v-else-if="item.prompt_template.template_type == 'mbti'"
-                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="scaleToFill"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url"
+                            mode="scaleToFill" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -92,7 +92,7 @@
                             <view class="details" style="margin-top: 20rpx;"
                                 v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
-                                "{{ item.content || $t('poster.defaultAnswer') }}"
+                                "{{ item.mbti_list[0] || $t('poster.defaultAnswer') }}"
                                 <text v-if="isType" class="look"
                                     @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
                                         $t('poster.viewAnswer') }} {{
@@ -120,7 +120,7 @@
                                 </view>
                             </block>
                             <block v-else>
-                            
+
                                 <view class="double">
                                     <view class="num" style="margin-left:-10rpx;font-size: 30rpx;">{{
                                         item.mbti_list[0]?.owner_mbti_type || '' }} <text
@@ -145,12 +145,18 @@
 
                                 </view>
                                 <view class="details">
-                                    <text v-if="isType" class="look"
+                                    <!-- 是房主 -->
+                                    <text v-if="isType && item.mbti_list[0].master" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
                                         <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
                                             !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
-                                            $t('poster.viewDetails') }}</text>
-                                        {{ '>>' }}</text>
+                                                $t('poster.viewDetails') }}</text>{{ '>>' }}</text>
+                                    <!-- 不是房主  -->
+                                    <text
+                                        v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
+                                        class="look"
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
+                                        <text>{{ $t('poster.viewDetails') }}</text>{{ '>>' }}</text>
                                 </view>
                             </block>
 
@@ -209,7 +215,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -657,7 +663,7 @@ export default {
 
         // 生成时间戳并进行MD5加密
         generateTimestampMD5() {
-           getcode(this.poster_id).then(res => {
+            getcode(this.poster_id).then(res => {
                 this.pipeiproup = true
                 this.md5 = res.data.unique_key
             })
@@ -705,19 +711,18 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
-            // 如果状态是已完成，跳转到详情页
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
-                 
                     if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
-                       
                         this.poster_id = item.id
-                        this.generateTimestampMD5()
+                        if (item.mbti_list[0].master) {
+                            this.generateTimestampMD5()
+                        }
                     }
-                    
-                } 
+                }
                 return
             }
+            // 如果状态是已完成，跳转到详情页
             if (item.status == "done") {
                 console.log(item.status)
                 if (item.id) {
