@@ -544,7 +544,10 @@ export default {
     otherNotCompleted: '相手がテストを完了していません',
     waitingForOthersToJoin: '他の人の参加を待っています',
     reInvite: '再招待',
-    viewInviteCode: '招待コードを表示'
+    viewInviteCode: '招待コードを表示',
+    incompleteTestMessage: '未完了のペアテスト記録があります。回答を続けますか？',
+    abandonAnswer: '回答を放棄',
+    continueAnswer: '回答を続ける'
   }
 }
 

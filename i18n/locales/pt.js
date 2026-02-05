@@ -545,7 +545,10 @@ export default {
     otherNotCompleted: 'A outra parte não completou o teste',
     waitingForOthersToJoin: 'Aguardando outros para se juntarem',
     reInvite: 'Reconvidar',
-    viewInviteCode: 'Ver código de convite'
+    viewInviteCode: 'Ver código de convite',
+    incompleteTestMessage: 'Você tem um registro de teste duplo incompleto. Deseja continuar respondendo?',
+    abandonAnswer: 'Abandonar Resposta',
+    continueAnswer: 'Continuar Resposta'
   }
 }
 

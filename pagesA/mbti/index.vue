@@ -62,13 +62,13 @@
 
         </template>
     </IndexProup>
-    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
             <view class="del-popup-content">
                 <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-                <view class="title1">您有未完成的双人测试记录，是否继续作答？</view>
+                <view class="title1">{{ t('mbti.incompleteTestMessage') }}</view>
                 <view class="del-popup-actions">
-                    <view class="del-popup-btn cancel" @click="btn(true)">放弃作答</view>
-                    <view class="del-popup-btn confirm" @click="btn(false)">继续作答</view>
+                    <view class="del-popup-btn cancel" @click="btn(true)">{{ t('mbti.abandonAnswer') }}</view>
+                    <view class="del-popup-btn confirm" @click="btn(false)">{{ t('mbti.continueAnswer') }}</view>
                 </view>
             </view>
         </up-popup>

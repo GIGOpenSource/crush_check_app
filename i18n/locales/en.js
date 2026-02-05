@@ -545,7 +545,10 @@ export default {
     otherNotCompleted: 'Other party did not complete the test',
     waitingForOthersToJoin: 'Waiting for others to join',
     reInvite: 'Re-invite',
-    viewInviteCode: 'View invite code'
+    viewInviteCode: 'View invite code',
+    incompleteTestMessage: 'You have an incomplete double test record. Do you want to continue answering?',
+    abandonAnswer: 'Abandon Answer',
+    continueAnswer: 'Continue Answer'
   },
    mbti: {
     testTitle: 'MBTIテスト',
