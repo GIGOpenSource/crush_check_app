@@ -1445,3 +1445,8 @@ const updateTabBarI18n = () => {
 	}
 }
 </style>
+<style>
+.u-safe-bottom{
+		height: 0 !important;
+	}
+</style>

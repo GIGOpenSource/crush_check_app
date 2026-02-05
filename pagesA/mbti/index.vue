@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                }}</view>
+                    }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -62,6 +62,17 @@
 
         </template>
     </IndexProup>
+    <!-- 是否放弃之前作答 -->
+     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+            <view class="del-popup-content">
+                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <view class="title1">您有未完成的双人测试记录，是否继续作答？</view>
+                <view class="del-popup-actions">
+                    <view class="del-popup-btn cancel" @click="btn(true)">放弃作答</view>
+                    <view class="del-popup-btn confirm" @click="btn(false)">继续作答</view>
+                </view>
+            </view>
+        </up-popup>
 </template>
 
 <script setup>
@@ -69,13 +80,14 @@ import { aesEncrypt, md5Encrypt } from '@/utils/crypto.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
-import { getList } from '@/api/mbti.js'
+import { getList, getRoom } from '@/api/mbti.js'
 const { t } = useI18n()
 const shadowStyle = reactive({
     shadowStyle: {
         backgroundImage: "none"
     }
 })
+const showDelPopup2 = ref(false)
 const choose = ref([{
     title: t('mbti.singleTest'),
     text: t('mbti.singleTestDesc')
@@ -126,9 +138,9 @@ const test_type = ref('')
 
 
 //人格
-const  clicks = (type) => {
-     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-    uni.navigateTo({ url: '/pagesA/mbti/poster?temtype='+type })
+const clicks = (type) => {
+    if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
+    uni.navigateTo({ url: '/pagesA/mbti/poster?temtype=' + type })
 }
 //选择模式
 const choosetype = (index) => {
@@ -148,11 +160,13 @@ const handleEncrypt = () => {
     const end = aesEncrypt(encryptedData)
     return end
 }
-const generateTimestampMD5 = () => {
-    const timestamp = Date.now();
-    const md5Hash = md5Encrypt(String(timestamp));
-    md5.value = md5Hash
-    uni.setStorageSync('timestamp', md5.value)
+const generateTimestampMD5 = (status) => {
+    getRoom(status).then(res => {
+        md5.value = res.data.room_key
+        uni.setStorageSync('timestamp', md5.value)
+         pipeiproup.value = true
+    })
+
 }
 //复制邀请码
 const copy = () => {
@@ -169,8 +183,8 @@ const copy = () => {
 }
 //双人模式开始测试
 const start = () => {
-    if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
-     getList(1, 6, test_type.value, mode.value, null, inviewma.value,md5.value).then(res => {
+    if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
+    getList(1, 6, test_type.value, mode.value, null, inviewma.value, md5.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
@@ -190,17 +204,26 @@ const layout = () => {
 //进入答题
 const join = (type) => {
     test_type.value = type
-     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
+    if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
     if (mode.value == 'single_mode') {
         uni.reLaunch({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })
     } else {
-        pipeiproup.value = true
-         if(!uni.getStorageSync('timestamp')){
-            generateTimestampMD5()
+        //没有房间号
+        if (!uni.getStorageSync('timestamp')) {
+            generateTimestampMD5(true) //强制请求
+        }else{
+            //有房间号
+            showDelPopup2.value = true
         }
     }
+}
+
+const btn = (status) => {
+   generateTimestampMD5(status)
+   showDelPopup2.value = false
+   ceshiproup.value = false
 }
 </script>
 
@@ -209,7 +232,81 @@ rich-text {
     color: #ffffff !important;
     font-size: 28rpx !important;
 }
+.del-popup-content {
+    position: relative;
+    width: 560rpx;
+    padding: 160rpx 40rpx 48rpx;
+    box-sizing: border-box;
+    border-radius: 36rpx;
+    background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+    box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+    text-align: center;
+    color: #000;
 
+    .del-popup-icon {
+        position: absolute;
+        top: -90rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200rpx;
+        height: 200rpx;
+    }
+
+    .title1 {
+        color: #000;
+        margin-top: -50rpx;
+        font-size: 30rpx;
+        font-weight: 400;
+    }
+
+    .num {
+        font-size: 26rpx;
+        margin-top: 20rpx;
+    }
+
+
+
+    .icon {
+        position: absolute;
+        transform: translateX(-50%);
+        left: 50%;
+        bottom: -100rpx;
+        color: #000;
+        cursor: pointer;
+
+        &.icon-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
+.del-popup-actions {
+    display: flex;
+    gap: 24rpx;
+    margin-top: 20rpx;
+}
+
+.del-popup-btn {
+    flex: 1;
+    height: 88rpx;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30rpx;
+    font-weight: 600;
+}
+
+.del-popup-btn.cancel {
+    background: #eeedff;
+    color: #b370ff;
+}
+
+.del-popup-btn.confirm {
+    background: #b370ff;
+    color: #ffffff;
+}
 .page {
     height: 96vh;
     margin: 20rpx 25rpx;
@@ -286,7 +383,6 @@ rich-text {
     align-items: center;
     padding: 40rpx 45rpx;
     box-sizing: border-box;
-
     .opera {
         display: flex;
         flex-direction: column;
@@ -406,4 +502,9 @@ rich-text {
         font-size: 28rpx;
     }
 }
+</style>
+<style>
+.u-safe-bottom{
+		height: 0 !important;
+	}
 </style>

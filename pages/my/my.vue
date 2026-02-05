@@ -1418,6 +1418,9 @@ export default {
 page {
   background: #12111f !important;
 }
+.u-safe-bottom{
+		height: 0 !important;
+	}
 </style>
 
 <style scoped lang="scss">
