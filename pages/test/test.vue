@@ -1631,7 +1631,7 @@ export default {
     }
 
     .wating {
-        width: 150rpx;
+        width: 170rpx;
         font-size: 24rpx;
         margin-top: 10rpx;
         margin-left: 20rpx;

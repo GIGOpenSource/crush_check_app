@@ -62,6 +62,16 @@
 
         </template>
     </IndexProup>
+    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+            <view class="del-popup-content">
+                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <view class="title1">您有未完成的双人测试记录，是否继续作答？</view>
+                <view class="del-popup-actions">
+                    <view class="del-popup-btn cancel" @click="btn(true)">放弃作答</view>
+                    <view class="del-popup-btn confirm" @click="btn(false)">继续作答</view>
+                </view>
+            </view>
+        </up-popup>
 </template>
 
 <script setup>
@@ -69,7 +79,7 @@ import { aesEncrypt, md5Encrypt } from '@/utils/crypto.js';
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n'
-import { getList } from '@/api/mbti.js'
+import { getList ,getRoom} from '@/api/mbti.js'
 const { t } = useI18n()
 const shadowStyle = reactive({
     shadowStyle: {
@@ -85,7 +95,7 @@ const choose = ref([{
 }])
 const mode = ref('')
 const md5 = ref(uni.getStorageSync('timestamp') || '')
-
+const showDelPopup2 = ref(false)
 const renge = [{
     t1: 'ENTJ',
     t2: 'ENTP',
@@ -141,19 +151,21 @@ const choosetype = (index) => {
     }
 
 }
+const generateTimestampMD5 = (status) => {
+    getRoom(status).then(res => {
+        md5.value = res.data.room_key
+        uni.setStorageSync('timestamp', md5.value)
+         pipeiproup.value = true
+    })
 
+}
 //加密邀请码
 const handleEncrypt = () => {
     const encryptedData = uni.getStorageSync('openId') + '@' + md5.value
     const end = aesEncrypt(encryptedData)
     return end
 }
-const generateTimestampMD5 = () => {
-    const timestamp = Date.now();
-    const md5Hash = md5Encrypt(String(timestamp));
-    md5.value = md5Hash
-    uni.setStorageSync('timestamp', md5.value)
-}
+
 //复制邀请码
 const copy = () => {
     uni.setClipboardData({
@@ -191,17 +203,26 @@ const layout = () => {
 //进入答题
 const join = (type) => {
     test_type.value = type
-     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
+    if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
     if (mode.value == 'single_mode') {
         uni.reLaunch({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })
     } else {
-        pipeiproup.value = true
-         if(!uni.getStorageSync('timestamp')){
-            generateTimestampMD5()
+        //没有房间号
+        if (!uni.getStorageSync('timestamp')) {
+            generateTimestampMD5(true) //强制请求
+        }else{
+            //有房间号
+            showDelPopup2.value = true
         }
     }
+}
+
+const btn = (status) => {
+   generateTimestampMD5(status)
+   showDelPopup2.value = false
+   ceshiproup.value = false
 }
 </script>
 
