@@ -191,8 +191,8 @@ const layout = () => {
 //进入答题
 const join = (type) => {
     test_type.value = type
+     if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
     if (mode.value == 'single_mode') {
-        if (!uni.getStorageSync('token')) return uni.navigateTo({url: "/pages/login/login"})
         uni.reLaunch({
             url: `/pagesA/mbti/dati?test_type=${type}&question_mode=${mode.value}`
         })
