@@ -535,6 +535,9 @@ export default {
     otherNotCompleted: '对方未完成测试',
     waitingForOthersToJoin: '等待他人加入',
     reInvite: '重新邀请',
-    viewInviteCode: '查看邀请码'
+    viewInviteCode: '查看邀请码',
+    incompleteTestMessage: '您有未完成的双人测试记录，是否继续作答？',
+    abandonAnswer: '放弃作答',
+    continueAnswer: '继续作答'
   }
 }

@@ -532,7 +532,10 @@ export default {
     otherNotCompleted: '상대방이 테스트를 완료하지 않았습니다',
     waitingForOthersToJoin: '다른 사람 참가 대기 중',
     reInvite: '다시 초대',
-    viewInviteCode: '초대 코드 보기'
+    viewInviteCode: '초대 코드 보기',
+    incompleteTestMessage: '완료하지 않은 페어 테스트 기록이 있습니다. 계속 답변하시겠습니까?',
+    abandonAnswer: '답변 포기',
+    continueAnswer: '답변 계속'
   }
 }
 

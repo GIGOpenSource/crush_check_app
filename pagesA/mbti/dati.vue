@@ -13,7 +13,7 @@
         <view class="page-content" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
             <view class="titlecon">
                 <view class="t1">{{ t('mbti.testTitle') }} ({{ title[test_type] }}) <text>{{ page }} / {{ total
-                        }}</text> </view>
+                }}</text> </view>
                 <view class="t2">{{ t('mbti.tip') }}</view>
             </view>
             <scroll-view class="content" scroll-y :scroll-into-view="scrollIntoView" scroll-with-animation
@@ -76,7 +76,7 @@
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
@@ -96,7 +96,16 @@ onLoad((e) => {
     question_mode.value = e.question_mode
     poster_id.value = e.poster_id || null
 })
+onUnload(() => {
+    if (total.value == page.value)  return
+     layout(poster_id.value).then(res => {
+            uni.switchTab({
+                url: '/pages/index/index'
+            })
+            uni.removeStorageSync('timestamp')
+        })
 
+})
 onMounted(() => {
     // 获取状态栏高度
     const systemInfo = uni.getSystemInfoSync()
@@ -220,12 +229,9 @@ const look = () => {
 }
 //确定退出
 const submit = () => {
-    layout(poster_id.value).then(res => {
-        uni.switchTab({
-            url: '/pages/index/index'
-        })
+    uni.switchTab({
+        url: '/pages/index/index'
     })
-
 }
 
 
