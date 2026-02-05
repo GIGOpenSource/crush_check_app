@@ -231,7 +231,81 @@ rich-text {
     color: #ffffff !important;
     font-size: 28rpx !important;
 }
+.del-popup-content {
+  position: relative;
+  width: 560rpx;
+  padding: 160rpx 40rpx 48rpx;
+  box-sizing: border-box;
+  border-radius: 36rpx;
+  background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
+  box-shadow: 0px 0px 10.9px 0px rgba(148, 148, 148, 0.29);
+  text-align: center;
+  color: #000;
 
+  .del-popup-icon {
+    position: absolute;
+    top: -90rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200rpx;
+    height: 200rpx;
+  }
+
+  .title1 {
+    color: #000;
+    margin-top: -50rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+  }
+
+  .num {
+    font-size: 26rpx;
+    margin-top: 20rpx;
+  }
+
+
+
+  .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}
+
+.del-popup-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 20rpx;
+}
+
+.del-popup-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.del-popup-btn.cancel {
+  background: #eeedff;
+  color: #b370ff;
+}
+
+.del-popup-btn.confirm {
+  background: #b370ff;
+  color: #ffffff;
+}
 .page {
     height: 96vh;
     margin: 20rpx 25rpx;

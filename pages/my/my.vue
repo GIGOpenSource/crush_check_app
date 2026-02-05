@@ -1650,7 +1650,7 @@ page {
   // flex: 1;
   min-width: 0;
   // gap: 12rpx;
-  margin-left: 20rpx;
+  margin-left: 10rpx;
 }
 
 .nickname,
