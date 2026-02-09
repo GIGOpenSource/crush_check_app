@@ -169,7 +169,7 @@ const handleEncrypt = () => {
 //复制邀请码
 const copy = () => {
     uni.setClipboardData({
-        data:`来测超准 MBTI！微信搜「Crush Check」APP，输入我的邀请码：${handleEncrypt()}，一起看看性格匹配度～`,
+        data:`快来测超准 MBTI！微信搜「Crush Check」APP，输入我的邀请码：${handleEncrypt()}，一起看看性格匹配度～`,
         success: function () {
             uni.showToast({
                 title: t('common.copySuccess'),
