@@ -142,6 +142,7 @@ const getlistTi = () => {
 }
 const up = async () => {
     await create()
+    if (page.value == 1) return
     page.value--
     getlistTi()
 
