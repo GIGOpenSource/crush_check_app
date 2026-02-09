@@ -107,7 +107,7 @@ const renge = [{
     t1: 'ENFJ',
     t2: 'INFJ',
     t3: 'INFP',
-    t4: 'ENTJ'
+    t4: 'ENFP'
 }, {
     t1: 'ESTJ',
     t2: 'ISTJ',
