@@ -92,7 +92,7 @@ const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const poster_id = ref(null)
 const title = { 'simple': t('mbti.simpleVersion'), 'major': t('mbti.majorVersion'), 'advanced': t('mbti.advancedVersion') }
-const userinfo = ref(JSON.parse(uni.getStorageSync('userinfo')))
+const userinfo = ref(JSON.parse(uni.getStorageSync('userInfo')))
 onLoad((e) => {
     test_type.value = e.test_type
     question_mode.value = e.question_mode
@@ -224,7 +224,7 @@ const look = () => {
             if(userinfo.is_vip){ //是会员
               uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
             }{//不是会员
-                
+
             }
            
         } else {
