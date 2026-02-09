@@ -97,13 +97,13 @@ onLoad((e) => {
     poster_id.value = e.poster_id || null
 })
 onUnload(() => {
-    if (total.value == page.value)  return
-     layout(poster_id.value).then(res => {
-            uni.switchTab({
-                url: '/pages/index/index'
-            })
-            uni.removeStorageSync('timestamp')
+    if (total.value == page.value) return
+    layout(poster_id.value).then(res => {
+        uni.switchTab({
+            url: '/pages/index/index'
         })
+        uni.removeStorageSync('timestamp')
+    })
 
 })
 onMounted(() => {
@@ -142,6 +142,7 @@ const getlistTi = () => {
 }
 const up = async () => {
     await create()
+    if (page.value == 1) return
     page.value--
     getlistTi()
 
