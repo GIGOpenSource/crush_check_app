@@ -549,7 +549,7 @@ export default {
     incompleteTestMessage: 'Você tem um registro de teste duplo incompleto. Deseja continuar respondendo?',
     abandonAnswer: 'Abandonar Resposta',
     continueAnswer: 'Continuar Resposta',
-    shareInviteMessage: 'Venha testar MBTI super preciso!\nPesquise o APP "Crush Check" no WeChat, insira meu código de convite: {inviteCode}, vamos verificar a compatibilidade de personalidade juntos～'
+    shareInviteMessage: 'Venha testar MBTI super preciso!\nAbra o APP "Crush Check", insira meu código de convite: {inviteCode}, vamos verificar a compatibilidade de personalidade juntos～'
   }
 }
 

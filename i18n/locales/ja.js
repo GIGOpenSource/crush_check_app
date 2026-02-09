@@ -548,7 +548,7 @@ export default {
     incompleteTestMessage: '未完了のペアテスト記録があります。回答を続けますか？',
     abandonAnswer: '回答を放棄',
     continueAnswer: '回答を続ける',
-    shareInviteMessage: '超正確なMBTIテストをしてみましょう！\nWeChatで「Crush Check」アプリを検索し、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～'
+    shareInviteMessage: '超正確なMBTIテストをしてみましょう！\n「Crush Check」APPを開いて、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～'
   }
 }
 
