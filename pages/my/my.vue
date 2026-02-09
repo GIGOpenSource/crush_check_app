@@ -214,7 +214,7 @@
           </view>
           <view class="bottom" @click="pay">{{ mouth.price }} {{ $t('index.perMonth') }} {{
             $t('index.openNow')
-            }}
+          }}
           </view>
           <view class="radio2">
             <radio value="r1" :checked="choose2" style="transform:scale(0.6);" color="#B370FF"
@@ -299,11 +299,11 @@ export default {
     };
   },
   onLoad() {
+  },
+  onShow() {
     getProductsList().then(res => {
       this.mouth = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
     })
-  },
-  onShow() {
     this.viplist = [
       t('index.vipFeature1'),
       t('index.vipFeature2'),
@@ -1492,14 +1492,16 @@ page {
     width: 100%;
     height: 100%;
   }
-.scroll-box{     
-   position: absolute;
+
+  .scroll-box {
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    z-index: 99; 
-}
+    z-index: 99;
+  }
+
   .content {
     position: absolute;
     left: 0;
@@ -1586,10 +1588,10 @@ page {
   // box-shadow: 0 18rpx 46rpx rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
-  
-  > * {
+
+  >* {
     margin-bottom: 20rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -1599,10 +1601,10 @@ page {
 .profile-content {
   display: flex;
   align-items: center;
-  
-  > * {
+
+  >* {
     margin-right: 24rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -1716,10 +1718,10 @@ page {
   flex-direction: column;
   z-index: 1;
   width: 75%;
-  
-  > * {
+
+  >* {
     margin-bottom: 12rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -1733,10 +1735,10 @@ page {
 
 .vip-header--member {
   align-items: center;
-  
-  > * {
+
+  >* {
     margin-right: 12rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -1781,10 +1783,10 @@ page {
   font-size: 24rpx;
   color: rgba(255, 255, 255, 0.75);
   margin-top: 4rpx;
-  
-  > * {
+
+  >* {
     margin-right: 8rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -1855,10 +1857,10 @@ page {
   display: flex;
   flex-direction: column;
   flex: 1;
-  
-  > * {
+
+  >* {
     margin-bottom: 8rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -1921,10 +1923,10 @@ page {
   height: 144rpx;
   padding: 0 32rpx;
   margin-top: 30rpx;
-  
-  > * {
+
+  >* {
     margin-right: 20rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -1941,10 +1943,10 @@ page {
 .functions-section {
   display: flex;
   flex-direction: column;
-  
-  > * {
+
+  >* {
     margin-bottom: 20rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -1986,8 +1988,8 @@ page {
   margin-top: 20rpx;
   margin-right: -20rpx;
   margin-bottom: -20rpx;
-  
-  > * {
+
+  >* {
     margin-right: 20rpx;
     margin-bottom: 20rpx;
   }
@@ -2125,10 +2127,10 @@ page {
   justify-content: space-between;
   align-items: center;
   flex: 1;
-  
-  > * {
+
+  >* {
     margin-right: 20rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -2173,10 +2175,10 @@ page {
   display: flex;
   flex-direction: column;
   color: #2b1747;
-  
-  > * {
+
+  >* {
     margin-bottom: 8rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -2198,10 +2200,10 @@ page {
 .reward-popup-actions {
   display: flex;
   justify-content: center;
-  
-  > * {
+
+  >* {
     margin-right: 24rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -2279,10 +2281,10 @@ page {
 
 .del-popup-actions {
   display: flex;
-  
-  > * {
+
+  >* {
     margin-right: 24rpx;
-    
+
     &:last-child {
       margin-right: 0;
     }
@@ -2293,10 +2295,10 @@ page {
 
   .del-popup-actions {
     display: flex;
-    
-    > * {
+
+    >* {
       margin-right: 24rpx;
-      
+
       &:last-child {
         margin-right: 0;
       }
@@ -2403,10 +2405,10 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  > * {
+
+  >* {
     margin-bottom: 32rpx;
-    
+
     &:last-child {
       margin-bottom: 0;
     }

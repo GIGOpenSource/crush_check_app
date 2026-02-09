@@ -148,7 +148,7 @@
                                     <text v-if="isType && item.mbti_list[0].master" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
                                         <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
-                                            !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
+                                            !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') + ' ' :
                                                 $t('poster.viewDetails') }}</text>{{ '>>' }}</text>
                                     <!-- 不是房主  -->
                                     <text
