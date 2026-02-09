@@ -38,7 +38,7 @@ import { useI18n } from 'vue-i18n'
 import Mbtiposter from '@/components/Mbtiposter/Mbtiposter.vue';
 import Twombtiposter from '@/components/Twombtiposter/Twombtiposter.vue';
 import Productposter from '@/components/Productposter/Productposter.vue';
-import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { onLoad, onUnload, onShow } from '@dcloudio/uni-app'
 import { getPosterDetails } from '@/api/index.js'
 import { getTemplate } from '@/api/mbti.js'
 import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
@@ -51,46 +51,131 @@ const posterImg = ref('')
 const posterError = ref(false)
 const friend = ref(false)
 
-// 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
+// 清理旧海报文件，只保留最新的一个（支持小程序和APP）
 const cleanupOldTempFiles = async () => {
   try {
-    const fs = wx.getFileSystemManager();
+    const currentPath = posterImg.value; // 当前最新的文件路径
     
-    // 核心容错：获取文件列表失败时直接返回，不中断流程
-    let fileList = [];
-    try {
-      const fileListRes = await new Promise((resolve, reject) => {
-        fs.getSavedFileList({ success: resolve, fail: reject });
-      });
-      fileList = fileListRes.fileList || [];
-    } catch (err) {
-      // 目录不存在/无文件时，打印提示并跳过删除步骤
-      console.log('无已保存文件，无需清理：', err.errMsg);
-      return;
-    }
-
-    // 遍历删除所有文件（有文件才执行）
-    if (fileList.length > 0) {
-      for (const file of fileList) {
-        try {
-          await new Promise((resolve, reject) => {
-            fs.unlink({ filePath: file.filePath, success: resolve, fail: reject });
+    // #ifdef MP-WEIXIN
+    // 小程序端清理
+    const fs = uni.getFileSystemManager();
+    if (fs) {
+      try {
+        const fileListRes = await new Promise((resolve, reject) => {
+          fs.getSavedFileList({ success: resolve, fail: reject });
+        });
+        const fileList = fileListRes.fileList || [];
+        
+        if (fileList.length > 0) {
+          // 按创建时间排序，最新的在前
+          const sortedFiles = fileList.sort((a, b) => (b.createTime || 0) - (a.createTime || 0));
+          
+          // 找到当前文件
+          const currentFile = sortedFiles.find(file => file.filePath === currentPath);
+          
+          // 只保留最新的一个文件（当前文件或最新的）
+          const fileToKeep = currentFile || sortedFiles[0];
+          
+          // 删除除了要保留的文件之外的所有文件
+          sortedFiles.forEach((file) => {
+            if (file.filePath !== fileToKeep.filePath) {
+              fs.removeSavedFile({
+                filePath: file.filePath,
+                success: () => {
+                  console.log('已清理旧海报文件:', file.filePath);
+                },
+                fail: () => {
+                  // 忽略删除失败
+                }
+              });
+            }
           });
-          console.log(`清理文件成功：${file.filePath}`);
-        } catch (err) {
-          console.warn(`清理单个文件失败（忽略）：${file.filePath}`);
         }
+      } catch (err) {
+        console.log('获取文件列表失败（可能无文件）：', err.errMsg || err);
       }
-      console.log('所有文件清理完成');
     }
+    // #endif
+    
+    // #ifdef APP-PLUS
+    // APP端清理
+    if (typeof plus !== 'undefined' && plus.io) {
+      const tempDirPath = '_doc/uniapp_temp';
+      await new Promise((resolve) => {
+        plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+          if (dirEntry.isDirectory) {
+            const reader = dirEntry.createReader();
+            const allEntries = [];
+            
+            const readAllEntries = () => {
+              reader.readEntries((entries) => {
+                if (entries.length > 0) {
+                  allEntries.push(...entries);
+                  readAllEntries();
+                } else {
+                  // 读取完成，清理旧文件
+                  const imageFiles = allEntries.filter(entry => {
+                    const name = entry.name || '';
+                    return /\.(jpg|jpeg|png|gif)$/i.test(name);
+                  });
+                  
+                  if (imageFiles.length > 0) {
+                    // 按文件名排序（通常包含时间戳），新的在前
+                    imageFiles.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+                    
+                    // 如果当前文件存在，只保留它；否则保留最新的一个
+                    const currentFile = imageFiles.find(entry => {
+                      const fullPath = `${tempDirPath}/${entry.name}`;
+                      return fullPath === currentPath || entry.name === currentPath.split('/').pop();
+                    });
+                    
+                    const fileToKeep = currentFile || imageFiles[0];
+                    
+                    imageFiles.forEach(fileEntry => {
+                      // 如果不是要保留的文件，删除它
+                      if (fileEntry.name !== fileToKeep.name) {
+                        fileEntry.remove(() => {
+                          console.log('已清理旧海报文件:', fileEntry.name);
+                        }, () => {
+                          // 忽略删除失败
+                        });
+                      }
+                    });
+                  }
+                  resolve();
+                }
+              }, () => {
+                resolve();
+              });
+            };
+            readAllEntries();
+          } else {
+            resolve();
+          }
+        }, () => {
+          resolve();
+        });
+      });
+    }
+    // #endif
   } catch (err) {
-    console.error('文件清理流程异常（不影响页面）：', err.errMsg);
+    console.error('文件清理流程异常（不影响页面）：', err);
   }
 };
-onUnload(() => {
+// 页面加载时清理
+onMounted(() => {
     cleanupOldTempFiles()
 })
 
+// 页面显示时也清理（每次进入页面时）
+onShow(() => {
+    cleanupOldTempFiles()
+})
+
+// 页面卸载时清理
+onUnload(() => {
+    cleanupOldTempFiles()
+})
 
 onLoad((e) => {
     type.value = e.type
@@ -119,6 +204,8 @@ const handlePosterSuccess = (filePath) => {
     if (filePath) {
         posterImg.value = filePath
         posterError.value = false
+        // 海报生成成功后立即清理旧文件
+        cleanupOldTempFiles()
     } else {
         console.error('海报路径为空')
         posterError.value = true

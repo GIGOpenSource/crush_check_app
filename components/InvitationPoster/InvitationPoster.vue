@@ -281,6 +281,8 @@ export default {
 		// 组件销毁前清理canvas资源和内存
 		this.cleanupCanvas();
 		this.forceCleanupMemory();
+		// 清理旧海报文件，只保留最新的
+		this.cleanupOldPosterFiles();
 		// 组件销毁时才清空图片路径
 		this.path = '';
 	},
@@ -468,6 +470,106 @@ export default {
 				console.log('强制清理内存失败:', e)
 			}
 			// #endif
+		},
+		// 清理旧海报文件，只保留最新的
+		cleanupOldPosterFiles() {
+			try {
+				const currentPath = this.path; // 当前最新的文件路径
+				
+				// #ifdef MP-WEIXIN
+				// 小程序端清理
+				const fs = uni.getFileSystemManager();
+				if (fs) {
+					fs.getSavedFileList({
+						success: (res) => {
+							const fileList = res.fileList || [];
+							if (fileList.length > 0) {
+								// 按创建时间排序，最新的在前
+								const sortedFiles = fileList.sort((a, b) => (b.createTime || 0) - (a.createTime || 0));
+								
+								// 找到当前文件
+								const currentFile = sortedFiles.find(file => file.filePath === currentPath);
+								
+								// 要保留的文件：如果当前文件存在则保留它，否则保留最新的一个
+								const fileToKeep = currentFile || sortedFiles[0];
+								
+								// 删除除了要保留的文件之外的所有文件
+								sortedFiles.forEach((file) => {
+									if (file.filePath !== fileToKeep.filePath) {
+										fs.removeSavedFile({
+											filePath: file.filePath,
+											success: () => {
+												console.log('已清理旧海报文件:', file.filePath);
+											},
+											fail: () => {
+												// 忽略删除失败
+											}
+										});
+									}
+								});
+							}
+						},
+						fail: () => {
+							// 获取文件列表失败，忽略
+						}
+					});
+				}
+				// #endif
+				
+				// #ifdef APP-PLUS
+				// APP端清理
+				if (typeof plus !== 'undefined' && plus.io) {
+					const tempDirPath = '_doc/uniapp_temp';
+					plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+						if (dirEntry.isDirectory) {
+							const reader = dirEntry.createReader();
+							const allEntries = [];
+							
+							const readAllEntries = () => {
+								reader.readEntries((entries) => {
+									if (entries.length > 0) {
+										allEntries.push(...entries);
+										readAllEntries();
+									} else {
+										// 读取完成，清理旧文件
+										const imageFiles = allEntries.filter(entry => {
+											const name = entry.name || '';
+											return /\.(jpg|jpeg|png|gif)$/i.test(name);
+										});
+										
+										if (imageFiles.length > 0) {
+											// 如果当前文件存在，只保留它；否则保留最新的一个
+											const currentFile = imageFiles.find(entry => {
+												const fullPath = `${tempDirPath}/${entry.name}`;
+												return fullPath === currentPath || entry.name === currentPath.split('/').pop();
+											});
+											
+											imageFiles.forEach(fileEntry => {
+												// 如果不是当前文件，删除它
+												if (!currentFile || fileEntry.name !== currentFile.name) {
+													fileEntry.remove(() => {
+														console.log('已清理旧海报文件:', fileEntry.name);
+													}, () => {
+														// 忽略删除失败
+													});
+												}
+											});
+										}
+									}
+								}, () => {
+									// 读取失败，忽略
+								});
+							};
+							readAllEntries();
+						}
+					}, () => {
+						// 目录不存在，忽略
+					});
+				}
+				// #endif
+			} catch (e) {
+				console.log('清理旧海报文件异常:', e);
+			}
 		},
 		// 清理canvas资源
 		cleanupCanvas() {
