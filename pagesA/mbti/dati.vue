@@ -77,6 +77,7 @@ import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
+import { getProducts } from '@/api/index.js'
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
@@ -91,6 +92,7 @@ const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const poster_id = ref(null)
 const title = { 'simple': t('mbti.simpleVersion'), 'major': t('mbti.majorVersion'), 'advanced': t('mbti.advancedVersion') }
+const userinfo = ref(JSON.parse(uni.getStorageSync('userinfo')))
 onLoad((e) => {
     test_type.value = e.test_type
     question_mode.value = e.question_mode
@@ -218,8 +220,13 @@ const choosestatus = (index, ite) => {
 //查看结果
 const look = () => {
     finsh(poster_id.value).then(res => {
-        if (question_mode.value == 'single_mode') {//单人
-            uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
+        if (question_mode.value == 'single_mode') {//单人 支付拦截
+            if(userinfo.is_vip){ //是会员
+              uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
+            }{//不是会员
+                
+            }
+           
         } else {
             showDelPopup3.value = true
         }
@@ -227,6 +234,23 @@ const look = () => {
         console.log(err, 'eee')
     })
 
+}
+
+//获取钱数
+const getprices = () => {
+    let object = {
+        'simple': 'mbti_40',
+        'major': 'mbti_60',
+        'advanced':'mbti_105'
+    }
+    //单次
+   getProducts(object[test_type.value]).then(res => {
+        once.value = res.data
+    })
+    //月
+      getProducts('vip').then(res => {
+        mouth.value = res.data
+    })
 }
 //确定退出
 const submit = () => {

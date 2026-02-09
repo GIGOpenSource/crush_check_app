@@ -161,7 +161,7 @@ const handleEncrypt = () => {
     return end
 }
 const generateTimestampMD5 = (status) => {
-    getRoom(status).then(res => {
+    getRoom(status,test_type.value).then(res => {
         md5.value = res.data.room_key
         uni.setStorageSync('timestamp', md5.value)
         pipeiproup.value = true

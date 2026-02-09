@@ -958,3 +958,8 @@ const click_invitecancel = () => {
 	}
 }
 </style>
+<style>
+ .u-popup__content{
+        background: transparent !important;
+    }
+</style>
