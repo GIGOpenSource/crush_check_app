@@ -36,7 +36,7 @@
             </scroll-view>
             <view class="btns">
                 <view class="btn1" v-if="page == 1" @click="down">{{ t('mbti.nextPage') }}</view>
-                <view class="btn2" v-else-if="page == total" @click="down">
+                <view class="btn2" v-else-if="page == total">
                     <view @click="up">{{ t('mbti.prevPage') }}</view>
                     <view @click="down">{{ t('mbti.viewResult') }}</view>
                 </view>
