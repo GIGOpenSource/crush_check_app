@@ -535,7 +535,9 @@ export default {
     viewInviteCode: '초대 코드 보기',
     incompleteTestMessage: '완료하지 않은 페어 테스트 기록이 있습니다. 계속 답변하시겠습니까?',
     abandonAnswer: '답변 포기',
-    continueAnswer: '답변 계속'
+    continueAnswer: '답변 계속',
+    shareInviteMessage: `초정확한 MBTI 테스트를 해보세요!
+위챗에서 "Crush Check" 미니프로그램을 검색하고, 내 초대 코드를 입력하세요: {inviteCode}, 함께 성격 호환성을 확인해봐요～`
   }
 }
 

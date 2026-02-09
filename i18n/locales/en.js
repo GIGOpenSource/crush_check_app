@@ -535,6 +535,8 @@ export default {
     viewInviteCode: 'View invite code',
     incompleteTestMessage: 'You have an incomplete double test record. Do you want to continue answering?',
     abandonAnswer: 'Abandon Answer',
-    continueAnswer: 'Continue Answer'
+    continueAnswer: 'Continue Answer',
+    shareInviteMessage: `Come test super accurate MBTI!
+Search "Crush Check" Mini Program on WeChat, enter my invitation code: {inviteCode}, let's check personality compatibility together～`
   }
 }

@@ -538,6 +538,8 @@ export default {
     viewInviteCode: '查看邀请码',
     incompleteTestMessage: '您有未完成的双人测试记录，是否继续作答？',
     abandonAnswer: '放弃作答',
-    continueAnswer: '继续作答'
+    continueAnswer: '继续作答',
+    shareInviteMessage: `快来测超准 MBTI！
+微信搜「Crush Check」小程序，输入我的邀请码：{inviteCode}，一起看看性格匹配度～`
   }
 }

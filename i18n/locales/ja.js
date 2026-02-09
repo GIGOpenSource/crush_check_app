@@ -534,7 +534,9 @@ export default {
     viewInviteCode: '招待コードを表示',
     incompleteTestMessage: '未完了のペアテスト記録があります。回答を続けますか？',
     abandonAnswer: '回答を放棄',
-    continueAnswer: '回答を続ける'
+    continueAnswer: '回答を続ける',
+    shareInviteMessage: `超正確なMBTIテストをしてみましょう！
+WeChatで「Crush Check」ミニプログラムを検索し、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～`
   }
 }
 

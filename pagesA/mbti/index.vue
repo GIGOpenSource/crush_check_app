@@ -31,7 +31,7 @@
                     <view class="richtext-content">{{ ceshicontent }}</view>
                 </scroll-view>
                 <view class="btn" v-for="(item, index) in ceshibtns" :key="index" @click="join(item.type)">{{ item.title
-                    }}</view>
+                }}</view>
                 <view class="layout" @click="layout">{{ t('mbti.exitTest') }}</view>
             </view>
 
@@ -63,16 +63,16 @@
         </template>
     </IndexProup>
     <!-- 是否放弃之前作答 -->
-     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
-            <view class="del-popup-content">
-                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
-                <view class="title1">{{ t('mbti.incompleteTestMessage') }}</view>
-                <view class="del-popup-actions">
-                    <view class="del-popup-btn cancel" @click="btn(true)">{{ t('mbti.abandonAnswer') }}</view>
-                    <view class="del-popup-btn confirm" @click="btn(false)">{{ t('mbti.continueAnswer') }}</view>
-                </view>
+    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+        <view class="del-popup-content">
+            <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+            <view class="title1">{{ t('mbti.incompleteTestMessage') }}</view>
+            <view class="del-popup-actions">
+                <view class="del-popup-btn cancel" @click="btn(true)">{{ t('mbti.abandonAnswer') }}</view>
+                <view class="del-popup-btn confirm" @click="btn(false)">{{ t('mbti.continueAnswer') }}</view>
             </view>
-        </up-popup>
+        </view>
+    </up-popup>
 </template>
 
 <script setup>
@@ -164,14 +164,14 @@ const generateTimestampMD5 = (status) => {
     getRoom(status).then(res => {
         md5.value = res.data.room_key
         uni.setStorageSync('timestamp', md5.value)
-         pipeiproup.value = true
+        pipeiproup.value = true
     })
 
 }
 //复制邀请码
 const copy = () => {
     uni.setClipboardData({
-        data: handleEncrypt(),
+        data: t('mbti.shareInviteMessage').replace('{inviteCode}', handleEncrypt()),
         success: function () {
             uni.showToast({
                 title: t('common.copySuccess'),
@@ -213,7 +213,7 @@ const join = (type) => {
         //没有房间号
         if (!uni.getStorageSync('timestamp')) {
             generateTimestampMD5(true) //强制请求
-        }else{
+        } else {
             //有房间号
             showDelPopup2.value = true
         }
@@ -221,9 +221,9 @@ const join = (type) => {
 }
 
 const btn = (status) => {
-   generateTimestampMD5(status)
-   showDelPopup2.value = false
-   ceshiproup.value = false
+    generateTimestampMD5(status)
+    showDelPopup2.value = false
+    ceshiproup.value = false
 }
 </script>
 
@@ -232,6 +232,7 @@ rich-text {
     color: #ffffff !important;
     font-size: 28rpx !important;
 }
+
 .del-popup-content {
     position: relative;
     width: 560rpx;
@@ -307,6 +308,7 @@ rich-text {
     background: #b370ff;
     color: #ffffff;
 }
+
 .page {
     height: 96vh;
     margin: 20rpx 25rpx;
@@ -383,6 +385,7 @@ rich-text {
     align-items: center;
     padding: 40rpx 45rpx;
     box-sizing: border-box;
+
     .opera {
         display: flex;
         flex-direction: column;
@@ -504,7 +507,7 @@ rich-text {
 }
 </style>
 <style>
-.u-safe-bottom{
-		height: 0 !important;
-	}
+.u-safe-bottom {
+    height: 0 !important;
+}
 </style>
