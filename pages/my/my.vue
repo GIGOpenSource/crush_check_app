@@ -197,7 +197,7 @@
   <!-- 分享 -->
   <InvitationFriend :show="friend" @close="friend = false" />
   <!-- 会员拦截 -->
-  <up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+  <up-popup :show="vipProup" @close="closeom" mode="bottom" round="25" :closeable="true">
     <view class="vipProup">
       <image :src="$getImg('index/bg')" class="bg" />
       <scroll-view scroll-y="true" class="scroll-box">
@@ -301,8 +301,11 @@ export default {
   onLoad() {
   },
   onShow() {
-    getProductsList().then(res => {
+
+    getProductsList('ios_vip').then(res => {
       this.mouth = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
+
+        console.log(this.mouth,'this.mouth')
     })
     this.viplist = [
       t('index.vipFeature1'),
@@ -334,7 +337,7 @@ export default {
       uni.stopPullDownRefresh();
     }
     this.refreshUserInfoForPullDown();
-    getProductsList().then(res => {
+    getProductsList('ios_vip').then(res => {
       this.mouth = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
     })
   },
@@ -414,6 +417,9 @@ export default {
   },
   // #endif
   methods: {
+    closeom() {
+      this.vipProup = false
+    },
     vipxiyi() {
       uni.navigateTo({
         url: "/pages/my/richtext?label=" + encodeURIComponent(t('common.vipServiceAgreement')) + "&type=" + encodeURIComponent('pay_agreement'),
@@ -611,7 +617,7 @@ export default {
       })
       try {
         // 获取产品列表
-        const res = await getProductsList();
+        const res = await getProductsList('ios_vip');
         console.log("获取产品列表成功", res);
 
         if (res.code === 200 || res.code === 201) {

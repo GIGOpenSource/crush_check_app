@@ -251,10 +251,10 @@ export function getSystemContent(type = "") {
  * 获取产品列表
  * @returns {Promise}
  */
-export function getProductsList() {
+export function getProductsList(product_type) {
   return getRequest(
     "/products/",
-    {},
+    {product_type},
     {
       header: {
         "Content-Type": "application/json",

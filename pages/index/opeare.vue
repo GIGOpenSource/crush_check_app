@@ -418,7 +418,7 @@ const handleInviteClick = () => {
 
 }
 const vipprice = () => {
-	getProducts().then(res => {
+	getProducts('ios_vip').then(res => {
 		mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
 		console.log('222mouthmouth',mouth.value)
 	})

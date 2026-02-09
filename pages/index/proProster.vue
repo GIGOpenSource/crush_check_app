@@ -153,8 +153,10 @@ onLoad((e) => {
 	getPosterDetails(id.value).then(res => {
 		details.value = res.data
 	})
-	getProducts().then(res => {
+	getProducts('ios_crush_once').then(res => {
 		once.value = res.data.results.filter(item => item.product_type == 'ios_crush_once')[0]
+	})
+	getProducts('ios_vip').then(res => {
 		mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
 	})
 })

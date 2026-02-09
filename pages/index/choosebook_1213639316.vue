@@ -125,7 +125,7 @@ onMounted(() => {
             }
         })
     })
-    getProducts().then(res => {
+    getProducts('ios_vip').then(res => {
         mouth.value = res.data.results.filter(item => item.product_type == 'ios_vip')[0]
     })
 })

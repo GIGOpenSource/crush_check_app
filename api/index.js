@@ -23,8 +23,8 @@ export const getDeepPoster = (params) => {
 }
 
 //获取钱数
-export const getProducts = () => {
-	return getRequest(`/products/`,{})
+export const getProducts = (product_type) => {
+	return getRequest(`/products/`,{product_type})
 }
 
 //创建订单
