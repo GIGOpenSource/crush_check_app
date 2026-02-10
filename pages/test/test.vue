@@ -221,7 +221,7 @@
 
         </template>
     </IndexProup>
-     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType"></MbtiProup>
+     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
 </template>
 
 <script>
@@ -651,23 +651,20 @@ export default {
             return category?.color || "#666";
         },
 
-        // 处理海报点击
+           // 处理海报点击
         handlePosterClick(item, index, type) {
-            // 如果状态是已完成，跳转到详情页
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
-
                     if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
-
                         this.poster_id = item.id
                         if (item.mbti_list[0].master) {
                             this.generateTimestampMD5()
                         }
                     }
-
                 }
                 return
             }
+            // 如果状态是已完成，跳转到详情页
             if (item.status == "done") {
                 console.log(item.status)
                 if (item.id) {
@@ -711,7 +708,43 @@ export default {
                                 this.poster_id = item.id
                                 this.generateTimestampMD5()
                             }
+                            //两个人都完成的情况下
                             if (item.mbti_list[0].other_status == 'done') {
+                                console.log(item.mbti_list[0].test_type, 'item.mbti_list[0].test_type')
+                                //支付完成
+                                if (item.mbti_list[0].room_pay_status == 'pay_completed') {
+                                    uni.navigateTo({
+                                        url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
+                                        fail: (err) => {
+                                            
+                                            console.error("跳转失败:", err);
+                                            uni.showToast({
+                                                title: this.$t('poster.jumpFailed'),
+                                                icon: "none",
+                                            });
+                                        },
+                                    });
+                                } else if (item.mbti_list[0].room_pay_status == 'affordable') {
+                                     this.getprices(item)
+                                    //可以支付
+                                    this.mbtishow = true
+                                } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
+                                    uni.showToast({
+                                        title: '暂时不可支付',
+                                        icon: "none",
+                                    });
+
+                                } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
+                                    uni.showToast({
+                                        title: '对方正在支付中',
+                                        icon: "none",
+                                    });
+                                }
+                            }
+
+                        } else { //单人
+                            //支付完成
+                            if (item.mbti_list[0].room_pay_status == 'pay_completed') {
                                 uni.navigateTo({
                                     url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
                                     fail: (err) => {
@@ -722,41 +755,117 @@ export default {
                                         });
                                     },
                                 });
+                            } else if (item.mbti_list[0].room_pay_status == 'affordable') {
+                                this.getprices(item)
+                                //可以支付
+                                this.mbtishow = true
                             }
-                        } else {//单人
-                            uni.navigateTo({
-                                url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
-                                fail: (err) => {
-                                    console.error("跳转失败:", err);
-                                    uni.showToast({
-                                        title: this.$t('poster.jumpFailed'),
-                                        icon: "none",
-                                    });
-                                },
-                            });
                         }
 
-
+                    } else {
+                        uni.showToast({
+                            title: this.$t('poster.posterIdNotExist'),
+                            icon: "none",
+                        });
                     }
-
-                } else {
-                    uni.showToast({
-                        title: this.$t('poster.posterIdNotExist'),
-                        icon: "none",
-                    });
+                    return;
                 }
-                return;
+                if (item.status === "error") {
+                    this.currentPosterId = item.id;
+                    this.showDelPopup2 = true;
+                    return;
+                }
+                this.previewImage(item, index);
+            }
+        },
+        //获取钱的类型
+        getprices(item) {
+            let object = {
+                'simple': 'single_mbti_40',
+                'major': 'single_mbti_60',
+                'advanced': 'single_mbti_105'
+            }
+            if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
+                if (item.mbti_list[0].test_type == 'simple') {
+                    this.posterType = 'double_mbti_40'
+                } else if (item.mbti_list[0].test_type == 'major') {
+                    this.posterType = 'double_mbti_60'
+                } else if (item.mbti_list[0].test_type == 'advanced') {
+                    this.posterType = 'double_mbti_105'
+                }
+            } else { //单人
+                if (item.content.question_mode == 'single_mode') {//纯单人
+                    this.posterType = object[item.mbti_list[0].test_type]
+                } else if (item.content.question_mode == 'double_mode') {//双人中的单人
+                    if (item.mbti_list[0].test_type == 'simple') {
+                        this.posterType = 'double_mbti_40'
+                    } else if (item.mbti_list[0].test_type == 'major') {
+                        this.posterType = 'double_mbti_60'
+                    } else if (item.mbti_list[0].test_type == 'advanced') {
+                        this.posterType = 'double_mbti_105'
+                    }
+                }
             }
 
-            // 如果状态是生成失败，显示失败弹窗
-            if (item.status === "error") {
-                this.currentPosterId = item.id; // 保存当前海报ID
-                this.showDelPopup2 = true;
-                return;
-            }
 
-            // 其他状态，预览图片
-            this.previewImage(item, index);
+
+        },
+        //微信支付
+        wxpay(moneyType, item) {
+            let params = {
+                description: item.description,
+                openId: uni.getStorageSync('openId'),
+                productId: item.id,
+                posterId: this.poster_id
+            }
+            if (moneyType == 'vip') {
+                delete params.posterId
+            }
+            createOrder(params).then(res => {
+                uni.requestPayment({
+                    "provider": "wxpay",
+                    ...res.data,
+                    "signType": "RSA",
+                    "package": `${res.data.prepayid}`,
+                    "nonceStr": res.data.noncestr,
+                    success(res) {
+                        uni.showToast({
+                            title: t('proPoster.paySuccess'),
+                            icon: 'success'
+                        })
+                        if (moneyType == 'vip') {
+                            this.getvip()
+                        } else {
+                            this.fetchPosterList()
+                        }
+
+                    },
+                    fail(e) {
+                        uni.showToast({
+                            title: t('proPoster.payFailed'),
+                            icon: 'none'
+                        })
+                    }
+                })
+
+            })
+
+        },
+
+        getvip() {
+            const openId = uni.getStorageSync('openId')
+            getUserInfo(openId).then(userRes => {
+                if (userRes.code === 200 || userRes.code === 201) {
+                    if (userRes.data) {
+                        uni.setStorageSync('userInfo', JSON.stringify(userRes
+                            .data))
+                        console.log('用户信息更新成功', userRes.data)
+                    }
+                }
+                showDelPopup3.value = false
+            }).catch(err => {
+                console.log('获取用户信息失败', err)
+            })
         },
         // 预览图片
         previewImage(item, index) {
