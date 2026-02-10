@@ -173,6 +173,13 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "loveCourt/materail",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
 				}
 			]
 		}

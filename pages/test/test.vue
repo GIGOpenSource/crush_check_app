@@ -34,7 +34,7 @@
                     <image v-if="!isType" class="select-icon" :src="item.isActive
                         ? '/static/my/yixuan.png'
                         : '/static/my/weixuan.png'
-                        " mode="aspectFit" @click.stop="toggleSelect(item)"></image>
+                        " mode="aspectFit"></image>
 
                     <!-- 左侧图片 -->
                     <view class="left">
@@ -51,8 +51,7 @@
                             :src="$getImg('index/tarotcards')" mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
                         </image>
-                        <image v-else-if="item.prompt_template.template_type == 'mbti'"
-                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url"
+                        <image v-else-if="item.prompt_template.template_type == 'mbti'" :src="$getImg('add/mbtiimages')"
                             mode="scaleToFill" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
@@ -78,9 +77,8 @@
                             <view class="num">{{ $t('poster.cheatScore') }}{{ item.score }}%</view>
                             <view class="details">
                                 <text>{{ item.summary }}</text>
-                                <text v-if="isType" class="look"
-                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                        $t('poster.viewPoster') }} {{
+                                <text v-if="isType" class="look">{{
+                                    $t('poster.viewPoster') }} {{
                                         '>>' }}</text>
                             </view>
                         </template>
@@ -93,68 +91,42 @@
                                 v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
                                 "{{ item.mbti_list[0] || $t('poster.defaultAnswer') }}"
-                                <text v-if="isType" class="look"
-                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                        $t('poster.viewAnswer') }} {{
-                                        '>>' }}</text>
+                                <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }} {{ '>>' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
-                                <text v-if="isType" class="look"
-                                    @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                        $t('poster.viewAnswer') }}
-                                    {{
-                                        '>>' }}</text>
+                                <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }}{{ '>>' }}</text>
                             </view>
                         </template>
+                        <!-- mbti单人 -->
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left:-10rpx">{{ $t('poster.personalityIs') }}{{
-                                    item.mbti_list[0]?.mbti_type ||
-                                    '--' }}</view>
-                                <view class="details" style="margin-top: 20rpx;">
-                                    <text v-if="isType" class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
-                                            $t('poster.viewDetails') }}
-                                        {{
-                                            '>>' }}</text>
+                                <view class="num" style="margin-left: 5rpx;">MBTI测试</view>
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                    <text>{{ $t('poster.personalityIs') }}</text>
+                                    <text v-if="isType" style="font-weight: 100;">立即查看 {{ '>>' }}</text>
                                 </view>
                             </block>
+                            <!-- mbti双人 -->
                             <block v-else>
-
-                                <view class="double">
-                                    <view class="num" style="margin-left:-10rpx;font-size: 30rpx;">{{
-                                        item.mbti_list[0]?.owner_mbti_type || '' }} <text
-                                            style="margin-left:25rpx;font-size: 26rpx;">X</text></view>
-                                    <view class="xi">
-                                        <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
-                                        <view class="num" style="width:120rpx;text-align: center;font-size: 30rpx;">{{
-                                            item.mbti_list[0].other_status == 'done' ?
-                                                item.mbti_list[0]?.other_type : '?' }}</view>
-                                        <!-- 完成 -->
-                                        <image :src="item.mbti_list[0]?.other_mbti_image_url" mode="scaleToFill"
-                                            class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
-                                        </image>
-                                        <!-- 未完成 -->
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{
-                                            $t('mbti.waitingForOtherResult') }}</view>
-                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">{{
-                                            $t('mbti.otherNotCompleted') }}</view>
-                                        <view class="wating" v-if="!item.mbti_list[0].other_status">{{
-                                            $t('mbti.waitingForOthersToJoin') }}</view>
-                                    </view>
-
-                                </view>
-                                <view class="details">
+                                <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                    <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
+                                        $t('mbti.waitingForOtherResult') }}</text>
+                                    <text v-if="item.mbti_list[0].other_status == 'exit'">{{
+                                        $t('mbti.otherNotCompleted') }}</text>
+                                    <text v-if="!item.mbti_list[0].other_status">{{
+                                        $t('mbti.waitingForOthersToJoin') }}</text>
+                                    <text v-if="item.mbti_list[0].other_status == 'done'">
+                                        双方均已完成答题
+                                    </text>
                                     <!-- 是房主 -->
-                                    <text v-if="isType && item.mbti_list[0].master" class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
-                                        <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') : !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') + ' ' : $t('poster.viewDetails') }}</text>{{ '>>' }}</text>
+                                    <text v-if="isType && item.mbti_list[0].master" style="font-weight: 100;margin-left: 20rpx;">
+                                        {{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
+                                            !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') + ' ' :
+                                                $t('poster.viewDetails') }} {{ '>>' }}</text>
                                     <!-- 不是房主  -->
-                                    <text
-                                        v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
-                                        class="look"
-                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
-                                        <text>{{ $t('poster.viewDetails') }}</text>{{ '>>' }}</text>
+                                    <text v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'" style="font-weight: 100;margin-left: 20rpx;">
+                                        立即查看{{ '>>' }}</text>
                                 </view>
                             </block>
 
@@ -213,7 +185,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -1639,9 +1611,9 @@ export default {
 
 .mbti {
     width: 150rpx !important;
-    height: 180rpx !important;
+    height: 150rpx !important;
     margin-left: 20rpx !important;
-    margin-top: 25rpx;
+    margin-top: 60rpx;
 }
 
 .double {
