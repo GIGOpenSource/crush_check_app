@@ -216,7 +216,7 @@
 
         </template>
     </IndexProup>
-    <MbtiProup :show="mbtishow" @close="mbtishow = false"></MbtiProup>
+    <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType"></MbtiProup>
 </template>
 
 <script>
@@ -258,7 +258,8 @@ export default {
             pipeicontent: [],
             md5: '',
             poster_id: '',
-            mbtishow:true
+            mbtishow:false,
+            posterType:''
         };
     },
     onLoad() {
@@ -322,7 +323,7 @@ export default {
         //     this.generateTimestampMD5()
         // }
 
-        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')]
+        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'),'试题类型将与邀请者保持一致']
         this.categoryList = [
             {
                 label: t('poster.all'),

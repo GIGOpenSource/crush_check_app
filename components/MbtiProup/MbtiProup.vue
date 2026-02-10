@@ -2,16 +2,12 @@
     <up-popup :show="show" mode="center" @close="handleClose" @open="show = true"
         :closeOnClickOverlay="closeOnClickOverlay">
         <view class="mbti">
-            <view>会员专享开通会员查看结果</view>
+            <view>{{ t1 }}</view>
             <view class="vip">
-                <view class="title">会员特权：</view>
-                <view class="view">
+                <view class="title">{{ t2 }}</view>
+                <view class="view" v-for="(item, index) in textlist" :key="index">
                     <view class="border"></view>
-                    <view class="text">3种核心题型无次数限制，随时复盘人格状态</view>
-                </view>
-                <view class="view">
-                    <view class="border"></view>
-                    <view class="text">其他模块功能畅玩</view>
+                    <view class="text">{{ item }}</view>
                 </view>
             </view>
             <view class="icons">
@@ -20,16 +16,22 @@
                     <view class="title">{{ item.title }}</view>
                 </view>
             </view>
-            <view class="btns">
-                <view class="btn">支付1.00元 开通VIP</view>
-                <view class="title">支付1.00元只查看本次结果</view>
+            <view class="btns" v-if="moneyType.includes('single')">
+                <view class="btn" @click="handlePay('vip')">支付{{mouth.prices}}元 开通VIP</view>
+                <view class="title" @click="handlePay(moneyType)">支付{{once.prices}}元只查看本次结果</view>
+            </view>
+            <view class="btns" v-else>
+                <view class="btn" @click="handlePay(moneyType)">支付{{once.prices}}元 解锁双人版测试</view>
             </view>
 
         </view>
     </up-popup>
 </template>
 
+
 <script setup>
+import { ref ,onMounted} from 'vue';
+import { getProducts } from '@/api/index.js'
 const props = defineProps({
     show: {
         type: Boolean,
@@ -46,6 +48,10 @@ const props = defineProps({
     canClose: {
         type: Boolean,
         default: true
+    },
+     moneyType: {
+        type: Object,
+        default: 'single_mbti_40'
     }
 })
 const icon = [{
@@ -58,6 +64,11 @@ const icon = [{
     images: 'add/icon3',
     title: '便捷省心'
 }]
+const textlist = ref(['3种核心题型无次数限制，随时复盘人格状态','其他模块功能畅玩'])
+const t1 = ref('')
+const t2 = ref('')
+const mouth = ref({})
+const once = ref({})
 const emits = defineEmits(["update:show", "close"])
 const handleClose = () => {
     if (!props.canClose) {
@@ -66,6 +77,36 @@ const handleClose = () => {
     emits("close");
     emits("update:show", false);
 }
+const handlePay = (type) => {
+    if(type == 'vip'){
+         emits("pay", moneyType,mouth.value);
+    }else{
+         emits("pay", moneyType,once.value);
+    }
+  
+}
+onMounted(() => {
+    if (props.moneyType.includes('single')) {
+        textlist.value = ['3种核心题型无次数限制，随时复盘人格状态', '其他模块功能畅玩']
+        t1.value = '会员专享开通会员查看结果'
+        t2.value = '会员特权：'
+    } else {
+        textlist.value = ['多维度适配分析：恋人、家人、朋友三种关系视角', '一人解锁，双方可见，共享深度关系分析', '附加双方个人专属单人解析报告，全面认知自我']
+        t1.value = '双人简易版MBTI测试报告'
+        t2.value = '套餐包含：'
+    }
+   getlist()
+})
+getlist(() => {
+    //月
+    getProducts('vip').then(res => {
+        mouth.value = res.data
+    })
+    //次
+    getProducts(moneyType).then(res => {
+        once.value = res.data
+    })
+})
 </script>
 
 <style lang="scss" scoped>
