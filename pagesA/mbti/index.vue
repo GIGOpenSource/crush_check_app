@@ -181,10 +181,59 @@ const copy = () => {
     });
 
 }
+// 从完整文本中提取邀请码
+const extractInviteCode = (inputText) => {
+    if (!inputText) return ''
+    
+    const trimmedText = inputText.trim()
+    
+    // 如果输入的是完整邀请消息，提取中间的邀请码
+    // 使用正则表达式匹配邀请码部分（在冒号/中文冒号和逗号/中文逗号之间）
+    const patterns = [
+        // 中文格式：输入我的邀请码：{code}，一起看看
+        /输入我的邀请码[：:]\s*([A-Za-z0-9+/=_-]+)[，,～~]/,
+        // 英文格式：invitation code: {code}, let's
+        /invitation\s+code[：:]\s*([A-Za-z0-9+/=_-]+)[，,～~]/i,
+        // 其他语言格式：código de invitación: {code}, 等
+        /[：:]\s*([A-Za-z0-9+/=_-]{20,})[，,～~]/,
+    ]
+    
+    // 尝试匹配各种格式
+    for (const pattern of patterns) {
+        const match = trimmedText.match(pattern)
+        if (match && match[1]) {
+            const extractedCode = match[1].trim()
+            // 验证提取的代码看起来像邀请码（长度足够且包含特殊字符）
+            if (extractedCode.length >= 20) {
+                return extractedCode
+            }
+        }
+    }
+    
+    // 如果不匹配任何格式，尝试直接查找邀请码模式（长字符串，包含特殊字符）
+    // 邀请码通常是 base64 编码的字符串，包含 /、+、= 等字符，长度通常较长
+    const inviteCodePattern = /([A-Za-z0-9+/=_-]{40,})/
+    const codeMatch = trimmedText.match(inviteCodePattern)
+    if (codeMatch && codeMatch[1]) {
+        const potentialCode = codeMatch[1].trim()
+        // 如果找到的长字符串看起来像邀请码（包含特殊字符），返回它
+        if (potentialCode.length >= 40 && /[+/=]/.test(potentialCode)) {
+            return potentialCode
+        }
+    }
+    
+    // 如果不包含完整格式，直接返回原值（可能是直接输入的邀请码）
+    return trimmedText
+}
+
 //双人模式开始测试
 const start = () => {
     if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
-    getList(1, 6, test_type.value, mode.value, null, inviewma.value, md5.value).then(res => {
+    
+    // 提取邀请码（如果用户粘贴了完整文本，只提取中间的邀请码部分）
+    const extractedInviteCode = extractInviteCode(inviewma.value)
+    
+    getList(1, 6, test_type.value, mode.value, null, extractedInviteCode, md5.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })
