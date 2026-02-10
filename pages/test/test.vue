@@ -723,7 +723,7 @@ export default {
                             if (item.mbti_list[0].other_status == 'done') {
                                 console.log(item.mbti_list[0].test_type, 'item.mbti_list[0].test_type')
                                 //支付完成
-                                if (item.mbti_list[0].room_pay_status == 'pay_completed') {
+                                if (item.content.room_pay_status == 'pay_completed') {
                                     uni.navigateTo({
                                         url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
                                         fail: (err) => {
@@ -735,17 +735,17 @@ export default {
                                             });
                                         },
                                     });
-                                } else if (item.mbti_list[0].room_pay_status == 'affordable') {
+                                } else if (item.content.room_pay_status == 'affordable') {
                                      this.getprices(item)
                                     //可以支付
                                     this.mbtishow = true
-                                } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
+                                } else if (item.content.room_pay_status == 'non_payable') {
                                     uni.showToast({
                                         title: '暂时不可支付',
                                         icon: "none",
                                     });
 
-                                } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
+                                } else if (item.content.room_pay_status == 'other_paying') {
                                     uni.showToast({
                                         title: '对方正在支付中',
                                         icon: "none",
@@ -755,7 +755,7 @@ export default {
 
                         } else { //单人
                             //支付完成
-                            if (item.mbti_list[0].room_pay_status == 'pay_completed') {
+                            if (item.content.room_pay_status == 'pay_completed') {
                                 uni.navigateTo({
                                     url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
                                     fail: (err) => {
@@ -766,11 +766,22 @@ export default {
                                         });
                                     },
                                 });
-                            } else if (item.mbti_list[0].room_pay_status == 'affordable') {
+                            } else if (item.content.room_pay_status == 'affordable') {
                                 this.getprices(item)
                                 //可以支付
                                 this.mbtishow = true
-                            }
+                            }else if (item.content.room_pay_status == 'non_payable') {
+                                    uni.showToast({
+                                        title: '暂时不可支付',
+                                        icon: "none",
+                                    });
+
+                                } else if (item.content.room_pay_status == 'other_paying') {
+                                    uni.showToast({
+                                        title: '对方正在支付中',
+                                        icon: "none",
+                                    });
+                                }
                         }
 
                     } else {
