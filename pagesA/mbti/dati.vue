@@ -255,8 +255,6 @@ const getprices = () => {
         'advanced': 'single_mbti_105'
     }
     mbti_type.value = object[test_type.value]
-    console.log(mbti_type.value,'mbti_type.valu')
-
 }
 //微信支付
 const wxpay = (moneyType, item) => {
@@ -286,7 +284,6 @@ const wxpay = (moneyType, item) => {
                     getvip()
                 }else{
                     showDelPopup3.value = false
-                    //单次支付成功后直接跳转结果页
                      uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
                 }
 
@@ -311,6 +308,7 @@ const getvip = () => {
                     .data))
                 console.log('用户信息更新成功', userRes.data)
             }
+            uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
         }
         showDelPopup3.value = false
     }).catch(err => {

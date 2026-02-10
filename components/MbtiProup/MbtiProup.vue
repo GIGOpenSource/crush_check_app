@@ -78,11 +78,18 @@ const initData = () => {
     console.log(props.show, 'MbtiProup show状态')
     if (props.moneyType.includes('single')) {
         textlist.value = ['3种核心题型无次数限制，随时复盘人格状态', '其他模块功能畅玩']
-        t1.value = '会员专享开通会员查看结果'
+        t1.value = `会员专享开通会员查看结果`
         t2.value = '会员特权：'
     } else {
         textlist.value = ['多维度适配分析：恋人、家人、朋友三种关系视角', '一人解锁，双方可见，共享深度关系分析', '附加双方个人专属单人解析报告，全面认知自我']
-        t1.value = '双人简易版MBTI测试报告'
+        if(props.moneyType.includes('40')){
+             t1.value =  `双人简易版MBTI测试报告`
+        }else if(props.moneyType.includes('60')){
+            t1.value =  `双人专业版MBTI测试报告`
+        }else if(props.moneyType.includes('105')){
+            t1.value =  `双人进阶版MBTI测试报告`
+        }
+       
         t2.value = '套餐包含：'
     }
     getlist()
