@@ -225,16 +225,21 @@ const choosestatus = (index, ite) => {
 //查看结果
 const look = () => {
     finsh(poster_id.value).then(res => {
-        if (question_mode.value == 'single_mode') {//单人 支付拦截
-            if (userinfo.is_vip) { //是会员
+        if (question_mode.value == 'single_mode') {//单人 支付拦截f
+              getprices()
+            if (userinfo.value.is_vip) { //是会员
                 uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
-            } { //不是会员
+                
+            }else{ //不是会员
+                console.log('不是会员')
                 mbtishow.value = true
+                console.log( mbtishow.value,' mbtishow.value')
             }
+           
 
         } else {
             showDelPopup3.value = true
-            getprices()
+           
         }
     }).catch(err => {
         console.log(err, 'eee')
@@ -250,6 +255,7 @@ const getprices = () => {
         'advanced': 'single_mbti_105'
     }
     mbti_type.value = object[test_type.value]
+    console.log(mbti_type.value,'mbti_type.valu')
 
 }
 //微信支付
@@ -260,6 +266,7 @@ const wxpay = (moneyType, item) => {
         productId: item.id,
         posterId: poster_id.value
     }
+    console.log(moneyType,'222')
     if (moneyType == 'vip') {
         delete params.posterId
     }
@@ -278,7 +285,9 @@ const wxpay = (moneyType, item) => {
                 if(moneyType == 'vip'){
                     getvip()
                 }else{
+                    showDelPopup3.value = false
                     //单次支付成功后直接跳转结果页
+                     uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
                 }
 
             },
@@ -303,6 +312,7 @@ const getvip = () => {
                 console.log('用户信息更新成功', userRes.data)
             }
         }
+        showDelPopup3.value = false
     }).catch(err => {
         console.log('获取用户信息失败', err)
     })

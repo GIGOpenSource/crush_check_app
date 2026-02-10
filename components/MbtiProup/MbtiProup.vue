@@ -1,5 +1,7 @@
 <template>
-    <up-popup :show="show" mode="center" @close="handleClose" @open="show = true"
+   <view>
+   
+ <up-popup :show="show" mode="center" @close="handleClose" @open="show = true"
         :closeOnClickOverlay="closeOnClickOverlay">
         <view class="mbti">
             <view>{{ t1 }}</view>
@@ -17,20 +19,20 @@
                 </view>
             </view>
             <view class="btns" v-if="moneyType.includes('single')">
-                <view class="btn" @click="handlePay('vip')">支付{{mouth.prices}}元 开通VIP</view>
-                <view class="title" @click="handlePay(moneyType)">支付{{once.prices}}元只查看本次结果</view>
+                <view class="btn" @click="handlePay('vip')">支付{{mouth.price}}元 开通VIP</view>
+                <view class="title" @click="handlePay(moneyType)">支付{{once.price}}元只查看本次结果</view>
             </view>
             <view class="btns" v-else>
-                <view class="btn" @click="handlePay(moneyType)">支付{{once.prices}}元 解锁双人版测试</view>
+                <view class="btn" @click="handlePay(moneyType)">支付{{once.price}}元 解锁双人版测试</view>
             </view>
 
         </view>
-    </up-popup>
+    </up-popup>   </view>
 </template>
 
 
 <script setup>
-import { ref ,onMounted} from 'vue';
+import { ref, watch } from 'vue';
 import { getProducts } from '@/api/index.js'
 const props = defineProps({
     show: {
@@ -50,10 +52,11 @@ const props = defineProps({
         default: true
     },
      moneyType: {
-        type: Object,
+        type: String,
         default: 'single_mbti_40'
     }
 })
+const emits = defineEmits(["update:show", "close","update:moneyType", "pay"])
 const icon = [{
     images: 'add/icon1',
     title: '专业量表'
@@ -69,23 +72,10 @@ const t1 = ref('')
 const t2 = ref('')
 const mouth = ref({})
 const once = ref({})
-const emits = defineEmits(["update:show", "close"])
-const handleClose = () => {
-    if (!props.canClose) {
-        return;
-    }
-    emits("close");
-    emits("update:show", false);
-}
-const handlePay = (type) => {
-    if(type == 'vip'){
-         emits("pay", moneyType,mouth.value);
-    }else{
-         emits("pay", moneyType,once.value);
-    }
-  
-}
-onMounted(() => {
+
+// 初始化逻辑
+const initData = () => {
+    console.log(props.show, 'MbtiProup show状态')
     if (props.moneyType.includes('single')) {
         textlist.value = ['3种核心题型无次数限制，随时复盘人格状态', '其他模块功能畅玩']
         t1.value = '会员专享开通会员查看结果'
@@ -95,17 +85,45 @@ onMounted(() => {
         t1.value = '双人简易版MBTI测试报告'
         t2.value = '套餐包含：'
     }
-   getlist()
-})
-getlist(() => {
+    getlist()
+}
+
+const handleClose = () => {
+    if (!props.canClose) {
+        return;
+    }
+    emits("close");
+    emits("update:show", false);
+}
+const handlePay = (type) => {
+    if(type == 'vip'){
+         emits("pay", 'vip', mouth.value);
+    }else{
+         emits("pay", type, once.value);
+    }
+}
+
+const  getlist = () => {
     //月
     getProducts('vip').then(res => {
-        mouth.value = res.data
+        mouth.value = res.data.results[0]
     })
     //次
-    getProducts(moneyType).then(res => {
-        once.value = res.data
+    getProducts(props.moneyType).then(res => {
+        once.value = res.data.results[0]
     })
+}
+
+watch(() => props.show, (newVal) => {
+    if (newVal) {
+        initData()
+    }
+}, { immediate: true })
+
+watch(() => props.moneyType, () => {
+    if (props.show) {
+        initData()
+    }
 })
 </script>
 

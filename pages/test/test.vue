@@ -331,31 +331,6 @@ export default {
                 color: "#9B59B6",
                 type: "all",
             },
-            // {
-            //   label: t('poster.chatScreenshot'),
-            //   icon: "/static/my/liaotian.png",
-            //   color: "#FFB6E1",
-            //   type: "chat",
-            // },
-            //   {
-            //     label: t('poster.socialScreenshot'),
-            //     icon: "/static/my/shejiao.png",
-            //     color: "#5B9BD5",
-            //     type: "social",
-            //   },
-            //   {
-            //     label: t('poster.physicalPhoto'),
-            //     icon: "/static/my/shiwu.png",
-            //     color: "#66BB6A",
-            //     type: "physical",
-            //   },
-            // {
-            //   label: t('poster.consumeVoucher'),
-            //   icon: "/static/my/xiaofei.png",
-            //   color: "#F2C448",
-            //   type: "consume",
-            // },
-
             {
                 label: t('poster.crushCheck'),
                 icon: "/static/my/shiwu.png",
