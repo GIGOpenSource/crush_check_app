@@ -69,6 +69,7 @@
                 </view>
             </view>
         </up-popup>
+         <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
     </view>
 </template>
 
@@ -77,6 +78,7 @@ import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
 import { onLoad ,onUnload} from '@dcloudio/uni-app'
+import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
@@ -91,6 +93,8 @@ const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const poster_id = ref(null)
 const title = { 'simple': t('mbti.simpleVersion'), 'major': t('mbti.majorVersion'), 'advanced': t('mbti.advancedVersion') }
+const userinfo = ref(JSON.parse(uni.getStorageSync('userInfo')))
+const mbti_type = ref('')
 onLoad((e) => {
     test_type.value = e.test_type
     question_mode.value = e.question_mode
@@ -218,15 +222,87 @@ const choosestatus = (index, ite) => {
 //查看结果
 const look = () => {
     finsh(poster_id.value).then(res => {
-        if (question_mode.value == 'single_mode') {//单人
-            uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
+        if (question_mode.value == 'single_mode') {//单人 支付拦截
+            if (userinfo.is_vip) { //是会员
+                uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
+            } { //不是会员
+                mbtishow.value = true
+            }
+
         } else {
             showDelPopup3.value = true
+            getprices()
         }
     }).catch(err => {
         console.log(err, 'eee')
     })
 
+}
+
+//获取钱的类型
+const getprices = () => {
+    let object = {
+        'simple': 'single_mbti_40',
+        'major': 'single_mbti_60',
+        'advanced': 'single_mbti_105'
+    }
+    mbti_type.value = object[test_type.value]
+
+}
+//微信支付
+const wxpay = (moneyType, item) => {
+    let params = {
+        description: item.description,
+        openId: uni.getStorageSync('openId'),
+        productId: item.id,
+        posterId: poster_id.value
+    }
+    if (moneyType == 'vip') {
+        delete params.posterId
+    }
+    createOrder(params).then(res => {
+        uni.requestPayment({
+            "provider": "wxpay",
+            ...res.data,
+            "signType": "RSA",
+            "package": `${res.data.prepayid}`,
+            "nonceStr": res.data.noncestr,
+            success(res) {
+                uni.showToast({
+                    title: t('proPoster.paySuccess'),
+                    icon: 'success'
+                })
+                if(moneyType == 'vip'){
+                    getvip()
+                }else{
+                    //单次支付成功后直接跳转结果页
+                }
+
+            },
+            fail(e) {
+                uni.showToast({
+                    title: t('proPoster.payFailed'),
+                    icon: 'none'
+                })
+            }
+        })
+
+    })
+
+}
+const getvip = () => {
+    const openId = uni.getStorageSync('openId')
+    getUserInfo(openId).then(userRes => {
+        if (userRes.code === 200 || userRes.code === 201) {
+            if (userRes.data) {
+                uni.setStorageSync('userInfo', JSON.stringify(userRes
+                    .data))
+                console.log('用户信息更新成功', userRes.data)
+            }
+        }
+    }).catch(err => {
+        console.log('获取用户信息失败', err)
+    })
 }
 //确定退出
 const submit = () => {

@@ -127,7 +127,7 @@ const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: 
 
 //匹配
 const pipeiproup = ref(false)
-const pipeicontent = ref([t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')])
+const pipeicontent = ref([t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'),'试题类型将与邀请者保持一致'])
 
 //邀请码
 const inviewma = ref('')
@@ -152,7 +152,7 @@ const choosetype = (index) => {
 
 }
 const generateTimestampMD5 = (status) => {
-    getRoom(status).then(res => {
+    getRoom(status,test_type.value).then(res => {
         md5.value = res.data.room_key
         uni.setStorageSync('timestamp', md5.value)
         pipeiproup.value = true
@@ -179,11 +179,74 @@ const copy = () => {
     });
 
 }
+// 从完整文本中提取邀请码
+// 从完整文本中提取邀请码
+const extractInviteCode = (inputText) => {
+    if (!inputText) return ''
+    
+    const trimmedText = inputText.trim()
+    
+    // 如果输入的是完整邀请消息，提取中间的邀请码
+    // 格式：快来测超准 MBTI！\n打开「Crush Check」APP，输入我的邀请码：{code}，一起看看性格匹配度～
+    // 示例：输入我的邀请码：CHkxhYlbQpt/U1rKB9D04de3fJDZjnmlv8xV3xiXSRjno6G9JKFNvOBiMoK98cg5p6e6FQmULna/1792o6CTTDrl6rT/sHWWne7iFkEwSSg=，一起看看性格匹配度～
+    
+    // 方法1：精确匹配中文格式（最准确）
+    // 匹配：输入我的邀请码：{code}，一起看看
+    // 使用非贪婪匹配 +? 确保只匹配到第一个逗号或波浪号
+    const chinesePattern = /输入我的邀请码[：:]\s*([A-Za-z0-9+/=_-]+?)[，,～~]/
+    const chineseMatch = trimmedText.match(chinesePattern)
+    if (chineseMatch && chineseMatch[1]) {
+        const extractedCode = chineseMatch[1].trim()
+        if (extractedCode.length >= 20) {
+            return extractedCode
+        }
+    }
+    
+    // 方法2：匹配英文格式
+    const englishPattern = /invitation\s+code[：:]\s*([A-Za-z0-9+/=_-]+?)[，,～~]/i
+    const englishMatch = trimmedText.match(englishPattern)
+    if (englishMatch && englishMatch[1]) {
+        const extractedCode = englishMatch[1].trim()
+        if (extractedCode.length >= 20) {
+            return extractedCode
+        }
+    }
+    
+    // 方法3：通用匹配 - 查找冒号后的长字符串直到遇到逗号或波浪号
+    // 使用非贪婪匹配，确保只匹配到第一个逗号或波浪号
+    const generalPattern = /[：:]\s*([A-Za-z0-9+/=_-]{20,}?)[，,～~]/
+    const generalMatch = trimmedText.match(generalPattern)
+    if (generalMatch && generalMatch[1]) {
+        const extractedCode = generalMatch[1].trim()
+        if (extractedCode.length >= 20) {
+            return extractedCode
+        }
+    }
+    
+    // 方法4：如果不匹配任何格式，尝试直接查找邀请码模式（长字符串，包含特殊字符）
+    // 邀请码通常是 base64 编码的字符串，包含 /、+、= 等字符，长度通常较长
+    const inviteCodePattern = /([A-Za-z0-9+/=_-]{40,})/
+    const codeMatch = trimmedText.match(inviteCodePattern)
+    if (codeMatch && codeMatch[1]) {
+        const potentialCode = codeMatch[1].trim()
+        // 如果找到的长字符串看起来像邀请码（包含特殊字符），返回它
+        if (potentialCode.length >= 40 && /[+/=]/.test(potentialCode)) {
+            return potentialCode
+        }
+    }
+    
+    // 如果不包含完整格式，直接返回原值（可能是直接输入的邀请码）
+    return trimmedText
+}
+
 //双人模式开始测试
 const start = () => {
-    // if (!inviewma.value) return uni.showToast({ title: t('mbti.pleaseInputInviteCode'), icon: 'none' })
     if (!uni.getStorageSync('token')) return uni.navigateTo({ url: "/pages/login/login" })
-    getList(1, 4, test_type.value, mode.value, null, inviewma.value, md5.value).then(res => {
+    
+    // 提取邀请码（如果用户粘贴了完整文本，只提取中间的邀请码部分）
+    const extractedInviteCode = extractInviteCode(inviewma.value)
+    
+    getList(1, 6, test_type.value, mode.value, null, extractedInviteCode, md5.value).then(res => {
         uni.redirectTo({
             url: `/pagesA/mbti/dati?test_type=${test_type.value}&question_mode=${mode.value}&poster_id=${res.data.poster_id}`
         })

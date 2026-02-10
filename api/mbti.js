@@ -38,7 +38,7 @@ export const getTemplate = (mbti_type) => {
 }
 
 //房间管理
-export const getRoom = (enforce) => {
-	return getRequest(`/get_mbti_house_id`,{enforce})
+export const getRoom = (enforce,test_type) => {
+	return getRequest(`/get_mbti_house_id`,{enforce,test_type})
 }
 
