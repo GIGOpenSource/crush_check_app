@@ -216,6 +216,7 @@
 
         </template>
     </IndexProup>
+    <MbtiProup :show="mbtishow" @close="mbtishow = false"></MbtiProup>
 </template>
 
 <script>
@@ -223,12 +224,13 @@ import { getPosterList, deletePosters, reGeneratePoster, getUserInfo } from "@/a
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
-import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
+import { aesEncrypt} from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
-
+import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 export default {
     components: {
-        IndexProup
+        IndexProup,
+        MbtiProup
     },
     mixins: [pageStayMixin],
     data() {
@@ -255,7 +257,8 @@ export default {
             pipeiproup: false,
             pipeicontent: [],
             md5: '',
-            poster_id: ''
+            poster_id: '',
+            mbtishow:true
         };
     },
     onLoad() {

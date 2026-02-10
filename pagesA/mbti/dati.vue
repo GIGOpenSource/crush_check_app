@@ -69,6 +69,7 @@
                 </view>
             </view>
         </up-popup>
+        <MbtiProup :show="mbtishow" @close="mbtishow = false"></MbtiProup>
     </view>
 </template>
 
@@ -78,6 +79,7 @@ import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { getProducts } from '@/api/index.js'
+import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 const { t } = useI18n()
 const test_type = ref('')
 const question_mode = ref('')
@@ -91,6 +93,7 @@ const statusBarHeight = ref(0)
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const poster_id = ref(null)
+const mbtishow = ref(false)
 const title = { 'simple': t('mbti.simpleVersion'), 'major': t('mbti.majorVersion'), 'advanced': t('mbti.advancedVersion') }
 const userinfo = ref(JSON.parse(uni.getStorageSync('userInfo')))
 onLoad((e) => {

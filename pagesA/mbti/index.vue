@@ -129,7 +129,7 @@ const ceshibtns = [{ title: t('mbti.simpleVersion'), type: 'simple' }, { title: 
 
 //匹配
 const pipeiproup = ref(false)
-const pipeicontent = ref([t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4')])
+const pipeicontent = ref([t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'),'试题类型将与邀请者保持一致'])
 
 //邀请码
 const inviewma = ref('')
