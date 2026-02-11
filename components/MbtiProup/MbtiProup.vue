@@ -19,7 +19,7 @@
                 </view>
             </view>
             <view class="btns" v-if="moneyType.includes('single')">
-                <view class="btn" @click="handlePay('vip')">支付{{mouth.price}}元 开通VIP</view>
+                <view class="btn" @click="handlePay('ios_vip')">支付{{mouth.price}}元 开通VIP</view>
                 <view class="title" @click="handlePay(moneyType)">支付{{once.price}}元只查看本次结果</view>
             </view>
             <view class="btns" v-else>
@@ -103,8 +103,8 @@ const handleClose = () => {
     emits("update:show", false);
 }
 const handlePay = (type) => {
-    if(type == 'vip'){
-         emits("pay", 'vip', mouth.value);
+    if(type == 'ios_vip'){
+         emits("pay", 'ios_vip', mouth.value);
     }else{
          emits("pay", type, once.value);
     }
@@ -112,7 +112,7 @@ const handlePay = (type) => {
 
 const  getlist = () => {
     //月
-    getProducts('vip').then(res => {
+    getProducts('ios_vip').then(res => {
         mouth.value = res.data.results[0]
     })
     //次

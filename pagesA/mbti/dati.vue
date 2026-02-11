@@ -264,7 +264,7 @@ const wxpay = (moneyType, item) => {
         posterId: poster_id.value
     }
     console.log(moneyType, '222')
-    if (moneyType == 'vip') {
+    if (moneyType == 'ios_vip') {
         delete params.posterId
     }
     iosOrder(params).then(res => {
@@ -292,7 +292,7 @@ const wxpay = (moneyType, item) => {
                                 title: t('proPoster.paySuccess'),
                                 icon: 'success'
                             })
-                            if (moneyType == 'vip') {
+                            if (moneyType == 'ios_vip') {
                                 getvip()
                             } else {
                                 showDelPopup3.value = false

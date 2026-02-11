@@ -193,7 +193,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -234,6 +234,7 @@ import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
+import { iosOrder } from '@/api/index.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 export default {
     components: {
@@ -656,10 +657,10 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
+            this.poster_id = item.id
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                     if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
-                        this.poster_id = item.id
                         if (item.mbti_list[0].master) {
                             this.generateTimestampMD5()
                         }
@@ -826,17 +827,19 @@ export default {
         },
         //微信支付
         wxpay(moneyType, item) {
+            let that = this
             let params = {
                 description: item.description,
                 openId: uni.getStorageSync('openId'),
                 productId: item.id,
-                posterId: this.poster_id
+                posterId: that.poster_id
             }
-            if (moneyType == 'vip') {
+            if (moneyType == 'ios_vip') {
                 delete params.posterId
             }
             iosOrder(params).then(res => {
                 let paymentData = res.data
+                console.log(params,'oaoaoao')
                 plus.payment.getChannels(function (channels) {
                     let iapChannel = channels.find(c => c.id === 'appleiap');
                     if (!iapChannel) {
@@ -860,11 +863,11 @@ export default {
                                         title: t('proPoster.paySuccess'),
                                         icon: 'success'
                                     })
-                                    this.mbtishow = false
-                                    if (moneyType == 'vip') {
-                                        this.getvip()
+                                    that.mbtishow = false
+                                    if (moneyType == 'ios_vip') {
+                                        that.getvip()
                                     } else {
-                                        this.fetchPosterList(true)
+                                        that.fetchPosterList(true)
                                     }
 
 
@@ -873,10 +876,24 @@ export default {
                                 })
                             },
                             fail: (err) => {
-                                //支付失败
-                                uni.showToast({
-                                    title: t('proPoster.payFailed'),
-                                    icon: 'none'
+                                if (moneyType.includes('single')) {
+                                    uni.showToast({
+                                        title: t('proPoster.payFailed'),
+                                        icon: 'none'
+                                    })
+                                    that.mbtishow = false
+                                    return
+                                }
+                                params.pay_action = 'cancel_pay'
+                                iosOrder(params).then(res => {
+                                    uni.showToast({
+                                        title: t('proPoster.payFailed'),
+                                        icon: 'none'
+                                    })
+                                    that.mbtishow = false
+                                    that.fetchPosterList(true);
+                                }).catch(err => {
+                                    console.log('取消订单失败', err)
                                 })
                             }
                         })

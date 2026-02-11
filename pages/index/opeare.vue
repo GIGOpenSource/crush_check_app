@@ -130,7 +130,7 @@
 			</template>
 		</IndexProup>
 		<!-- 会员拦截 -->
-		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true">
+		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="false">
 			<view class="vipProup">
 				<image :src="$getImg('index/bg')" class="bg" />
 				<scroll-view scroll-y="true" class="scroll-box">
