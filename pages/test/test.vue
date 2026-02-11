@@ -101,15 +101,15 @@
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left: 5rpx;">MBTI测试</view>
-                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text>{{ $t('poster.personalityIs') }}</text>
-                                    <text v-if="isType" style="font-weight: 100;">立即查看 {{ '>>' }}</text>
+                                    <text style="font-weight: 100;">立即查看 {{ '>>' }}</text>
                                 </view>
                             </block>
                             <!-- mbti双人 -->
                             <block v-else>
                                 <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
-                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;"  v-if="isType">
                                     <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
                                         $t('mbti.waitingForOtherResult') }}</text>
                                     <text v-if="item.mbti_list[0].other_status == 'exit'">{{
