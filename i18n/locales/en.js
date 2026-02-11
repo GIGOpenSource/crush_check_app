@@ -465,6 +465,7 @@ export default {
     step2: 'The other party enters the invitation code to join your test',
     step3: 'You and the other party complete the MBTI test questions separately',
     step4: 'The system generates your personality matching report',
+    step5: 'Question type will be consistent with the inviter',
     startTest: 'Start Test',
     pleaseInputInviteCode: 'Please enter other\'s invitation code',
     viewAll: 'View All',
@@ -538,5 +539,32 @@ export default {
     continueAnswer: 'Continue Answer',
     shareInviteMessage: `Come test super accurate MBTI!
 Search "Crush Check" Mini Program on WeChat, enter my invitation code: {inviteCode}, let's check personality compatibility together～`
+  },
+  mbtiProup: {
+    professionalScale: 'Professional Scale',
+    costEffective: 'Cost-Effective',
+    convenient: 'Convenient',
+    vipBenefit1: '3 core question types with unlimited attempts, review personality status anytime',
+    vipBenefit2: 'Enjoy all other module features',
+    vipExclusiveTitle: 'Member Exclusive - Subscribe to view results',
+    vipPrivileges: 'Member Privileges:',
+    doubleBenefit1: 'Multi-dimensional compatibility analysis: lover, family, friend perspectives',
+    doubleBenefit2: 'One person unlocks, both parties can view, share in-depth relationship analysis',
+    doubleBenefit3: 'Includes individual analysis reports for both parties, comprehensive self-awareness',
+    doubleSimpleReport: 'Double Simple MBTI Test Report',
+    doubleProfessionalReport: 'Double Professional MBTI Test Report',
+    doubleAdvancedReport: 'Double Advanced MBTI Test Report',
+    packageIncludes: 'Package Includes:',
+    payVip: 'Pay {price} yuan to activate VIP',
+    payOnceResult: 'Pay {price} yuan to view this result only',
+    payUnlockDouble: 'Pay {price} yuan to unlock double test'
+  },
+  test: {
+    mbtiTest: 'MBTI Test',
+    mbtiDoubleTest: 'MBTI Double Test',
+    bothCompleted: 'Both parties have completed the test',
+    viewNow: 'View Now',
+    paymentNotAvailable: 'Payment is temporarily unavailable',
+    otherPaying: 'The other party is paying'
   }
 }

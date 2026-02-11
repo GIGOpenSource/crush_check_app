@@ -100,15 +100,15 @@
                         <!-- mbti单人 -->
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left: 5rpx;">MBTI测试</view>
+                                <view class="num" style="margin-left: 5rpx;">{{ $t('test.mbtiTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text>{{ $t('poster.personalityIs') }}</text>
-                                    <text style="font-weight: 100;">立即查看 {{ '>>' }}</text>
+                                    <text style="font-weight: 100;">{{ $t('test.viewNow') }} {{ '>>' }}</text>
                                 </view>
                             </block>
                             <!-- mbti双人 -->
                             <block v-else>
-                                <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
+                                <view class="num" style="margin-left:5rpx;">{{ $t('test.mbtiDoubleTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
                                         $t('mbti.waitingForOtherResult') }}</text>
@@ -117,7 +117,7 @@
                                     <text v-if="!item.mbti_list[0].other_status">{{
                                         $t('mbti.waitingForOthersToJoin') }}</text>
                                     <text v-if="item.mbti_list[0].other_status == 'done'">
-                                        双方均已完成答题
+                                        {{ $t('test.bothCompleted') }}
                                     </text>
                                     <!-- 是房主 -->
                                     <text v-if="isType && item.mbti_list[0].master"
@@ -129,7 +129,7 @@
                                     <text
                                         v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
                                         style="font-weight: 100;margin-left: 20rpx;">
-                                        立即查看{{ '>>' }}</text>
+                                        {{ $t('test.viewNow') }}{{ '>>' }}</text>
                                 </view>
                             </block>
 
@@ -327,7 +327,7 @@ export default {
         //     this.generateTimestampMD5()
         // }
 
-        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'), '试题类型将与邀请者保持一致']
+        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'), t('mbti.step5')]
         this.categoryList = [
             {
                 label: t('poster.all'),
@@ -731,13 +731,13 @@ export default {
                                     this.mbtishow = true
                                 } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
                                     uni.showToast({
-                                        title: '暂时不可支付',
+                                        title: this.$t('test.paymentNotAvailable'),
                                         icon: "none",
                                     });
 
                                 } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
                                     uni.showToast({
-                                        title: '对方正在支付中',
+                                        title: this.$t('test.otherPaying'),
                                         icon: "none",
                                     });
                                 }
@@ -762,13 +762,13 @@ export default {
                                 this.mbtishow = true
                             } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
                                 uni.showToast({
-                                    title: '暂时不可支付',
+                                    title: this.$t('test.paymentNotAvailable'),
                                     icon: "none",
                                 });
 
                             } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
                                 uni.showToast({
-                                    title: '对方正在支付中',
+                                    title: this.$t('test.otherPaying'),
                                     icon: "none",
                                 });
                             }

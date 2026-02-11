@@ -465,6 +465,7 @@ export default {
     step2: '상대방이 초대 코드를 입력하여 테스트에 참여합니다',
     step3: '당신과 상대방이 각각 MBTI 테스트 질문을 완료합니다',
     step4: '시스템이 성격 매칭 보고서를 생성합니다',
+    step5: '문제 유형은 초대자와 일치합니다',
     startTest: '테스트 시작',
     pleaseInputInviteCode: '다른 사람의 초대 코드를 입력하세요',
     viewAll: '전체 보기',
@@ -538,6 +539,33 @@ export default {
     continueAnswer: '답변 계속',
     shareInviteMessage: `초정확한 MBTI 테스트를 해보세요!
 위챗에서 "Crush Check" 미니프로그램을 검색하고, 내 초대 코드를 입력하세요: {inviteCode}, 함께 성격 호환성을 확인해봐요～`
+  },
+  mbtiProup: {
+    professionalScale: '전문 척도',
+    costEffective: '비용 효율적',
+    convenient: '편리함',
+    vipBenefit1: '3가지 핵심 문제 유형 무제한, 언제든지 성격 상태 복습',
+    vipBenefit2: '다른 모듈 기능 모두 이용 가능',
+    vipExclusiveTitle: '회원 전용 - 회원 가입하여 결과 보기',
+    vipPrivileges: '회원 특권:',
+    doubleBenefit1: '다차원 적합성 분석: 연인, 가족, 친구 관점',
+    doubleBenefit2: '한 사람이 잠금 해제하면 양쪽 모두 볼 수 있으며, 심층 관계 분석 공유',
+    doubleBenefit3: '양쪽 모두를 위한 개인 분석 보고서 포함, 포괄적인 자기 인식',
+    doubleSimpleReport: '더블 간단 MBTI 테스트 보고서',
+    doubleProfessionalReport: '더블 전문 MBTI 테스트 보고서',
+    doubleAdvancedReport: '더블 고급 MBTI 테스트 보고서',
+    packageIncludes: '패키지 포함:',
+    payVip: '{price}원 지불하여 VIP 활성화',
+    payOnceResult: '{price}원 지불하여 이번 결과만 보기',
+    payUnlockDouble: '{price}원 지불하여 더블 테스트 잠금 해제'
+  },
+  test: {
+    mbtiTest: 'MBTI 테스트',
+    mbtiDoubleTest: 'MBTI 더블 테스트',
+    bothCompleted: '양쪽 모두 테스트를 완료했습니다',
+    viewNow: '지금 보기',
+    paymentNotAvailable: '일시적으로 결제할 수 없습니다',
+    otherPaying: '상대방이 결제 중입니다'
   }
 }
 

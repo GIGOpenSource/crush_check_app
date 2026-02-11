@@ -464,6 +464,7 @@ export default {
     step2: '相手が招待コードを入力してあなたのテストに参加する',
     step3: 'あなたと相手がそれぞれMBTIテストの質問を完了する',
     step4: 'システムがあなたの性格マッチングレポートを生成する',
+    step5: '問題タイプは招待者と一致します',
     startTest: 'テストを開始',
     pleaseInputInviteCode: '他の人の招待コードを入力してください',
     viewAll: 'すべて表示',
@@ -537,6 +538,33 @@ export default {
     continueAnswer: '回答を続ける',
     shareInviteMessage: `超正確なMBTIテストをしてみましょう！
 WeChatで「Crush Check」ミニプログラムを検索し、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～`
+  },
+  mbtiProup: {
+    professionalScale: '専門スケール',
+    costEffective: 'コストパフォーマンス',
+    convenient: '便利',
+    vipBenefit1: '3つの核心問題タイプ無制限、いつでも性格状態を復習',
+    vipBenefit2: '他のモジュール機能すべて利用可能',
+    vipExclusiveTitle: '会員限定 - 会員登録して結果を見る',
+    vipPrivileges: '会員特権:',
+    doubleBenefit1: '多次元適合性分析：恋人、家族、友人視点',
+    doubleBenefit2: '一人がロック解除すると、両方とも閲覧可能、深層関係分析を共有',
+    doubleBenefit3: '両方のための個人分析レポートを含む、包括的な自己認識',
+    doubleSimpleReport: 'ダブル簡易版MBTIテストレポート',
+    doubleProfessionalReport: 'ダブル専門版MBTIテストレポート',
+    doubleAdvancedReport: 'ダブル上級版MBTIテストレポート',
+    packageIncludes: 'パッケージ内容:',
+    payVip: '{price}元支払ってVIPを有効化',
+    payOnceResult: '{price}元支払って今回の結果のみ閲覧',
+    payUnlockDouble: '{price}元支払ってダブルテストをロック解除'
+  },
+  test: {
+    mbtiTest: 'MBTIテスト',
+    mbtiDoubleTest: 'MBTIダブルテスト',
+    bothCompleted: '両方ともテストを完了しました',
+    viewNow: '今すぐ見る',
+    paymentNotAvailable: '一時的に支払いできません',
+    otherPaying: '相手が支払い中です'
   }
 }
 

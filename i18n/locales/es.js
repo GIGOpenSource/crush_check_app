@@ -456,6 +456,7 @@ export default {
     step2: 'La otra parte ingresa el código de invitación para unirse a tu test',
     step3: 'Tú y la otra parte completan las preguntas del test MBTI por separado',
     step4: 'El sistema genera tu informe de compatibilidad de personalidad',
+    step5: 'El tipo de pregunta será consistente con el invitador',
     startTest: 'Comenzar Test',
     pleaseInputInviteCode: 'Por favor ingresa el código de invitación de otra persona',
     viewAll: 'Ver todo',
@@ -529,5 +530,32 @@ export default {
     continueAnswer: 'Continuar Respuesta',
     shareInviteMessage: `¡Ven a probar MBTI súper preciso!
 Busca el Mini Programa "Crush Check" en WeChat, ingresa mi código de invitación: {inviteCode}, juntos veamos la compatibilidad de personalidad～`
+  },
+  mbtiProup: {
+    professionalScale: 'Escala Profesional',
+    costEffective: 'Rentable',
+    convenient: 'Conveniente',
+    vipBenefit1: '3 tipos de preguntas principales sin límite, revisa el estado de personalidad en cualquier momento',
+    vipBenefit2: 'Disfruta de todas las funciones de otros módulos',
+    vipExclusiveTitle: 'Exclusivo para Miembros - Suscríbete para ver resultados',
+    vipPrivileges: 'Privilegios de Miembro:',
+    doubleBenefit1: 'Análisis de compatibilidad multidimensional: perspectivas de pareja, familia, amigo',
+    doubleBenefit2: 'Una persona desbloquea, ambas partes pueden ver, compartir análisis profundo de relación',
+    doubleBenefit3: 'Incluye informes de análisis individual para ambas partes, autoconocimiento integral',
+    doubleSimpleReport: 'Informe de Prueba MBTI Doble Simple',
+    doubleProfessionalReport: 'Informe de Prueba MBTI Doble Profesional',
+    doubleAdvancedReport: 'Informe de Prueba MBTI Doble Avanzado',
+    packageIncludes: 'El Paquete Incluye:',
+    payVip: 'Pagar {price} yuan para activar VIP',
+    payOnceResult: 'Pagar {price} yuan para ver solo este resultado',
+    payUnlockDouble: 'Pagar {price} yuan para desbloquear prueba doble'
+  },
+  test: {
+    mbtiTest: 'Prueba MBTI',
+    mbtiDoubleTest: 'Prueba MBTI Doble',
+    bothCompleted: 'Ambas partes han completado la prueba',
+    viewNow: 'Ver Ahora',
+    paymentNotAvailable: 'El pago no está disponible temporalmente',
+    otherPaying: 'La otra parte está pagando'
   }
 }

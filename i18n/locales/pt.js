@@ -464,6 +464,7 @@ export default {
     step2: 'A outra parte insere o código de convite para se juntar ao seu teste',
     step3: 'Você e a outra parte completam as perguntas do teste MBTI separadamente',
     step4: 'O sistema gera seu relatório de compatibilidade de personalidade',
+    step5: 'O tipo de questão será consistente com o convidante',
     startTest: 'Iniciar Teste',
     pleaseInputInviteCode: 'Por favor, digite o código de convite de outra pessoa',
     viewAll: 'Ver Tudo',
@@ -537,6 +538,33 @@ export default {
     continueAnswer: 'Continuar Resposta',
     shareInviteMessage: `Venha testar MBTI super preciso!
 Pesquise o Mini Programa "Crush Check" no WeChat, insira meu código de convite: {inviteCode}, vamos verificar a compatibilidade de personalidade juntos～`
+  },
+  mbtiProup: {
+    professionalScale: 'Escala Profissional',
+    costEffective: 'Custo-Benefício',
+    convenient: 'Conveniente',
+    vipBenefit1: '3 tipos de questões principais sem limite, revise o estado da personalidade a qualquer momento',
+    vipBenefit2: 'Desfrute de todos os recursos de outros módulos',
+    vipExclusiveTitle: 'Exclusivo para Membros - Assine para ver resultados',
+    vipPrivileges: 'Privilégios de Membro:',
+    doubleBenefit1: 'Análise de compatibilidade multidimensional: perspectivas de parceiro, família, amigo',
+    doubleBenefit2: 'Uma pessoa desbloqueia, ambas as partes podem ver, compartilhar análise profunda de relacionamento',
+    doubleBenefit3: 'Inclui relatórios de análise individual para ambas as partes, autoconhecimento abrangente',
+    doubleSimpleReport: 'Relatório de Teste MBTI Duplo Simples',
+    doubleProfessionalReport: 'Relatório de Teste MBTI Duplo Profissional',
+    doubleAdvancedReport: 'Relatório de Teste MBTI Duplo Avançado',
+    packageIncludes: 'O Pacote Inclui:',
+    payVip: 'Pagar {price} yuan para ativar VIP',
+    payOnceResult: 'Pagar {price} yuan para ver apenas este resultado',
+    payUnlockDouble: 'Pagar {price} yuan para desbloquear teste duplo'
+  },
+  test: {
+    mbtiTest: 'Teste MBTI',
+    mbtiDoubleTest: 'Teste MBTI Duplo',
+    bothCompleted: 'Ambas as partes completaram o teste',
+    viewNow: 'Ver Agora',
+    paymentNotAvailable: 'O pagamento não está disponível temporariamente',
+    otherPaying: 'A outra parte está pagando'
   }
 }
 

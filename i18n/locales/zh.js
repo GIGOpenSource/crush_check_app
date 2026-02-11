@@ -468,6 +468,7 @@ export default {
     step2: '对方输入邀请码加入您的测试',
     step3: '您和对方分别完成MBTI测试题',
     step4: '系统生成你们的性格匹配度报告',
+    step5: '试题类型将与邀请者保持一致',
     startTest: '开始测试',
     pleaseInputInviteCode: '请输入他人邀请码',
     viewAll: '查看全部',
@@ -541,5 +542,32 @@ export default {
     continueAnswer: '继续作答',
     shareInviteMessage: `快来测超准 MBTI！
 微信搜「Crush Check」小程序，输入我的邀请码：{inviteCode}，一起看看性格匹配度～`
+  },
+  mbtiProup: {
+    professionalScale: '专业量表',
+    costEffective: '性价比高',
+    convenient: '便捷省心',
+    vipBenefit1: '3种核心题型无次数限制，随时复盘人格状态',
+    vipBenefit2: '其他模块功能畅玩',
+    vipExclusiveTitle: '会员专享开通会员查看结果',
+    vipPrivileges: '会员特权：',
+    doubleBenefit1: '多维度适配分析：恋人、家人、朋友三种关系视角',
+    doubleBenefit2: '一人解锁，双方可见，共享深度关系分析',
+    doubleBenefit3: '附加双方个人专属单人解析报告，全面认知自我',
+    doubleSimpleReport: '双人简易版MBTI测试报告',
+    doubleProfessionalReport: '双人专业版MBTI测试报告',
+    doubleAdvancedReport: '双人进阶版MBTI测试报告',
+    packageIncludes: '套餐包含：',
+    payVip: '支付{price}元 开通VIP',
+    payOnceResult: '支付{price}元只查看本次结果',
+    payUnlockDouble: '支付{price}元 解锁双人版测试'
+  },
+  test: {
+    mbtiTest: 'MBTI测试',
+    mbtiDoubleTest: 'MBTI双人版测试',
+    bothCompleted: '双方均已完成答题',
+    viewNow: '立即查看',
+    paymentNotAvailable: '暂时不可支付',
+    otherPaying: '对方正在支付中'
   }
 }
