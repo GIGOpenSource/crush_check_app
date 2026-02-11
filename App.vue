@@ -7,6 +7,9 @@ import {
 import uma from '@/uma.js'
 import { ref } from 'vue'
 import { t } from '@/i18n/index.js'
+import {
+	getUserInfo,
+} from "@/api/login.js";
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -31,6 +34,11 @@ const params = ref({
 	pageName: '首页'
 })
 onShow(() => {
+	if (uni.getStorageSync('token')) {// 如果用户登陆了
+		getUserInfo(uni.getStorageSync('openId')).then(res => {
+			uni.setStorageSync('userInfo', JSON.stringify(res.data))
+		})
+	}
 	app_show()
 })
 onHide(() => {
