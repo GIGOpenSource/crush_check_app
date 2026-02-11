@@ -847,6 +847,7 @@ export default {
                             title: t('proPoster.paySuccess'),
                             icon: 'success'
                         })
+                        this.mbtishow = false
                         if (moneyType == 'vip') {
                             this.getvip()
                         } else {
@@ -877,6 +878,7 @@ export default {
                     }
                 }
                 showDelPopup3.value = false
+                this.fetchPosterList()
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })
