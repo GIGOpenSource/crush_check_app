@@ -12,7 +12,7 @@
               <view class="item-left">
                 <image
                   class="item-avatar"
-                  :src="item.user_avatar || '/static/my/user_no.png'"
+                  :src="item.user_avatar || $getImg('my/user_no')"
                   mode="aspectFill"
                 ></image>
                 <view class="item-info">

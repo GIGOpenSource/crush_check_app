@@ -4,7 +4,7 @@
     <view class="profile-card">
       <view class="profile-content" @click="handleProfileClick">
         <template v-if="!isLoggedIn">
-          <image class="avatar" src="/static/my/user_no.png" mode="aspectFill"></image>
+          <image class="avatar" :src="$getImg('my/user_no')" mode="aspectFill"></image>
           <view class="profile-info">
             <text class="login-tip">{{ $t('my.login') }}</text>
           </view>
@@ -12,7 +12,7 @@
         <template v-else>
           <button open-type="chooseAvatar" @chooseavatar="onChooseAvatar" class="avatar-btn logged-in"
             hover-class="none">
-            <image class="avatar-image" :src="userInfo.user_avatar || '/static/my/user_no.png'" mode="aspectFill">
+            <image class="avatar-image" :src="userInfo.user_avatar || $getImg('my/user_no')" mode="aspectFill">
             </image>
           </button>
           <view class="profile-info">
@@ -50,7 +50,7 @@
         </view>
         <view v-else class="vip-header">
           <text class="vip-title vip-title--guest">{{ $t('my.unlockVip') }}</text>
-          <image class="vip-title-icon" src="/static/my/baogao.png" mode="widthFix"></image>
+          <image class="vip-title-icon" :src="$getImg('my/baogao')" mode="widthFix"></image>
         </view>
         <view class="vip-subtitle">
           <text class="vip-subtitle-text">{{ $t('my.reportRemaining') }}</text>
@@ -66,7 +66,7 @@
 
     <!-- 邀请新伙伴 -->
     <view class="invite-module">
-      <image class="invite-icon" src="/static/my/yaoqing.png" mode="aspectFit"></image>
+      <image class="invite-icon" :src="$getImg('my/yaoqing')" mode="aspectFit"></image>
       <view class="invite-info">
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
         <text class="invite-subtitle">{{ inviteProgressText }}</text>
@@ -136,7 +136,7 @@
 
     <!-- 关注公众号 -->
     <view class="public-card">
-      <image class="public-icon" src="/static/my/guanzhu.png" mode="aspectFit"></image>
+      <image class="public-icon" :src="$getImg('my/guanzhu')" mode="aspectFit"></image>
       <view class="public-info">
         <text class="public-title">{{ $t('my.followMore') }}</text>
         <text class="public-action" @click="handlePublicFollow">{{ $t('my.clickFollow') }}</text>
@@ -147,7 +147,7 @@
   <up-popup class="reward-popup-wrapper" :show="rewardPopupVisible" mode="center" @close="closeRewardPopup"
     border-radius="60rpx">
     <view class="reward-popup">
-      <image class="reward-popup-icon" src="/static/my/gongxi.png"></image>
+      <image class="reward-popup-icon" :src="$getImg('my/gongxi')"></image>
       <view class="reward-popup-main">
         <text v-for="(line, idx) in rewardPopupMainText" :key="idx" class="reward-popup-main-line">{{ line }}</text>
       </view>
@@ -162,7 +162,7 @@
 
   <up-popup :show="showDelPopup2" mode="center">
     <view class="del-popup-content">
-      <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+      <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
       <view class="del-popup-title">{{ $t('my.posterFailed') }}</view>
       <view class="del-popup-actions">
         <view class="del-popup-btn cancel" @click="handleFailCancel">{{ $t('common.cancel') }}</view>
@@ -1088,7 +1088,7 @@ export default {
           icon: "none",
         });
         // 上传失败，恢复默认头像
-        this.userInfo.user_avatar = "/static/my/user_no.png";
+        this.userInfo.user_avatar = $getImg('my/user_no');
         uni.setStorageSync("userInfo", JSON.stringify(this.userInfo));
       }
     },

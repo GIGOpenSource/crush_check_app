@@ -72,7 +72,7 @@
     <!-- 删除 -->
     <up-popup :show="showDelPopup" mode="center">
         <view class="del-popup-content">
-            <image class="del-popup-icon" src="/static/my/shanchu.png"></image>
+            <image class="del-popup-icon" :src="$getImg('my/shanchu')"></image>
             <view class="del-popup-title"> 确定将清空全部内容吗</view>
             <view class="del-popup-actions">
                 <view class="del-popup-btn cancel" @click="showDelPopup = false">取消</view>

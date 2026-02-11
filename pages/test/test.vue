@@ -32,8 +32,8 @@
                     @click="isType ? handlePosterClick(item, index, item.prompt_template.template_type) : toggleSelect(item)">
                     <!-- 选中图标 -->
                     <image v-if="!isType" class="select-icon" :src="item.isActive
-                        ? '/static/my/yixuan.png'
-                        : '/static/my/weixuan.png'
+                        ? $getImg('my/yixuan')
+                        : $getImg('my/weixuan')
                         " mode="aspectFit"></image>
 
                     <!-- 左侧图片 -->
@@ -157,7 +157,7 @@
     </view>
     <up-popup :show="showDelPopup" mode="center">
         <view class="del-popup-content">
-            <image class="del-popup-icon" src="/static/my/shanchu.png"></image>
+            <image class="del-popup-icon" :src="$getImg('my/shanchu')"></image>
             <view class="del-popup-title">
                 {{
                     selectedCount > 1
@@ -175,7 +175,7 @@
 
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
-            <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="del-popup-title">{{ $t('poster.posterFailed') }}</view>
             <view class="del-popup-actions">
                 <view class="del-popup-btn cancel" @click="handleFailCancel">{{ $t('common.cancel') }}</view>
@@ -331,32 +331,23 @@ export default {
         this.categoryList = [
             {
                 label: t('poster.all'),
-                icon: "/static/my/quanbu.png",
-                color: "#9B59B6",
                 type: "all",
             },
             {
                 label: t('poster.crushCheck'),
-                icon: "/static/my/shiwu.png",
-                color: "#66BB6A",
                 type: "crushcheck",
             },
             {
                 label: t('poster.answerBook'),
-                icon: "/static/my/shejiao.png",
                 color: "#5B9BD5",
                 type: "answer",
             },
             {
                 label: t('poster.tarotCard'),
-                icon: "/static/my/shiwu.png",
-                color: "#66BB6A",
                 type: "tarot_card",
             },
             {
                 label: t('poster.mbti'),
-                icon: "/static/my/shiwu.png",
-                color: "#66BB6A",
                 type: "mbti",
             },
         ];

@@ -65,7 +65,7 @@
     <!-- 是否放弃之前作答 -->
     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
         <view class="del-popup-content">
-            <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="title1">{{ t('mbti.incompleteTestMessage') }}</view>
             <view class="del-popup-actions">
                 <view class="del-popup-btn cancel" @click="btn(true)">{{ t('mbti.abandonAnswer') }}</view>

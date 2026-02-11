@@ -49,7 +49,7 @@
     <!-- 解锁本次报告 -->
     <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
-            <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
             <view class="del-popup-actions">
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>

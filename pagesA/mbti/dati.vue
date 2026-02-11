@@ -48,7 +48,7 @@
         </view>
         <up-popup :show="showDelPopup2" mode="center">
             <view class="del-popup-content">
-                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
                 <view class="title1">{{ t('mbti.exitConfirmTip') }}</view>
                 <view class="del-popup-actions">
                     <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ t('common.cancel') }}</view>
@@ -61,7 +61,7 @@
         </up-popup>
         <up-popup :show="showDelPopup3" mode="center">
             <view class="del-popup-content">
-                <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+                <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
                 <view class="title1">{{ t('mbti.submitSuccess') }}</view>
                 <view class="del-popup-actions">
                     <view class="del-popup-btn confirm" @click="uni.switchTab({ url: '/pages/test/test' })">{{

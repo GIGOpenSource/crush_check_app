@@ -3,7 +3,7 @@
     <view class="login-content">
       <!-- Logo 和应用名称 -->
       <view class="logo-section">
-        <image class="logo-icon" src="/static/my/logo.png" mode="aspectFit"></image>
+        <image class="logo-icon" :src="$getImg('my/logo')" mode="aspectFit"></image>
         <text class="app-name">{{ $t('login.appName') }}</text>
       </view>
 
@@ -43,7 +43,7 @@
       </view>
       <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
-          <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+          <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
           <view class="title1">{{ $t('common.zhuxiao') }}</view>
           <view class="del-popup-actions">
             <view class="del-popup-btn cancel" @click="showDelPopup2 = false">{{ $t('common.cancel') }}</view>

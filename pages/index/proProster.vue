@@ -55,7 +55,7 @@
 		<!-- 解锁本次报告 -->
 		<up-popup :show="showDelPopup2" mode="center">
 			<view class="del-popup-content">
-				<image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+				<image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
 				<view class="title">{{ $t('proPoster.unlockThisReport') }}</view>
 				<view class="num">{{ $t('proPoster.reportRemainingTimes') }}: {{ userinfo.allow_count }}{{
 					$t('proPoster.times')

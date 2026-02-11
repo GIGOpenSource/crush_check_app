@@ -46,8 +46,8 @@
               class="select-icon"
               :src="
                 item.isActive
-                  ? '/static/my/yixuan.png'
-                  : '/static/my/weixuan.png'
+                  ? $getImg('my/xuanzhong')
+                  : $getImg('my/weixuan')
               "
               mode="aspectFit"
               @click.stop="toggleSelect(item)"
@@ -119,7 +119,7 @@
   </view>
   <up-popup :show="showDelPopup" mode="center">
     <view class="del-popup-content">
-      <image class="del-popup-icon" src="/static/my/shanchu.png"></image>
+      <image class="del-popup-icon" :src="$getImg('my/shanchu')"></image>
       <view class="del-popup-title">
         {{
           selectedCount > 1
@@ -138,7 +138,7 @@
 
   <up-popup :show="showDelPopup2" mode="center">
     <view class="del-popup-content">
-      <image class="del-popup-icon" src="/static/my/gantanhao.png"></image>
+      <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
       <view class="del-popup-title">{{ $t('poster.posterFailed') }}</view>
       <view class="del-popup-actions">
         <view class="del-popup-btn cancel" @click="handleFailCancel">{{ $t('common.cancel') }}</view>
@@ -208,34 +208,20 @@ export default {
     this.categoryList = [
       {
         label: t('poster.all'),
-        icon: "/static/my/quanbu.png",
         color: "#9B59B6",
         type: "all",
       },
-      // {
-      //   label: t('poster.chatScreenshot'),
-      //   icon: "/static/my/liaotian.png",
-      //   color: "#FFB6E1",
-      //   type: "chat",
-      // },
       {
         label: t('poster.socialScreenshot'),
-        icon: "/static/my/shejiao.png",
         color: "#5B9BD5",
         type: "social",
       },
       {
         label: t('poster.physicalPhoto'),
-        icon: "/static/my/shiwu.png",
+  
         color: "#66BB6A",
         type: "physical",
-      },
-      // {
-      //   label: t('poster.consumeVoucher'),
-      //   icon: "/static/my/xiaofei.png",
-      //   color: "#F2C448",
-      //   type: "consume",
-      // },
+      }
     ];
     this.pageName = t('poster.title');
     this.fetchPosterList();
