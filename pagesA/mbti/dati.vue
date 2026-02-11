@@ -69,7 +69,7 @@
                 </view>
             </view>
         </up-popup>
-        <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
+        <MbtiProup :show="mbtishow" @close="close" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
     </view>
 </template>
 
@@ -130,7 +130,7 @@ const getlistTi = () => {
         .then(res => {
             list.value = res.data.results.map(item => ({
                 ...item,
-                question_value: item.question_value || 0
+                question_value: item.question_value || 3
             }))
             total.value = res.data.pagination.total_pages
             poster_id.value = res.data.poster_id
@@ -313,6 +313,12 @@ const getvip = () => {
         showDelPopup3.value = false
     }).catch(err => {
         console.log('获取用户信息失败', err)
+    })
+}
+const close = () => {
+    mbtishow.value = false
+    uni.switchTab({
+        url:'/pages/test/test'
     })
 }
 //确定退出
