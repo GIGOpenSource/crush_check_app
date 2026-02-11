@@ -555,9 +555,12 @@ export default {
     doubleProfessionalReport: '더블 전문 MBTI 테스트 보고서',
     doubleAdvancedReport: '더블 고급 MBTI 테스트 보고서',
     packageIncludes: '패키지 포함:',
-    payVip: '{price}원 지불하여 VIP 활성화',
-    payOnceResult: '{price}원 지불하여 이번 결과만 보기',
-    payUnlockDouble: '{price}원 지불하여 더블 테스트 잠금 해제'
+    payVipPrefix: '',
+    payVipSuffix: '원 지불하여 VIP 활성화',
+    payOnceResultPrefix: '',
+    payOnceResultSuffix: '원 지불하여 이번 결과만 보기',
+    payUnlockDoublePrefix: '',
+    payUnlockDoubleSuffix: '원 지불하여 더블 테스트 잠금 해제'
   },
   test: {
     mbtiTest: 'MBTI 테스트',

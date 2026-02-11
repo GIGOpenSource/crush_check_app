@@ -19,11 +19,11 @@
                 </view>
             </view>
             <view class="btns" v-if="moneyType.includes('single')">
-                <view class="btn" @click="handlePay('vip')">{{ t('mbtiProup.payVip', { price: mouth.price }) }}</view>
-                <view class="title" @click="handlePay(moneyType)">{{ t('mbtiProup.payOnceResult', { price: once.price }) }}</view>
+                <view class="btn" @click="handlePay('vip')">{{ t('mbtiProup.payVipPrefix') }}{{ mouth.price }}{{ t('mbtiProup.payVipSuffix') }}</view>
+                <view class="title" @click="handlePay(moneyType)">{{ t('mbtiProup.payOnceResultPrefix') }}{{ once.price }}{{ t('mbtiProup.payOnceResultSuffix') }}</view>
             </view>
             <view class="btns" v-else>
-                <view class="btn" @click="handlePay(moneyType)">{{ t('mbtiProup.payUnlockDouble', { price: once.price }) }}</view>
+                <view class="btn" @click="handlePay(moneyType)">{{ t('mbtiProup.payUnlockDoublePrefix') }}{{ once.price }}{{ t('mbtiProup.payUnlockDoubleSuffix') }}</view>
             </view>
 
         </view>

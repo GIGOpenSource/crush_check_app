@@ -237,23 +237,37 @@ export default {
             this.rechargeList = [...this.rechargeList, ...results];
           }
 
-          // 根据 pagination 判断是否还有更多数据
-          const currentPage = pagination.page || this.currentPage;
+          // 根据返回的数据和分页信息判断是否还有更多数据
+          const responsePage = pagination.page !== undefined && pagination.page !== null ? pagination.page : this.currentPage;
           const totalPages = pagination.total_pages || 0;
 
           console.log("分页信息", {
-            currentPage: currentPage,
+            requestPage: this.currentPage,
+            responsePage: responsePage,
             totalPages: totalPages,
-            hasMore: currentPage < totalPages,
+            resultsLength: results.length,
+            hasMore: responsePage < totalPages && results.length > 0,
           });
 
-          if (currentPage >= totalPages) {
-            // 当前页已经是最后一页，没有更多数据
+          // 判断是否还有更多数据的逻辑：
+          // 1. 如果返回的数据为空，说明没有更多数据了
+          if (results.length === 0) {
+            this.hasMore = false;
+            console.log("返回空数据，没有更多数据");
+          } 
+          // 2. 如果返回的数据少于每页数量，说明没有更多数据了
+          else if (results.length < this.pageSize) {
+            this.hasMore = false;
+            console.log("返回数据少于每页数量，没有更多数据");
+          }
+          // 3. 如果当前页已经大于等于总页数，没有更多数据
+          else if (responsePage >= totalPages) {
             this.hasMore = false;
             console.log("已到最后一页，没有更多数据");
-          } else {
-            // 还有更多数据，更新页码为下一页
-            this.currentPage = currentPage + 1;
+          }
+          // 4. 还有更多数据，更新页码为下一页
+          else {
+            this.currentPage = responsePage + 1;
             this.hasMore = true;
             console.log("还有更多数据，下一页:", this.currentPage);
           }

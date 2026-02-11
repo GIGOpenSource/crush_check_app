@@ -554,9 +554,12 @@ WeChatで「Crush Check」ミニプログラムを検索し、私の招待コー
     doubleProfessionalReport: 'ダブル専門版MBTIテストレポート',
     doubleAdvancedReport: 'ダブル上級版MBTIテストレポート',
     packageIncludes: 'パッケージ内容:',
-    payVip: '{price}元支払ってVIPを有効化',
-    payOnceResult: '{price}元支払って今回の結果のみ閲覧',
-    payUnlockDouble: '{price}元支払ってダブルテストをロック解除'
+    payVipPrefix: '',
+    payVipSuffix: '元支払ってVIPを有効化',
+    payOnceResultPrefix: '',
+    payOnceResultSuffix: '元支払って今回の結果のみ閲覧',
+    payUnlockDoublePrefix: '',
+    payUnlockDoubleSuffix: '元支払ってダブルテストをロック解除'
   },
   test: {
     mbtiTest: 'MBTIテスト',

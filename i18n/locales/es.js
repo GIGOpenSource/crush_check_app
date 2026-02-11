@@ -546,9 +546,12 @@ Busca el Mini Programa "Crush Check" en WeChat, ingresa mi código de invitació
     doubleProfessionalReport: 'Informe de Prueba MBTI Doble Profesional',
     doubleAdvancedReport: 'Informe de Prueba MBTI Doble Avanzado',
     packageIncludes: 'El Paquete Incluye:',
-    payVip: 'Pagar {price} yuan para activar VIP',
-    payOnceResult: 'Pagar {price} yuan para ver solo este resultado',
-    payUnlockDouble: 'Pagar {price} yuan para desbloquear prueba doble'
+    payVipPrefix: 'Pagar ',
+    payVipSuffix: ' yuan para activar VIP',
+    payOnceResultPrefix: 'Pagar ',
+    payOnceResultSuffix: ' yuan para ver solo este resultado',
+    payUnlockDoublePrefix: 'Pagar ',
+    payUnlockDoubleSuffix: ' yuan para desbloquear prueba doble'
   },
   test: {
     mbtiTest: 'Prueba MBTI',

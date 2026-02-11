@@ -558,9 +558,12 @@ export default {
     doubleProfessionalReport: '双人专业版MBTI测试报告',
     doubleAdvancedReport: '双人进阶版MBTI测试报告',
     packageIncludes: '套餐包含：',
-    payVip: '支付{price}元 开通VIP',
-    payOnceResult: '支付{price}元只查看本次结果',
-    payUnlockDouble: '支付{price}元 解锁双人版测试'
+    payVipPrefix: '支付',
+    payVipSuffix: '元 开通VIP',
+    payOnceResultPrefix: '支付',
+    payOnceResultSuffix: '元只查看本次结果',
+    payUnlockDoublePrefix: '支付',
+    payUnlockDoubleSuffix: '元 解锁双人版测试'
   },
   test: {
     mbtiTest: 'MBTI测试',
