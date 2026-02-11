@@ -130,7 +130,7 @@ const getlistTi = () => {
         .then(res => {
             list.value = res.data.results.map(item => ({
                 ...item,
-                question_value: item.question_value || 3
+                question_value: item.question_value || 0
             }))
             total.value = res.data.pagination.total_pages
             poster_id.value = res.data.poster_id
