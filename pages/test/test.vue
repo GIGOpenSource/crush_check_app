@@ -109,7 +109,7 @@
                             <!-- mbti双人 -->
                             <block v-else>
                                 <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
-                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;"  v-if="isType">
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
                                         $t('mbti.waitingForOtherResult') }}</text>
                                     <text v-if="item.mbti_list[0].other_status == 'exit'">{{
@@ -188,7 +188,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -655,7 +655,7 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
-             this.poster_id = item.id
+            this.poster_id = item.id
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                     if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
@@ -824,6 +824,7 @@ export default {
         },
         //微信支付
         wxpay(moneyType, item) {
+            let that = this
             let params = {
                 description: item.description,
                 openId: uni.getStorageSync('openId'),
@@ -845,18 +846,33 @@ export default {
                             title: t('proPoster.paySuccess'),
                             icon: 'success'
                         })
-                        this.mbtishow = false
+                        that.mbtishow = false
                         if (moneyType == 'vip') {
-                            this.getvip()
+                            that.getvip()
                         } else {
-                            this.fetchPosterList()
+                            that.fetchPosterList(true);
                         }
-                        
+
                     },
                     fail(e) {
-                        uni.showToast({
-                            title: t('proPoster.payFailed'),
-                            icon: 'none'
+                        if(moneyType.includes('single')){
+                             uni.showToast({
+                                title: t('proPoster.payFailed'),
+                                icon: 'none'
+                            })
+                             that.mbtishow = false
+                            return
+                        }
+                        params.pay_action = 'cancel_pay'
+                        createOrder(params).then(res => {
+                            uni.showToast({
+                                title: t('proPoster.payFailed'),
+                                icon: 'none'
+                            })
+                            that.mbtishow = false
+                             that.fetchPosterList(true);
+                        }).catch(err => {
+                            console.log('取消订单失败', err)
                         })
                     }
                 })
@@ -874,8 +890,7 @@ export default {
                         console.log('用户信息更新成功', userRes.data)
                     }
                 }
-                showDelPopup3.value = false
-                 this.fetchPosterList()
+                 this.fetchPosterList(true);
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })
