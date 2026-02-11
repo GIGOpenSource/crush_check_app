@@ -78,7 +78,7 @@
                             <view class="details">
                                 <text>{{ item.summary }}</text>
                                 <text v-if="isType" class="look">{{
-                                        $t('poster.viewPoster') }} {{
+                                    $t('poster.viewPoster') }} {{
                                         '>>' }}</text>
                             </view>
                         </template>
@@ -92,29 +92,29 @@
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
                                 "{{ item.content || $t('poster.defaultAnswer') }}"
                                 <text v-if="isType" class="look">{{
-                                        $t('poster.viewAnswer') }} {{
+                                    $t('poster.viewAnswer') }} {{
                                         '>>' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
                                 <text v-if="isType" class="look">{{
-                                        $t('poster.viewAnswer') }}
+                                    $t('poster.viewAnswer') }}
                                     {{
                                         '>>' }}</text>
                             </view>
                         </template>
-                          <!-- mbti单人 -->
+                        <!-- mbti单人 -->
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left: 5rpx;">MBTI测试</view>
-                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text>{{ $t('poster.personalityIs') }}</text>
-                                    <text v-if="isType" style="font-weight: 100;">立即查看 {{ '>>' }}</text>
+                                    <text style="font-weight: 100;">立即查看 {{ '>>' }}</text>
                                 </view>
                             </block>
                             <!-- mbti双人 -->
                             <block v-else>
                                 <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
-                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;">
+                                <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
                                         $t('mbti.waitingForOtherResult') }}</text>
                                     <text v-if="item.mbti_list[0].other_status == 'exit'">{{
@@ -125,12 +125,15 @@
                                         双方均已完成答题
                                     </text>
                                     <!-- 是房主 -->
-                                    <text v-if="isType && item.mbti_list[0].master" style="font-weight: 100;margin-left: 20rpx;">
+                                    <text v-if="isType && item.mbti_list[0].master"
+                                        style="font-weight: 100;margin-left: 20rpx;">
                                         {{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
                                             !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') + ' ' :
                                                 $t('poster.viewDetails') }} {{ '>>' }}</text>
                                     <!-- 不是房主  -->
-                                    <text v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'" style="font-weight: 100;margin-left: 20rpx;">
+                                    <text
+                                        v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
+                                        style="font-weight: 100;margin-left: 20rpx;">
                                         立即查看{{ '>>' }}</text>
                                 </view>
                             </block>
@@ -190,7 +193,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -221,7 +224,7 @@
 
         </template>
     </IndexProup>
-     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
+    <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
 </template>
 
 <script>
@@ -263,8 +266,8 @@ export default {
             pipeicontent: [],
             md5: '',
             poster_id: '',
-            mbtishow:false,
-            posterType:''
+            mbtishow: false,
+            posterType: ''
         };
     },
     onLoad() {
@@ -315,7 +318,7 @@ export default {
         this.loadMore();
     },
     onShow() {
-         this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'),'试题类型将与邀请者保持一致']
+        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'), '试题类型将与邀请者保持一致']
         this.categoryList = [
             {
                 label: t('poster.all'),
@@ -355,10 +358,10 @@ export default {
         //复制邀请码
         copy() {
             uni.setClipboardData({
-                data: this.handleEncrypt(),
+                data: `${t('mbti.shareInviteMessage').replace('{inviteCode}', this.handleEncrypt())}`,
                 success: function () {
                     uni.showToast({
-                        title: '复制成功',
+                        title: t('common.copySuccess'),
                         icon: 'none'
                     });
                 }
@@ -651,7 +654,7 @@ export default {
             return category?.color || "#666";
         },
 
-           // 处理海报点击
+        // 处理海报点击
         handlePosterClick(item, index, type) {
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
@@ -716,7 +719,7 @@ export default {
                                     uni.navigateTo({
                                         url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
                                         fail: (err) => {
-                                            
+
                                             console.error("跳转失败:", err);
                                             uni.showToast({
                                                 title: this.$t('poster.jumpFailed'),
@@ -725,7 +728,7 @@ export default {
                                         },
                                     });
                                 } else if (item.mbti_list[0].room_pay_status == 'affordable') {
-                                     this.getprices(item)
+                                    this.getprices(item)
                                     //可以支付
                                     this.mbtishow = true
                                 } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
@@ -759,18 +762,18 @@ export default {
                                 this.getprices(item)
                                 //可以支付
                                 this.mbtishow = true
-                            }else if (item.mbti_list[0].room_pay_status == 'non_payable') {
-                                    uni.showToast({
-                                        title: '暂时不可支付',
-                                        icon: "none",
-                                    });
+                            } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
+                                uni.showToast({
+                                    title: '暂时不可支付',
+                                    icon: "none",
+                                });
 
-                                } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
-                                    uni.showToast({
-                                        title: '对方正在支付中',
-                                        icon: "none",
-                                    });
-                                }
+                            } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
+                                uni.showToast({
+                                    title: '对方正在支付中',
+                                    icon: "none",
+                                });
+                            }
                         }
 
                     } else {
@@ -1705,7 +1708,7 @@ export default {
 }
 
 .mbti {
-     width: 150rpx !important;
+    width: 150rpx !important;
     height: 150rpx !important;
     margin-left: 20rpx !important;
     margin-top: 60rpx;
