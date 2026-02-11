@@ -851,11 +851,12 @@ export default {
                         if (moneyType == 'vip') {
                             this.getvip()
                         } else {
-                            this.fetchPosterList()
+                            this.fetchPosterList(true)
                         }
 
                     },
                     fail(e) {
+                        //取消支付
                         uni.showToast({
                             title: t('proPoster.payFailed'),
                             icon: 'none'
@@ -877,8 +878,7 @@ export default {
                         console.log('用户信息更新成功', userRes.data)
                     }
                 }
-                showDelPopup3.value = false
-                this.fetchPosterList()
+               this.fetchPosterList(true)
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })
