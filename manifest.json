@@ -10,7 +10,7 @@
         "usingComponents" : true,
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,
-        "safeArea" : {
+        "safearea" : {
             "bottom" : {
                 "offset" : "none"
             }

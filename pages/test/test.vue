@@ -193,7 +193,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -351,7 +351,7 @@ export default {
                 type: "mbti",
             },
         ];
-        this.fetchPosterList();
+        this.fetchPosterList(true);
     },
 
     methods: {
@@ -835,34 +835,60 @@ export default {
             if (moneyType == 'vip') {
                 delete params.posterId
             }
-            createOrder(params).then(res => {
-                uni.requestPayment({
-                    "provider": "wxpay",
-                    ...res.data,
-                    "signType": "RSA",
-                    "package": `${res.data.prepayid}`,
-                    "nonceStr": res.data.noncestr,
-                    success(res) {
-                        uni.showToast({
-                            title: t('proPoster.paySuccess'),
-                            icon: 'success'
-                        })
-                        this.mbtishow = false
-                        if (moneyType == 'vip') {
-                            this.getvip()
-                        } else {
-                            this.fetchPosterList(true)
-                        }
-
-                    },
-                    fail(e) {
-                        //取消支付
-                        uni.showToast({
-                            title: t('proPoster.payFailed'),
-                            icon: 'none'
-                        })
+            iosOrder(params).then(res => {
+                let paymentData = res.data
+                plus.payment.getChannels(function (channels) {
+                    let iapChannel = channels.find(c => c.id === 'appleiap');
+                    if (!iapChannel) {
+                        uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                        return;
                     }
-                })
+                    iapChannel.requestProduct([paymentData.productid], function (res) {
+                        uni.requestPayment({
+                            provider: 'appleiap',
+                            orderInfo: {
+                                productid: res[0].productid,
+                                quantity: 1,
+                                username: paymentData.username,
+                                manualFinishTransaction: false,
+                                paymentDiscount: '否'
+                            },
+                            success: (e) => {
+                                e.payment.username = paymentData.username;
+                                ios_receipt(e).then(res => {
+                                    uni.showToast({
+                                        title: t('proPoster.paySuccess'),
+                                        icon: 'success'
+                                    })
+                                    this.mbtishow = false
+                                    if (moneyType == 'vip') {
+                                        this.getvip()
+                                    } else {
+                                        this.fetchPosterList(true)
+                                    }
+
+
+                                }).catch(err => {
+                                    console.log('获取用户信息失败', err)
+                                })
+                            },
+                            fail: (err) => {
+                                //支付失败
+                                uni.showToast({
+                                    title: t('proPoster.payFailed'),
+                                    icon: 'none'
+                                })
+                            }
+                        })
+
+                    }, function (err) {
+                        console.error('IAP 商品信息获取失败:', err);
+                        uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                    });
+                }, function (e) {
+                    console.error('获取支付通道失败:', e);
+                    uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+                });
 
             })
 
@@ -878,7 +904,7 @@ export default {
                         console.log('用户信息更新成功', userRes.data)
                     }
                 }
-               this.fetchPosterList(true)
+                this.fetchPosterList(true)
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })

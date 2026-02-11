@@ -69,7 +69,7 @@
                 </view>
             </view>
         </up-popup>
-         <MbtiProup :show="mbtishow" @close="close" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
+        <MbtiProup :show="mbtishow" @close="close" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
     </view>
 </template>
 
@@ -77,9 +77,9 @@
 import { onMounted, ref, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
-import { onLoad ,onUnload} from '@dcloudio/uni-app'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
-import { createOrder } from '@/api/index.js'
+import { iosOrder } from '@/api/index.js'
 import { getUserInfo } from '@/api/login.js'
 const { t } = useI18n()
 const test_type = ref('')
@@ -97,19 +97,20 @@ const poster_id = ref(null)
 const title = { 'simple': t('mbti.simpleVersion'), 'major': t('mbti.majorVersion'), 'advanced': t('mbti.advancedVersion') }
 const userinfo = ref(JSON.parse(uni.getStorageSync('userInfo')))
 const mbti_type = ref('')
+const mbtishow = ref(false)
 onLoad((e) => {
     test_type.value = e.test_type
     question_mode.value = e.question_mode
     poster_id.value = e.poster_id || null
 })
 onUnload(() => {
-    if (total.value == page.value)  return
-     layout(poster_id.value).then(res => {
-            uni.switchTab({
-                url: '/pages/index/index'
-            })
-            uni.removeStorageSync('timestamp')
+    if (total.value == page.value) return
+    layout(poster_id.value).then(res => {
+        uni.switchTab({
+            url: '/pages/index/index'
         })
+        uni.removeStorageSync('timestamp')
+    })
 
 })
 onMounted(() => {
@@ -129,7 +130,7 @@ const getlistTi = () => {
         .then(res => {
             list.value = res.data.results.map(item => ({
                 ...item,
-                question_value: item.question_value || 0
+                question_value: item.question_value || 2
             }))
             total.value = res.data.pagination.total_pages
             poster_id.value = res.data.poster_id
@@ -224,20 +225,20 @@ const choosestatus = (index, ite) => {
 const look = () => {
     finsh(poster_id.value).then(res => {
         if (question_mode.value == 'single_mode') {//单人 支付拦截f
-              getprices()
+            getprices()
             if (userinfo.value.is_vip) { //是会员
                 uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
-                
-            }else{ //不是会员
+
+            } else { //不是会员
                 console.log('不是会员')
                 mbtishow.value = true
-                console.log( mbtishow.value,' mbtishow.value')
+                console.log(mbtishow.value, ' mbtishow.value')
             }
-           
+
 
         } else {
             showDelPopup3.value = true
-           
+
         }
     }).catch(err => {
         console.log(err, 'eee')
@@ -254,7 +255,7 @@ const getprices = () => {
     }
     mbti_type.value = object[test_type.value]
 }
-//微信支付
+//ios支付
 const wxpay = (moneyType, item) => {
     let params = {
         description: item.description,
@@ -262,37 +263,63 @@ const wxpay = (moneyType, item) => {
         productId: item.id,
         posterId: poster_id.value
     }
-    console.log(moneyType,'222')
+    console.log(moneyType, '222')
     if (moneyType == 'vip') {
         delete params.posterId
     }
-    createOrder(params).then(res => {
-        uni.requestPayment({
-            "provider": "wxpay",
-            ...res.data,
-            "signType": "RSA",
-            "package": `${res.data.prepayid}`,
-            "nonceStr": res.data.noncestr,
-            success(res) {
-                uni.showToast({
-                    title: t('proPoster.paySuccess'),
-                    icon: 'success'
-                })
-                if(moneyType == 'vip'){
-                    getvip()
-                }else{
-                    showDelPopup3.value = false
-                     uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
-                }
-
-            },
-            fail(e) {
-                uni.showToast({
-                    title: t('proPoster.payFailed'),
-                    icon: 'none'
-                })
+    iosOrder(params).then(res => {
+        let paymentData = res.data
+        plus.payment.getChannels(function (channels) {
+            let iapChannel = channels.find(c => c.id === 'appleiap');
+            if (!iapChannel) {
+                uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                return;
             }
-        })
+            iapChannel.requestProduct([paymentData.productid], function (res) {
+                uni.requestPayment({
+                    provider: 'appleiap',
+                    orderInfo: {
+                        productid: res[0].productid,
+                        quantity: 1,
+                        username: paymentData.username,
+                        manualFinishTransaction: false,
+                        paymentDiscount: '否'
+                    },
+                    success: (e) => {
+                        e.payment.username = paymentData.username;
+                        ios_receipt(e).then(res => {
+                            uni.showToast({
+                                title: t('proPoster.paySuccess'),
+                                icon: 'success'
+                            })
+                            if (moneyType == 'vip') {
+                                getvip()
+                            } else {
+                                showDelPopup3.value = false
+                                uni.redirectTo({ url: `/pagesA/mbti/poster?id=` + poster_id.value + '&type=' + 'single' })
+                            }
+
+
+                        }).catch(err => {
+                            console.log('获取用户信息失败', err)
+                        })
+                    },
+                    fail: (err) => {
+                        uni.showToast({
+                            title: t('proPoster.payFailed'),
+                            icon: 'none'
+                        })
+                    }
+                })
+
+            }, function (err) {
+                console.error('IAP 商品信息获取失败:', err);
+                uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+            });
+        }, function (e) {
+            console.error('获取支付通道失败:', e);
+            uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+        });
 
     })
 
@@ -316,12 +343,12 @@ const getvip = () => {
 const close = () => {
     mbtishow.value = false
     uni.switchTab({
-        url:'/pages/test/test'
+        url: '/pages/test/test'
     })
 }
 //确定退出
 const submit = () => {
-   uni.switchTab({
+    uni.switchTab({
         url: '/pages/index/index'
     })
 
