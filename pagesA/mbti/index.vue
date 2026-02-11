@@ -50,7 +50,7 @@
                     <view class="copy" @click="copy">{{ t('mbti.clickCopy') }}</view>
                     <view class="and">{{ t('mbti.or') }}</view>
                     <view class="shuru"><input type="text" v-model="inviewma" :placeholder="t('mbti.inputInviteCode')"
-                            placeholder-style="color:#9A90FF;"></view>
+                            placeholder-style="color:#9A90FF;" maxlength="1000"></view>
                 </view>
                 <view class="titlescon">
                     <view v-for="(item, index) in pipeicontent" :key="index" class="titles">{{ index + 1 }}.{{ item }}
@@ -181,49 +181,63 @@ const copy = () => {
     });
 
 }
-// 从完整文本中提取邀请码
+// 从完整文本中提取邀请码（支持所有语言的国际化格式）
+// 统一方法：从冒号后的第一个字符开始，到最后一个等于号（=）结束截取
 const extractInviteCode = (inputText) => {
     if (!inputText) return ''
     
-    const trimmedText = inputText.trim()
+    // 先规范化文本：将所有空白字符（包括换行符、制表符等）替换为单个空格
+    const normalizedText = inputText.replace(/\s+/g, ' ').trim()
     
-    // 如果输入的是完整邀请消息，提取中间的邀请码
-    // 使用正则表达式匹配邀请码部分（在冒号/中文冒号和逗号/中文逗号之间）
-    const patterns = [
-        // 中文格式：输入我的邀请码：{code}，一起看看
-        /输入我的邀请码[：:]\s*([A-Za-z0-9+/=_-]+)[，,～~]/,
-        // 英文格式：invitation code: {code}, let's
-        /invitation\s+code[：:]\s*([A-Za-z0-9+/=_-]+)[，,～~]/i,
-        // 其他语言格式：código de invitación: {code}, 等
-        /[：:]\s*([A-Za-z0-9+/=_-]{20,})[，,～~]/,
-    ]
-    
-    // 尝试匹配各种格式
-    for (const pattern of patterns) {
-        const match = trimmedText.match(pattern)
-        if (match && match[1]) {
-            const extractedCode = match[1].trim()
-            // 验证提取的代码看起来像邀请码（长度足够且包含特殊字符）
-            if (extractedCode.length >= 20) {
+    // 查找冒号的位置（支持中文冒号：和英文冒号:）
+    const colonMatch = normalizedText.match(/[：:]/)
+    if (colonMatch) {
+        const colonIndex = colonMatch.index
+        // 提取冒号后的内容
+        const afterColon = normalizedText.substring(colonIndex + 1).trim()
+        // 查找最后一个等于号（=）的位置
+        const lastEqualsIndex = afterColon.lastIndexOf('=')
+        if (lastEqualsIndex > 0) {
+            // 提取从开始到最后一个等于号（包含等于号）的内容
+            const extractedCode = afterColon.substring(0, lastEqualsIndex + 1).trim()
+            // 验证提取的代码看起来像邀请码（长度足够，且包含特殊字符）
+            if (extractedCode.length >= 40 && /[+/=]/.test(extractedCode) && /^[A-Za-z0-9+/=_-]+$/.test(extractedCode)) {
                 return extractedCode
+            }
+        } else {
+            // 如果没有找到等于号，尝试查找第一个分隔符（中文逗号，、英文逗号,、日文顿号、）
+            const separatorIndex = afterColon.search(/[，,、]/)
+            if (separatorIndex > 0) {
+                const extractedCode = afterColon.substring(0, separatorIndex).trim()
+                if (extractedCode.length >= 40 && /[+/=]/.test(extractedCode) && /^[A-Za-z0-9+/=_-]+$/.test(extractedCode)) {
+                    return extractedCode
+                }
+            } else {
+                // 如果都没有找到，提取到文本结束
+                const extractedCode = afterColon.trim()
+                if (extractedCode.length >= 40 && /[+/=]/.test(extractedCode) && /^[A-Za-z0-9+/=_-]+$/.test(extractedCode)) {
+                    return extractedCode
+                }
             }
         }
     }
     
-    // 如果不匹配任何格式，尝试直接查找邀请码模式（长字符串，包含特殊字符）
-    // 邀请码通常是 base64 编码的字符串，包含 /、+、= 等字符，长度通常较长
-    const inviteCodePattern = /([A-Za-z0-9+/=_-]{40,})/
-    const codeMatch = trimmedText.match(inviteCodePattern)
-    if (codeMatch && codeMatch[1]) {
-        const potentialCode = codeMatch[1].trim()
-        // 如果找到的长字符串看起来像邀请码（包含特殊字符），返回它
-        if (potentialCode.length >= 40 && /[+/=]/.test(potentialCode)) {
-            return potentialCode
+    // 备用方案：查找最长的 base64 编码字符串
+    const allCodes = normalizedText.match(/[A-Za-z0-9+/=_-]{60,}/g)
+    if (allCodes && allCodes.length > 0) {
+        const validCodes = allCodes.filter(code => /[+/=]/.test(code) && /^[A-Za-z0-9+/=_-]+$/.test(code))
+        if (validCodes.length > 0) {
+            const longestCode = validCodes.reduce((longest, current) => 
+                current.length > longest.length ? current : longest
+            )
+            if (longestCode.length >= 60) {
+                return longestCode.trim()
+            }
         }
     }
     
-    // 如果不包含完整格式，直接返回原值（可能是直接输入的邀请码）
-    return trimmedText
+    // 如果以上都不匹配，直接返回原值（可能是直接输入的邀请码）
+    return normalizedText
 }
 
 //双人模式开始测试

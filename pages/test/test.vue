@@ -188,7 +188,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -366,7 +366,7 @@ export default {
         //复制邀请码
         copy() {
             uni.setClipboardData({
-                data: this.handleEncrypt(),
+                data: t('mbti.shareInviteMessage').replace('{inviteCode}', this.handleEncrypt()),
                 success: function () {
                     uni.showToast({
                         title: t('common.copySuccess'),
@@ -727,7 +727,7 @@ export default {
                                     uni.navigateTo({
                                         url: '/pagesA/mbti/poster?id=' + item.id + '&type=' + item.mbti_list[0].templates[0].template_type,
                                         fail: (err) => {
-                                            
+
                                             console.error("跳转失败:", err);
                                             uni.showToast({
                                                 title: this.$t('poster.jumpFailed'),
@@ -736,7 +736,7 @@ export default {
                                         },
                                     });
                                 } else if (item.mbti_list[0].room_pay_status == 'affordable') {
-                                     this.getprices(item)
+                                    this.getprices(item)
                                     //可以支付
                                     this.mbtishow = true
                                 } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
@@ -770,18 +770,18 @@ export default {
                                 this.getprices(item)
                                 //可以支付
                                 this.mbtishow = true
-                            }else if (item.mbti_list[0].room_pay_status == 'non_payable') {
-                                    uni.showToast({
-                                        title: '暂时不可支付',
-                                        icon: "none",
-                                    });
+                            } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
+                                uni.showToast({
+                                    title: '暂时不可支付',
+                                    icon: "none",
+                                });
 
-                                } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
-                                    uni.showToast({
-                                        title: '对方正在支付中',
-                                        icon: "none",
-                                    });
-                                }
+                            } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
+                                uni.showToast({
+                                    title: '对方正在支付中',
+                                    icon: "none",
+                                });
+                            }
                         }
 
                     } else {
