@@ -69,7 +69,7 @@
                 </view>
             </view>
         </up-popup>
-         <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
+         <MbtiProup :show="mbtishow" @close="close" :moneyType="mbti_type" @pay="wxpay"></MbtiProup>
     </view>
 </template>
 
@@ -311,6 +311,12 @@ const getvip = () => {
         showDelPopup3.value = false
     }).catch(err => {
         console.log('获取用户信息失败', err)
+    })
+}
+const close = () => {
+    mbtishow.value = false
+    uni.switchTab({
+        url:'/pages/test/test'
     })
 }
 //确定退出

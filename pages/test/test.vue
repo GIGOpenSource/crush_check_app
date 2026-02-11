@@ -759,7 +759,18 @@ export default {
                                 this.getprices(item)
                                 //可以支付
                                 this.mbtishow = true
-                            }
+                            }else if (item.mbti_list[0].room_pay_status == 'non_payable') {
+                                    uni.showToast({
+                                        title: '暂时不可支付',
+                                        icon: "none",
+                                    });
+
+                                } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
+                                    uni.showToast({
+                                        title: '对方正在支付中',
+                                        icon: "none",
+                                    });
+                                }
                         }
 
                     } else {
