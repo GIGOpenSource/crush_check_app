@@ -655,10 +655,10 @@ export default {
 
         // 处理海报点击
         handlePosterClick(item, index, type) {
+             this.poster_id = item.id
             if (type == 'mbti' && item.status == 'waiting') {
                 if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                     if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
-                        this.poster_id = item.id
                         if (item.mbti_list[0].master) {
                             this.generateTimestampMD5()
                         }
@@ -707,7 +707,6 @@ export default {
                         if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                             if (item.mbti_list[0].other_status == 'waiting') return
                             if (item.mbti_list[0].other_status == 'exit' || item.mbti_list[0].other_status == '') {
-                                this.poster_id = item.id
                                 this.generateTimestampMD5()
                             }
                             //两个人都完成的情况下
@@ -846,12 +845,13 @@ export default {
                             title: t('proPoster.paySuccess'),
                             icon: 'success'
                         })
+                        this.mbtishow = false
                         if (moneyType == 'vip') {
                             this.getvip()
                         } else {
                             this.fetchPosterList()
                         }
-
+                        
                     },
                     fail(e) {
                         uni.showToast({
@@ -864,7 +864,6 @@ export default {
             })
 
         },
-
         getvip() {
             const openId = uni.getStorageSync('openId')
             getUserInfo(openId).then(userRes => {
@@ -876,6 +875,7 @@ export default {
                     }
                 }
                 showDelPopup3.value = false
+                 this.fetchPosterList()
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })
