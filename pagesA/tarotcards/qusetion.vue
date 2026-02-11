@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { onShow, onHide, onLoad } from '@dcloudio/uni-app'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -67,7 +67,9 @@ onLoad(() => {
     uni.setNavigationBarTitle({
         title: t('tarot_name')
     });
-    value1.value = uni.getStorageSync('question') || '';
+    const storedValue = uni.getStorageSync('question') || '';
+    // 确保从存储读取的值也不超过300字符
+    value1.value = storedValue.length > 300 ? storedValue.substring(0, 300) : storedValue;
 })
 
 const handleFocus = () => {
@@ -77,6 +79,15 @@ const handleFocus = () => {
 const handleBlur = () => {
     isFocused.value = false;
 };
+
+// 使用 watch 监听值变化，手动限制输入长度
+// 解决安卓微信小程序中 up-textarea 组件的 maxlength 属性不生效的问题
+watch(value1, (newVal) => {
+    const maxLength = 300;
+    if (newVal && newVal.length > maxLength) {
+        value1.value = newVal.substring(0, maxLength);
+    }
+});
 const path = async () => {
     if (!uni.getStorageSync('token')) {
         uni.navigateTo({
