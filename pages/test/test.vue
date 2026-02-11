@@ -234,7 +234,7 @@ import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
-import { iosOrder } from '@/api/index.js'
+import { iosOrder,ios_receipt } from '@/api/index.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 export default {
     components: {
@@ -903,7 +903,13 @@ export default {
 
                     }, function (err) {
                         console.error('IAP 商品信息获取失败:', err);
-                        uni.showToast({ title: t('mbti.productInfoFailed'), icon: 'none' });
+                        // 根据错误码显示不同的提示
+                        let errorMsg = t('mbti.productInfoFailed');
+                        if (err && (err.code === -100 || err.errCode === -100)) {
+                            errorMsg = t('mbti.orderInfoFailed');
+                        }
+                        uni.showToast({ title: errorMsg, icon: 'none' });
+                        that.mbtishow = false;
                     });
                 }, function (e) {
                     console.error('获取支付通道失败:', e);

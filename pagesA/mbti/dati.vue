@@ -79,7 +79,7 @@ import { useI18n } from 'vue-i18n'
 import { getList, createPoster, finsh, layout } from '@/api/mbti.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
-import { iosOrder } from '@/api/index.js'
+import { iosOrder,ios_receipt } from '@/api/index.js'
 import { getUserInfo } from '@/api/login.js'
 const { t } = useI18n()
 const test_type = ref('')

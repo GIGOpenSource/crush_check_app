@@ -582,6 +582,7 @@ export default {
     otherPaying: '相手が支払い中です',
     applePayChannelNotFound: 'Apple Payチャネルが見つかりません',
     productInfoFailed: '商品情報の取得に失敗しました',
+    orderInfoFailed: '注文情報の取得に失敗しました。ネットワーク接続を確認するか、後でもう一度お試しください',
     paymentChannelFailed: '支払いチャネルの取得に失敗しました'
   }
 }

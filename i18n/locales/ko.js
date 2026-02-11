@@ -583,6 +583,7 @@ export default {
     otherPaying: '상대방이 결제 중입니다',
     applePayChannelNotFound: 'Apple Pay 채널을 찾을 수 없습니다',
     productInfoFailed: '제품 정보 가져오기 실패',
+    orderInfoFailed: '주문 정보 가져오기 실패, 네트워크 연결을 확인하거나 나중에 다시 시도하세요',
     paymentChannelFailed: '결제 채널 가져오기 실패'
   }
 }

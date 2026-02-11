@@ -583,6 +583,7 @@ export default {
     otherPaying: 'A outra parte está pagando',
     applePayChannelNotFound: 'Canal Apple Pay não encontrado',
     productInfoFailed: 'Falha ao obter informações do produto',
+    orderInfoFailed: 'Falha ao obter informações do pedido, verifique sua conexão de rede ou tente novamente mais tarde',
     paymentChannelFailed: 'Falha ao obter canal de pagamento'
   }
 }

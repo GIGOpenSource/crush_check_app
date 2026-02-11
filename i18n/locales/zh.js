@@ -586,6 +586,7 @@ export default {
     otherPaying: '对方正在支付中',
     applePayChannelNotFound: '未找到苹果支付通道',
     productInfoFailed: '商品信息获取失败',
+    orderInfoFailed: '返回订单信息失败，请检查网络连接或稍后重试',
     paymentChannelFailed: '支付通道获取失败'
   }
 }
