@@ -480,6 +480,7 @@ export default {
     step2: 'A outra parte insere o código de convite para se juntar ao seu teste',
     step3: 'Você e a outra parte completam as perguntas do teste MBTI separadamente',
     step4: 'O sistema gera seu relatório de compatibilidade de personalidade',
+    testTypeConsistentWithInviter: 'O tipo de teste será consistente com o convidador',
     startTest: 'Iniciar Teste',
     pleaseInputInviteCode: 'Por favor, digite o código de convite de outra pessoa',
     viewAll: 'Ver Tudo',
@@ -551,7 +552,38 @@ export default {
     incompleteTestMessage: 'Você tem um registro de teste duplo incompleto. Deseja continuar respondendo?',
     abandonAnswer: 'Abandonar Resposta',
     continueAnswer: 'Continuar Resposta',
-    shareInviteMessage: 'Venha testar MBTI super preciso!\nAbra o APP "Crush Check", insira meu código de convite: {inviteCode}, vamos verificar a compatibilidade de personalidade juntos～'
+    shareInviteMessage: 'Venha testar MBTI super preciso!\nAbra o APP "Crush Check", insira meu código de convite: {inviteCode}, vamos verificar a compatibilidade de personalidade juntos～',
+    // Componente MbtiProup
+    professionalScale: 'Escala Profissional',
+    costEffective: 'Custo-Benefício',
+    convenient: 'Conveniente',
+    vipExclusiveTitle: 'Exclusivo VIP - Torne-se membro para ver resultados',
+    vipPrivileges: 'Privilégios VIP:',
+    singleVipBenefit1: 'Acesso ilimitado a 3 tipos de perguntas principais, revise o status de personalidade a qualquer momento',
+    singleVipBenefit2: 'Acesso completo a todos os outros recursos do módulo',
+    doubleSimpleReport: 'Relatório de Teste MBTI Versão Simples Dupla',
+    doubleMajorReport: 'Relatório de Teste MBTI Versão Profissional Dupla',
+    doubleAdvancedReport: 'Relatório de Teste MBTI Versão Avançada Dupla',
+    packageIncludes: 'O Pacote Inclui:',
+    doubleBenefit1: 'Análise de compatibilidade multidimensional: perspectivas de relacionamento de amante, família, amigo',
+    doubleBenefit2: 'Uma pessoa desbloqueia, ambas as partes podem ver, compartilhar análise profunda de relacionamento',
+    doubleBenefit3: 'Inclui relatórios de análise individual exclusivos para ambas as partes, autoconhecimento abrangente',
+    payVipPrefix: 'Pagar',
+    payVipSuffix: 'yuans para ativar VIP',
+    payOnceResultPrefix: 'Pagar',
+    payOnceResultSuffix: 'yuans para ver apenas este resultado',
+    payUnlockDoublePrefix: 'Pagar',
+    payUnlockDoubleSuffix: 'yuans para desbloquear teste de versão dupla',
+    // página test.vue
+    mbtiTest: 'Teste MBTI',
+    mbtiDoubleTest: 'Teste MBTI Versão Dupla',
+    viewNow: 'Ver Agora',
+    bothCompleted: 'Ambas as partes completaram a resposta',
+    temporarilyUnpayable: 'Temporariamente indisponível para pagamento',
+    otherPaying: 'A outra parte está pagando',
+    applePayChannelNotFound: 'Canal Apple Pay não encontrado',
+    productInfoFailed: 'Falha ao obter informações do produto',
+    paymentChannelFailed: 'Falha ao obter canal de pagamento'
   }
 }
 

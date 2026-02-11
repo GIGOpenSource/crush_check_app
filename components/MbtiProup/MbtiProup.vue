@@ -13,17 +13,17 @@
                 </view>
             </view>
             <view class="icons">
-                <view class="icon" v-for="(item, index) in icon" :key="index">
+                <view class="icon" v-for="(item, index) in iconList" :key="index">
                     <image :src="$getImg(item.images)" mode="aspectFill"></image>
-                    <view class="title">{{ item.title }}</view>
+                    <view class="title">{{ $t(item.titleKey) }}</view>
                 </view>
             </view>
             <view class="btns" v-if="moneyType.includes('single')">
-                <view class="btn" @click="handlePay('ios_vip')">支付{{mouth.price}}元 开通VIP</view>
-                <view class="title" @click="handlePay(moneyType)">支付{{once.price}}元只查看本次结果</view>
+                <view class="btn" @click="handlePay('ios_vip')">{{ $t('mbti.payVipPrefix') }}{{ mouth.price }}{{ $t('mbti.payVipSuffix') }}</view>
+                <view class="title" @click="handlePay(moneyType)">{{ $t('mbti.payOnceResultPrefix') }}{{ once.price }}{{ $t('mbti.payOnceResultSuffix') }}</view>
             </view>
             <view class="btns" v-else>
-                <view class="btn" @click="handlePay(moneyType)">支付{{once.price}}元 解锁双人版测试</view>
+                <view class="btn" @click="handlePay(moneyType)">{{ $t('mbti.payUnlockDoublePrefix') }}{{ once.price }}{{ $t('mbti.payUnlockDoubleSuffix') }}</view>
             </view>
 
         </view>
@@ -34,6 +34,9 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { getProducts } from '@/api/index.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 const props = defineProps({
     show: {
         type: Boolean,
@@ -57,17 +60,17 @@ const props = defineProps({
     }
 })
 const emits = defineEmits(["update:show", "close","update:moneyType", "pay"])
-const icon = [{
+const iconList = [{
     images: 'add/icon1',
-    title: '专业量表'
+    titleKey: 'mbti.professionalScale'
 }, {
     images: 'add/icon2',
-    title: '性价比高'
+    titleKey: 'mbti.costEffective'
 }, {
     images: 'add/icon3',
-    title: '便捷省心'
+    titleKey: 'mbti.convenient'
 }]
-const textlist = ref(['3种核心题型无次数限制，随时复盘人格状态','其他模块功能畅玩'])
+const textlist = ref([])
 const t1 = ref('')
 const t2 = ref('')
 const mouth = ref({})
@@ -77,20 +80,20 @@ const once = ref({})
 const initData = () => {
     console.log(props.show, 'MbtiProup show状态')
     if (props.moneyType.includes('single')) {
-        textlist.value = ['3种核心题型无次数限制，随时复盘人格状态', '其他模块功能畅玩']
-        t1.value = `会员专享开通会员查看结果`
-        t2.value = '会员特权：'
+        textlist.value = [t('mbti.singleVipBenefit1'), t('mbti.singleVipBenefit2')]
+        t1.value = t('mbti.vipExclusiveTitle')
+        t2.value = t('mbti.vipPrivileges')
     } else {
-        textlist.value = ['多维度适配分析：恋人、家人、朋友三种关系视角', '一人解锁，双方可见，共享深度关系分析', '附加双方个人专属单人解析报告，全面认知自我']
+        textlist.value = [t('mbti.doubleBenefit1'), t('mbti.doubleBenefit2'), t('mbti.doubleBenefit3')]
         if(props.moneyType.includes('40')){
-             t1.value =  `双人简易版MBTI测试报告`
+             t1.value = t('mbti.doubleSimpleReport')
         }else if(props.moneyType.includes('60')){
-            t1.value =  `双人专业版MBTI测试报告`
+            t1.value = t('mbti.doubleMajorReport')
         }else if(props.moneyType.includes('105')){
-            t1.value =  `双人进阶版MBTI测试报告`
+            t1.value = t('mbti.doubleAdvancedReport')
         }
        
-        t2.value = '套餐包含：'
+        t2.value = t('mbti.packageIncludes')
     }
     getlist()
 }

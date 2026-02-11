@@ -249,9 +249,9 @@ const look = () => {
 //获取钱的类型
 const getprices = () => {
     let object = {
-        'simple': 'single_mbti_40',
-        'major': 'single_mbti_60',
-        'advanced': 'single_mbti_105'
+        'simple': 'single_ios_mbti_40',
+        'major': 'single_ios_mbti_60',
+        'advanced': 'single_ios_mbti_105'
     }
     mbti_type.value = object[test_type.value]
 }

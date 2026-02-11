@@ -105,15 +105,15 @@
                         <!-- mbti单人 -->
                         <template v-if="item.prompt_template.template_type == 'mbti'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left: 5rpx;">MBTI测试</view>
+                                <view class="num" style="margin-left: 5rpx;">{{ $t('mbti.mbtiTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text>{{ $t('poster.personalityIs') }}</text>
-                                    <text style="font-weight: 100;">立即查看 {{ '>>' }}</text>
+                                    <text style="font-weight: 100;">{{ $t('mbti.viewNow') }} {{ '>>' }}</text>
                                 </view>
                             </block>
                             <!-- mbti双人 -->
                             <block v-else>
-                                <view class="num" style="margin-left:5rpx;">MBTI双人版测试</view>
+                                <view class="num" style="margin-left:5rpx;">{{ $t('mbti.mbtiDoubleTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
                                     <text v-if="item.mbti_list[0].other_status == 'waiting'">{{
                                         $t('mbti.waitingForOtherResult') }}</text>
@@ -122,7 +122,7 @@
                                     <text v-if="!item.mbti_list[0].other_status">{{
                                         $t('mbti.waitingForOthersToJoin') }}</text>
                                     <text v-if="item.mbti_list[0].other_status == 'done'">
-                                        双方均已完成答题
+                                        {{ $t('mbti.bothCompleted') }}
                                     </text>
                                     <!-- 是房主 -->
                                     <text v-if="isType && item.mbti_list[0].master"
@@ -134,7 +134,7 @@
                                     <text
                                         v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
                                         style="font-weight: 100;margin-left: 20rpx;">
-                                        立即查看{{ '>>' }}</text>
+                                        {{ $t('mbti.viewNow') }}{{ '>>' }}</text>
                                 </view>
                             </block>
 
@@ -319,7 +319,7 @@ export default {
         this.loadMore();
     },
     onShow() {
-        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'), '试题类型将与邀请者保持一致']
+        this.pipeicontent = [t('mbti.step1'), t('mbti.step2'), t('mbti.step3'), t('mbti.step4'), t('mbti.testTypeConsistentWithInviter')]
         this.categoryList = [
             {
                 label: t('poster.all'),
@@ -734,13 +734,13 @@ export default {
                                     this.mbtishow = true
                                 } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
                                     uni.showToast({
-                                        title: '暂时不可支付',
+                                        title: t('mbti.temporarilyUnpayable'),
                                         icon: "none",
                                     });
 
                                 } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
                                     uni.showToast({
-                                        title: '对方正在支付中',
+                                        title: t('mbti.otherPaying'),
                                         icon: "none",
                                     });
                                 }
@@ -765,13 +765,13 @@ export default {
                                 this.mbtishow = true
                             } else if (item.mbti_list[0].room_pay_status == 'non_payable') {
                                 uni.showToast({
-                                    title: '暂时不可支付',
+                                    title: t('mbti.temporarilyUnpayable'),
                                     icon: "none",
                                 });
 
                             } else if (item.mbti_list[0].room_pay_status == 'other_paying') {
                                 uni.showToast({
-                                    title: '对方正在支付中',
+                                    title: t('mbti.otherPaying'),
                                     icon: "none",
                                 });
                             }
@@ -796,28 +796,28 @@ export default {
         //获取钱的类型
         getprices(item) {
             let object = {
-                'simple': 'single_mbti_40',
-                'major': 'single_mbti_60',
-                'advanced': 'single_mbti_105'
+                'simple': 'single_ios_mbti_40',
+                'major': 'single_ios_mbti_60',
+                'advanced': 'single_ios_mbti_105'
             }
             if (item.mbti_list[0].templates[0].template_type == 'double') { //双人
                 if (item.mbti_list[0].test_type == 'simple') {
-                    this.posterType = 'double_mbti_40'
+                    this.posterType = 'double_ios_mbti_40'
                 } else if (item.mbti_list[0].test_type == 'major') {
-                    this.posterType = 'double_mbti_60'
+                    this.posterType = 'double_ios_mbti_60'
                 } else if (item.mbti_list[0].test_type == 'advanced') {
-                    this.posterType = 'double_mbti_105'
+                    this.posterType = 'double_ios_mbti_105'
                 }
             } else { //单人
                 if (item.content.question_mode == 'single_mode') {//纯单人
                     this.posterType = object[item.mbti_list[0].test_type]
                 } else if (item.content.question_mode == 'double_mode') {//双人中的单人
                     if (item.mbti_list[0].test_type == 'simple') {
-                        this.posterType = 'double_mbti_40'
+                        this.posterType = 'double_ios_mbti_40'
                     } else if (item.mbti_list[0].test_type == 'major') {
-                        this.posterType = 'double_mbti_60'
+                        this.posterType = 'double_ios_mbti_60'
                     } else if (item.mbti_list[0].test_type == 'advanced') {
-                        this.posterType = 'double_mbti_105'
+                        this.posterType = 'double_ios_mbti_105'
                     }
                 }
             }
@@ -837,16 +837,19 @@ export default {
             if (moneyType == 'ios_vip') {
                 delete params.posterId
             }
+            console.log('pas',params)
             iosOrder(params).then(res => {
                 let paymentData = res.data
-                console.log(params,'oaoaoao')
+                console.log('反水数据',res.data)
                 plus.payment.getChannels(function (channels) {
                     let iapChannel = channels.find(c => c.id === 'appleiap');
+                    console.log('iapChannel',iapChannel)
                     if (!iapChannel) {
-                        uni.showToast({ title: '未找到苹果支付通道', icon: 'none' });
+                        uni.showToast({ title: t('mbti.applePayChannelNotFound'), icon: 'none' });
                         return;
                     }
                     iapChannel.requestProduct([paymentData.productid], function (res) {
+                        console.log('IAP 商品信息', res);
                         uni.requestPayment({
                             provider: 'appleiap',
                             orderInfo: {
@@ -900,11 +903,11 @@ export default {
 
                     }, function (err) {
                         console.error('IAP 商品信息获取失败:', err);
-                        uni.showToast({ title: '商品信息获取失败', icon: 'none' });
+                        uni.showToast({ title: t('mbti.productInfoFailed'), icon: 'none' });
                     });
                 }, function (e) {
                     console.error('获取支付通道失败:', e);
-                    uni.showToast({ title: '支付通道获取失败', icon: 'none' });
+                    uni.showToast({ title: t('mbti.paymentChannelFailed'), icon: 'none' });
                 });
 
             })
@@ -982,7 +985,7 @@ export default {
                 fail: (err) => {
                     console.error("登录失败:", err);
                     uni.showToast({
-                        title: "登录失败: " + (err.errMsg || "未知错误"),
+                        title: t('common.loginFailed') + ": " + (err.errMsg || t('common.unknownError')),
                         icon: "none",
                     });
                 },

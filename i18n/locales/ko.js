@@ -480,6 +480,7 @@ export default {
     step2: '상대방이 초대 코드를 입력하여 테스트에 참여합니다',
     step3: '당신과 상대방이 각각 MBTI 테스트 질문을 완료합니다',
     step4: '시스템이 성격 매칭 보고서를 생성합니다',
+    testTypeConsistentWithInviter: '테스트 유형은 초대자와 일치합니다',
     startTest: '테스트 시작',
     pleaseInputInviteCode: '다른 사람의 초대 코드를 입력하세요',
     viewAll: '전체 보기',
@@ -551,7 +552,38 @@ export default {
     incompleteTestMessage: '완료하지 않은 페어 테스트 기록이 있습니다. 계속 답변하시겠습니까?',
     abandonAnswer: '답변 포기',
     continueAnswer: '답변 계속',
-    shareInviteMessage: '초정확한 MBTI 테스트를 해보세요!\n「Crush Check」APP을 열고, 내 초대 코드를 입력하세요: {inviteCode}, 함께 성격 호환성을 확인해봐요～'
+    shareInviteMessage: '초정확한 MBTI 테스트를 해보세요!\n「Crush Check」APP을 열고, 내 초대 코드를 입력하세요: {inviteCode}, 함께 성격 호환성을 확인해봐요～',
+    // MbtiProup 컴포넌트
+    professionalScale: '전문 척도',
+    costEffective: '비용 효율성',
+    convenient: '편리함',
+    vipExclusiveTitle: 'VIP 전용 - 회원이 되어 결과 보기',
+    vipPrivileges: 'VIP 특권:',
+    singleVipBenefit1: '3가지 핵심 질문 유형에 무제한 액세스, 언제든지 성격 상태 확인',
+    singleVipBenefit2: '다른 모든 모듈 기능에 대한 전체 액세스',
+    doubleSimpleReport: '더블 간단 버전 MBTI 테스트 보고서',
+    doubleMajorReport: '더블 전문 버전 MBTI 테스트 보고서',
+    doubleAdvancedReport: '더블 고급 버전 MBTI 테스트 보고서',
+    packageIncludes: '패키지 포함:',
+    doubleBenefit1: '다차원 호환성 분석: 연인, 가족, 친구 관계 관점',
+    doubleBenefit2: '한 사람이 잠금 해제, 양측 모두 볼 수 있음, 깊은 관계 분석 공유',
+    doubleBenefit3: '양측 모두를 위한 독점 개별 분석 보고서 포함, 포괄적인 자기 인식',
+    payVipPrefix: '',
+    payVipSuffix: '원을 지불하여 VIP 활성화',
+    payOnceResultPrefix: '',
+    payOnceResultSuffix: '원을 지불하여 이 결과만 보기',
+    payUnlockDoublePrefix: '',
+    payUnlockDoubleSuffix: '원을 지불하여 더블 버전 테스트 잠금 해제',
+    // test.vue 페이지
+    mbtiTest: 'MBTI 테스트',
+    mbtiDoubleTest: 'MBTI 더블 버전 테스트',
+    viewNow: '지금 보기',
+    bothCompleted: '양측 모두 답변을 완료했습니다',
+    temporarilyUnpayable: '일시적으로 결제 불가',
+    otherPaying: '상대방이 결제 중입니다',
+    applePayChannelNotFound: 'Apple Pay 채널을 찾을 수 없습니다',
+    productInfoFailed: '제품 정보 가져오기 실패',
+    paymentChannelFailed: '결제 채널 가져오기 실패'
   }
 }
 

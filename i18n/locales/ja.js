@@ -479,6 +479,7 @@ export default {
     step2: '相手が招待コードを入力してあなたのテストに参加する',
     step3: 'あなたと相手がそれぞれMBTIテストの質問を完了する',
     step4: 'システムがあなたの性格マッチングレポートを生成する',
+    testTypeConsistentWithInviter: 'テストタイプは招待者と一致します',
     startTest: 'テストを開始',
     pleaseInputInviteCode: '他の人の招待コードを入力してください',
     viewAll: 'すべて表示',
@@ -550,7 +551,38 @@ export default {
     incompleteTestMessage: '未完了のペアテスト記録があります。回答を続けますか？',
     abandonAnswer: '回答を放棄',
     continueAnswer: '回答を続ける',
-    shareInviteMessage: '超正確なMBTIテストをしてみましょう！\n「Crush Check」APPを開いて、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～'
+    shareInviteMessage: '超正確なMBTIテストをしてみましょう！\n「Crush Check」APPを開いて、私の招待コードを入力してください：{inviteCode}、一緒に性格の相性を確認しましょう～',
+    // MbtiProupコンポーネント
+    professionalScale: '専門スケール',
+    costEffective: 'コストパフォーマンス',
+    convenient: '便利',
+    vipExclusiveTitle: 'VIP限定 - メンバーになって結果を表示',
+    vipPrivileges: 'VIP特権：',
+    singleVipBenefit1: '3つのコア質問タイプへの無制限アクセス、いつでも人格状態を確認',
+    singleVipBenefit2: '他のすべてのモジュール機能へのフルアクセス',
+    doubleSimpleReport: 'ダブル簡易版MBTIテストレポート',
+    doubleMajorReport: 'ダブル専門版MBTIテストレポート',
+    doubleAdvancedReport: 'ダブル上級版MBTIテストレポート',
+    packageIncludes: 'パッケージ内容：',
+    doubleBenefit1: '多次元適合分析：恋人、家族、友人関係の視点',
+    doubleBenefit2: '1人がアンロック、両方の当事者が閲覧可能、深い関係分析を共有',
+    doubleBenefit3: '両当事者専用の個別分析レポートを含む、包括的な自己認識',
+    payVipPrefix: '',
+    payVipSuffix: '元を支払ってVIPを有効化',
+    payOnceResultPrefix: '',
+    payOnceResultSuffix: '元を支払ってこの結果のみを表示',
+    payUnlockDoublePrefix: '',
+    payUnlockDoubleSuffix: '元を支払ってダブル版テストをアンロック',
+    // test.vueページ
+    mbtiTest: 'MBTIテスト',
+    mbtiDoubleTest: 'MBTIダブル版テスト',
+    viewNow: '今すぐ表示',
+    bothCompleted: '双方が回答を完了しました',
+    temporarilyUnpayable: '一時的に支払い不可',
+    otherPaying: '相手が支払い中です',
+    applePayChannelNotFound: 'Apple Payチャネルが見つかりません',
+    productInfoFailed: '商品情報の取得に失敗しました',
+    paymentChannelFailed: '支払いチャネルの取得に失敗しました'
   }
 }
 
