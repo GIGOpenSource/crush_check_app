@@ -33,8 +33,8 @@
          </view>
       </view>
       <view class="tarbar">
-         <view :class="current == 0 ? 'current' : ''" @click="current = 0">{{ t('tarot_result_tab_explain') }}</view>
-         <view :class="current == 1 ? 'current' : ''" @click="current = 1">{{ t('tarot_result_tab_interpret') }}</view>
+         <view :class="current == 0 ? 'current' : ''" @click="clicks(0)">{{ t('tarot_result_tab_explain') }}</view>
+         <view :class="current == 1 ? 'current' : ''" @click="clicks(1)">{{ t('tarot_result_tab_interpret') }}</view>
       </view>
       <view class="content" v-if="current == 0">
          <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
@@ -52,15 +52,15 @@
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
+            <!-- <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
                {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
                   t('tarot_result_ai_interpret') }}
-            </view>
+            </view> -->
          </view>
          <view class="title" v-if="details.child_list[0]?.content.summary">
             <rich-text :nodes="details.child_list[0]?.content.summary"></rich-text>
          </view>
-         <view class="title1" v-else>这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读这里是解读</view>
+         <view class="title1" v-else>对于工作中期待的事情能否成功，圣杯7正位暗示目前成功可能面临一些挑战。你所期待的成功可能更多还停留在美好的幻想层面，与现实存在一定差距。建议你认真分析工作中的实际状况，梳理出实现期待的具体步骤，不要被不切实际的想法左右。要以务实的态度去努力，逐步靠近目标，这样才更有可能收获成功。</view>
       </view>
    </view>
    <view style="height: 130rpx;"></view>
@@ -287,6 +287,15 @@ const submit = () => {
 // 		uma.trackEvent('pay_fail', params.value)
 // 	}
 // }
+
+const clicks = (index) => {
+  current.value = index
+  if(index == 1 && details.value.child_list.length == 0) {
+     tarotcardnswer({ parent_id: id.value}).then(res => {
+        getdetails()
+     })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -571,7 +580,7 @@ const submit = () => {
       height: 100%;
       z-index: 99;
       font-weight: 100;
-      background-color: rgba(255, 255, 255, .3);
+      background-color: rgba(255, 255, 255, .5);
       z-index: 1;
       display: flex;
       align-items: center;
@@ -594,7 +603,7 @@ const submit = () => {
    .title1 {
       filter: blur(2px);
       /* 内容模糊（可选） */
-      opacity: 0.5;
+      opacity: 0.2;
       /* 内容半透明（可选） */
    }
 }
