@@ -1,7 +1,11 @@
 <template>
     <view class="page">
         <view class="titlecon">
-            <view class="t1">爱的裁判所</view>
+            <view class="t1">
+                <text>爱的裁判所</text>
+                <view @click="tishi = true"><up-icon name="error-circle" color="#ffffff" size="15"></up-icon>
+                </view>
+            </view>
             <view class="del">清空</view>
         </view>
         <view class="content">
@@ -133,7 +137,8 @@ const progress = ref(0)
         margin: 20rpx 0;
         color: #000;
     }
-     .btn {
+
+    .btn {
         background: #B370FF;
         color: #fff;
         margin-top: 20rpx;
@@ -211,6 +216,12 @@ const progress = ref(0)
     .t1 {
         width: 100%;
         text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text{
+            margin-right: 10rpx;
+        }
     }
 
     .del {
