@@ -168,7 +168,7 @@
                                             style="margin-left:20rpx;font-size: 26rpx;">X</text></view>
                                     <view class="xi">
                                         <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
-                                        <view class="num" style="width:120rpx;text-align: center;font-size: 32rpx;">{{
+                                        <view class="num" style="width:130rpx;text-align: center;font-size: 32rpx;">{{
                                             item.mbti_list[0].other_status == 'done' ?
                                                 item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
@@ -1820,7 +1820,7 @@ export default {
 }
 
 .mbti {
-    width: 150rpx !important;
+    width: 155rpx !important;
     // height: 150rpx !important;
     margin-left: 20rpx !important;
     margin-top: 60rpx;
