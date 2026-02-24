@@ -180,6 +180,13 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "loveCourt/poster",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false
+					}
 				}
 			]
 		}

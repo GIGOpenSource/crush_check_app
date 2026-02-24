@@ -41,11 +41,11 @@
 				<image :src="$getImg('add/mbti')" mode="widthFix" />
 			</view>
 			<view class="left" @click="path('/pagesA/loveCourt/index')">
-				<view style="margin-left: 50rpx;width: 200rpx;text-align: center;">
-					<view>爱的裁判所</view>
-					<view></view>
+				<view style="margin-left: 50rpx;text-align: center;">
+					<view>爱的裁</view>
+					<view>判所</view>
 				</view>
-				<image :src="$getImg('index/tarotcards')" style="width: 300rpx;margin-left: 0;" />
+				<image :src="$getImg('add/love')" style="width: 120rpx;height:100rpx" />
 			</view>
 		</view>
 	</view>

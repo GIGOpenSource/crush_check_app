@@ -1,7 +1,7 @@
 <template>
   <view class="page">
     <view class="top">
-      <text class="back">返回结果</text>
+      <text class="back" @click="back">返回结果</text>
       <text class="title">爱的裁判所附件查看</text>
     </view>
     <view class="content">
@@ -36,6 +36,9 @@ const people = ref(['张三', '李四']) //人物
 const event = ref('12345')//事件描述
 const question = ref('111')//问题描述
 const current = ref(0)
+const back = () => {
+  uni.navigateBack()
+}
 </script>
 
 <style lang="scss" scoped>
