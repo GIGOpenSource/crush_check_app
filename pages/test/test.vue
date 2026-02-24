@@ -55,7 +55,7 @@
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'"
                             :src="$getImg('add/mbtiimages')" mode="scaleToFill"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="width: 150rpx;height:150rpx">
                         </image>
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
