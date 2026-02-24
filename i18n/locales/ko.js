@@ -585,6 +585,14 @@ export default {
     productInfoFailed: '제품 정보 가져오기 실패',
     orderInfoFailed: '주문 정보 가져오기 실패, 네트워크 연결을 확인하거나 나중에 다시 시도하세요',
     paymentChannelFailed: '결제 채널 가져오기 실패'
+  },
+  test: {
+    mbtiTest: 'MBTI 테스트',
+    mbtiDoubleTest: 'MBTI 더블 버전 테스트',
+    bothCompleted: '양측 모두 답변을 완료했습니다',
+    viewNow: '지금 보기',
+    paymentNotAvailable: '일시적으로 결제 불가',
+    otherPaying: '상대방이 결제 중입니다'
   }
 }
 

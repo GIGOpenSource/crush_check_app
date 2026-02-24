@@ -584,6 +584,14 @@ export default {
     productInfoFailed: '商品情報の取得に失敗しました',
     orderInfoFailed: '注文情報の取得に失敗しました。ネットワーク接続を確認するか、後でもう一度お試しください',
     paymentChannelFailed: '支払いチャネルの取得に失敗しました'
+  },
+  test: {
+    mbtiTest: 'MBTIテスト',
+    mbtiDoubleTest: 'MBTIダブル版テスト',
+    bothCompleted: '双方が回答を完了しました',
+    viewNow: '今すぐ表示',
+    paymentNotAvailable: '一時的に支払い不可',
+    otherPaying: '相手が支払い中です'
   }
 }
 

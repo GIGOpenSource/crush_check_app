@@ -576,5 +576,13 @@ export default {
     productInfoFailed: 'Error al obtener información del producto',
     orderInfoFailed: 'Error al obtener información del pedido, por favor verifique su conexión de red o intente más tarde',
     paymentChannelFailed: 'Error al obtener canal de pago'
+  },
+  test: {
+    mbtiTest: 'Prueba MBTI',
+    mbtiDoubleTest: 'Prueba MBTI Versión Doble',
+    bothCompleted: 'Ambas partes han completado la respuesta',
+    viewNow: 'Ver Ahora',
+    paymentNotAvailable: 'Temporalmente no disponible para pago',
+    otherPaying: 'La otra parte está pagando'
   }
 }

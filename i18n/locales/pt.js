@@ -585,6 +585,14 @@ export default {
     productInfoFailed: 'Falha ao obter informações do produto',
     orderInfoFailed: 'Falha ao obter informações do pedido, verifique sua conexão de rede ou tente novamente mais tarde',
     paymentChannelFailed: 'Falha ao obter canal de pagamento'
+  },
+  test: {
+    mbtiTest: 'Teste MBTI',
+    mbtiDoubleTest: 'Teste MBTI Versão Dupla',
+    bothCompleted: 'Ambas as partes completaram a resposta',
+    viewNow: 'Ver Agora',
+    paymentNotAvailable: 'Temporariamente indisponível para pagamento',
+    otherPaying: 'A outra parte está pagando'
   }
 }
 

@@ -585,5 +585,13 @@ export default {
     productInfoFailed: 'Failed to get product information',
     orderInfoFailed: 'Failed to get order information, please check your network connection or try again later',
     paymentChannelFailed: 'Failed to get payment channel'
+  },
+  test: {
+    mbtiTest: 'MBTI Test',
+    mbtiDoubleTest: 'MBTI Double Version Test',
+    bothCompleted: 'Both parties have completed answering',
+    viewNow: 'View Now',
+    paymentNotAvailable: 'Temporarily unavailable for payment',
+    otherPaying: 'The other party is paying'
   }
 }
