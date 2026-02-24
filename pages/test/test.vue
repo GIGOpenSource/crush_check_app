@@ -51,8 +51,16 @@
                             :src="$getImg('index/tarotcards')" mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', 'tarot_card': item.prompt_template.template_type == 'tarot_card' }">
                         </image>
-                        <image v-else-if="item.prompt_template.template_type == 'mbti'" :src="$getImg('add/mbtiimages')"
-                            mode="scaleToFill" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                        <!-- mbti -->
+                        <image
+                            v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'"
+                            :src="$getImg('add/mbtiimages')" mode="scaleToFill"
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                        </image>
+                        <image
+                            v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
+                            :src="item.mbti_list[0]?.templates[0]?.image_url || $getImg('add/mbti')" mode="widthFix"
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -97,8 +105,8 @@
                                 <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }}{{ '>>' }}</text>
                             </view>
                         </template>
-                        <!-- mbti单人 -->
-                        <template v-if="item.prompt_template.template_type == 'mbti'">
+                        <!-- mbti -->
+                        <template v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left: 5rpx;">{{ $t('test.mbtiTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
@@ -130,6 +138,55 @@
                                         v-if="isType && !item.mbti_list[0].master && item.mbti_list[0].other_status == 'done'"
                                         style="font-weight: 100;margin-left: 20rpx;">
                                         {{ $t('test.viewNow') }}{{ '>>' }}</text>
+                                </view>
+                            </block>
+
+
+                        </template>
+                        <template v-if="item.prompt_template.template_type == 'mbti'  && item.mbti_list[0].room_pay_status == 'pay_completed'">
+                            <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
+                                <view class="num" style="margin-left:-10rpx;margin-top: 40rpx;">{{ $t('poster.personalityIs') }}{{
+                                    item.mbti_list[0]?.mbti_type ||
+                                    '--' }}</view>
+                                <view class="details" style="margin-top: 20rpx;">
+                                    <text v-if="isType" class="look"
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
+                                            $t('poster.viewDetails') }}
+                                        {{
+                                            '>>' }}</text>
+                                </view>
+                            </block>
+                            <block v-else>
+                                <view class="double" style="margin-top: 40rpx;">
+                                    <view class="num" style="margin-left:-10rpx;font-size: 32rpx;">{{
+                                        item.mbti_list[0]?.owner_mbti_type || '' }} <text
+                                            style="margin-left:20rpx;font-size: 26rpx;">X</text></view>
+                                    <view class="xi">
+                                        <!-- 判断状态 如果都完成的话 显示名称 否则显示？ -->
+                                        <view class="num" style="width:120rpx;text-align: center;font-size: 32rpx;">{{
+                                            item.mbti_list[0].other_status == 'done' ?
+                                                item.mbti_list[0]?.other_type : '?' }}</view>
+                                        <!-- 完成 -->
+                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
+                                            class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
+                                        </image>
+                                        <!-- 未完成 -->
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{
+                                            $t('mbti.waitingForOtherResult') }}</view>
+                                        <view class="wating" v-if="item.mbti_list[0].other_status == 'exit'">{{
+                                            $t('mbti.otherNotCompleted') }}</view>
+                                        <view class="wating" v-if="!item.mbti_list[0].other_status">{{
+                                            $t('mbti.waitingForOthersToJoin') }}</view>
+                                    </view>
+
+                                </view>
+                                <view class="details">
+                                    <text v-if="isType" class="look"
+                                        @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
+                                        <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
+                                            !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
+                                            $t('poster.viewDetails') }}</text>
+                                        {{ '>>' }}</text>
                                 </view>
                             </block>
 
@@ -188,7 +245,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -855,12 +912,12 @@ export default {
 
                     },
                     fail(e) {
-                        if(moneyType.includes('single')){
-                             uni.showToast({
+                        if (moneyType.includes('single')) {
+                            uni.showToast({
                                 title: t('proPoster.payFailed'),
                                 icon: 'none'
                             })
-                             that.mbtishow = false
+                            that.mbtishow = false
                             return
                         }
                         params.pay_action = 'cancel_pay'
@@ -870,7 +927,7 @@ export default {
                                 icon: 'none'
                             })
                             that.mbtishow = false
-                             that.fetchPosterList(true);
+                            that.fetchPosterList(true);
                         }).catch(err => {
                             console.log('取消订单失败', err)
                         })
@@ -890,7 +947,7 @@ export default {
                         console.log('用户信息更新成功', userRes.data)
                     }
                 }
-                 this.fetchPosterList(true);
+                this.fetchPosterList(true);
             }).catch(err => {
                 console.log('获取用户信息失败', err)
             })
@@ -1715,15 +1772,14 @@ export default {
 
 .mbti1 {
     width: 150rpx !important;
-    height: 180rpx !important;
+    // height: 150rpx !important;
     margin-right: 10rpx;
     margin-left: 20rpx !important;
 
 }
-
 .mbti {
     width: 150rpx !important;
-    height: 150rpx !important;
+    // height: 150rpx !important;
     margin-left: 20rpx !important;
     margin-top: 60rpx;
 }
