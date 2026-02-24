@@ -59,7 +59,7 @@
                         </image>
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
-                            :src="item.mbti_list[0]?.templates[0]?.image_url || $getImg('add/mbti')" mode="widthFix"
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
                             :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
                         </image>
                         <view v-else class="poster-placeholder">
@@ -173,7 +173,7 @@
                                                 item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
                                         <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
-                                            class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
+                                            class="mbti1" v-if="item.mbti_list[0].other_mbti_image_url == 'done'">
                                         </image>
                                         <!-- 未完成 -->
                                         <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{
