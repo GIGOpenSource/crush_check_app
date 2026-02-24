@@ -60,7 +60,7 @@
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
                             :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }">
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="margin-top: 35rpx;">
                         </image>
                         <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
@@ -172,8 +172,8 @@
                                             item.mbti_list[0].other_status == 'done' ?
                                                 item.mbti_list[0]?.other_type : '?' }}</view>
                                         <!-- 完成 -->
-                                        <image :src="item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
-                                            class="mbti1" v-if="item.mbti_list[0].other_mbti_image_url == 'done'">
+                                        <image :src="item.mbti_list[0]?.other_mbti_image_url" mode="widthFix"
+                                            class="mbti1" v-if="item.mbti_list[0].other_status == 'done'">
                                         </image>
                                         <!-- 未完成 -->
                                         <view class="wating" v-if="item.mbti_list[0].other_status == 'waiting'">{{
@@ -1812,7 +1812,7 @@ export default {
 }
 
 .mbti1 {
-    width: 150rpx !important;
+    width: 148rpx !important;
     // height: 180rpx !important;
     margin-right: 10rpx;
     margin-left: 20rpx !important;
@@ -1820,7 +1820,7 @@ export default {
 }
 
 .mbti {
-    width: 155rpx !important;
+    width: 150rpx !important;
     // height: 150rpx !important;
     margin-left: 20rpx !important;
     margin-top: 60rpx;
