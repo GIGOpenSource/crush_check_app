@@ -1,7 +1,7 @@
 <template>
     <view class="page">
         <view class="titlecon">
-            <view class="t1">AI恋爱法庭</view>
+            <view class="t1">爱的裁判所</view>
             <view class="del">清空</view>
         </view>
         <view class="content">

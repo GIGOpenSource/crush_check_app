@@ -17,14 +17,14 @@
 					<view>{{ t('index.answer') }}</view>
 					<view>{{ t('index.book') }}</view>
 				</view>
-				<image :src="$getImg('index/answer')"  />
+				<image :src="$getImg('index/answer')" />
 			</view>
-				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
+			<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
 				<view style="margin-left: 50rpx;width: 200rpx;">
 					<view>{{ t('tarot_name') }}</view>
 					<view></view>
 				</view>
-				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
+				<image :src="$getImg('index/tarotcards')" style="width: 300rpx;margin-left: 0;" />
 			</view>
 			<!-- <view class="left" @click="path('/pagesA/mbti/index')">
 				<view>
@@ -39,6 +39,13 @@
 					<view>MBTI</view>
 				</view>
 				<image :src="$getImg('add/mbti')" mode="widthFix" />
+			</view>
+			<view class="left" @click="path('/pagesA/loveCourt/index')">
+				<view style="margin-left: 50rpx;width: 200rpx;text-align: center;">
+					<view>爱的裁判所</view>
+					<view></view>
+				</view>
+				<image :src="$getImg('index/tarotcards')" style="width: 300rpx;margin-left: 0;" />
 			</view>
 		</view>
 	</view>
