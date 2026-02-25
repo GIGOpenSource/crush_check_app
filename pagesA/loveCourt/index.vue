@@ -49,10 +49,10 @@
                 <text v-if="userinfo.other_status">{{ status[userinfo.other_status] }}</text>
 
             </view>
-            <view class="btn" @click="btnInvite('share')" v-if="!params.invitation_code">
+            <view class="btn" @click="btnInvite('share')" v-if="!userinfo.other_status">
                 <image :src="$getImg('add/wx')" mode="widthFix" /> 转发邀请
             </view>
-            <view class="btn" @click="btnInvite('save')" v-if="params.invitation_code">
+            <view class="btn" @click="btnInvite('save')" v-if="params.invitation_code && userinfo.other_status">
                 提交内容
             </view>
         </view>
@@ -164,7 +164,6 @@ import {
     onPullDownRefresh
 } from '@dcloudio/uni-app'
 import { onUnmounted } from 'vue'
-import { url } from 'uview-plus/libs/function/test'
 const tishi = ref(false)
 const userAgreementContent = ref('2222222')
 const invite = ref(false)
@@ -195,7 +194,7 @@ const posterIdFromInvite = ref(false) //轮询
 const status = { 'waiting': '输入中', 'done': '已提交' }
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
-const recode = ref({})
+const recode = ref({other_status:null})
 onMounted(() => {
     const systemInfo = uni.getSystemInfoSync()
     const pxToRpx = (systemInfo.windowWidth || 375) / 375 * 2
@@ -213,7 +212,7 @@ onLoad((e) => {
     }
 })
 const goBack = () => {
-    if(recode.value.poster_id){
+    if(recode.value?.poster_id){
         showDelPopup3.value = true
     }else{
         uni.navigateBack()
@@ -473,6 +472,7 @@ const btn = (type) => {
        showDelPopup2.value = false
   }else{ //放弃
      showDelPopup2.value = false
+     recode.value = {}
   }
 }
 //是否保存草稿

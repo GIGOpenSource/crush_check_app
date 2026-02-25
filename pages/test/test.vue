@@ -58,6 +58,12 @@
                             :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="width: 150rpx;height:150rpx">
                         </image>
                          <image
+                            v-else-if="item.prompt_template.template_type == 'trial_case'"
+                            :src="$getImg('add/love')" mode="widthFix"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }" style="margin:50rpx 0 0 30rpx;width:170rpx">
+                        </image>
+                        <!-- 恋爱小法庭 -->
+                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
                             :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
                             :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="margin-top: 35rpx;">
@@ -406,6 +412,10 @@ export default {
             {
                 label: t('poster.mbti'),
                 type: "mbti",
+            },
+             {
+                label: '爱的裁判所',
+                type: "trial_case",
             },
         ];
     },

@@ -40,7 +40,7 @@
 				</view>
 				<image :src="$getImg('add/mbti')" mode="widthFix" />
 			</view>
-			<view class="left" @click="path(`/pagesA/loveCourt/index`)">
+			<view class="left" @click="path(`/pagesA/loveCourt/index?invitation_code=${invitation_code}&speak=${speak}&nickname=${nickname}`)">
 				<view style="margin-left: 50rpx;text-align: center;">
 					<view>爱的裁</view>
 					<view>判所</view>
@@ -76,9 +76,9 @@ const path = (url) => {
 	 }
 	
 }
-// const invitation_code = "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX6/t8sAnUAgG/pelZmqiYYD"
-// const speak = '我想知道你的的想法'
-// const nickname = '测试用户'
+const invitation_code =  "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX6lOI32FjiTKYybzy28hhip"
+const speak = '我想知道你的的想法'
+const nickname = '测试用户'
 onLoad((e) => {
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);
