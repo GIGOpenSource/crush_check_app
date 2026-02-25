@@ -1652,7 +1652,7 @@ export default {
 .del-popup-content {
     position: relative;
     width: 560rpx;
-    padding: 160rpx 40rpx 48rpx;
+    padding: 120rpx 40rpx 48rpx;
     box-sizing: border-box;
     border-radius: 36rpx;
     background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);

@@ -1,5 +1,15 @@
 <template>
     <view class="page">
+        <!-- 自定义导航栏 -->
+        <view class="custom-navbar" :style="{ paddingTop: statusBarHeight + 'rpx' }">
+            <view class="navbar-content">
+                <view class="navbar-back" @click="goBack">
+                    <up-icon name="arrow-left" color="#ffffff" size="24"></up-icon>
+                </view>
+                <view class="navbar-title">CrushCheck</view>
+            </view>
+        </view>
+        <view class="page-body" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
         <view class="titlecon">
             <view class="t1">
                 <text>爱的裁判所</text>
@@ -45,6 +55,7 @@
             <view class="btn" @click="btnInvite('save')" v-if="params.invitation_code">
                 提交内容
             </view>
+        </view>
         </view>
     </view>
     <!-- 恋爱裁判所弹框  -->
@@ -113,17 +124,39 @@
             </view>
         </template>
     </IndexProup>
+      <!-- 是否放弃之前作答 -->
+    <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
+        <view class="del-popup-content">
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
+            <view class="title1" style="color:#000;margin-bottom: 20rpx;">未完成的双人陈述，要继续推进吗？</view>
+            <view class="del-popup-actions">
+                <view class="del-popup-btn cancel" @click="btn(false)">放弃调解</view>
+                <view class="del-popup-btn confirm" @click="btn(true)">继续陈述</view>
+            </view>
+        </view>
+    </up-popup>
+       <!-- 是否放弃之前作答 -->
+    <up-popup :show="showDelPopup3" mode="center" @close="showDelPopup3 = false">
+        <view class="del-popup-content">
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
+            <view class="title1" style="color:#000;margin-bottom: 40rpx;">退出后是否保存草稿</view>
+            <view class="del-popup-actions">
+                <view class="del-popup-btn cancel" @click="baocao(false)">取消</view>
+                <view class="del-popup-btn confirm" @click="baocao(true)">确定</view>
+            </view>
+        </view>
+    </up-popup>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
     host
 } from '@/config/config.js'
-import { saveLoveCourtRecord, getUserJoinedStatus } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, getUserJoinedStatus, getRecords } from '@/api/loveCourt.js'
 import {
     onLoad,
     onShow,
@@ -131,6 +164,7 @@ import {
     onPullDownRefresh
 } from '@dcloudio/uni-app'
 import { onUnmounted } from 'vue'
+import { url } from 'uview-plus/libs/function/test'
 const tishi = ref(false)
 const userAgreementContent = ref('2222222')
 const invite = ref(false)
@@ -156,10 +190,19 @@ const uploadProgress = ref(0)
 const speak = ref('') //想法
 const inviteName = ref('') //邀请人昵称
 const userinfo = ref({})
+const statusBarHeight = ref(0)
 const posterIdFromInvite = ref(false) //轮询
 const status = { 'waiting': '输入中', 'done': '已提交' }
+const showDelPopup2 = ref(false)
+const showDelPopup3 = ref(false)
+const recode = ref({})
+onMounted(() => {
+    const systemInfo = uni.getSystemInfoSync()
+    const pxToRpx = (systemInfo.windowWidth || 375) / 375 * 2
+    statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
+})
 onLoad((e) => {
-    console.log(e, 'eee')
+    fetchDrafts()
     inviteName.value = e.nickname
     content.value = e.speak
     invitation_code.value = e.invitation_code
@@ -169,6 +212,14 @@ onLoad((e) => {
         posterIdFromInvite.value = true
     }
 })
+const goBack = () => {
+    if(recode.value.poster_id){
+        showDelPopup3.value = true
+    }else{
+        uni.navigateBack()
+    }
+   
+}
 //上传图片
 const addImage = () => {
     if (params.value.supplementary_materials.length >= 6) {
@@ -209,7 +260,7 @@ const addImage = () => {
                             try {
                                 let images = JSON.parse(uploadFileRes.data).data.url
                                 params.value.supplementary_materials.push(images)
-                                console.log(params.value.supplementary_materials, 'params.value.supplementary_materials')
+
                                 uploadProgress.value = ((index + 1) / res.tempFilePaths.length) * 100
                                 resolve(images)
 
@@ -293,6 +344,9 @@ const btnInvite = (type) => {
     } else if (type == 'share') {
         params.value.status = 'draft'
         params.value.share_status = true
+    }else if(type == 'cao'){
+        params.value.status = 'draft'
+        params.value.share_status = ''
     }
     saveLoveCourtRecord(params.value).then(res => {
         if (type == 'share') {
@@ -395,12 +449,81 @@ const handleExit = () => {
     uni.switchTab({ url: '/pages/test/test' })
     showProgress.value = false
 }
+//获取草稿
+const fetchDrafts = () => {
+     getRecords().then(res => {
+        let drafts = res.data
+        if(drafts.poster_id){
+            showDelPopup2.value = true
+        }else{
+            showDelPopup2.value = false
+        }
+        delete drafts.is_draft
+        delete drafts.is_host
+        recode.value = drafts
+     })
+     .catch(err => {
+
+     })
+}
+const btn = (type) => {
+    //继续
+  if(type){
+       params.value = recode.value
+       showDelPopup2.value = false
+  }else{ //放弃
+     showDelPopup2.value = false
+  }
+}
+//是否保存草稿
+const baocao = (type) => {
+     //保存
+  if(type){
+         btnInvite('caogao')
+       showDelPopup3.value = false
+  }else{ //不保存
+     showDelPopup3.value = false
+  }
+  uni.switchTab({
+    url: '/pages/index/index'
+  })
+}
 
 </script>
 
 <style lang="scss" scoped>
-.page {
+.page-body {
     margin: 40rpx 25rpx;
+}
+.custom-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background: #12111f;
+    .navbar-content {
+        height: 88rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20rpx;
+        position: relative;
+        .navbar-back {
+            position: absolute;
+            left: 20rpx;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60rpx;
+            height: 60rpx;
+        }
+        .navbar-title {
+            font-size: 32rpx;
+            font-weight: 500;
+            color: #ffffff;
+        }
+    }
 }
 
 .pcontent {
@@ -512,7 +635,7 @@ const handleExit = () => {
     .del {
         position: absolute;
         right: 20rpx;
-        top: 40rpx;
+        top:185rpx;
         color: rgba(255, 255, 255, 0.5);
     }
 }
@@ -597,7 +720,7 @@ const handleExit = () => {
 
 .content {
     margin: 30rpx 0;
-    height: 75vh;
+    height: 68vh;
     background: rgba(255, 255, 255, 0.1);
     box-sizing: border-box;
     border: 0.5rpx solid #FFFFFF;
@@ -727,7 +850,7 @@ const handleExit = () => {
 .del-popup-content {
     position: relative;
     width: 560rpx;
-    padding: 160rpx 40rpx 48rpx;
+    padding: 120rpx 40rpx 48rpx;
     box-sizing: border-box;
     border-radius: 36rpx;
     background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
@@ -748,7 +871,7 @@ const handleExit = () => {
     font-size: 32rpx;
     font-weight: 600;
     color: #333333;
-    margin-bottom: 50rpx;
+    margin-bottom: 30rpx;
 }
 
 .del-popup-actions {

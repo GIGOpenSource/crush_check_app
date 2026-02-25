@@ -63,7 +63,18 @@ const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
-	uni.navigateTo({ url })
+	 if(!uni.getStorageSync('token')){
+		if(url == '/pagesA/loveCourt/index'){
+			uni.navigateTo({
+				url:'/pages/login/login'
+			})
+		}else{
+             uni.navigateTo({ url })
+		}
+	 }else{
+		uni.navigateTo({ url })
+	 }
+	
 }
 // const invitation_code = "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX6/t8sAnUAgG/pelZmqiYYD"
 // const speak = '我想知道你的的想法'
