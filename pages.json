@@ -170,7 +170,7 @@
 					"path": "loveCourt/index",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
-						"enablePullDownRefresh": false,
+						"enablePullDownRefresh": true,
 						"disableScroll": false
 					}
 				},{

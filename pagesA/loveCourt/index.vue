@@ -6,34 +6,44 @@
                 <view @click="tishi = true"><up-icon name="error-circle" color="#ffffff" size="15"></up-icon>
                 </view>
             </view>
-            <view class="del">清空</view>
+            <view class="del" @click="showDelPopup = true">清空</view>
         </view>
         <view class="content">
-            <view class="input"><input type="text" placeholder="输入您的昵称" placeholder-style="color:#ffffff;"></view>
+            <view class="input"><input type="text" v-model="params.nickname" placeholder="输入您的昵称"
+                    placeholder-style="color:#ffffff;"></view>
             <view>
-                <textarea placeholder="输入事件，如发生了什么事" placeholder-style="color:#ffffff;"></textarea>
+                <textarea v-model="params.event_description" placeholder="输入事件，如发生了什么事"
+                    placeholder-style="color:#ffffff;"></textarea>
             </view>
             <view>
-                <textarea placeholder="输入问题，如委屈或不适的问题点" placeholder-style="color:#ffffff;"></textarea>
+                <textarea v-model="params.issue_description" placeholder="输入问题，如委屈或不适的问题点"
+                    placeholder-style="color:#ffffff;"></textarea>
             </view>
             <view class="title">补充材料上传：</view>
             <!-- 照片 -->
             <view class="images">
-                <view class="update">
-                    <image :src="$getImg('index/bg')" mode="scaleToFill" />
-                    <view class="close"><up-icon name="close" color="#ffffff" size="26"></up-icon></view>
+                <view class="update" v-for="(item, index) in params.supplementary_materials" :key="index">
+                    <image :src="item" mode="scaleToFill" />
+                    <view class="close" @click="removeImage(index)"><up-icon name="close" color="#ffffff"
+                            size="26"></up-icon></view>
                 </view>
-                <view class="update">+</view>
+                <view class="update" @click="addImage" v-if="params.supplementary_materials.length < 6">+</view>
             </view>
         </view>
         <view class="bottom">
-            <view class="top"> <up-avatar :src="src" size="36"></up-avatar>
-                <text>未邀请对方</text>
-                <!-- <text>已加入</text> -->
+            <view class="top"> <up-avatar :src="userinfo.other_status == null ? '' : userinfo.avatar"
+                    size="36"></up-avatar>
+                <!-- 昵称 -->
+                <text>{{ userinfo.other_status == null ? '未邀请对方' : userinfo.nickname || '用户昵称' }}</text>
+                <!-- 状态 -->
+                <text v-if="userinfo.other_status">{{ status[userinfo.other_status] }}</text>
 
             </view>
-            <view class="btn">
+            <view class="btn" @click="btnInvite('share')" v-if="!params.invitation_code">
                 <image :src="$getImg('add/wx')" mode="widthFix" /> 转发邀请
+            </view>
+            <view class="btn" @click="btnInvite('save')" v-if="params.invitation_code">
+                提交内容
             </view>
         </view>
     </view>
@@ -55,22 +65,23 @@
     <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
         <view class="tishi tishi1">
             <view>顺便给Ta带个话儿</view>
-            <textarea placeholder="跟TA说说你的想法..."></textarea>
+            <textarea placeholder="跟TA说说你的想法..." v-model="params.send_word"></textarea>
             <view class="btn">
-                <button>复制链接去邀请</button>
+                <button open-type="share" hover-class="none">去邀请</button>
             </view>
-            <view class="cancel">取消</view>
+            <view class="cancel" @click="invite = false">取消</view>
         </view>
     </up-popup>
     <!-- 接受弹窗 -->
     <up-popup :show="invited" @close="invited = false" @open="invited = true" mode="center">
         <view class="tishi tishi1">
-            <view> <text style="color:red;margin-right: 20rpx;">用户昵称</text> <text>邀请你加入小法庭</text></view>
-            <view class="content1">{{ content }}</view>
-            <view class="btn">
+            <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || '用户昵称' }}</text> <text>邀请你加入小法庭</text>
+            </view>
+            <view class="content1">Ta对你说：{{ content }}</view>
+            <view class="btn" @click="agree">
                 <button>我愿意和你聊聊</button>
             </view>
-            <view class="cancel">取消</view>
+            <view class="cancel" @click="cancelInvite">取消</view>
         </view>
     </up-popup>
     <!-- 删除 -->
@@ -80,12 +91,12 @@
             <view class="del-popup-title"> 确定将清空全部内容吗</view>
             <view class="del-popup-actions">
                 <view class="del-popup-btn cancel" @click="showDelPopup = false">取消</view>
-                <view class="del-popup-btn confirm" @click="confirmDelete">确认</view>
+                <view class="del-popup-btn confirm" @click="clearContent">确认</view>
             </view>
         </view>
     </up-popup>
     <!-- 分析 -->
-    <IndexProup :show="showProgress" @close="showProgress = false" :cha="true" :height="125">
+    <IndexProup :show="showProgress" @close="handleExit" :cha="false" :height="125">
         <template #content>
             <view class="pcontent">
                 <view style="color:#000">法官团审理中...</view>
@@ -97,25 +108,294 @@
                         </view>
                     </view>
                 </view>
-                <view class="tip">推出后可在“检测记录”中查看</view>
-                <view class="btn">退出</view>
+                <view class="tip">退出后可在“检测记录”中查看</view>
+                <view class="btn" @click="handleExit">退出</view>
             </view>
         </template>
     </IndexProup>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { ref } from 'vue'
+import {
+    host
+} from '@/config/config.js'
+import { saveLoveCourtRecord, getUserJoinedStatus } from '@/api/loveCourt.js'
+import {
+    onLoad,
+    onShow,
+    onShareAppMessage,
+    onPullDownRefresh
+} from '@dcloudio/uni-app'
+import { onUnmounted } from 'vue'
 const tishi = ref(false)
 const userAgreementContent = ref('2222222')
 const invite = ref(false)
 const invited = ref(false)
-const content = ref('hahahahahah')
-const src = ref('222')
+const content = ref('')
 const showDelPopup = ref(false)
 const showProgress = ref(false)
 const progress = ref(0)
+const params = ref({
+    nickname: '', //昵称
+    event_description: '',//事件
+    issue_description: '',//问题点
+    supplementary_materials: [],//上传图片
+    status: "draft",//状态
+    poster_id: '',
+    invitation_code: '',//被邀请者id
+    share_status: '',
+    send_word: ""
+}) //初始化参数
+const invitation_code = ref('')
+const uploading = ref(false)
+const uploadProgress = ref(0)
+const speak = ref('') //想法
+const inviteName = ref('') //邀请人昵称
+const userinfo = ref({})
+const posterIdFromInvite = ref(false) //轮询
+const status = { 'waiting': '输入中', 'done': '已提交' }
+onLoad((e) => {
+    console.log(e, 'eee')
+    inviteName.value = e.nickname
+    content.value = e.speak
+    invitation_code.value = e.invitation_code
+    if (e.invitation_code) {
+        invited.value = true
+        params.value.invitation_code = e.invitation_code
+        posterIdFromInvite.value = true
+    }
+})
+//上传图片
+const addImage = () => {
+    if (params.value.supplementary_materials.length >= 6) {
+        uni.showToast({
+            title: t('index.maxUploadSix'),
+            icon: 'none'
+        })
+        return
+    }
+    uni.chooseImage({
+        count: 6 - params.value.supplementary_materials.length,
+        type: 'file',
+        success: async (res) => {
+            uploading.value = true
+            uploadProgress.value = 0
+            uni.showLoading({
+                title: t('index.uploading'),
+                mask: true
+            });
+            // if (res.errMsg == 'chooseImage:ok') {
+            //     click_album()
+            // } else {
+            //     click_camera()
+            // }
+            // photo_upload_start()
+            const uploadPromises = res.tempFilePaths.map((filePath, index) => {
+                return new Promise((resolve, reject) => {
+                    uni.uploadFile({
+                        url: host + '/upload/',
+                        filePath: filePath,
+                        name: 'file',
+                        formData: {
+                            type: 'img',
+                            file: filePath,
+                            file_name: filePath,
+                        },
+                        success: (uploadFileRes) => {
+                            try {
+                                let images = JSON.parse(uploadFileRes.data).data.url
+                                params.value.supplementary_materials.push(images)
+                                console.log(params.value.supplementary_materials, 'params.value.supplementary_materials')
+                                uploadProgress.value = ((index + 1) / res.tempFilePaths.length) * 100
+                                resolve(images)
+
+                            } catch (error) {
+                                console.log(error, 'parse error')
+                                reject(error)
+
+                            }
+                        },
+                        fail: (err) => {
+                            console.log(err, 'upload error')
+                            reject(err)
+                        }
+                    });
+                });
+            });
+
+            try {
+                // photo_upload_success()
+                await Promise.all(uploadPromises)
+                uni.hideLoading()
+                uni.showToast({
+                    title: t('index.uploadSuccess'),
+                    icon: 'success'
+                })
+            } catch (error) {
+                // photo_upload_fail()
+                uni.hideLoading()
+                uni.showToast({
+                    title: t('index.partUploadFailed'),
+                    icon: 'none'
+                })
+            } finally {
+                uploading.value = false
+                uploadProgress.value = 0
+            }
+        },
+        fail: (err) => {
+            // upload_cancel()
+            uploading.value = false
+        }
+    });
+}
+//删除图片
+const removeImage = (index) => {
+    params.value.supplementary_materials.splice(index, 1)
+}
+//转发邀请
+const btnInvite = (type) => {
+    if (!params.value.nickname) {
+        uni.showToast({
+            title: '请输入昵称',
+            icon: 'none'
+        })
+        return
+    }
+    if (!params.value.event_description) {
+        uni.showToast({
+            title: '请输入事件描述',
+            icon: 'none'
+        })
+        return
+    }
+    if (!params.value.issue_description) {
+        uni.showToast({
+            title: '请输入问题描述',
+            icon: 'none'
+        })
+        return
+    }
+    if (!uni.getStorageSync('token')) {
+        uni.navigateTo({ url: '/pages/login/login' })
+        return
+    }
+    if (!params.value.poster_id) delete params.value.poster_id
+    if (!params.value.invitation_code) delete params.value.invitation_code
+    if (type == 'save') {
+        params.value.status = 'done'
+        delete params.value.share_status
+        delete params.value.send_word
+    } else if (type == 'share') {
+        params.value.status = 'draft'
+        params.value.share_status = true
+    }
+    saveLoveCourtRecord(params.value).then(res => {
+        if (type == 'share') {
+            invite.value = true
+            params.value.poster_id = res.data.poster_id
+            invitation_code.value = res.data.invitation_code
+        } else if (type == 'save') {
+            showProgress.value = true
+            progress.value = 0
+            const timer = setInterval(() => {
+                if (progress.value >= 99) {
+                    clearInterval(timer)
+                    return
+                }
+                progress.value++
+            }, 20)
+        }
+
+        startPolling()
+    }).catch(err => {
+        console.log(err, 'err')
+    })
+}
+//我愿意和你聊聊
+const agree = () => {
+    if (!uni.getStorageSync('token')) {
+        uni.navigateTo({ url: '/pages/login/login' })
+        return
+    }
+    saveLoveCourtRecord(params.value).then(res => {
+        invited.value = false
+        posterIdFromInvite.value = false
+        params.value.poster_id = res.data.poster_id
+        getstatus()
+        startPolling()
+    }).catch(err => {
+        cancelInvite()
+    })
+}
+//获取状态
+const getstatus = () => {
+    if (!params.value.poster_id) return
+    getUserJoinedStatus({ poster_id: params.value.poster_id }).then(res => {
+        userinfo.value = res.data
+    })
+}
+// 2000ms 轮询 getstatus
+let pollTimer = null
+const startPolling = () => {
+    if (pollTimer) return
+    pollTimer = setInterval(() => {
+        getstatus()
+    }, 2000)
+}
+const stopPolling = () => {
+    if (pollTimer) {
+        clearInterval(pollTimer)
+        pollTimer = null
+    }
+}
+onShow(() => {
+    if (params.value.poster_id && !posterIdFromInvite.value) startPolling()
+})
+onUnmounted(() => {
+    stopPolling()
+})
+// 下拉刷新：走同一接口，刷新后停止下拉动画
+onPullDownRefresh(() => {
+    getstatus()
+    uni.stopPullDownRefresh()
+})
+//取消邀请
+const cancelInvite = () => {
+    invited.value = false
+    params.value.poster_id = ''
+    params.value.invitation_code = ''
+    posterIdFromInvite.value = false
+    stopPolling()
+}
+//清空
+const clearContent = () => {
+    params.value.nickname = ''
+    params.value.event_description = ''
+    params.value.issue_description = ''
+    params.value.supplementary_materials = []
+    showDelPopup.value = false
+}
+onShareAppMessage(() => {
+    btnInvite('share')
+    const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
+    const query = `?invitation_code=${invitation_code.value}&speak=${params.value.send_word}&nickname=${nickname}`
+    return {
+        title: params.value.send_word ? `@${nickname}:` + params.value.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
+        path: `/pagesA/loveCourt/index${query}`, // 分享路径携带个人ID
+        imageUrl: "/static/index/yq2.png", // 分享图片，不设置则使用默认截图
+    };
+})
+//退出
+const handleExit = () => {
+    uni.switchTab({ url: '/pages/test/test' })
+    showProgress.value = false
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -125,9 +405,7 @@ const progress = ref(0)
 
 .pcontent {
     width: 500rpx;
-    height: 350rpx;
     padding: 40rpx 0;
-    padding-bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,27 +414,32 @@ const progress = ref(0)
         font-size: 26rpx;
         margin: 20rpx 0;
         color: #000;
+        margin-top: 40rpx !important;
     }
 
     .btn {
         background: #B370FF;
         color: #fff;
-        margin-top: 20rpx;
+        // margin-top: 20rpx;
         height: 80rpx;
         line-height: 80rpx;
-        width: 80%;
+        width: 90%;
         border-radius: 80rpx;
         text-align: center;
         font-size: 32rpx;
         font-weight: 500;
     }
 
+    .tip {
+        font-size: 24rpx;
+    }
+
 }
 
 .progress-wrapper {
     width: 70%;
-    margin: 10rpx auto;
-    margin-bottom: 20rpx;
+    margin: 0 auto;
+    // margin-bottom: 20rpx;
 }
 
 .custom-progress {
@@ -166,7 +449,7 @@ const progress = ref(0)
 .progress-track {
     position: relative;
     width: 100%;
-    height: 60rpx;
+    height: 50rpx;
     background-color: #ffffff;
     border-radius: 40rpx;
     border: 1px solid #e0e0e0;
@@ -201,6 +484,7 @@ const progress = ref(0)
     margin-top: 15rpx;
     width: 90%;
     text-align: center;
+    padding-bottom: 30rpx;
 }
 
 .num {
@@ -219,7 +503,8 @@ const progress = ref(0)
         display: flex;
         align-items: center;
         justify-content: center;
-        text{
+
+        text {
             margin-right: 10rpx;
         }
     }
@@ -241,6 +526,7 @@ const progress = ref(0)
     padding: 40rpx 45rpx;
     box-sizing: border-box;
     max-height: 80vh;
+    padding-bottom: 20rpx;
 
     .title {
         font-weight: bold;
@@ -425,7 +711,7 @@ const progress = ref(0)
 
 .tishi1 {
     padding: 40rpx 30rpx;
-    padding-bottom: 0;
+    // padding-bottom: 0;
 
     textarea,
     .content1 {
