@@ -213,7 +213,7 @@
                                     }}</text>
                                 <text class="look" v-if="item.business_data.generate_status == 'non_generable'">等待对方完成{{
                                     '>>' }}</text>
-                                <text class="look" v-if="item.business_data.generate_status == null">对方已退出{{ '>>'
+                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">对方已退出{{ '>>'
                                     }}</text>
                             </view>
                         </template>
@@ -288,7 +288,8 @@
     <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
         <template #content>
             <view class="content">
-                <view class="num" style="color:#333;margin-bottom: 20rpx;font-size: 26rpx;">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
+                <view class="num" style="color:#333;margin-bottom: 20rpx;font-size: 26rpx;">{{
+                    $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
                     }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
@@ -334,7 +335,7 @@
             </view>
         </view>
     </up-popup>
-     <!-- 恋爱 -->
+    <!-- 恋爱 -->
     <IndexProup :show="showProgress1" @close="showProgress1 = false" :cha="false" :height="125">
         <template #content>
             <view class="pcontent">
@@ -352,6 +353,17 @@
             </view>
         </template>
     </IndexProup>
+    <!-- 顺道带个话弹窗 -->
+    <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
+        <view class="tishi2 tishi1">
+            <view>顺便给Ta带个话儿</view>
+            <textarea placeholder="跟TA说说你的想法..." v-model="send_word"></textarea>
+            <view class="btn">
+                <button open-type="share" hover-class="none">去邀请</button>
+            </view>
+            <view class="cancel" @click="invite = false">取消</view>
+        </view>
+    </up-popup>
 </template>
 
 <script>
@@ -364,6 +376,7 @@ import { getcode } from '@/api/mbti.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 import { createOrder, getProducts } from '@/api/index.js'
 import { host } from '@/config/config.js';
+import { saveLoveCourtRecord } from '@/api/loveCourt.js'
 export default {
     components: {
         IndexProup,
@@ -385,7 +398,7 @@ export default {
             progress: 0, // 进度百分比
             progressTimer: null, // 进度条定时器
 
-           showProgress1: false, // 显示进度条弹窗
+            showProgress1: false, // 显示进度条弹窗
             progress1: 0, // 进度百分比
             progressTimer1: null, // 进度条定时器
 
@@ -404,6 +417,8 @@ export default {
             mbtishow: false,
             posterType: '',
             lovepay: '',//恋爱小法庭支付
+            send_word: '',
+            invite: false
 
         };
     },
@@ -949,7 +964,7 @@ export default {
                                 },
                             });
                         } else if (item.business_data.generate_status == 'waiting_generate') {
-                              console.log('等待生成中')
+                            console.log('等待生成中')
                             getProducts('trial_case').then(res => {
                                 this.lovepay = res.data.results[0]
                                 this.showDelPopup3 = true
@@ -961,11 +976,9 @@ export default {
                                 icon: "none",
                             });
 
-                        } else if (item.business_data.generate_status == null) {
-                            uni.showToast({
-                                title: this.$t('test.otherPaying'),
-                                icon: "none",
-                            });
+                        } else if (item.business_data.generate_status == 'nobody') {
+                            this.invite = true
+                            this.invitation_code = item.business_data.invitation_code
                         }
                     } else {
                         uni.showToast({
@@ -1021,76 +1034,76 @@ export default {
             })
         },
         //小法庭深度
-         lovedeep(){
-                // details.value.children_status = 'waiting'
-    this.showProgress1 = true
-    this.progress1 = 0
-    if (this.progressTimer1) {
-        clearInterval(this.progressTimer1)
-        this.progressTimer1 = null
-    }
-    this.progressTimer1 = setInterval(() => {
-        if (this.progress1 >= 99) {
-            clearInterval(this.progressTimer1)
-            this.progressTimer1 = null
-            return
-        }
-        this.progress1++
-    }, 20)
-    let params = {
-        poster_id: this.poster_id,
-    }
-    uni.request({
-        url: host + '/trialcase/generate_trialcase/',
-        data: params,
-        header: {
-            token: uni.getStorageSync('token'),
-            "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
-        },
-        method: 'POST',
-        timeout: 1500000,
-        complete: (data) => {
-            // 清除进度条定时器
+        lovedeep() {
+            // details.value.children_status = 'waiting'
+            this.showProgress1 = true
+            this.progress1 = 0
             if (this.progressTimer1) {
                 clearInterval(this.progressTimer1)
                 this.progressTimer1 = null
             }
-
-            if (data.data.code == 403) {
-                this.showProgress1 = false
-                this.progress1 = 0
-                // 重置等待状态
-                // details.value.children_status = ''
-                uni.navigateTo({
-                    url: "/pages/login/login"
-                })
-                return
+            this.progressTimer1 = setInterval(() => {
+                if (this.progress1 >= 99) {
+                    clearInterval(this.progressTimer1)
+                    this.progressTimer1 = null
+                    return
+                }
+                this.progress1++
+            }, 20)
+            let params = {
+                poster_id: this.poster_id,
             }
+            uni.request({
+                url: host + '/trialcase/generate_trialcase/',
+                data: params,
+                header: {
+                    token: uni.getStorageSync('token'),
+                    "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+                },
+                method: 'POST',
+                timeout: 1500000,
+                complete: (data) => {
+                    // 清除进度条定时器
+                    if (this.progressTimer1) {
+                        clearInterval(this.progressTimer1)
+                        this.progressTimer1 = null
+                    }
 
-            if (data.data.code == 200 || data.data.code == 201) {
-                // 设置进度为100%
-                this.progress1 = 100
+                    if (data.data.code == 403) {
+                        this.showProgress1 = false
+                        this.progress1 = 0
+                        // 重置等待状态
+                        // details.value.children_status = ''
+                        uni.navigateTo({
+                            url: "/pages/login/login"
+                        })
+                        return
+                    }
 
-                // 延迟关闭弹窗，让用户看到100%
-                setTimeout(() => {
-                    this.showProgress1 = false
-                    // details.value.deepimages = data.data.data.image_url
-                    // status.value = 2
-                    this.progress1 = 0
-                    // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
-                    // details.value.children_status = ''
-                    this.fetchPosterList(true)
-                }, 500)
-            } else {
-                this.showProgress1 = false
-                this.progress1 = 0
-                this.fetchPosterList(true)
-                // 请求失败，重置等待状态，允许重试
-                // details.value.children_status = ''
-            }
-        }
-    })
-         },
+                    if (data.data.code == 200 || data.data.code == 201) {
+                        // 设置进度为100%
+                        this.progress1 = 100
+
+                        // 延迟关闭弹窗，让用户看到100%
+                        setTimeout(() => {
+                            this.showProgress1 = false
+                            // details.value.deepimages = data.data.data.image_url
+                            // status.value = 2
+                            this.progress1 = 0
+                            // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
+                            // details.value.children_status = ''
+                            this.fetchPosterList(true)
+                        }, 500)
+                    } else {
+                        this.showProgress1 = false
+                        this.progress1 = 0
+                        this.fetchPosterList(true)
+                        // 请求失败，重置等待状态，允许重试
+                        // details.value.children_status = ''
+                    }
+                }
+            })
+        },
         //获取钱的类型
         getprices(item) {
             let object = {
@@ -1568,7 +1581,28 @@ export default {
             this.showProgress = false;
             this.progress = 0;
         },
+        updatalove() {
+            saveLoveCourtRecord({
+                status: "draft",//状态
+                poster_id: this.poster_id,
+                share_status: true,
+                send_word: this.send_word
+            }).then(res => {
+                console.log("保存恋爱法庭记录成功", res);
+            })
+        }
     },
+    onShareAppMessage() {
+         this.updatalove()
+        const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
+        const code = encodeURIComponent(JSON.stringify(this.invitation_code));
+        const query = `?invitation_code=${code}&speak=${this.send_word}&nickname=${nickname}`
+        return {
+            title:this.send_word ? `@${nickname}:` + this.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
+            path: `/pagesA/loveCourt/index${query}`, // 分享路径携带个人ID
+            imageUrl: "/static/index/yq2.png", // 分享图片，不设置则使用默认截图
+        };
+    }
 };
 </script>
 <style scoped lang="scss">
@@ -1647,6 +1681,7 @@ export default {
     transition: width 0.3s ease;
     position: relative;
 }
+
 .del-popup-actions {
     width: 100%;
 
@@ -2410,6 +2445,100 @@ export default {
         text-align: center;
         font-size: 32rpx;
         font-weight: 500;
+    }
+
+    .disagree-btn {
+        margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 100%;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 28rpx;
+    }
+}
+
+
+.tishi1 {
+    padding: 40rpx 30rpx;
+    // padding-bottom: 0;
+
+    textarea,
+    .content1 {
+        width: 100%;
+        background: #F0F0F0;
+        margin: 20rpx 0;
+        border-radius: 20rpx;
+        padding: 20rpx;
+        box-sizing: border-box;
+    }
+}
+
+.tishi2 {
+    width: 600rpx;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40rpx 45rpx;
+    box-sizing: border-box;
+    max-height: 80vh;
+    padding-bottom: 20rpx;
+
+    .title {
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-bottom: 30rpx;
+        text-align: center;
+        width: 100%;
+    }
+
+    .agreement-content {
+        width: 100%;
+        max-height: 600rpx;
+        margin-bottom: 20rpx;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .richtext-content {
+        width: 100%;
+        font-size: 28rpx;
+        line-height: 1.8;
+        // color: rgba(0, 0, 0, 0.85);
+        word-wrap: break-word;
+    }
+
+    .loading,
+    .empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40rpx 0;
+        font-size: 28rpx;
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        margin-top: 20rpx;
+        height: 90rpx;
+        line-height: 90rpx;
+        width: 100%;
+        border-radius: 90rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+
+        button {
+            background: transparent;
+            color: #FFF;
+        }
+    }
+
+    .cancel {
+        margin-top: 20rpx;
     }
 
     .disagree-btn {

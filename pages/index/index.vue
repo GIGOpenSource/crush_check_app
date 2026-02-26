@@ -83,7 +83,7 @@ const path = (url) => {
 	 }
 	
 }
-const invitation_code = "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX4EFGttOUq/wcBWn4NBukiF"
+const invitation_code =  encodeURIComponent(JSON.stringify("U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX4EFGttOUq/wcBWn4NBukiF")); 
 const speak = '我想知道你的的想法'
 const nickname = '测试用户'
 // ?invitation_code=${invitation_code}&speak=${speak}&nickname=${nickname}

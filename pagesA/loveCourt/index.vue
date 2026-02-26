@@ -201,10 +201,10 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 })
 onLoad((e) => {
-    
+     console.log(e,'ee')
     inviteName.value = e.nickname
     content.value = e.speak
-    invitation_code.value = e.invitation_code
+    invitation_code.value = JSON.parse(decodeURIComponent(e.invitation_code))
     if (e.invitation_code) {
         invited.value = true
         params.value.invitation_code = e.invitation_code
@@ -440,7 +440,8 @@ const clearContent = () => {
 onShareAppMessage(() => {
     btnInvite('share')
     const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
-    const query = `?invitation_code=${invitation_code.value}&speak=${params.value.send_word}&nickname=${nickname}`
+    const code = encodeURIComponent(JSON.stringify(invitation_code.value));
+    const query = `?invitation_code=${code}&speak=${params.value.send_word}&nickname=${nickname}`
     return {
         title: params.value.send_word ? `@${nickname}:` + params.value.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
         path: `/pagesA/loveCourt/index${query}`, // 分享路径携带个人ID
