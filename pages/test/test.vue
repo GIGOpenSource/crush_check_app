@@ -37,7 +37,7 @@
                         " mode="aspectFit"></image>
 
                     <!-- 左侧图片 -->
-                    <view class="left" v-if="item.prompt_template.template_type !== 'trial_case'">
+                    <view class="left" v-if="item.business_data?.generate_status !== 'generated'">
                         <image v-if="item.prompt_template.template_type == 'answer'" :src="item.file_url"
                             mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', }">
@@ -65,11 +65,11 @@
                             style="margin-top: 35rpx;">
                         </image>
                         <!-- 恋爱小法庭 -->
-                        <!-- <image v-else-if="item.prompt_template.template_type == 'trial_case'" :src="$getImg('add/love')"
+                        <image v-else-if="item.prompt_template.template_type == 'trial_case'" :src="$getImg('add/love')"
                             mode="widthFix"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }"
                             style="margin:50rpx 0 0 30rpx;width:170rpx">
-                        </image> -->
+                        </image>
                         <!-- <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
                         </view> -->
@@ -204,26 +204,33 @@
 
                         </template>
                         <!-- 恋爱小法庭未完成 -->
-                        <!-- <template
-                            v-if="item.prompt_template.template_type == 'trial_case'">
+                        <template
+                            v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status !== 'generated'">
                             <view class="num" style="margin-left:20rpx">爱的裁判所</view>
                             <view class="details" style="margin-top: 20rpx;">
-                                <text class="look">查看结果{{ '>>' }}</text>
+                                <text class="look"
+                                    v-if="item.business_data.generate_status == 'waiting_generate'">查看结果{{ '>>'
+                                    }}</text>
+                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">等待对方完成{{
+                                    '>>' }}</text>
+                                <text class="look" v-if="item.business_data.generate_status == null">对方已退出{{ '>>'
+                                    }}</text>
                             </view>
-                        </template> -->
-                        <!-- 恋爱小法庭已完成 -->
-                        <template v-if="item.prompt_template.template_type == 'trial_case'">
+                        </template>
+                        <!-- 恋爱小法庭已完成并且支付完成-->
+                        <template
+                            v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status == 'generated'">
                             <view class="num trial_case" style="margin-left:20rpx">
                                 <text>吉吉毛毛哄睡案</text>
                                 <text class="btn">已结案</text>
                             </view>
-                            <view class="num" style="margin-left:20rpx">
+                            <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
                                 <text style="display:inline-block;width:160rpx;">案号</text>
-                                <text>12233445号</text>
+                                <text>{{ item.business_data.case_number }}</text>
                             </view>
-                            <view class="num" style="margin-left:20rpx">
+                            <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
                                 <text style="display:inline-block;width:160rpx;">立案日期</text>
-                                <text>2026-02-25</text>
+                                <text>{{ item.last_used_time || '--' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;">
                                 <text class="look">查看详情{{ '>>' }}</text>
@@ -281,8 +288,8 @@
     <IndexProup :show="showProgress" @close="handleProgressClose" :cha="true" :height="125">
         <template #content>
             <view class="content">
-                <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                }}</view>
+                <view class="num" style="color:#333;margin-bottom: 20rpx;font-size: 26rpx;">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
+                    }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -290,7 +297,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="tip">{{ $t('poster.exitTip') }}</view>
+                <view class="tip">退出后可在“检测记录”中查看</view>
             </view>
         </template>
     </IndexProup>
@@ -314,6 +321,37 @@
         </template>
     </IndexProup>
     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
+    <up-popup :show="showDelPopup3" mode="center">
+        <view class="del-popup-content" style="height:320rpx">
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
+            <view class="title" style="color:#000">{{ $t('answerBook.unlockAnalysis') }}</view>
+            <view class="del-popup-actions">
+                <view @click="lovepaywx" class="btn11">{{ lovepay.price }} {{ $t('answerBook.payNow') }}</view>
+                <!-- <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view> -->
+            </view>
+            <view class="icon" @click="showDelPopup3 = false">
+                <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+            </view>
+        </view>
+    </up-popup>
+     <!-- 恋爱 -->
+    <IndexProup :show="showProgress1" @close="showProgress1 = false" :cha="false" :height="125">
+        <template #content>
+            <view class="pcontent">
+                <view style="color:#000;font-size: 28rpx;">法官团审理中...</view>
+                <view class="num">正在仔细分析详情...</view>
+                <view class="progress-wrapper">
+                    <view class="custom-progress">
+                        <view class="progress-track" style="height:50rpx">
+                            <view class="progress-fill" :style="{ width: progress1 + '%' }"></view>
+                        </view>
+                    </view>
+                </view>
+                <view class="tip">退出后可在“检测记录”中查看</view>
+                <view class="btn" @click="showProgress1 = false" style="margin:30rpx">退出</view>
+            </view>
+        </template>
+    </IndexProup>
 </template>
 
 <script>
@@ -324,7 +362,8 @@ import { t } from '@/i18n/index.js';
 import { aesEncrypt } from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
-import { createOrder } from '@/api/index.js'
+import { createOrder, getProducts } from '@/api/index.js'
+import { host } from '@/config/config.js';
 export default {
     components: {
         IndexProup,
@@ -336,6 +375,7 @@ export default {
             pageName: '',
             showDelPopup: false,
             showDelPopup2: false,
+            showDelPopup3: false,
             selectedCount: 0,
             currentPosterId: null, // 当前点击的海报ID，用于重新生成
             currentCategory: 0,
@@ -344,6 +384,11 @@ export default {
             showProgress: false, // 显示进度条弹窗
             progress: 0, // 进度百分比
             progressTimer: null, // 进度条定时器
+
+           showProgress1: false, // 显示进度条弹窗
+            progress1: 0, // 进度百分比
+            progressTimer1: null, // 进度条定时器
+
             categoryList: [],
             posterList: [],
             currentPage: 1,
@@ -357,7 +402,9 @@ export default {
             md5: '',
             poster_id: '',
             mbtishow: false,
-            posterType: ''
+            posterType: '',
+            lovepay: '',//恋爱小法庭支付
+
         };
     },
     onLoad() {
@@ -558,11 +605,17 @@ export default {
                         pagination: pagination,
                     });
 
-                    // 为每个项目添加 isActive 属性
-                    const formattedResults = results.map((item) => ({
-                        ...item,
-                        isActive: this.isSelectAll && !this.isType, // 如果全选状态且处于管理模式，新数据也选中
-                    }));
+                    // 为每个项目添加 isActive 属性，若有 last_used_time 则格式化为 YYYY-MM-DD
+                    const formattedResults = results.map((item) => {
+                        const next = {
+                            ...item,
+                            isActive: this.isSelectAll && !this.isType, // 如果全选状态且处于管理模式，新数据也选中
+                        };
+                        if (item.last_used_time) {
+                            next.last_used_time = this.formatDateOnly(item.last_used_time);
+                        }
+                        return next;
+                    });
 
                     if (reset) {
                         this.posterList = formattedResults;
@@ -660,6 +713,16 @@ export default {
             }
         },
 
+        // 将 ISO 时间格式化为 YYYY-MM-DD（如 2026-02-26T11:01:18.547649+08:00 -> 2026-02-26）
+        formatDateOnly(isoString) {
+            if (!isoString) return '';
+            const d = new Date(isoString);
+            if (isNaN(d.getTime())) return isoString;
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        },
         // 格式化日期为相对时间
         formatDate(dateString) {
             if (!dateString) return "";
@@ -872,6 +935,38 @@ export default {
                             }
                         }
 
+                    } else if (type == 'trial_case') {
+                        //支付完成
+                        if (item.business_data.generate_status == 'generated') {
+                            uni.navigateTo({
+                                url: '/pagesA/loveCourt/poster?id=' + item.id,
+                                fail: (err) => {
+                                    console.error("跳转失败:", err);
+                                    uni.showToast({
+                                        title: this.$t('poster.jumpFailed'),
+                                        icon: "none",
+                                    });
+                                },
+                            });
+                        } else if (item.business_data.generate_status == 'waiting_generate') {
+                              console.log('等待生成中')
+                            getProducts('trial_case').then(res => {
+                                this.lovepay = res.data.results[0]
+                                this.showDelPopup3 = true
+                            })
+
+                        } else if (item.business_data.generate_status == 'non_generable') {
+                            uni.showToast({
+                                title: this.$t('test.paymentNotAvailable'),
+                                icon: "none",
+                            });
+
+                        } else if (item.business_data.generate_status == null) {
+                            uni.showToast({
+                                title: this.$t('test.otherPaying'),
+                                icon: "none",
+                            });
+                        }
                     } else {
                         uni.showToast({
                             title: this.$t('poster.posterIdNotExist'),
@@ -888,6 +983,114 @@ export default {
                 this.previewImage(item, index);
             }
         },
+        //支付小法庭
+        lovepaywx() {
+            let params = {
+                description: this.lovepay.description,
+                openId: uni.getStorageSync('openId'),
+                productId: this.lovepay.id,
+                posterId: this.poster_id
+            }
+            createOrder(params).then(res => {
+                let that = this
+                uni.requestPayment({
+                    "provider": "wxpay",
+                    ...res.data,
+                    "signType": "RSA",
+                    "package": `${res.data.prepayid}`,
+                    "nonceStr": res.data.noncestr,
+                    success(res) {
+                        that.lovedeep()
+                        uni.showToast({
+                            title: t('proPoster.paySuccess'),
+                            icon: 'success'
+                        })
+                        that.showDelPopup3 = false
+
+
+                    },
+                    fail(e) {
+                        uni.showToast({
+                            title: t('proPoster.payFailed'),
+                            icon: 'none'
+                        })
+                        that.showDelPopup3 = false
+                    }
+                })
+
+            })
+        },
+        //小法庭深度
+         lovedeep(){
+                // details.value.children_status = 'waiting'
+    this.showProgress1 = true
+    this.progress1 = 0
+    if (this.progressTimer1) {
+        clearInterval(this.progressTimer1)
+        this.progressTimer1 = null
+    }
+    this.progressTimer1 = setInterval(() => {
+        if (this.progress1 >= 99) {
+            clearInterval(this.progressTimer1)
+            this.progressTimer1 = null
+            return
+        }
+        this.progress1++
+    }, 20)
+    let params = {
+        poster_id: this.poster_id,
+    }
+    uni.request({
+        url: host + '/trialcase/generate_trialcase/',
+        data: params,
+        header: {
+            token: uni.getStorageSync('token'),
+            "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+        },
+        method: 'POST',
+        timeout: 1500000,
+        complete: (data) => {
+            // 清除进度条定时器
+            if (this.progressTimer1) {
+                clearInterval(this.progressTimer1)
+                this.progressTimer1 = null
+            }
+
+            if (data.data.code == 403) {
+                this.showProgress1 = false
+                this.progress1 = 0
+                // 重置等待状态
+                // details.value.children_status = ''
+                uni.navigateTo({
+                    url: "/pages/login/login"
+                })
+                return
+            }
+
+            if (data.data.code == 200 || data.data.code == 201) {
+                // 设置进度为100%
+                this.progress1 = 100
+
+                // 延迟关闭弹窗，让用户看到100%
+                setTimeout(() => {
+                    this.showProgress1 = false
+                    // details.value.deepimages = data.data.data.image_url
+                    // status.value = 2
+                    this.progress1 = 0
+                    // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
+                    // details.value.children_status = ''
+                    this.fetchPosterList(true)
+                }, 500)
+            } else {
+                this.showProgress1 = false
+                this.progress1 = 0
+                this.fetchPosterList(true)
+                // 请求失败，重置等待状态，允许重试
+                // details.value.children_status = ''
+            }
+        }
+    })
+         },
         //获取钱的类型
         getprices(item) {
             let object = {
@@ -1369,12 +1572,115 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.pcontent {
+    width: 500rpx;
+    padding: 40rpx 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0;
+
+    .num {
+        font-size: 26rpx;
+        margin: 20rpx 0;
+        color: #000;
+        margin-top: 30rpx !important;
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        // margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 90%;
+        border-radius: 80rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+    }
+
+    .tip {
+        font-size: 24rpx;
+    }
+
+}
+
+.progress-wrapper {
+    width: 70%;
+    margin: 0 auto;
+    // margin-bottom: 20rpx;
+}
+
+.custom-progress {
+    width: 100%;
+}
+
+.progress-track {
+    position: relative;
+    width: 100%;
+    height: 50rpx;
+    background-color: #ffffff;
+    border-radius: 40rpx;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #C084FC 0%, #9333EA 100%);
+    background-image: repeating-linear-gradient(-45deg,
+            #C084FC 0rpx,
+            #D4A5F8 3rpx,
+            #9333EA 7rpx,
+            #9333EA 7rpx,
+            #D4A5F8 10rpx,
+            #C084FC 10rpx,
+            #C084FC 10rpx,
+            #D4A5F8 13rpx,
+            #9333EA 17rpx,
+            #9333EA 17rpx,
+            #D4A5F8 20rpx,
+            #C084FC 20rpx);
+    border-radius: 40rpx;
+    transition: width 0.3s ease;
+    position: relative;
+}
+.del-popup-actions {
+    width: 100%;
+
+    .btn11 {
+        width: 100%;
+        background: #b370ff;
+        height: 90rpx;
+        margin-top: 30rpx;
+        line-height: 90rpx;
+        border-radius: 90rpx;
+    }
+}
+
+.del-popup-content .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
 .trial_case {
     display: flex;
     justify-content: space-between;
     width: 135%;
+
     .btn {
-          background: #beffd5;
+        background: #beffd5;
         font-size: 26rpx;
         color: #349a5b;
         padding: 10rpx 20rpx;
