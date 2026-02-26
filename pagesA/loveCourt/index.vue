@@ -67,7 +67,8 @@
                     <rich-text v-if="userAgreementContent" :nodes="userAgreementContent"
                         class="richtext-content"></rich-text>
                 </scroll-view>
-                <view class="btn" @click="handleAgree">去使用</view>
+                <view class="btn" @click="tishi = false">去使用</view>
+                <view style="height: 15rpx;"></view>
             </view>
 
         </template>
@@ -157,6 +158,7 @@ import {
     host
 } from '@/config/config.js'
 import { saveLoveCourtRecord, getUserJoinedStatus, getRecords,deleteRecords } from '@/api/loveCourt.js'
+import { getSystemContent } from "@/api/login.js";
 import {
     onLoad,
     onShow,
@@ -201,7 +203,6 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 })
 onLoad((e) => {
-     console.log(e,'ee')
     inviteName.value = e.nickname
     content.value = e.speak
     invitation_code.value = invitation_code.value ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
@@ -214,6 +215,10 @@ onLoad((e) => {
     if(!invitation_code.value){
         fetchDrafts()
     }
+    getSystemContent('trial_agreement').then(res => {
+        console.log(res,'reeeee')
+        userAgreementContent.value = res.data[0].trial_agreement
+    })
 })
 const goBack = () => {
     if(recode.value?.poster_id){
@@ -476,9 +481,12 @@ const btn = (type) => {
        params.value = recode.value
        showDelPopup2.value = false
   }else{ //放弃
+   
+     params.value.poster_id = recode.value.poster_id
      showDelPopup2.value = false
      recode.value = {}
-      del()
+       del()
+     
   }
 }
 //是否保存草稿
@@ -500,6 +508,7 @@ const baocao = (type) => {
 const del = () => {
     if (!params.value.poster_id) return
     deleteRecords(params.value.poster_id).then(res => {
+        params.value.poster_id = ''
         clearContent()
     }).catch(err => {
        
