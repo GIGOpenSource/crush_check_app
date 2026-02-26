@@ -5,7 +5,7 @@
             <text class="title">爱的裁判所</text>
         </view>
         <view class="content">
-            <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" />
+            <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" :info="details"/>
         </view>
         <view class="bottom">
             <view class="border">
@@ -20,9 +20,21 @@
 <script setup>
 import Loveposter from '@/components/Loveposter/Loveposter.vue';
 import { ref } from 'vue';
-
+import { getPosterDetails } from '@/api/index.js'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 const posterImg = ref('');
 const posterError = ref(false);
+const details = ref({});
+const id = ref('')
+onLoad((e) => {
+    if (e.id) {
+        getPosterDetails(e.id).then(res => {
+            details.value = res.data
+        })
+    }
+    id.value = e.id
+
+})
 
 const handlePosterSuccess = (filePath) => {
     if (filePath) {
@@ -33,6 +45,42 @@ const handlePosterSuccess = (filePath) => {
         posterError.value = true
     }
 }
+// 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
+const cleanupOldTempFiles = async () => {
+  try {
+    const fs = wx.getFileSystemManager();
+    
+    // 核心容错：获取文件列表失败时直接返回，不中断流程
+    let fileList = [];
+    try {
+      const fileListRes = await new Promise((resolve, reject) => {
+        fs.getSavedFileList({ success: resolve, fail: reject });
+      });
+      fileList = fileListRes.fileList || [];
+    } catch (err) {
+      // 目录不存在/无文件时，打印提示并跳过删除步骤
+      console.log('无已保存文件，无需清理：', err.errMsg);
+      return;
+    }
+
+    // 遍历删除所有文件（有文件才执行）
+    if (fileList.length > 0) {
+      for (const file of fileList) {
+        try {
+          await new Promise((resolve, reject) => {
+            fs.unlink({ filePath: file.filePath, success: resolve, fail: reject });
+          });
+          console.log(`清理文件成功：${file.filePath}`);
+        } catch (err) {
+          console.warn(`清理单个文件失败（忽略）：${file.filePath}`);
+        }
+      }
+      console.log('所有文件清理完成');
+    }
+  } catch (err) {
+    console.error('文件清理流程异常（不影响页面）：', err.errMsg);
+  }
+};
 
 const handlePosterFail = (error) => {
     console.error('海报生成失败:', error)
@@ -68,9 +116,12 @@ const path = (type) => {
     } else if (type == 'back') {
         uni.switchTab({ url: '/pages/index/index' })
     } else if(type == 'look'){
-        uni.navigateTo({ url: '/pagesA/loveCourt/materail' })
+        uni.navigateTo({ url: '/pagesA/loveCourt/materail?id='+id.value })
     }
 }
+onUnload(() => {
+    cleanupOldTempFiles()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +144,7 @@ const path = (type) => {
     box-sizing: border-box;
     border: 0.5rpx solid #FFFFFF;
     border-radius: 10rpx;
-    min-height: 82vh;
+    max-height: 82vh;
     margin-top: 30rpx;
     box-sizing: border-box;
     overflow-y: scroll;

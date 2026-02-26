@@ -7,7 +7,7 @@
     <view class="content">
       <view class="name">
         <view v-for="(person, index) in people" :key="index" :class="{ 'active': current == index }"
-          @click="current = index">{{ person }}</view>
+          @click="clicks(index)">{{ person }}</view>
       </view>
       <view class="c1">
         <view class="title">事件描述:</view>
@@ -17,13 +17,10 @@
         <view class="title">问题描述:</view>
         <view class="descript">{{ question }}</view>
       </view>
-      <view class="c1">
+      <view class="c1" v-if="imageList.length > 0">
         <view>补充材料上传:</view>
         <view class="images">
-          <image
-            :src="$getImg('index/tarotcards')"
-            mode="scaleToFill"
-          />
+          <image mode="scaleToFill" v-for="(img, index) in imageList" :key="index" :src="img" />
         </view>
       </view>
     </view>
@@ -32,12 +29,43 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getPosterDetails } from '@/api/index.js'
+import { onLoad } from '@dcloudio/uni-app'
 const people = ref(['张三', '李四']) //人物
-const event = ref('12345')//事件描述
-const question = ref('111')//问题描述
+const event = ref('')//事件描述
+const question = ref('')//问题描述
 const current = ref(0)
+const details = ref({})
+const imageList = ref([])
 const back = () => {
   uni.navigateBack()
+}
+
+onLoad((e) => {
+  if (e.id) {
+    getPosterDetails(e.id).then(res => {
+      details.value = res.data
+      people.value[0] = details.value.business_data?.self_data?.nickname || '张三'
+      people.value[1] = details.value.business_data?.other_data?.nickname || '李四'
+       event.value = details.value.business_data?.self_data?.event_description || '暂无'
+    question.value = details.value.business_data?.self_data?.issue_description || '暂无'
+    imageList.value = details.value.business_data?.self_data?.supplementary_materials || []
+    })
+  }
+
+})
+const clicks = (index) => {
+  current.value = index
+
+  if (index == 0) {
+    event.value = details.value.business_data?.self_data?.event_description || '暂无'
+    question.value = details.value.business_data?.self_data?.event_description || '暂无'
+    imageList.value = details.value.business_data?.self_data?.supplementary_materials || []
+  } else if (index == 1) {
+    event.value = details.value.business_data?.other_data?.event_description || '暂无'
+    question.value = details.value.business_data?.other_data?.event_description || '暂无'
+    imageList.value = details.value.business_data?.other_data?.supplementary_materials || []
+  }
 }
 </script>
 
@@ -86,6 +114,10 @@ const back = () => {
       text-align: center;
       font-size: 28rpx;
       margin-right: 20rpx;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0 20rpx;
+      box-sizing: border-box;
     }
 
     .active {
@@ -110,16 +142,17 @@ const back = () => {
       padding: 20rpx;
       border-radius: 20rpx;
     }
-    .images{
+
+    .images {
       display: flex;
       flex-wrap: wrap;
-     
-      image{
+
+      image {
         width: 30%;
         height: 200rpx;
         object-fit: cover;
         margin-left: 3%;
-         margin-top: 20rpx;
+        margin-top: 20rpx;
       }
     }
   }

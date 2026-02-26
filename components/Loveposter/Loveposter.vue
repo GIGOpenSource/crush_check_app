@@ -10,23 +10,23 @@
                 <!-- 标题 -->
                   <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
                         <l-painter-text css="display: block;margin:20rpx 0;width:100%;text-align: center;font-size: 30rpx;font-weight:bolder" text="爱的裁判所判决书"></l-painter-text>
-                       <l-painter-text text="案号：2025-甜糯-001号" css="font-size: 24rpx;"></l-painter-text>
+                       <l-painter-text :text="'案号' + (info.business_data?.case_name || '--') " css="font-size: 24rpx;"></l-painter-text>
                     </l-painter-view>
                     <!-- 对手信息 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-bottom: 20rpx;">
                         <l-painter-view css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
                             <l-painter-view css="display: flex; flex-direction: row;margin-bottom: 20rpx;">
-                                <l-painter-text :text="'A：' + opponentAName" css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
-                                <l-painter-text :text="'B：' + opponentBName" css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
+                                <l-painter-text :text="'A：' + (info.business_data?.self_data?.nickname || '')" css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
+                                <l-painter-text :text="'B：' + (info.business_data?.other_data?.nickname || '')" css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
                             </l-painter-view>
-                            <l-painter-text :text="'审判长：' + judgeName" css="color: rgba(255,255,255,0.9); margin-bottom: 20rpx;"></l-painter-text>
-                            <l-painter-text :text="'开庭时间：' + courtTimeDesc" css="color: rgba(255,255,255,0.9);"></l-painter-text>
+                            <l-painter-text :text="'审判长：' + info.content?.presiding_judge" css="color: rgba(255,255,255,0.9); margin-bottom: 20rpx;"></l-painter-text>
+                            <l-painter-text :text="'开庭时间：' + (info.content?.open_court_time || '')" css="color: rgba(255,255,255,0.9);"></l-painter-text>
                         </l-painter-view>
                     </l-painter-view>
                  <!-- 问题原因分析 -->
                     <l-painter-view css="display: flex;flex-direction: column;">
                         <l-painter-text text="问题原因分析："></l-painter-text>
-                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" text="问题原因分析问题原因分析文案文案"></l-painter-text>
+                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" :text="info.content?.analysis || ''"></l-painter-text>
                     </l-painter-view>
                     <!-- 问题占比 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
@@ -35,8 +35,8 @@
                         <l-painter-view css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 40rpx 40rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" >
                             <!-- 上方：左侧名称、右侧名称+百分比 -->
                             <l-painter-view css="display: flex; flex-direction: row; justify-content: space-between; margin-bottom: 12rpx;">
-                                <l-painter-text :text="questionProportionLeftName" css="color: #fff;"></l-painter-text>
-                                <l-painter-text :text="questionProportionRightLabel" css="color: #fff;"></l-painter-text>
+                                <l-painter-text :text="(info.business_data?.self_data?.nickname || '')" css="color: #fff;"></l-painter-text>
+                                <l-painter-text :text="(info.business_data?.other_data?.nickname || '')" css="color: #fff;"></l-painter-text>
                             </l-painter-view>
                             <!-- 中间：双色横向条（左绿右橙，圆角） -->
                             <l-painter-view css="display: flex; flex-direction: row; width: 100%; height: 70rpx; border-radius: 10rpx;overflow: hidden;margin:10rpx 0;">
@@ -45,29 +45,29 @@
                             </l-painter-view>
                             <!-- 下方：左侧百分比、右侧百分比（浅灰） -->
                             <l-painter-view css="display: flex; flex-direction: row; justify-content: space-between; margin-top: 8rpx;">
-                                <l-painter-text :text="questionProportionLeftPercent + '%'" css="color: rgba(255,255,255,0.6); font-size: 24rpx;"></l-painter-text>
-                                <l-painter-text :text="questionProportionRightPercent + '%'" css="color: rgba(255,255,255,0.6); font-size: 24rpx;"></l-painter-text>
+                                <l-painter-text :text="(info.content?.percentage ?? 0) + '%'" css="color: rgba(255,255,255,0.6); font-size: 24rpx;"></l-painter-text>
+                                <l-painter-text :text="(info.content?.other_percentage ?? 0) + '%'" css="color: rgba(255,255,255,0.6); font-size: 24rpx;"></l-painter-text>
                             </l-painter-view>
                         </l-painter-view>
                     </l-painter-view>
                     <!-- 最终判决 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
                         <l-painter-text text="最终判决："></l-painter-text>
-                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" text="最终判决文案最终判决文案文案"></l-painter-text>
+                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" :text="info.content?.verdict || ''"></l-painter-text>
                     </l-painter-view>
                      <!-- 和解方案 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
                         <l-painter-text text="和解方案："></l-painter-text>
-                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" text="和解方案和解方案文案文案"></l-painter-text>
+                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" :text="info.content?.resolution || ''"></l-painter-text>
                     </l-painter-view>
                      <!-- 法官建议 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
                         <l-painter-text text="法官建议："></l-painter-text>
-                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" text="法官建议法官建议文案文案"></l-painter-text>
+                        <l-painter-text css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e" :text="info.content?.judge_advice || ''"></l-painter-text>
                     </l-painter-view>
                     <!-- 判决时间 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 30rpx;align-items: center;">
-                        <l-painter-text css="color: rgba(255, 255, 255, 0.5);" text="判决时间：2026/12/05 14:48"></l-painter-text>
+                        <l-painter-text css="color: rgba(255, 255, 255, 0.5);" :text="'判决时间：' + verdictTimeText"></l-painter-text>
                     </l-painter-view>
 
                 </l-painter-view>
@@ -92,7 +92,20 @@ export default {
             type: Object,
             // 优化1：给默认值初始化child_list，避免访问时报错
             default: () => ({
-                child_list: []
+                child_list: [],
+                business_data: {
+                    case_name: '',
+                    self_data: {
+                        nickname: ''
+                    },
+                    other_data: {
+                        nickname: ''
+                    }
+                },
+                content: {
+                    percentage: 0,
+                    other_percentage: 0
+                }
             })
         }
     },
@@ -122,17 +135,30 @@ export default {
         };
     },
     computed: {
+        // 将 last_used_time（ISO）格式化为 判决时间：YYYY/MM/DD HH:mm
+        verdictTimeText() {
+            const raw = this.info?.last_used_time
+            if (!raw) return ''
+            const d = new Date(raw)
+            if (isNaN(d.getTime())) return raw
+            const y = d.getFullYear()
+            const m = String(d.getMonth() + 1).padStart(2, '0')
+            const day = String(d.getDate()).padStart(2, '0')
+            const h = String(d.getHours()).padStart(2, '0')
+            const min = String(d.getMinutes()).padStart(2, '0')
+            return `${y}/${m}/${day} ${h}:${min}`
+        },
         questionProportionRightLabel() {
             return this.questionProportionRightName
         },
         // 进度条左侧样式（绿色），与项目内 background:#33323e 写法一致，确保 lime-painter 解析后能绘制
         questionProportionLeftBarCss() {
-            const w = this.questionProportionLeftPercent || 0;
+            const w = this.info?.content?.percentage ?? this.questionProportionLeftPercent ?? 0;
             return `width:${w}%;height:70rpx;background:#33A366;backgroundColor:#33A366`;
         },
         // 进度条右侧样式（橙黄色）
         questionProportionRightBarCss() {
-            const w = this.questionProportionRightPercent || 0;
+            const w = this.info?.content?.other_percentage ?? this.questionProportionRightPercent ?? 0;
             return `width:${w}%;height:70rpx;background:#E6A23C;backgroundColor:#E6A23C`;
         },
         list() {

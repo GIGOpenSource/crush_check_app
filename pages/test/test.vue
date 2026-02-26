@@ -221,7 +221,7 @@
                         <template
                             v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status == 'generated'">
                             <view class="num trial_case" style="margin-left:20rpx">
-                                <text>吉吉毛毛哄睡案</text>
+                                <text>{{ item.business_data.case_name || '--' }}</text>
                                 <text class="btn">已结案</text>
                             </view>
                             <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
