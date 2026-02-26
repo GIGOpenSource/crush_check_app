@@ -19,19 +19,13 @@
 				</view>
 				<image :src="$getImg('index/answer')" />
 			</view>
-			<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
+			<view class="left" @click="path('/pagesA/tarotcards/qusetion')" v-if="version == 1">
 				<view style="margin-left: 50rpx;width: 200rpx;">
 					<view>{{ t('tarot_name') }}</view>
 					<view></view>
 				</view>
 				<image :src="$getImg('index/tarotcards')" style="width: 300rpx;margin-left: 0;" />
 			</view>
-			<!-- <view class="left" @click="path('/pagesA/mbti/index')">
-				<view>
-					<view>MBTI</view>
-				</view>
-				<image :src="$getImg('add/mbti')" mode="widthFix" />
-			</view> -->
 		</view>
 		<view class="bottom">
 			<view class="left" @click="path('/pagesA/mbti/index')">
@@ -53,14 +47,16 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n';
+import { getSystemContent } from "@/api/login.js";
+import { ref } from 'vue'
 import {
-	onLoad
+	onLoad,onShow
 } from '@dcloudio/uni-app'
 import {
 	share
 } from '@/api/index.js'
 const { t } = useI18n();
-
+const version = ref('')
 const path = (url) => {
 	uni.removeStorageSync('question');
 	 if(!uni.getStorageSync('token')){
@@ -102,6 +98,11 @@ onLoad((e) => {
 			console.log(res, "share record");
 		});
 	}
+})
+onShow(() => {
+	getSystemContent().then(res => {
+		version.value = res.data[0].version
+	})
 })
 
 </script>
