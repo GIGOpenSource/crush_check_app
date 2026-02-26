@@ -9,7 +9,7 @@
                 <view class="navbar-title">CrushCheck</view>
             </view>
         </view>
-        <view class="page-body" :style="{ marginTop: (statusBarHeight + 88) + 'rpx' }">
+        <view class="page-body" :style="{ marginTop: (statusBarHeight + 108) + 'rpx' }">
         <view class="titlecon">
             <view class="t1">
                 <text>爱的裁判所</text>
@@ -111,14 +111,14 @@
         <template #content>
             <view class="pcontent">
                 <view style="color:#000">法官团审理中...</view>
-                <view class="num">正在仔细分析详情...</view>
-                <view class="progress-wrapper">
+                <!-- <view class="num">正在仔细分析详情...</view> -->
+                <!-- <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
                             <view class="progress-fill" :style="{ width: progress + '%' }"></view>
                         </view>
                     </view>
-                </view>
+                </view> -->
                 <view class="tip">退出后可在“检测记录”中查看</view>
                 <view class="btn" @click="handleExit">退出</view>
             </view>
@@ -156,7 +156,7 @@ import { ref, onMounted } from 'vue'
 import {
     host
 } from '@/config/config.js'
-import { saveLoveCourtRecord, getUserJoinedStatus, getRecords } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, getUserJoinedStatus, getRecords,deleteRecords } from '@/api/loveCourt.js'
 import {
     onLoad,
     onShow,
@@ -201,7 +201,7 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 })
 onLoad((e) => {
-    fetchDrafts()
+    
     inviteName.value = e.nickname
     content.value = e.speak
     invitation_code.value = e.invitation_code
@@ -209,6 +209,10 @@ onLoad((e) => {
         invited.value = true
         params.value.invitation_code = e.invitation_code
         posterIdFromInvite.value = true
+        
+    }
+    if(!invitation_code.value){
+        fetchDrafts()
     }
 })
 const goBack = () => {
@@ -473,6 +477,7 @@ const btn = (type) => {
   }else{ //放弃
      showDelPopup2.value = false
      recode.value = {}
+      del()
   }
 }
 //是否保存草稿
@@ -483,10 +488,21 @@ const baocao = (type) => {
        showDelPopup3.value = false
   }else{ //不保存
      showDelPopup3.value = false
+      del()
+      stopPolling()
   }
   uni.switchTab({
     url: '/pages/index/index'
   })
+}
+//中途退出
+const del = () => {
+    if (!params.value.poster_id) return
+    deleteRecords(params.value.poster_id).then(res => {
+        clearContent()
+    }).catch(err => {
+       
+    })
 }
 
 </script>
@@ -619,7 +635,6 @@ const baocao = (type) => {
 
 .titlecon {
     width: 100%;
-
     .t1 {
         width: 100%;
         text-align: center;
@@ -635,7 +650,7 @@ const baocao = (type) => {
     .del {
         position: absolute;
         right: 20rpx;
-        top:185rpx;
+        top:205rpx;
         color: rgba(255, 255, 255, 0.5);
     }
 }

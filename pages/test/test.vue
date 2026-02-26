@@ -37,7 +37,7 @@
                         " mode="aspectFit"></image>
 
                     <!-- 左侧图片 -->
-                    <view class="left">
+                    <view class="left" v-if="item.prompt_template.template_type !== 'trial_case'">
                         <image v-if="item.prompt_template.template_type == 'answer'" :src="item.file_url"
                             mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', }">
@@ -55,22 +55,24 @@
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'"
                             :src="$getImg('add/mbtiimages')" mode="scaleToFill"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="width: 150rpx;height:150rpx">
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }"
+                            style="width: 150rpx;height:150rpx">
                         </image>
-                         <image
-                            v-else-if="item.prompt_template.template_type == 'trial_case'"
-                            :src="$getImg('add/love')" mode="widthFix"
-                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }" style="margin:50rpx 0 0 30rpx;width:170rpx">
+                        <image
+                            v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url"
+                            mode="widthFix" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }"
+                            style="margin-top: 35rpx;">
                         </image>
                         <!-- 恋爱小法庭 -->
-                         <image
-                            v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
-                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="margin-top: 35rpx;">
-                        </image>
-                        <view v-else class="poster-placeholder">
+                        <!-- <image v-else-if="item.prompt_template.template_type == 'trial_case'" :src="$getImg('add/love')"
+                            mode="widthFix"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }"
+                            style="margin:50rpx 0 0 30rpx;width:170rpx">
+                        </image> -->
+                        <!-- <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
-                        </view>
+                        </view> -->
                     </view>
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
@@ -112,7 +114,8 @@
                             </view>
                         </template>
                         <!-- mbti -->
-                        <template v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'">
+                        <template
+                            v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left: 5rpx;">{{ $t('test.mbtiTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
@@ -149,11 +152,13 @@
 
 
                         </template>
-                        <template v-if="item.prompt_template.template_type == 'mbti'  && item.mbti_list[0].room_pay_status == 'pay_completed'">
+                        <template
+                            v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left:-10rpx;margin-top: 40rpx;">{{ $t('poster.personalityIs') }}{{
-                                    item.mbti_list[0]?.mbti_type ||
-                                    '--' }}</view>
+                                <view class="num" style="margin-left:-10rpx;margin-top: 40rpx;">{{
+                                    $t('poster.personalityIs') }}{{
+                                        item.mbti_list[0]?.mbti_type ||
+                                        '--' }}</view>
                                 <view class="details" style="margin-top: 20rpx;">
                                     <text v-if="isType" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
@@ -191,12 +196,38 @@
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
                                         <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
                                             !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
-                                            $t('poster.viewDetails') }}</text>
+                                                $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
                             </block>
 
 
+                        </template>
+                        <!-- 恋爱小法庭未完成 -->
+                        <!-- <template
+                            v-if="item.prompt_template.template_type == 'trial_case'">
+                            <view class="num" style="margin-left:20rpx">爱的裁判所</view>
+                            <view class="details" style="margin-top: 20rpx;">
+                                <text class="look">查看结果{{ '>>' }}</text>
+                            </view>
+                        </template> -->
+                        <!-- 恋爱小法庭已完成 -->
+                        <template v-if="item.prompt_template.template_type == 'trial_case'">
+                            <view class="num trial_case" style="margin-left:20rpx">
+                                <text>吉吉毛毛哄睡案</text>
+                                <text class="btn">已结案</text>
+                            </view>
+                            <view class="num" style="margin-left:20rpx">
+                                <text style="display:inline-block;width:160rpx;">案号</text>
+                                <text>12233445号</text>
+                            </view>
+                            <view class="num" style="margin-left:20rpx">
+                                <text style="display:inline-block;width:160rpx;">立案日期</text>
+                                <text>2026-02-25</text>
+                            </view>
+                            <view class="details" style="margin-top: 20rpx;">
+                                <text class="look">查看详情{{ '>>' }}</text>
+                            </view>
                         </template>
                     </view>
                 </view>
@@ -413,7 +444,7 @@ export default {
                 label: t('poster.mbti'),
                 type: "mbti",
             },
-             {
+            {
                 label: '爱的裁判所',
                 type: "trial_case",
             },
@@ -1338,6 +1369,19 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.trial_case {
+    display: flex;
+    justify-content: space-between;
+    width: 135%;
+    .btn {
+          background: #beffd5;
+        font-size: 26rpx;
+        color: #349a5b;
+        padding: 10rpx 20rpx;
+        border-radius: 10rpx;
+    }
+}
+
 .poster-page {
 
     min-height: 100vh;
@@ -1787,6 +1831,7 @@ export default {
     margin-left: 20rpx !important;
 
 }
+
 .mbti {
     width: 155rpx !important;
     // height: 150rpx !important;

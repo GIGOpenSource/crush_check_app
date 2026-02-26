@@ -69,16 +69,24 @@ const path = (url) => {
 				url:'/pages/login/login'
 			})
 		}else{
-             uni.navigateTo({ url })
+			if(url == '/pagesA/loveCourt/index'){
+				uni.redirectTo({
+					url:'/pagesA/loveCourt/index'
+				})
+			}else{
+                uni.navigateTo({ url })
+			}
+            
 		}
 	 }else{
 		uni.navigateTo({ url })
 	 }
 	
 }
-const invitation_code =  "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX6lOI32FjiTKYybzy28hhip"
+const invitation_code =  "U2FsdGVkX18AAAAAAAAAADNBcMGxhX3kVgr6zqhmYX48N8W5IUrrFVqIuz+8pwcq"
 const speak = '我想知道你的的想法'
 const nickname = '测试用户'
+// ?invitation_code=${invitation_code}&speak=${speak}&nickname=${nickname}
 onLoad((e) => {
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);

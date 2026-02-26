@@ -15,7 +15,12 @@ export const getRecords = () => {
 	return getRequest(`/trialcase/get_latest_draft/`, {})
 }
 
-//详情
+//删除记录
+export const deleteRecords = (poster_id) => {
+	return deleteRequest(`/trialcase/delete_trialcase/`,{poster_id})
+}
+
+//深度
 export const loveCourtJudgment = (params) => {
 	return postRequest('/trialcase/generate_trialcase/',params)
 }
