@@ -204,7 +204,7 @@ onLoad((e) => {
      console.log(e,'ee')
     inviteName.value = e.nickname
     content.value = e.speak
-    invitation_code.value = JSON.parse(decodeURIComponent(e.invitation_code))
+    invitation_code.value = invitation_code.value ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
     if (e.invitation_code) {
         invited.value = true
         params.value.invitation_code = e.invitation_code
