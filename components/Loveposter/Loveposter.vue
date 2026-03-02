@@ -10,7 +10,7 @@
                 <!-- 标题 -->
                   <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
                         <l-painter-text css="display: block;margin:20rpx 0;width:100%;text-align: center;font-size: 30rpx;font-weight:bolder" text="爱的裁判所判决书"></l-painter-text>
-                       <l-painter-text :text="'案号' + (info.business_data?.case_name || '--') " css="font-size: 24rpx;"></l-painter-text>
+                       <l-painter-text :text="'案号：' + (info.content?.case_name || '--') " css="font-size: 24rpx;"></l-painter-text>
                     </l-painter-view>
                     <!-- 对手信息 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-bottom: 20rpx;">

@@ -163,7 +163,8 @@ import {
     onLoad,
     onShow,
     onShareAppMessage,
-    onPullDownRefresh
+    onPullDownRefresh,
+    onUnload
 } from '@dcloudio/uni-app'
 import { onUnmounted } from 'vue'
 const tishi = ref(false)
@@ -208,7 +209,7 @@ onLoad((e) => {
     invitation_code.value = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
     if (e.invitation_code) {
         invited.value = true
-        params.value.invitation_code = invitation_code.value
+        params.value.invitation_code = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
         posterIdFromInvite.value = true
         
     }
@@ -219,6 +220,9 @@ onLoad((e) => {
         console.log(res,'reeeee')
         userAgreementContent.value = res.data[0].trial_agreement
     })
+})
+onUnload(() => {
+    stopPolling()
 })
 const goBack = () => {
     console.log(recode.value.poster_id,'recode.value')
@@ -295,7 +299,7 @@ const addImage = () => {
                 uni.hideLoading()
                 uni.showToast({
                     title: t('index.uploadSuccess'),
-                    icon: 'success'
+                    icon: 'none'
                 })
             } catch (error) {
                 // photo_upload_fail()
