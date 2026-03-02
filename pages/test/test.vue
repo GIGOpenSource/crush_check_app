@@ -1162,7 +1162,7 @@ export default {
                     success(res) {
                         uni.showToast({
                             title: t('proPoster.paySuccess'),
-                            icon: 'success'
+                            icon: 'none'
                         })
                         that.mbtishow = false
                         if (moneyType == 'vip') {
