@@ -485,8 +485,12 @@ const fetchDrafts = () => {
 const btn = (type) => {
     //继续
   if(type){
+    console.log(recode.value,'recode.value')
        params.value = recode.value
        showDelPopup2.value = false
+       console.log(params.value.poster_id)
+        getstatus()
+        startPolling()
   }else{ //放弃
    
      params.value.poster_id = recode.value.poster_id
