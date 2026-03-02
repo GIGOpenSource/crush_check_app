@@ -153,6 +153,7 @@ onUnload(() => {
     right: 60rpx;
     font-size: 26rpx;
     color: rgba(255, 255, 255, 0.5);
+    z-index: 999;
 }
 .content {
     box-sizing: border-box;
