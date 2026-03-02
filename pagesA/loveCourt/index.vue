@@ -511,11 +511,11 @@ const btn = (type) => {
 const baocao = (type) => {
      //保存
   if(type){
-         btnInvite('caogao')
+         btnInvite('cao')
        showDelPopup3.value = false
   }else{ //不保存
      showDelPopup3.value = false
-      del()
+    //   del()
       stopPolling()
   }
   uni.switchTab({
