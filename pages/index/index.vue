@@ -36,8 +36,8 @@
 			</view>
 			<view class="left" @click="path(`/pagesA/loveCourt/index`)">
 				<view style="margin-left: 50rpx;text-align: center;">
-					<view>爱的裁</view>
-					<view>判所</view>
+					<view>{{ t('loveCourt.titleLine1') }}</view>
+					<view>{{ t('loveCourt.titleLine2') }}</view>
 				</view>
 				<image :src="$getImg('add/love')" style="width: 120rpx;height:100rpx" />
 			</view>

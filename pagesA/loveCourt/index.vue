@@ -12,24 +12,24 @@
         <view class="page-body" :style="{ marginTop: (statusBarHeight + 108) + 'rpx' }">
         <view class="titlecon">
             <view class="t1">
-                <text>爱的裁判所</text>
+                <text>{{ t('loveCourt.title') }}</text>
                 <view @click="tishi = true"><up-icon name="error-circle" color="#ffffff" size="15"></up-icon>
                 </view>
             </view>
-            <view class="del" @click="showDelPopup = true">清空</view>
+            <view class="del" @click="showDelPopup = true">{{ t('loveCourt.clear') }}</view>
         </view>
         <view class="content">
-            <view class="input"><input type="text" v-model="params.nickname" placeholder="输入您的昵称"
+            <view class="input"><input type="text" v-model="params.nickname" :placeholder="t('loveCourt.placeholderNickname')"
                     placeholder-style="color:#ffffff;"></view>
             <view>
-                <textarea v-model="params.event_description" placeholder="输入事件，如发生了什么事"
+                <textarea v-model="params.event_description" :placeholder="t('loveCourt.placeholderEvent')"
                     placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
             </view>
             <view>
-                <textarea v-model="params.issue_description" placeholder="输入问题，如委屈或不适的问题点"
+                <textarea v-model="params.issue_description" :placeholder="t('loveCourt.placeholderIssue')"
                     placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
             </view>
-            <view class="title">补充材料上传：</view>
+            <view class="title">{{ t('loveCourt.supplementaryUpload') }}</view>
             <!-- 照片 -->
             <view class="images">
                 <view class="update" v-for="(item, index) in params.supplementary_materials" :key="index">
@@ -44,16 +44,16 @@
             <view class="top"> <up-avatar :src="userinfo.other_status == null ? '' : userinfo.avatar"
                     size="36"></up-avatar>
                 <!-- 昵称 -->
-                <text>{{ userinfo.other_status == null ? '未邀请对方' : userinfo.nickname || '用户昵称' }}</text>
+                <text>{{ userinfo.other_status == null ? t('loveCourt.notInvited') : userinfo.nickname || t('loveCourt.userNickname') }}</text>
                 <!-- 状态 -->
-                <text v-if="userinfo.other_status">{{ status[userinfo.other_status] }}</text>
+                <text v-if="userinfo.other_status">{{ statusText[userinfo.other_status] }}</text>
 
             </view>
             <view class="btn" @click="btnInvite('share')" v-if="!userinfo.other_status">
-                <image :src="$getImg('add/wx')" mode="widthFix" /> 转发邀请
+                <image :src="$getImg('add/wx')" mode="widthFix" /> {{ t('loveCourt.forwardInvite') }}
             </view>
             <view class="btn" @click="btnInvite('save')" v-if="userinfo.other_status">
-                提交内容
+                {{ t('loveCourt.submitContent') }}
             </view>
         </view>
         </view>
@@ -62,12 +62,12 @@
     <IndexProup :show="tishi" @close="tishi = false">
         <template #content>
             <view class="tishi">
-                <view class="title">恋爱裁判所</view>
+                <view class="title">{{ t('loveCourt.trialTitle') }}</view>
                 <scroll-view class="agreement-content" scroll-y>
                     <rich-text v-if="userAgreementContent" :nodes="userAgreementContent"
                         class="richtext-content"></rich-text>
                 </scroll-view>
-                <view class="btn" @click="tishi = false">去使用</view>
+                <view class="btn" @click="tishi = false">{{ t('loveCourt.goUse') }}</view>
                 <view style="height: 15rpx;"></view>
             </view>
 
@@ -76,34 +76,34 @@
     <!-- 邀请弹窗 -->
     <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
         <view class="tishi tishi1">
-            <view>顺便给Ta带个话儿</view>
-            <textarea placeholder="跟TA说说你的想法..." v-model="params.send_word"></textarea>
+            <view>{{ t('loveCourt.inviteMessageTitle') }}</view>
+            <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word"></textarea>
             <view class="btn">
-                <button open-type="share" hover-class="none">去邀请</button>
+                <button open-type="share" hover-class="none">{{ t('loveCourt.goInvite') }}</button>
             </view>
-            <view class="cancel" @click="invite = false">取消</view>
+            <view class="cancel" @click="invite = false">{{ t('loveCourt.cancel') }}</view>
         </view>
     </up-popup>
     <!-- 接受弹窗 -->
     <up-popup :show="invited" @close="invited = false" @open="invited = true" mode="center">
         <view class="tishi tishi1">
-            <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || '用户昵称' }}</text> <text>邀请你加入小法庭</text>
+            <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || t('loveCourt.userNickname') }}</text> <text>{{ t('loveCourt.inviteYouJoin') }}</text>
             </view>
-            <view class="content1">Ta对你说：{{ content || '紧急传唤！你的对象已向恋爱小法庭提起诉讼！'}}</view>
+            <view class="content1">{{ t('loveCourt.taSayToYou') }}{{ content || t('loveCourt.defaultSummons') }}</view>
             <view class="btn" @click="agree">
-                <button>我愿意和你聊聊</button>
+                <button>{{ t('loveCourt.agreeToChat') }}</button>
             </view>
-            <view class="cancel" @click="cancelInvite">取消</view>
+            <view class="cancel" @click="cancelInvite">{{ t('loveCourt.cancel') }}</view>
         </view>
     </up-popup>
     <!-- 删除 -->
     <up-popup :show="showDelPopup" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/shanchu')"></image>
-            <view class="del-popup-title"> 确定将清空全部内容吗</view>
+            <view class="del-popup-title"> {{ t('loveCourt.confirmClearAll') }}</view>
             <view class="del-popup-actions">
-                <view class="del-popup-btn cancel" @click="showDelPopup = false">取消</view>
-                <view class="del-popup-btn confirm" @click="clearContent">确认</view>
+                <view class="del-popup-btn cancel" @click="showDelPopup = false">{{ t('loveCourt.cancel') }}</view>
+                <view class="del-popup-btn confirm" @click="clearContent">{{ t('loveCourt.confirm') }}</view>
             </view>
         </view>
     </up-popup>
@@ -111,7 +111,7 @@
     <IndexProup :show="showProgress" @close="handleExit" :cha="false" :height="125">
         <template #content>
             <view class="pcontent">
-                <view style="color:#000">法官团审理中...</view>
+                <view style="color:#000">{{ t('loveCourt.judgeProcessing') }}</view>
                 <!-- <view class="num">正在仔细分析详情...</view> -->
                 <!-- <view class="progress-wrapper">
                     <view class="custom-progress">
@@ -120,19 +120,19 @@
                         </view>
                     </view>
                 </view> -->
-                <view class="tip">退出后可在“检测记录”中查看</view>
-                <view class="btn" @click="handleExit">退出</view>
-            </view>
+                <view class="tip">{{ t('loveCourt.exitTipRecord') }}</view>“”</view>
+                <view class="btn" @click="handleExit">{{ t('loveCourt.exit') }}</view>
+            <!-- </view> -->
         </template>
     </IndexProup>
       <!-- 是否放弃之前作答 -->
     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
-            <view class="title1" style="color:#000;margin-bottom: 20rpx;">未完成的双人陈述，要继续推进吗？</view>
+            <view class="title1" style="color:#000;margin-bottom: 20rpx;">{{ t('loveCourt.unfinishedContinue') }}</view>
             <view class="del-popup-actions">
-                <view class="del-popup-btn cancel" @click="btn(false)">放弃调解</view>
-                <view class="del-popup-btn confirm" @click="btn(true)">继续陈述</view>
+                <view class="del-popup-btn cancel" @click="btn(false)">{{ t('loveCourt.giveUpMediation') }}</view>
+                <view class="del-popup-btn confirm" @click="btn(true)">{{ t('loveCourt.continueStatement') }}</view>
             </view>
         </view>
     </up-popup>
@@ -140,10 +140,10 @@
     <up-popup :show="showDelPopup3" mode="center" @close="showDelPopup3 = false">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
-            <view class="title1" style="color:#000;margin-bottom: 40rpx;">退出后是否保存草稿</view>
+            <view class="title1" style="color:#000;margin-bottom: 40rpx;">{{ t('loveCourt.exitSaveDraft') }}</view>
             <view class="del-popup-actions">
-                <view class="del-popup-btn cancel" @click="baocao(false)">否</view>
-                <view class="del-popup-btn confirm" @click="baocao(true)">是</view>
+                <view class="del-popup-btn cancel" @click="baocao(false)">{{ t('loveCourt.no') }}</view>
+                <view class="del-popup-btn confirm" @click="baocao(true)">{{ t('loveCourt.yes') }}</view>
             </view>
         </view>
     </up-popup>
@@ -153,7 +153,7 @@
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import IndexProup from '@/components/IndexProup/IndexProup.vue'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import {
     host
 } from '@/config/config.js'
@@ -194,7 +194,7 @@ const inviteName = ref('') //邀请人昵称
 const userinfo = ref({})
 const statusBarHeight = ref(0)
 const posterIdFromInvite = ref(false) //轮询
-const status = { 'waiting': '输入中', 'done': '已提交' }
+const statusText = computed(() => ({ 'waiting': t('loveCourt.statusInputing'), 'done': t('loveCourt.statusSubmitted') }))
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const recode = ref({other_status:null})
@@ -334,21 +334,21 @@ const btnInvite = (type) => {
     if(type == 'save'){
             if (!params.value.nickname) {
         uni.showToast({
-            title: '请输入昵称',
+            title: t('loveCourt.pleaseInputNickname'),
             icon: 'none'
         })
         return
     }
     if (!params.value.event_description) {
         uni.showToast({
-            title: '请输入事件描述',
+            title: t('loveCourt.pleaseInputEvent'),
             icon: 'none'
         })
         return
     }
     if (!params.value.issue_description) {
         uni.showToast({
-            title: '请输入问题描述',
+            title: t('loveCourt.pleaseInputIssue'),
             icon: 'none'
         })
         return
@@ -466,7 +466,7 @@ onShareAppMessage(() => {
     const code = encodeURIComponent(JSON.stringify(invitation_code.value));
     const query = `?invitation_code=${code}&speak=${params.value.send_word}&nickname=${nickname}`
     return {
-        title: params.value.send_word ? `@${nickname}:` + params.value.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
+        title: params.value.send_word ? `@${nickname}:` + params.value.send_word : t('loveCourt.defaultSummons'), // 分享标题
         path: `/pagesA/loveCourt/index${query}`, // 分享路径携带个人ID
         imageUrl: "/static/index/yq2.png", // 分享图片，不设置则使用默认截图
     };

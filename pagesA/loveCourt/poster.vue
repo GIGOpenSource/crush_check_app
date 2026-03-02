@@ -1,21 +1,21 @@
 <template>
     <view class="page">
-    <view class="look" @click="path('look')">查看资料</view>
+    <view class="look" @click="path('look')">{{ t('loveCourt.viewMaterials') }}</view>
         <view class="top">
-            <text class="title">爱的裁判所</text>
+            <text class="title">{{ t('loveCourt.title') }}</text>
         </view>
         <view class="content">
             <view v-if="!posterImg && !posterError" class="poster-loading">
                 <view class="loading-spinner"></view>
-                <text>海报生成中...</text>
+                <text>{{ t('loveCourt.posterGenerating') }}</text>
             </view>
             <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" :info="details"/>
         </view>
         <view class="bottom">
             <view class="border">
-                <view @click="path('share')">分享结果</view>
-                <view @click="path('again')">再来一次</view>
-                <view class="back" @click="path('back')">返回首页</view>
+                <view @click="path('share')">{{ t('loveCourt.shareResult') }}</view>
+                <view @click="path('again')">{{ t('loveCourt.tryAgain') }}</view>
+                <view class="back" @click="path('back')">{{ t('loveCourt.backHome') }}</view>
             </view>
         </view>
     </view>
@@ -24,8 +24,11 @@
 <script setup>
 import Loveposter from '@/components/Loveposter/Loveposter.vue';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { getPosterDetails } from '@/api/index.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
+
+const { t } = useI18n()
 const posterImg = ref('');
 const posterError = ref(false);
 const details = ref({});
@@ -101,7 +104,7 @@ const path = (type) => {
     if (type == 'share') {
         if (!posterImg.value) {
             uni.showToast({
-                title: t('mbti.posterNotReady'),
+                title: t('loveCourt.posterNotReady'),
                 icon: 'none',
                 duration: 2000
             })

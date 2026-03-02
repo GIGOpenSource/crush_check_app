@@ -1,8 +1,8 @@
 <template>
   <view class="page">
     <view class="top">
-      <text class="back" @click="back">返回结果</text>
-      <text class="title">爱的裁判所附件查看</text>
+      <text class="back" @click="back">{{ t('loveCourt.backToResult') }}</text>
+      <text class="title">{{ t('loveCourt.materialTitle') }}</text>
     </view>
     <view class="content">
       <view class="name">
@@ -10,15 +10,15 @@
           @click="clicks(index)">{{ person }}</view>
       </view>
       <view class="c1">
-        <view class="title">事件描述:</view>
+        <view class="title">{{ t('loveCourt.eventDesc') }}</view>
         <view class="descript">{{ event }}</view>
       </view>
       <view class="c1">
-        <view class="title">问题描述:</view>
+        <view class="title">{{ t('loveCourt.issueDesc') }}</view>
         <view class="descript">{{ question }}</view>
       </view>
       <view class="c1" v-if="imageList.length > 0">
-        <view>补充材料上传:</view>
+        <view>{{ t('loveCourt.supplementaryUpload') }}</view>
         <view class="images">
           <image mode="scaleToFill" v-for="(img, index) in imageList" :key="index" :src="img" />
         </view>
@@ -29,9 +29,12 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { getPosterDetails } from '@/api/index.js'
 import { onLoad } from '@dcloudio/uni-app'
-const people = ref(['张三', '李四']) //人物
+
+const { t } = useI18n()
+const people = ref([t('loveCourt.defaultNameA'), t('loveCourt.defaultNameB')])
 const event = ref('')//事件描述
 const question = ref('')//问题描述
 const current = ref(0)
@@ -45,10 +48,10 @@ onLoad((e) => {
   if (e.id) {
     getPosterDetails(e.id).then(res => {
       details.value = res.data
-      people.value[0] = details.value.business_data?.self_data?.nickname || '张三'
-      people.value[1] = details.value.business_data?.other_data?.nickname || '李四'
-       event.value = details.value.business_data?.self_data?.event_description || '暂无'
-    question.value = details.value.business_data?.self_data?.issue_description || '暂无'
+      people.value[0] = details.value.business_data?.self_data?.nickname || t('loveCourt.defaultNameA')
+      people.value[1] = details.value.business_data?.other_data?.nickname || t('loveCourt.defaultNameB')
+       event.value = details.value.business_data?.self_data?.event_description || t('loveCourt.materialNoContent')
+    question.value = details.value.business_data?.self_data?.issue_description || t('loveCourt.materialNoContent')
     imageList.value = details.value.business_data?.self_data?.supplementary_materials || []
     })
   }
@@ -58,12 +61,12 @@ const clicks = (index) => {
   current.value = index
 
   if (index == 0) {
-    event.value = details.value.business_data?.self_data?.event_description || '暂无'
-    question.value = details.value.business_data?.self_data?.event_description || '暂无'
+    event.value = details.value.business_data?.self_data?.event_description || t('loveCourt.materialNoContent')
+    question.value = details.value.business_data?.self_data?.issue_description || t('loveCourt.materialNoContent')
     imageList.value = details.value.business_data?.self_data?.supplementary_materials || []
   } else if (index == 1) {
-    event.value = details.value.business_data?.other_data?.event_description || '暂无'
-    question.value = details.value.business_data?.other_data?.event_description || '暂无'
+    event.value = details.value.business_data?.other_data?.event_description || t('loveCourt.materialNoContent')
+    question.value = details.value.business_data?.other_data?.issue_description || t('loveCourt.materialNoContent')
     imageList.value = details.value.business_data?.other_data?.supplementary_materials || []
   }
 }

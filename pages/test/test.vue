@@ -206,14 +206,14 @@
                         <!-- 恋爱小法庭未完成 -->
                         <template
                             v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status !== 'generated'">
-                            <view class="num" style="margin-left:20rpx">爱的裁判所</view>
+                            <view class="num" style="margin-left:20rpx">{{ $t('loveCourt.title') }}</view>
                             <view class="details" style="margin-top: 20rpx;">
                                 <text class="look"
-                                    v-if="item.business_data.generate_status == 'waiting_generate'">查看结果{{ '>>'
+                                    v-if="item.business_data.generate_status == 'waiting_generate'">{{ $t('loveCourt.viewResult') }}{{ '>>'
                                     }}</text>
-                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">等待对方完成{{
+                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">{{ $t('loveCourt.waitingOtherComplete') }}{{
                                     '>>' }}</text>
-                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">对方已退出{{ '>>'
+                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">{{ $t('loveCourt.otherExited') }}{{ '>>'
                                     }}</text>
                             </view>
                         </template>
@@ -222,18 +222,18 @@
                             v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status == 'generated'">
                             <view class="num trial_case" style="margin-left:20rpx">
                                 <text>{{ item.business_data.case_name || '--' }}</text>
-                                <text class="btn">已结案</text>
+                                <text class="btn">{{ $t('loveCourt.caseClosed') }}</text>
                             </view>
                             <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
-                                <text style="display:inline-block;width:160rpx;">案号</text>
+                                <text style="display:inline-block;width:160rpx;">{{ $t('loveCourt.caseNumber') }}</text>
                                 <text>{{ item.business_data.case_number }}</text>
                             </view>
                             <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
-                                <text style="display:inline-block;width:160rpx;">立案日期</text>
+                                <text style="display:inline-block;width:160rpx;">{{ $t('loveCourt.filingDate') }}</text>
                                 <text>{{ item.last_used_time || '--' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;">
-                                <text class="look">查看详情{{ '>>' }}</text>
+                                <text class="look">{{ $t('poster.viewDetails') }}{{ '>>' }}</text>
                             </view>
                         </template>
                     </view>
@@ -298,7 +298,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="tip">退出后可在“检测记录”中查看</view>
+                <view class="tip">{{ $t('loveCourt.exitTipRecord') }}</view>
             </view>
         </template>
     </IndexProup>
@@ -339,8 +339,8 @@
     <IndexProup :show="showProgress1" @close="showProgress1 = false" :cha="false" :height="125">
         <template #content>
             <view class="pcontent">
-                <view style="color:#000;font-size: 28rpx;">法官团审理中...</view>
-                <view class="num">正在仔细分析详情...</view>
+                <view style="color:#000;font-size: 28rpx;">{{ $t('loveCourt.judgeProcessing') }}</view>
+                <view class="num">{{ $t('loveCourt.analyzingDetail') }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track" style="height:50rpx">
@@ -348,20 +348,20 @@
                         </view>
                     </view>
                 </view>
-                <view class="tip">退出后可在“检测记录”中查看</view>
-                <view class="btn" @click="showProgress1 = false" style="margin:30rpx">退出</view>
+                <view class="tip">{{ $t('loveCourt.exitTipRecord') }}</view>
+                <view class="btn" @click="showProgress1 = false" style="margin:30rpx">{{ $t('loveCourt.exit') }}</view>
             </view>
         </template>
     </IndexProup>
     <!-- 顺道带个话弹窗 -->
     <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
         <view class="tishi2 tishi1">
-            <view>顺便给Ta带个话儿</view>
-            <textarea placeholder="跟TA说说你的想法..." v-model="send_word"></textarea>
+            <view>{{ $t('loveCourt.inviteMessageTitle') }}</view>
+            <textarea :placeholder="$t('loveCourt.invitePlaceholder')" v-model="send_word"></textarea>
             <view class="btn">
-                <button open-type="share" hover-class="none">去邀请</button>
+                <button open-type="share" hover-class="none">{{ $t('loveCourt.goInvite') }}</button>
             </view>
-            <view class="cancel" @click="invite = false">取消</view>
+            <view class="cancel" @click="invite = false">{{ $t('loveCourt.cancel') }}</view>
         </view>
     </up-popup>
 </template>
@@ -507,7 +507,7 @@ export default {
                 type: "mbti",
             },
             {
-                label: '爱的裁判所',
+                label: t('loveCourt.title'),
                 type: "trial_case",
             },
         ];
@@ -994,9 +994,9 @@ export default {
                     return;
                 }
                 this.previewImage(item, index);
-            }else if(item.status == 'error' || type == 'trial_case'){
+            }else if(item.status == 'error' && type == 'trial_case'){
                 this.lovedeep()
-            }else if(item.status == 'error' || type == 'social' || type == 'physical'){
+            }else if(item.status == 'error' && (type == 'social' || type == 'physical')){
                 this.handleRetryClick(item)
             }
         },
