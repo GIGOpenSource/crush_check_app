@@ -5,6 +5,10 @@
             <text class="title">爱的裁判所</text>
         </view>
         <view class="content">
+            <view v-if="!posterImg && !posterError" class="poster-loading">
+                <view class="loading-spinner"></view>
+                <text>海报生成中...</text>
+            </view>
             <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" :info="details"/>
         </view>
         <view class="bottom">
@@ -30,6 +34,13 @@ onLoad((e) => {
     if (e.id) {
         getPosterDetails(e.id).then(res => {
             details.value = res.data
+            const c = details.value.content || {}
+            // 问题原因分析、最终判决、和解方案、法官建议：把 /n 或 \n 转为实际换行，供 Loveposter 按行渲染
+            const toLineBreak = (s) => (s || '').replace(/\/n/g, '\n').replace(/\\n/g, '\n')
+            if (c.analysis !== undefined) c.analysis = toLineBreak(c.analysis)
+            if (c.verdict !== undefined) c.verdict = toLineBreak(c.verdict)
+            if (c.resolution !== undefined) c.resolution = toLineBreak(c.resolution)
+            if (c.judge_advice !== undefined) c.judge_advice = toLineBreak(c.judge_advice)
         })
     }
     id.value = e.id
@@ -144,11 +155,52 @@ onUnload(() => {
     box-sizing: border-box;
     border: 0.5rpx solid #FFFFFF;
     border-radius: 10rpx;
-    max-height: 82vh;
+    width: 100%;
+    height: 82vh;
     margin-top: 30rpx;
     box-sizing: border-box;
     overflow-y: scroll;
     background: #2a2935;
+    position: relative;
+
+    .poster-loading {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #12111F !important;
+        z-index: 10;
+        border-radius: 10rpx;
+
+        .loading-spinner {
+            width: 60rpx;
+            height: 60rpx;
+            border: 4rpx solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20rpx;
+        }
+
+        text {
+            color: #fff;
+            font-size: 32rpx;
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .bottom {
