@@ -198,6 +198,8 @@ const status = { 'waiting': '输入中', 'done': '已提交' }
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
 const recode = ref({other_status:null})
+/** 关弹窗可能触发 onShow，设为 true 时 onShow 内不启动轮询并会 stopPolling */
+const skipNextShowPolling = ref(false)
 onMounted(() => {
     const systemInfo = uni.getSystemInfoSync()
     const pxToRpx = (systemInfo.windowWidth || 375) / 375 * 2
@@ -222,10 +224,11 @@ onLoad((e) => {
     })
 })
 onUnload(() => {
-    stopPolling()
-    if(!params.value.poster_id){
+    if(!params.value.poster_id && (params.value.nickname !== '' || params.value.event_description !== '' ||  params.value.issue_description !== '' || params.value.supplementary_materials.length !== 0)){
          btnInvite('cao')
     }
+    params.value.poster_id = ''
+    stopPolling()
 })
 const goBack = () => {
     console.log(recode.value.poster_id,'recode.value')
@@ -423,13 +426,15 @@ const startPolling = () => {
     }, 2000)
 }
 const stopPolling = () => {
+    console.log(1)
     if (pollTimer) {
+        console.log(2)
         clearInterval(pollTimer)
         pollTimer = null
     }
 }
 onShow(() => {
-    if (params.value.poster_id && !posterIdFromInvite.value) startPolling()
+    // if (params.value.poster_id && !posterIdFromInvite.value) startPolling()
 })
 onUnmounted(() => {
     stopPolling()
@@ -458,7 +463,6 @@ const clearContent = () => {
 onShareAppMessage(() => {
     btnInvite('share')
     const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
-    console.log(invitation_code.value,'invitation_code.value')
     const code = encodeURIComponent(JSON.stringify(invitation_code.value));
     const query = `?invitation_code=${code}&speak=${params.value.send_word}&nickname=${nickname}`
     return {
@@ -509,15 +513,16 @@ const btn = (type) => {
 }
 //是否保存草稿
 const baocao = (type) => {
-     //保存
+  skipNextShowPolling.value = true // 关弹窗可能触发 onShow，避免再次 startPolling
+  //保存
   if(type){
-         btnInvite('cao')
-       showDelPopup3.value = false
+    btnInvite('cao')
+    showDelPopup3.value = false
   }else{ //不保存
-     showDelPopup3.value = false
-    //   del()
-      stopPolling()
+    showDelPopup3.value = false
   }
+  pollTimer = '1111'
+  stopPolling()
   uni.switchTab({
     url: '/pages/index/index'
   })
@@ -528,6 +533,7 @@ const del = () => {
     deleteRecords(params.value.poster_id).then(res => {
         params.value.poster_id = ''
         clearContent()
+        stopPolling()
     }).catch(err => {
        
     })
