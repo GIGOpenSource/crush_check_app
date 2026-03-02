@@ -338,7 +338,7 @@
         </view>
     </up-popup>
     <!-- 恋爱 -->
-    <IndexProup :show="showProgress1" @close="showProgress1 = false" :cha="false" :height="125">
+    <IndexProup :show="showProgress1" @close="handexit" :cha="false" :height="125">
         <template #content>
             <view class="pcontent">
                 <view style="color:#000;font-size: 28rpx;">{{ $t('loveCourt.judgeProcessing') }}</view>
@@ -351,7 +351,7 @@
                     </view>
                 </view>
                 <view class="tip">{{ $t('loveCourt.exitTipRecord') }}</view>
-                <view class="btn" @click="showProgress1 = false" style="margin:30rpx">{{ $t('loveCourt.exit') }}</view>
+                <view class="btn" @click="handexit" style="margin:30rpx">{{ $t('loveCourt.exit') }}</view>
             </view>
         </template>
     </IndexProup>
@@ -1011,6 +1011,12 @@ export default {
                 })
             }
         },
+        //退出
+        handexit(){
+             this.showProgress1 = false
+             this.fetchPosterList(true)
+        },
+
         //检查支付状态
         lovepaywx() {
             payStatus(this.invitation_code).then(res => {
@@ -1051,7 +1057,7 @@ export default {
                         that.lovedeep()
                         uni.showToast({
                             title: t('proPoster.paySuccess'),
-                            icon: 'success'
+                            icon: 'none'
                         })
                         that.showDelPopup3 = false
 
