@@ -77,10 +77,10 @@
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
                     <view class="status-overlay"
-                        v-if="(item.status === 'waiting' || item.status === 'error') && item.prompt_template.template_type !== 'mbti'">
+                        v-if="(item.status === 'waiting' || item.status === 'error' || item.status === 'paying') && item.prompt_template.template_type !== 'mbti'">
                         <!-- 右上角状态标签 -->
-                        <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
-                            @click.stop="index == 1 ? handleRetryClick(item) : null">
+                        <view v-if="item.status === 'waiting' || item.status === 'error' || item.status === 'paying'"
+                            class="status-badge" @click.stop="index == 1 ? handleRetryClick(item) : null">
                             <text class="status-badge-text">{{ getStatusTitle(item.status) }}</text>
                         </view>
                     </view>
@@ -208,12 +208,14 @@
                             v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status !== 'generated'">
                             <view class="num" style="margin-left:20rpx">{{ $t('loveCourt.title') }}</view>
                             <view class="details" style="margin-top: 20rpx;">
-                                <text class="look"
-                                    v-if="item.business_data.generate_status == 'waiting_generate'">{{ $t('loveCourt.viewResult') }}{{ '>>'
+                                <text class="look" v-if="item.business_data.generate_status == 'waiting_generate'">{{
+                                    $t('loveCourt.viewResult') }}{{ '>>'
                                     }}</text>
-                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">{{ $t('loveCourt.waitingOtherComplete') }}{{
-                                    '>>' }}</text>
-                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">{{ $t('loveCourt.otherExited') }}{{ '>>'
+                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">{{
+                                    $t('loveCourt.waitingOtherComplete') }}{{
+                                        '>>' }}</text>
+                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">{{
+                                    $t('loveCourt.otherExited') }}{{ '>>'
                                     }}</text>
                             </view>
                         </template>
@@ -376,7 +378,7 @@ import { getcode } from '@/api/mbti.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 import { createOrder, getProducts } from '@/api/index.js'
 import { host } from '@/config/config.js';
-import { saveLoveCourtRecord } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, payStatus } from '@/api/loveCourt.js'
 export default {
     components: {
         IndexProup,
@@ -795,6 +797,7 @@ export default {
                 done: this.$t('poster.done'),
                 error: this.$t('common.fail'),
                 deleted: this.$t('poster.deleted'),
+                paying: this.$t('poster.paying')
             };
             return statusMap[status] || "";
         },
@@ -804,6 +807,8 @@ export default {
                 return this.$t('poster.generatingStatus');
             } else if (status === "error") {
                 return this.$t('poster.generatingFailed');
+            } else if (status == 'paying') {
+                return this.$t('poster.paying')
             }
             return "";
         },
@@ -951,6 +956,7 @@ export default {
                         }
 
                     } else if (type == 'trial_case') {
+                        this.invitation_code = item.business_data.invitation_code
                         //支付完成
                         if (item.business_data.generate_status == 'generated') {
                             uni.navigateTo({
@@ -994,14 +1000,38 @@ export default {
                     return;
                 }
                 this.previewImage(item, index);
-            }else if(item.status == 'error' && type == 'trial_case'){
+            } else if (item.status == 'error' && type == 'trial_case') {
                 this.lovedeep()
-            }else if(item.status == 'error' && (type == 'social' || type == 'physical')){
+            } else if (item.status == 'error' && (type == 'social' || type == 'physical')) {
                 this.handleRetryClick(item)
+            } else if (item.status == 'paying') {
+                uni.showToast({
+                    title: '对方正在支付中',
+                    icon: 'none'
+                })
             }
         },
-        //支付小法庭
+        //检查支付状态
         lovepaywx() {
+            payStatus(this.invitation_code).then(res => {
+                if (res.data.is_pay == 'can_pay') {
+                    lovepaywx1()
+                } else if (res.data.is_pay == 'not_pay') {
+                    uni.showToast({
+                        title: this.$t('poster.paying'),
+                        icon: 'none'
+                    })
+                }
+            })
+                .catch(err => {
+                    uni.showToast({
+                        title: res.message,
+                        icon: 'none'
+                    })
+                })
+        },
+        //支付小法庭
+        lovepaywx1() {
             let params = {
                 description: this.lovepay.description,
                 openId: uni.getStorageSync('openId'),
@@ -1017,6 +1047,7 @@ export default {
                     "package": `${res.data.prepayid}`,
                     "nonceStr": res.data.noncestr,
                     success(res) {
+                        //支付成功
                         that.lovedeep()
                         uni.showToast({
                             title: t('proPoster.paySuccess'),
@@ -1027,6 +1058,7 @@ export default {
 
                     },
                     fail(e) {
+                        //取消支付
                         uni.showToast({
                             title: t('proPoster.payFailed'),
                             icon: 'none'
@@ -1597,12 +1629,12 @@ export default {
         }
     },
     onShareAppMessage() {
-         this.updatalove()
+        this.updatalove()
         const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
         const code = encodeURIComponent(JSON.stringify(this.invitation_code));
         const query = `?invitation_code=${code}&speak=${this.send_word}&nickname=${nickname}`
         return {
-            title:this.send_word ? `@${nickname}:` + this.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
+            title: this.send_word ? `@${nickname}:` + this.send_word : '紧急传唤！你的对象已向恋爱小法庭提起诉讼！', // 分享标题
             path: `/pagesA/loveCourt/index${query}`, // 分享路径携带个人ID
             imageUrl: "/static/index/yq2.png", // 分享图片，不设置则使用默认截图
         };

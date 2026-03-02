@@ -281,6 +281,7 @@ export default {
     unknownType: '未知类型',
     done: '完成',
     deleted: '已删除',
+    paying: '对方支付中',
     cheatScore: '含渣量：',
     viewPoster: '查看海报',
     viewAnswer: '查看答案',

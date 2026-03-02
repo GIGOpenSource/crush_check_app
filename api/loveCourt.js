@@ -25,3 +25,9 @@ export const loveCourtJudgment = (params) => {
 	return postRequest('/trialcase/generate_trialcase/',params)
 }
 
+//支付状态
+export const payStatus = (invitation_code) => {
+	return postRequest('/trialcase/verify_payment_status/',{invitation_code})
+}
+
+

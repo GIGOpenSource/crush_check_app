@@ -279,6 +279,7 @@ export default {
     unknownType: '不明なタイプ',
     done: '完了',
     deleted: '削除されました',
+    paying: '相手が支払い中',
     cheatScore: '浮気スコア：',
     viewPoster: 'ポスターを見る',
     viewAnswer: '答えを見る',

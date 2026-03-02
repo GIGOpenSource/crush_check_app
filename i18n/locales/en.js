@@ -280,6 +280,7 @@ export default {
     unknownType: 'Unknown type',
     done: 'Done',
     deleted: 'Deleted',
+    paying: 'The other party is paying',
     cheatScore: 'Cheat Score:',
     viewPoster: 'View Poster',
     viewAnswer: 'View Answer',

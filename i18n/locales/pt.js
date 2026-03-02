@@ -279,6 +279,7 @@ export default {
     unknownType: 'Tipo desconhecido',
     done: 'Concluído',
     deleted: 'Excluído',
+    paying: 'A outra parte está pagando',
     cheatScore: 'Pontuação de Traidor:',
     viewPoster: 'Ver Pôster',
     viewAnswer: 'Ver Resposta',

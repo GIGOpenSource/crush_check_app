@@ -271,6 +271,7 @@ export default {
     unknownType: 'Tipo desconocido',
     done: 'Completado',
     deleted: 'Eliminado',
+    paying: 'La otra parte está pagando',
     cheatScore: 'Puntuación de Tramposo:',
     viewPoster: 'Ver Póster',
     viewAnswer: 'Ver Respuesta',

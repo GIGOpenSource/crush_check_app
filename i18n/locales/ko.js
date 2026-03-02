@@ -280,6 +280,7 @@ export default {
     unknownType: '알 수 없는 유형',
     done: '완료',
     deleted: '삭제됨',
+    paying: '상대방이 결제 중',
     cheatScore: '바람둥이 점수：',
     viewPoster: '포스터 보기',
     viewAnswer: '답변 보기',
