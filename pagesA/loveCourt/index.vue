@@ -120,9 +120,9 @@
                         </view>
                     </view>
                 </view> -->
-                <view class="tip">{{ t('loveCourt.exitTipRecord') }}</view>“”</view>
+                <view class="tip">{{ t('loveCourt.exitTipRecord') }}</view>
                 <view class="btn" @click="handleExit">{{ t('loveCourt.exit') }}</view>
-            <!-- </view> -->
+            </view>
         </template>
     </IndexProup>
       <!-- 是否放弃之前作答 -->
