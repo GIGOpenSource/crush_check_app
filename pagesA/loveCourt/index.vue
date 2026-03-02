@@ -89,7 +89,7 @@
         <view class="tishi tishi1">
             <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || '用户昵称' }}</text> <text>邀请你加入小法庭</text>
             </view>
-            <view class="content1">Ta对你说：{{ content }}</view>
+            <view class="content1">Ta对你说：{{ content || '--'}}</view>
             <view class="btn" @click="agree">
                 <button>我愿意和你聊聊</button>
             </view>
@@ -205,7 +205,7 @@ onMounted(() => {
 onLoad((e) => {
     inviteName.value = e.nickname
     content.value = e.speak
-    invitation_code.value = JSON.parse(decodeURIComponent(e.invitation_code)) || ''
+    invitation_code.value = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
     if (e.invitation_code) {
         invited.value = true
         params.value.invitation_code = invitation_code.value
@@ -221,10 +221,13 @@ onLoad((e) => {
     })
 })
 const goBack = () => {
-    if(recode.value?.poster_id){
+    console.log(recode.value.poster_id,'recode.value')
+    if(recode.value.poster_id){
         showDelPopup3.value = true
-    }else{
-        uni.navigateBack()
+    }else if(!recode.value.poster_id){
+       uni.switchTab({
+        url:'/pages/index/index'
+       })
     }
    
 }
