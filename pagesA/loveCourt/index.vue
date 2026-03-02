@@ -52,7 +52,7 @@
             <view class="btn" @click="btnInvite('share')" v-if="!userinfo.other_status">
                 <image :src="$getImg('add/wx')" mode="widthFix" /> 转发邀请
             </view>
-            <view class="btn" @click="btnInvite('save')" v-if="params.invitation_code && userinfo.other_status">
+            <view class="btn" @click="btnInvite('save')" v-if="userinfo.other_status">
                 提交内容
             </view>
         </view>
@@ -89,7 +89,7 @@
         <view class="tishi tishi1">
             <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || '用户昵称' }}</text> <text>邀请你加入小法庭</text>
             </view>
-            <view class="content1">Ta对你说：{{ content || '--'}}</view>
+            <view class="content1">Ta对你说：{{ content || '紧急传唤！你的对象已向恋爱小法庭提起诉讼！'}}</view>
             <view class="btn" @click="agree">
                 <button>我愿意和你聊聊</button>
             </view>

@@ -994,6 +994,10 @@ export default {
                     return;
                 }
                 this.previewImage(item, index);
+            }else if(item.status == 'error' || type == 'trial_case'){
+                this.lovedeep()
+            }else if(item.status == 'error' || type == 'social' || type == 'physical'){
+                this.handleRetryClick(item)
             }
         },
         //支付小法庭
