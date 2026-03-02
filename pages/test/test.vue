@@ -378,7 +378,7 @@ import { getcode } from '@/api/mbti.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
 import { createOrder, getProducts } from '@/api/index.js'
 import { host } from '@/config/config.js';
-import { saveLoveCourtRecord, payStatus } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, payStatus,cancelpayStatus } from '@/api/loveCourt.js'
 export default {
     components: {
         IndexProup,
@@ -1015,7 +1015,7 @@ export default {
         lovepaywx() {
             payStatus(this.invitation_code).then(res => {
                 if (res.data.is_pay == 'can_pay') {
-                    lovepaywx1()
+                    this.lovepaywx1()
                 } else if (res.data.is_pay == 'not_pay') {
                     uni.showToast({
                         title: this.$t('poster.paying'),
@@ -1025,7 +1025,7 @@ export default {
             })
                 .catch(err => {
                     uni.showToast({
-                        title: res.message,
+                        title: err.message,
                         icon: 'none'
                     })
                 })
@@ -1064,10 +1064,17 @@ export default {
                             icon: 'none'
                         })
                         that.showDelPopup3 = false
+                        that.cancelpay()
                     }
                 })
 
             })
+        },
+        //取消支付
+        cancelpay(){
+              cancelpayStatus(this.invitation_code).then(res => {
+                console.log(res)
+              })
         },
         //小法庭深度
         lovedeep() {

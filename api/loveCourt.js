@@ -29,5 +29,10 @@ export const loveCourtJudgment = (params) => {
 export const payStatus = (invitation_code) => {
 	return postRequest('/trialcase/verify_payment_status/',{invitation_code})
 }
+//取消支付
+export const cancelpayStatus = (invitation_code) => {
+	return postRequest('/trialcase/cancel_payment/',{invitation_code})
+}
+
 
 
