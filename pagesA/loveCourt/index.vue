@@ -37,7 +37,7 @@
                     <view class="close" @click="removeImage(index)"><up-icon name="close" color="#ffffff"
                             size="26"></up-icon></view>
                 </view>
-                <view class="update" @click="addImage" v-if="params.supplementary_materials.length < 6">+</view>
+                <view class="update" @click="addImage" v-if="params.supplementary_materials.length < 3">+</view>
             </view>
         </view>
         <view class="bottom">
@@ -205,10 +205,10 @@ onMounted(() => {
 onLoad((e) => {
     inviteName.value = e.nickname
     content.value = e.speak
-    invitation_code.value = invitation_code.value ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
+    invitation_code.value = JSON.parse(decodeURIComponent(e.invitation_code)) || ''
     if (e.invitation_code) {
         invited.value = true
-        params.value.invitation_code = e.invitation_code
+        params.value.invitation_code = invitation_code.value
         posterIdFromInvite.value = true
         
     }
@@ -230,7 +230,7 @@ const goBack = () => {
 }
 //上传图片
 const addImage = () => {
-    if (params.value.supplementary_materials.length >= 6) {
+    if (params.value.supplementary_materials.length >= 3) {
         uni.showToast({
             title: t('index.maxUploadSix'),
             icon: 'none'
@@ -238,7 +238,7 @@ const addImage = () => {
         return
     }
     uni.chooseImage({
-        count: 6 - params.value.supplementary_materials.length,
+        count: 3 - params.value.supplementary_materials.length,
         type: 'file',
         success: async (res) => {
             uploading.value = true
@@ -318,7 +318,8 @@ const removeImage = (index) => {
 }
 //转发邀请
 const btnInvite = (type) => {
-    if (!params.value.nickname) {
+    if(type == 'save'){
+            if (!params.value.nickname) {
         uni.showToast({
             title: '请输入昵称',
             icon: 'none'
@@ -339,6 +340,8 @@ const btnInvite = (type) => {
         })
         return
     }
+    }
+
     if (!uni.getStorageSync('token')) {
         uni.navigateTo({ url: '/pages/login/login' })
         return
@@ -445,6 +448,7 @@ const clearContent = () => {
 onShareAppMessage(() => {
     btnInvite('share')
     const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
+    console.log(invitation_code.value,'invitation_code.value')
     const code = encodeURIComponent(JSON.stringify(invitation_code.value));
     const query = `?invitation_code=${code}&speak=${params.value.send_word}&nickname=${nickname}`
     return {
