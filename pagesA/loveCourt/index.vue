@@ -23,11 +23,11 @@
                     placeholder-style="color:#ffffff;"></view>
             <view>
                 <textarea v-model="params.event_description" placeholder="输入事件，如发生了什么事"
-                    placeholder-style="color:#ffffff;"></textarea>
+                    placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
             </view>
             <view>
                 <textarea v-model="params.issue_description" placeholder="输入问题，如委屈或不适的问题点"
-                    placeholder-style="color:#ffffff;"></textarea>
+                    placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
             </view>
             <view class="title">补充材料上传：</view>
             <!-- 照片 -->
@@ -780,7 +780,7 @@ const del = () => {
         width: 100%;
         padding: 20rpx;
         box-sizing: border-box;
-        height: 200rpx;
+        min-height: 200rpx;
     }
 
     .title {
