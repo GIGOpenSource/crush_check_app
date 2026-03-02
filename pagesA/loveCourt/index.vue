@@ -142,8 +142,8 @@
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="title1" style="color:#000;margin-bottom: 40rpx;">退出后是否保存草稿</view>
             <view class="del-popup-actions">
-                <view class="del-popup-btn cancel" @click="baocao(false)">取消</view>
-                <view class="del-popup-btn confirm" @click="baocao(true)">确定</view>
+                <view class="del-popup-btn cancel" @click="baocao(false)">否</view>
+                <view class="del-popup-btn confirm" @click="baocao(true)">是</view>
             </view>
         </view>
     </up-popup>
@@ -223,6 +223,9 @@ onLoad((e) => {
 })
 onUnload(() => {
     stopPolling()
+    if(!params.value.poster_id){
+         btnInvite('cao')
+    }
 })
 const goBack = () => {
     console.log(recode.value.poster_id,'recode.value')
