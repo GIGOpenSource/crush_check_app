@@ -17,17 +17,17 @@
 					<view>{{ t('index.answer') }}</view>
 					<view>{{ t('index.book') }}</view>
 				</view>
-				<image :src="$getImg('index/answer')"  />
+				<image :src="$getImg('index/answer')" />
 			</view>
-				<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
+			<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
 				<view style="margin-left: 50rpx;width: 200rpx;">
 					<view>{{ t('tarot_name') }}</view>
 					<view></view>
 				</view>
-				<image :src="$getImg('index/tarotcards')"  style="width: 300rpx;margin-left: 0;"/>
+				<image :src="$getImg('index/tarotcards')" style="width: 300rpx;margin-left: 0;" />
 			</view>
 		</view>
-	   <view class="bottom">
+		<view class="bottom">
 			<view class="left" @click="path('/pagesA/mbti/index')">
 				<view>
 					<view>MBTI</view>
@@ -57,25 +57,25 @@ const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
-	 if(!uni.getStorageSync('token')){
-		if(url == '/pagesA/loveCourt/index'){
+	if (!uni.getStorageSync('token')) {
+		if (url == '/pagesA/loveCourt/index') {
 			uni.navigateTo({
-				url:'/pages/login/login'
+				url: '/pages/login/login'
 			})
-		}else{
-			if(url == '/pagesA/loveCourt/index'){
+		} else {
+			if (url == '/pagesA/loveCourt/index') {
 				uni.redirectTo({
-					url:'/pagesA/loveCourt/index'
+					url: '/pagesA/loveCourt/index'
 				})
-			}else{
-                uni.navigateTo({ url })
+			} else {
+				uni.navigateTo({ url })
 			}
-            
+
 		}
-	 }else{
+	} else {
 		uni.navigateTo({ url })
-	 }
-	
+	}
+
 }
 onLoad((e) => {
 	if (e.scene) {

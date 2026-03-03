@@ -10,52 +10,53 @@
             </view>
         </view>
         <view class="page-body" :style="{ marginTop: (statusBarHeight + 108) + 'rpx' }">
-        <view class="titlecon">
-            <view class="t1">
-                <text>{{ t('loveCourt.title') }}</text>
-                <view @click="tishi = true"><up-icon name="error-circle" color="#ffffff" size="15"></up-icon>
+            <view class="titlecon">
+                <view class="t1">
+                    <text>{{ t('loveCourt.title') }}</text>
+                    <view @click="tishi = true"><up-icon name="error-circle" color="#ffffff" size="15"></up-icon>
+                    </view>
+                </view>
+                <view class="del" @click="showDelPopup = true">{{ t('loveCourt.clear') }}</view>
+            </view>
+            <view class="content">
+                <view class="input"><input type="text" v-model="params.nickname"
+                        :placeholder="t('loveCourt.placeholderNickname')" placeholder-style="color:#ffffff;"></view>
+                <view>
+                    <textarea v-model="params.event_description" :placeholder="t('loveCourt.placeholderEvent')"
+                        placeholder-style="color:#ffffff;" auto-height maxlength="1000"></textarea>
+                </view>
+                <view>
+                    <textarea v-model="params.issue_description" :placeholder="t('loveCourt.placeholderIssue')"
+                        placeholder-style="color:#ffffff;" auto-height maxlength="1000"></textarea>
+                </view>
+                <view class="title">{{ t('loveCourt.supplementaryUpload') }}</view>
+                <!-- 照片 -->
+                <view class="images">
+                    <view class="update" v-for="(item, index) in params.supplementary_materials" :key="index">
+                        <image :src="item" mode="scaleToFill" />
+                        <view class="close" @click="removeImage(index)"><up-icon name="close" color="#ffffff"
+                                size="26"></up-icon></view>
+                    </view>
+                    <view class="update" @click="addImage" v-if="params.supplementary_materials.length < 3">+</view>
                 </view>
             </view>
-            <view class="del" @click="showDelPopup = true">{{ t('loveCourt.clear') }}</view>
-        </view>
-        <view class="content">
-            <view class="input"><input type="text" v-model="params.nickname" :placeholder="t('loveCourt.placeholderNickname')"
-                    placeholder-style="color:#ffffff;"></view>
-            <view>
-                <textarea v-model="params.event_description" :placeholder="t('loveCourt.placeholderEvent')"
-                    placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
-            </view>
-            <view>
-                <textarea v-model="params.issue_description" :placeholder="t('loveCourt.placeholderIssue')"
-                    placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
-            </view>
-            <view class="title">{{ t('loveCourt.supplementaryUpload') }}</view>
-            <!-- 照片 -->
-            <view class="images">
-                <view class="update" v-for="(item, index) in params.supplementary_materials" :key="index">
-                    <image :src="item" mode="scaleToFill" />
-                    <view class="close" @click="removeImage(index)"><up-icon name="close" color="#ffffff"
-                            size="26"></up-icon></view>
-                </view>
-                <view class="update" @click="addImage" v-if="params.supplementary_materials.length < 3">+</view>
-            </view>
-        </view>
-        <view class="bottom">
-            <view class="top"> <up-avatar :src="userinfo.other_status == null ? '' : userinfo.avatar"
-                    size="36"></up-avatar>
-                <!-- 昵称 -->
-                <text>{{ userinfo.other_status == null ? t('loveCourt.notInvited') : userinfo.nickname || t('loveCourt.userNickname') }}</text>
-                <!-- 状态 -->
-                <text v-if="userinfo.other_status">{{ statusText[userinfo.other_status] }}</text>
+            <view class="bottom">
+                <view class="top"> <up-avatar :src="userinfo.other_status == null ? '' : userinfo.avatar"
+                        size="36"></up-avatar>
+                    <!-- 昵称 -->
+                    <text>{{ userinfo.other_status == null ? t('loveCourt.notInvited') : userinfo.nickname ||
+                        t('loveCourt.userNickname') }}</text>
+                    <!-- 状态 -->
+                    <text v-if="userinfo.other_status">{{ statusText[userinfo.other_status] }}</text>
 
+                </view>
+                <view class="btn" @click="btnInvite('share')" v-if="!userinfo.other_status">
+                    <image :src="$getImg('add/wx')" mode="widthFix" /> {{ t('loveCourt.forwardInvite') }}
+                </view>
+                <view class="btn" @click="btnInvite('save')" v-if="userinfo.other_status">
+                    {{ t('loveCourt.submitContent') }}
+                </view>
             </view>
-            <view class="btn" @click="btnInvite('share')" v-if="!userinfo.other_status">
-                <image :src="$getImg('add/wx')" mode="widthFix" /> {{ t('loveCourt.forwardInvite') }}
-            </view>
-            <view class="btn" @click="btnInvite('save')" v-if="userinfo.other_status">
-                {{ t('loveCourt.submitContent') }}
-            </view>
-        </view>
         </view>
     </view>
     <!-- 恋爱裁判所弹框  -->
@@ -78,8 +79,8 @@
         <view class="tishi tishi1">
             <view>{{ t('loveCourt.inviteMessageTitle') }}</view>
             <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word"></textarea>
-            <view class="btn">
-                <button open-type="share" hover-class="none">{{ t('loveCourt.goInvite') }}</button>
+            <view class="btn" @click="copy">
+                <button open-type="share" hover-class="none">复制链接去邀请</button>
             </view>
             <view class="cancel" @click="invite = false">{{ t('loveCourt.cancel') }}</view>
         </view>
@@ -87,7 +88,8 @@
     <!-- 接受弹窗 -->
     <up-popup :show="invited" @close="invited = false" @open="invited = true" mode="center">
         <view class="tishi tishi1">
-            <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || t('loveCourt.userNickname') }}</text> <text>{{ t('loveCourt.inviteYouJoin') }}</text>
+            <view> <text style="color:red;margin-right: 20rpx;">{{ inviteName || t('loveCourt.userNickname') }}</text>
+                <text>{{ t('loveCourt.inviteYouJoin') }}</text>
             </view>
             <view class="content1">{{ t('loveCourt.taSayToYou') }}{{ content || t('loveCourt.defaultSummons') }}</view>
             <view class="btn" @click="agree">
@@ -125,7 +127,7 @@
             </view>
         </template>
     </IndexProup>
-      <!-- 是否放弃之前作答 -->
+    <!-- 是否放弃之前作答 -->
     <up-popup :show="showDelPopup2" mode="center" @close="showDelPopup2 = false">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
@@ -136,7 +138,7 @@
             </view>
         </view>
     </up-popup>
-       <!-- 是否放弃之前作答 -->
+    <!-- 是否放弃之前作答 -->
     <up-popup :show="showDelPopup3" mode="center" @close="showDelPopup3 = false">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
@@ -157,7 +159,7 @@ import { ref, computed, onMounted } from 'vue'
 import {
     host
 } from '@/config/config.js'
-import { saveLoveCourtRecord, getUserJoinedStatus, getRecords,deleteRecords } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, getUserJoinedStatus, getRecords, deleteRecords } from '@/api/loveCourt.js'
 import { getSystemContent } from "@/api/login.js";
 import {
     onLoad,
@@ -167,6 +169,7 @@ import {
     onUnload
 } from '@dcloudio/uni-app'
 import { onUnmounted } from 'vue'
+import { aesEncrypt } from '@/utils/crypto.js';
 const tishi = ref(false)
 const userAgreementContent = ref('2222222')
 const invite = ref(false)
@@ -197,7 +200,7 @@ const posterIdFromInvite = ref(false) //轮询
 const statusText = computed(() => ({ 'waiting': t('loveCourt.statusInputing'), 'done': t('loveCourt.statusSubmitted') }))
 const showDelPopup2 = ref(false)
 const showDelPopup3 = ref(false)
-const recode = ref({other_status:null})
+const recode = ref({ other_status: null })
 /** 关弹窗可能触发 onShow，设为 true 时 onShow 内不启动轮询并会 stopPolling */
 const skipNextShowPolling = ref(false)
 onMounted(() => {
@@ -213,33 +216,33 @@ onLoad((e) => {
         invited.value = true
         params.value.invitation_code = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
         posterIdFromInvite.value = true
-        
+
     }
-    if(!invitation_code.value){
+    if (!invitation_code.value) {
         fetchDrafts()
     }
     getSystemContent('trial_agreement').then(res => {
-        console.log(res,'reeeee')
+        console.log(res, 'reeeee')
         userAgreementContent.value = res.data[0].trial_agreement
     })
 })
 onUnload(() => {
-    if(!params.value.poster_id && (params.value.nickname !== '' || params.value.event_description !== '' ||  params.value.issue_description !== '' || params.value.supplementary_materials.length !== 0)){
-         btnInvite('cao')
+    if (!params.value.poster_id && (params.value.nickname !== '' || params.value.event_description !== '' || params.value.issue_description !== '' || params.value.supplementary_materials.length !== 0)) {
+        btnInvite('cao')
     }
     params.value.poster_id = ''
     stopPolling()
 })
 const goBack = () => {
-    console.log(recode.value.poster_id,'recode.value')
-    if(recode.value.poster_id){
+    console.log(recode.value.poster_id, 'recode.value')
+    if (recode.value.poster_id) {
         showDelPopup3.value = true
-    }else if(!recode.value.poster_id){
-       uni.switchTab({
-        url:'/pages/index/index'
-       })
+    } else if (!recode.value.poster_id) {
+        uni.switchTab({
+            url: '/pages/index/index'
+        })
     }
-   
+
 }
 //上传图片
 const addImage = () => {
@@ -331,28 +334,28 @@ const removeImage = (index) => {
 }
 //转发邀请
 const btnInvite = (type) => {
-    if(type == 'save'){
-            if (!params.value.nickname) {
-        uni.showToast({
-            title: t('loveCourt.pleaseInputNickname'),
-            icon: 'none'
-        })
-        return
-    }
-    if (!params.value.event_description) {
-        uni.showToast({
-            title: t('loveCourt.pleaseInputEvent'),
-            icon: 'none'
-        })
-        return
-    }
-    if (!params.value.issue_description) {
-        uni.showToast({
-            title: t('loveCourt.pleaseInputIssue'),
-            icon: 'none'
-        })
-        return
-    }
+    if (type == 'save') {
+        if (!params.value.nickname) {
+            uni.showToast({
+                title: t('loveCourt.pleaseInputNickname'),
+                icon: 'none'
+            })
+            return
+        }
+        if (!params.value.event_description) {
+            uni.showToast({
+                title: t('loveCourt.pleaseInputEvent'),
+                icon: 'none'
+            })
+            return
+        }
+        if (!params.value.issue_description) {
+            uni.showToast({
+                title: t('loveCourt.pleaseInputIssue'),
+                icon: 'none'
+            })
+            return
+        }
     }
 
     if (!uni.getStorageSync('token')) {
@@ -368,7 +371,7 @@ const btnInvite = (type) => {
     } else if (type == 'share') {
         params.value.status = 'draft'
         params.value.share_status = true
-    }else if(type == 'cao'){
+    } else if (type == 'cao') {
         params.value.status = 'draft'
         params.value.share_status = ''
     }
@@ -460,6 +463,24 @@ const clearContent = () => {
     params.value.supplementary_materials = []
     showDelPopup.value = false
 }
+//复制链接
+const copy = () => {
+    btnInvite('share')
+    const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
+    const code = encodeURIComponent(JSON.stringify(invitation_code.value));
+    const query = `?invitation_code=${code}&speak=${params.value.send_word}&nickname=${nickname}`
+    const end = aesEncrypt(query)
+    //复制邀请码
+    uni.setClipboardData({
+        data: end,
+        success: function () {
+            uni.showToast({
+                title: t('common.copySuccess'),
+                icon: 'none'
+            });
+        }
+    });
+}
 onShareAppMessage(() => {
     btnInvite('share')
     const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
@@ -478,54 +499,54 @@ const handleExit = () => {
 }
 //获取草稿
 const fetchDrafts = () => {
-     getRecords().then(res => {
+    getRecords().then(res => {
         let drafts = res.data
-        if(drafts.poster_id){
+        if (drafts.poster_id) {
             showDelPopup2.value = true
-        }else{
+        } else {
             showDelPopup2.value = false
         }
         delete drafts.is_draft
         delete drafts.is_host
         recode.value = drafts
-     })
-     .catch(err => {
+    })
+        .catch(err => {
 
-     })
+        })
 }
 const btn = (type) => {
     //继续
-  if(type){
-    console.log(recode.value,'recode.value')
-       params.value = recode.value
-       showDelPopup2.value = false
-       console.log(params.value.poster_id)
+    if (type) {
+        console.log(recode.value, 'recode.value')
+        params.value = recode.value
+        showDelPopup2.value = false
+        console.log(params.value.poster_id)
         getstatus()
         startPolling()
-  }else{ //放弃
-   
-     params.value.poster_id = recode.value.poster_id
-     showDelPopup2.value = false
-     recode.value = {}
-       del()
-     
-  }
+    } else { //放弃
+
+        params.value.poster_id = recode.value.poster_id
+        showDelPopup2.value = false
+        recode.value = {}
+        del()
+
+    }
 }
 //是否保存草稿
 const baocao = (type) => {
-  skipNextShowPolling.value = true // 关弹窗可能触发 onShow，避免再次 startPolling
-  //保存
-  if(type){
-    btnInvite('cao')
-    showDelPopup3.value = false
-  }else{ //不保存
-    showDelPopup3.value = false
-  }
-  pollTimer = '1111'
-  stopPolling()
-  uni.switchTab({
-    url: '/pages/index/index'
-  })
+    skipNextShowPolling.value = true // 关弹窗可能触发 onShow，避免再次 startPolling
+    //保存
+    if (type) {
+        btnInvite('cao')
+        showDelPopup3.value = false
+    } else { //不保存
+        showDelPopup3.value = false
+    }
+    pollTimer = '1111'
+    stopPolling()
+    uni.switchTab({
+        url: '/pages/index/index'
+    })
 }
 //中途退出
 const del = () => {
@@ -535,7 +556,7 @@ const del = () => {
         clearContent()
         stopPolling()
     }).catch(err => {
-       
+
     })
 }
 
@@ -545,6 +566,7 @@ const del = () => {
 .page-body {
     margin: 40rpx 25rpx;
 }
+
 .custom-navbar {
     position: fixed;
     top: 0;
@@ -552,6 +574,7 @@ const del = () => {
     right: 0;
     z-index: 999;
     background: #12111f;
+
     .navbar-content {
         height: 88rpx;
         display: flex;
@@ -559,6 +582,7 @@ const del = () => {
         justify-content: center;
         padding: 0 20rpx;
         position: relative;
+
         .navbar-back {
             position: absolute;
             left: 20rpx;
@@ -568,6 +592,7 @@ const del = () => {
             width: 60rpx;
             height: 60rpx;
         }
+
         .navbar-title {
             font-size: 32rpx;
             font-weight: 500;
@@ -669,6 +694,7 @@ const del = () => {
 
 .titlecon {
     width: 100%;
+
     .t1 {
         width: 100%;
         text-align: center;
@@ -684,7 +710,7 @@ const del = () => {
     .del {
         position: absolute;
         right: 20rpx;
-        top:235rpx;
+        top: 235rpx;
         color: rgba(255, 255, 255, 0.5);
     }
 }
