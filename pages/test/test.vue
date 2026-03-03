@@ -37,7 +37,7 @@
                         " mode="aspectFit"></image>
 
                     <!-- 左侧图片 -->
-                    <view class="left">
+                    <view class="left" v-if="item.business_data?.generate_status !== 'generated'">
                         <image v-if="item.prompt_template.template_type == 'answer'" :src="item.file_url"
                             mode="scaleToFill"
                             :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error', }">
@@ -55,24 +55,32 @@
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'"
                             :src="$getImg('add/mbtiimages')" mode="scaleToFill"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="width: 150rpx;height:150rpx">
+                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }"
+                            style="width: 150rpx;height:150rpx">
                         </image>
                         <image
                             v-else-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'"
-                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url" mode="widthFix"
-                            :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }" style="margin-top: 35rpx;">
+                            :src="item.mbti_list[0].templates[0].template_type == 'double' ? item.mbti_list[0]?.owner_image_url : item.mbti_list[0]?.templates[0]?.image_url"
+                            mode="widthFix" :class="{ 'mbti': item.prompt_template.template_type == 'mbti' }"
+                            style="margin-top: 35rpx;">
                         </image>
-                        <view v-else class="poster-placeholder">
+                        <!-- 恋爱小法庭 -->
+                        <image v-else-if="item.prompt_template.template_type == 'trial_case'" :src="$getImg('add/love')"
+                            mode="widthFix"
+                            :class="{ 'poster-image--blur': item.status === 'waiting' || item.status === 'error' }"
+                            style="margin:50rpx 0 0 30rpx;width:170rpx">
+                        </image>
+                        <!-- <view v-else class="poster-placeholder">
                             <text class="poster-placeholder-text">{{ getStatusText(item.status) }}</text>
-                        </view>
+                        </view> -->
                     </view>
 
                     <!-- 状态遮罩 - 铺满整个卡片区域 -->
                     <view class="status-overlay"
-                        v-if="(item.status === 'waiting' || item.status === 'error') && item.prompt_template.template_type !== 'mbti'">
+                        v-if="(item.status === 'waiting' || item.status === 'error' || item.status === 'paying') && item.prompt_template.template_type !== 'mbti'">
                         <!-- 右上角状态标签 -->
-                        <view v-if="item.status === 'waiting' || item.status === 'error'" class="status-badge"
-                            @click.stop="index == 1 ? handleRetryClick(item) : null">
+                        <view v-if="item.status === 'waiting' || item.status === 'error' || item.status === 'paying'"
+                            class="status-badge" @click.stop="index == 1 ? handleRetryClick(item) : null">
                             <text class="status-badge-text">{{ getStatusTitle(item.status) }}</text>
                         </view>
                     </view>
@@ -98,20 +106,16 @@
                             <view class="details" style="margin-top: 20rpx;"
                                 v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
-                                "{{ item.content || $t('poster.defaultAnswer') }}"
-                                <text v-if="isType" class="look">{{
-                                    $t('poster.viewAnswer') }} {{
-                                        '>>' }}</text>
+                                "{{ item.mbti_list[0] || $t('poster.defaultAnswer') }}"
+                                <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }} {{ '>>' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
-                                <text v-if="isType" class="look">{{
-                                    $t('poster.viewAnswer') }}
-                                    {{
-                                        '>>' }}</text>
+                                <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }}{{ '>>' }}</text>
                             </view>
                         </template>
                         <!-- mbti -->
-                        <template v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'">
+                        <template
+                            v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status !== 'pay_completed'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
                                 <view class="num" style="margin-left: 5rpx;">{{ $t('test.mbtiTest') }}</view>
                                 <view class="details" style="margin-top: 30rpx;font-size: 30rpx;" v-if="isType">
@@ -148,11 +152,13 @@
 
 
                         </template>
-                        <template v-if="item.prompt_template.template_type == 'mbti'  && item.mbti_list[0].room_pay_status == 'pay_completed'">
+                        <template
+                            v-if="item.prompt_template.template_type == 'mbti' && item.mbti_list[0].room_pay_status == 'pay_completed'">
                             <block v-if="item.mbti_list[0]?.templates[0].template_type == 'single'">
-                                <view class="num" style="margin-left:-10rpx;margin-top: 40rpx;">{{ $t('poster.personalityIs') }}{{
-                                    item.mbti_list[0]?.mbti_type ||
-                                    '--' }}</view>
+                                <view class="num" style="margin-left:-10rpx;margin-top: 40rpx;">{{
+                                    $t('poster.personalityIs') }}{{
+                                        item.mbti_list[0]?.mbti_type ||
+                                        '--' }}</view>
                                 <view class="details" style="margin-top: 20rpx;">
                                     <text v-if="isType" class="look"
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">{{
@@ -190,14 +196,48 @@
                                         @click.stop="handlePosterClick(item, index, item.prompt_template.template_type)">
                                         <text>{{ item.mbti_list[0].other_status == 'exit' ? $t('mbti.reInvite') :
                                             !item.mbti_list[0].other_status ? $t('mbti.viewInviteCode') :
-                                            $t('poster.viewDetails') }}</text>
+                                                $t('poster.viewDetails') }}</text>
                                         {{ '>>' }}</text>
                                 </view>
                             </block>
 
 
                         </template>
-                       
+                        <!-- 恋爱小法庭未完成 -->
+                        <template
+                            v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status !== 'generated'">
+                            <view class="num" style="margin-left:20rpx">{{ $t('loveCourt.title') }}</view>
+                            <view class="details" style="margin-top: 20rpx;">
+                                <text class="look" v-if="item.business_data.generate_status == 'waiting_generate'">{{
+                                    $t('loveCourt.viewResult') }}{{ '>>'
+                                    }}</text>
+                                <text class="look" v-if="item.business_data.generate_status == 'non_generable'">{{
+                                    $t('loveCourt.waitingOtherComplete') }}{{
+                                        '>>' }}</text>
+                                <text class="look" v-if="item.business_data.generate_status == 'nobody'">{{
+                                    $t('loveCourt.otherExited') }}{{ '>>'
+                                    }}</text>
+                            </view>
+                        </template>
+                        <!-- 恋爱小法庭已完成并且支付完成-->
+                        <template
+                            v-if="item.prompt_template.template_type == 'trial_case' && item.business_data.generate_status == 'generated'">
+                            <view class="num trial_case" style="margin-left:20rpx">
+                                <text>{{ item.business_data.case_name || '--' }}</text>
+                                <text class="btn">{{ $t('loveCourt.caseClosed') }}</text>
+                            </view>
+                            <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
+                                <text style="display:inline-block;width:160rpx;">{{ $t('loveCourt.caseNumber') }}</text>
+                                <text>{{ item.business_data.case_number }}</text>
+                            </view>
+                            <view class="num" style="margin-left:20rpx;font-size:30rpx;width:100%">
+                                <text style="display:inline-block;width:160rpx;">{{ $t('loveCourt.filingDate') }}</text>
+                                <text>{{ item.last_used_time || '--' }}</text>
+                            </view>
+                            <view class="details" style="margin-top: 20rpx;">
+                                <text class="look">{{ $t('poster.viewDetails') }}{{ '>>' }}</text>
+                            </view>
+                        </template>
                     </view>
                 </view>
                 <!-- <view v-if="loading" class="loading-more">{{ $t('poster.loadingMore') }}</view> -->
@@ -283,6 +323,48 @@
         </template>
     </IndexProup>
     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
+     <up-popup :show="showDelPopup3" mode="center">
+        <view class="del-popup-content" style="height:320rpx">
+            <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
+            <view class="title" style="color:#000">{{ $t('answerBook.unlockAnalysis') }}</view>
+            <view class="del-popup-actions">
+                <view @click="lovepaywx" class="btn11">{{ lovepay.price }} {{ $t('answerBook.payNow') }}</view>
+                <!-- <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view> -->
+            </view>
+            <view class="icon" @click="showDelPopup3 = false">
+                <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
+            </view>
+        </view>
+    </up-popup>
+    <!-- 恋爱 -->
+    <IndexProup :show="showProgress1" @close="handexit" :cha="false" :height="125">
+        <template #content>
+            <view class="pcontent">
+                <view style="color:#000;font-size: 28rpx;">{{ $t('loveCourt.judgeProcessing') }}</view>
+                <view class="num">{{ $t('loveCourt.analyzingDetail') }}</view>
+                <view class="progress-wrapper">
+                    <view class="custom-progress">
+                        <view class="progress-track" style="height:50rpx">
+                            <view class="progress-fill" :style="{ width: progress1 + '%' }"></view>
+                        </view>
+                    </view>
+                </view>
+                <view class="tip">{{ $t('loveCourt.exitTipRecord') }}</view>
+                <view class="btn" @click="handexit" style="margin:30rpx">{{ $t('loveCourt.exit') }}</view>
+            </view>
+        </template>
+    </IndexProup>
+    <!-- 顺道带个话弹窗 -->
+    <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
+        <view class="tishi2 tishi1">
+            <view>{{ $t('loveCourt.inviteMessageTitle') }}</view>
+            <textarea :placeholder="$t('loveCourt.invitePlaceholder')" v-model="send_word"></textarea>
+            <view class="btn">
+                <button open-type="share" hover-class="none">{{ $t('loveCourt.goInvite') }}</button>
+            </view>
+            <view class="cancel" @click="invite = false">{{ $t('loveCourt.cancel') }}</view>
+        </view>
+    </up-popup>
 </template>
 
 <script>
@@ -292,8 +374,11 @@ import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
-import { iosOrder,ios_receipt } from '@/api/index.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
+import { iosOrder,ios_receipt,getProducts } from '@/api/index.js'
+
+import { host } from '@/config/config.js';
+import { saveLoveCourtRecord, payStatus,cancelpayStatus } from '@/api/loveCourt.js'
 export default {
     components: {
         IndexProup,
@@ -313,6 +398,11 @@ export default {
             showProgress: false, // 显示进度条弹窗
             progress: 0, // 进度百分比
             progressTimer: null, // 进度条定时器
+
+             showProgress1: false, // 显示进度条弹窗
+            progress1: 0, // 进度百分比
+            progressTimer1: null, // 进度条定时器
+
             categoryList: [],
             posterList: [],
             currentPage: 1,
@@ -326,7 +416,11 @@ export default {
             md5: '',
             poster_id: '',
             mbtishow: false,
-            posterType: ''
+            posterType: '',
+             lovepay: '',//恋爱小法庭支付
+            send_word: '',
+            invite: false
+
         };
     },
     onLoad() {
@@ -408,6 +502,10 @@ export default {
                 icon: "/static/my/shiwu.png",
                 color: "#66BB6A",
                 type: "mbti",
+            },
+             {
+                label: t('loveCourt.title'),
+                type: "trial_case",
             },
         ];
         this.fetchPosterList(true);
@@ -679,6 +777,7 @@ export default {
                 done: this.$t('poster.done'),
                 error: this.$t('common.fail'),
                 deleted: this.$t('poster.deleted'),
+                paying: this.$t('poster.paying')
             };
             return statusMap[status] || "";
         },
@@ -688,6 +787,8 @@ export default {
                 return this.$t('poster.generatingStatus');
             } else if (status === "error") {
                 return this.$t('poster.generatingFailed');
+            }else if (status == 'paying') {
+                return this.$t('poster.paying')
             }
             return "";
         },
@@ -835,6 +936,37 @@ export default {
                             }
                         }
 
+                    } else if (type == 'trial_case') {
+                        this.invitation_code = item.business_data.invitation_code
+                        //支付完成
+                        if (item.business_data.generate_status == 'generated') {
+                            uni.navigateTo({
+                                url: '/pagesA/loveCourt/poster?id=' + item.id,
+                                fail: (err) => {
+                                    console.error("跳转失败:", err);
+                                    uni.showToast({
+                                        title: this.$t('poster.jumpFailed'),
+                                        icon: "none",
+                                    });
+                                },
+                            });
+                        } else if (item.business_data.generate_status == 'waiting_generate') {
+                            console.log('等待生成中')
+                            getProducts('trial_case').then(res => {
+                                this.lovepay = res.data.results[0]
+                                this.showDelPopup3 = true
+                            })
+
+                        } else if (item.business_data.generate_status == 'non_generable') {
+                            uni.showToast({
+                                title: this.$t('test.paymentNotAvailable'),
+                                icon: "none",
+                            });
+
+                        } else if (item.business_data.generate_status == 'nobody') {
+                            this.invite = true
+                            this.invitation_code = item.business_data.invitation_code
+                        }
                     } else {
                         uni.showToast({
                             title: this.$t('poster.posterIdNotExist'),
@@ -849,8 +981,159 @@ export default {
                     return;
                 }
                 this.previewImage(item, index);
+            }else if (item.status == 'error' && type == 'trial_case') {
+                this.lovedeep()
+            } else if (item.status == 'error' && (type == 'social' || type == 'physical')) {
+                this.handleRetryClick(item)
+            } else if (item.status == 'paying') {
+                uni.showToast({
+                    title: '对方正在支付中',
+                    icon: 'none'
+                })
             }
         },
+         //退出
+        handexit(){
+             this.showProgress1 = false
+             this.fetchPosterList(true)
+        },
+        //检查支付状态
+        lovepaywx() {
+            payStatus(this.invitation_code).then(res => {
+                if (res.data.is_pay == 'can_pay') {
+                    this.lovepaywx1()
+                } else if (res.data.is_pay == 'not_pay') {
+                    uni.showToast({
+                        title: this.$t('poster.paying'),
+                        icon: 'none'
+                    })
+                }
+            })
+                .catch(err => {
+                    uni.showToast({
+                        title: err.message,
+                        icon: 'none'
+                    })
+                })
+        },
+        //支付小法庭
+        lovepaywx1() {
+            let params = {
+                description: this.lovepay.description,
+                openId: uni.getStorageSync('openId'),
+                productId: this.lovepay.id,
+                posterId: this.poster_id
+            }
+            createOrder(params).then(res => {
+                let that = this
+                uni.requestPayment({
+                    "provider": "wxpay",
+                    ...res.data,
+                    "signType": "RSA",
+                    "package": `${res.data.prepayid}`,
+                    "nonceStr": res.data.noncestr,
+                    success(res) {
+                        //支付成功
+                        that.lovedeep()
+                        uni.showToast({
+                            title: t('proPoster.paySuccess'),
+                            icon: 'none'
+                        })
+                        that.showDelPopup3 = false
+
+
+                    },
+                    fail(e) {
+                        //取消支付
+                        uni.showToast({
+                            title: t('proPoster.payFailed'),
+                            icon: 'none'
+                        })
+                        that.showDelPopup3 = false
+                        that.cancelpay()
+                    }
+                })
+
+            })
+        },
+        //取消支付
+        cancelpay(){
+              cancelpayStatus(this.invitation_code).then(res => {
+                console.log(res)
+              })
+        },
+        //小法庭深度
+        lovedeep() {
+            // details.value.children_status = 'waiting'
+            this.showProgress1 = true
+            this.progress1 = 0
+            if (this.progressTimer1) {
+                clearInterval(this.progressTimer1)
+                this.progressTimer1 = null
+            }
+            this.progressTimer1 = setInterval(() => {
+                if (this.progress1 >= 99) {
+                    clearInterval(this.progressTimer1)
+                    this.progressTimer1 = null
+                    return
+                }
+                this.progress1++
+            }, 20)
+            let params = {
+                poster_id: this.poster_id,
+            }
+            uni.request({
+                url: host + '/trialcase/generate_trialcase/',
+                data: params,
+                header: {
+                    token: uni.getStorageSync('token'),
+                    "Accept-Language": uni.getStorageSync('currentLanguage') || 'zh'
+                },
+                method: 'POST',
+                timeout: 1500000,
+                complete: (data) => {
+                    // 清除进度条定时器
+                    if (this.progressTimer1) {
+                        clearInterval(this.progressTimer1)
+                        this.progressTimer1 = null
+                    }
+
+                    if (data.data.code == 403) {
+                        this.showProgress1 = false
+                        this.progress1 = 0
+                        // 重置等待状态
+                        // details.value.children_status = ''
+                        uni.navigateTo({
+                            url: "/pages/login/login"
+                        })
+                        return
+                    }
+
+                    if (data.data.code == 200 || data.data.code == 201) {
+                        // 设置进度为100%
+                        this.progress1 = 100
+
+                        // 延迟关闭弹窗，让用户看到100%
+                        setTimeout(() => {
+                            this.showProgress1 = false
+                            // details.value.deepimages = data.data.data.image_url
+                            // status.value = 2
+                            this.progress1 = 0
+                            // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
+                            // details.value.children_status = ''
+                            this.fetchPosterList(true)
+                        }, 500)
+                    } else {
+                        this.showProgress1 = false
+                        this.progress1 = 0
+                        this.fetchPosterList(true)
+                        // 请求失败，重置等待状态，允许重试
+                        // details.value.children_status = ''
+                    }
+                }
+            })
+        },
+
         //获取钱的类型
         getprices(item) {
             let object = {
@@ -1369,6 +1652,19 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.trial_case {
+    display: flex;
+    justify-content: space-between;
+    width: 135%;
+
+    .btn {
+        background: #beffd5;
+        font-size: 26rpx;
+        color: #349a5b;
+        padding: 10rpx 20rpx;
+        border-radius: 10rpx;
+    }
+}
 .poster-page {
     min-height: 100vh;
     background: #12111f;
