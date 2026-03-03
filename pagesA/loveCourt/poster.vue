@@ -24,7 +24,7 @@
 
 <script setup>
 import Loveposter from '@/components/Loveposter/Loveposter.vue';
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getPosterDetails } from '@/api/index.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
@@ -122,6 +122,10 @@ const path = (type) => {
     }
 }
 onUnload(() => {
+    cleanupOldTempFiles()
+})
+// 页面加载时清理
+onMounted(() => {
     cleanupOldTempFiles()
 })
 </script>
