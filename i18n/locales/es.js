@@ -666,5 +666,20 @@ export default {
     viewNow: 'Ver Ahora',
     paymentNotAvailable: 'El pago no está disponible temporalmente',
     otherPaying: 'La otra parte está pagando'
+  },
+  lovePoster: {
+    title: 'Veredicto del Tribunal del Amor',
+    caseNumber: 'N.º de caso: ',
+    partyA: 'A: ',
+    partyB: 'B: ',
+    presidingJudge: 'Juez presidente: ',
+    openCourtTime: 'Hora de apertura: ',
+    analysisTitle: 'Análisis de causas: ',
+    proportionTitle: 'Proporción: ',
+    verdictTitle: 'Veredicto final: ',
+    resolutionTitle: 'Plan de conciliación: ',
+    judgeAdviceTitle: 'Consejo del juez: ',
+    verdictTime: 'Fecha del veredicto: ',
+    imageLoadFailed: 'Error al cargar la imagen, inténtelo de nuevo'
   }
 }
