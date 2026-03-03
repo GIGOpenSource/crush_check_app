@@ -11,7 +11,7 @@
 				<image :src="$getImg('index/jz')" />
 			</view>
 		</view>
-		<view class="bottom">
+		<view class="bottom" v-if="version == 1">
 			<view class="left" @click="path('/pages/index/answer')">
 				<view>
 					<view>{{ t('index.answer') }}</view>
@@ -19,7 +19,7 @@
 				</view>
 				<image :src="$getImg('index/answer')" />
 			</view>
-			<view class="left" @click="path('/pagesA/tarotcards/qusetion')" v-if="version == 1">
+			<view class="left" @click="path('/pagesA/tarotcards/qusetion')">
 				<view style="margin-left: 50rpx;width: 200rpx;">
 					<view>{{ t('tarot_name') }}</view>
 					<view></view>
