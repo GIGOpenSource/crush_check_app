@@ -188,6 +188,14 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
+				},{
+					"path": "constellation/index",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false,
+						"navigationStyle": "custom"
+					}
 				}
 			]
 		}
