@@ -217,19 +217,25 @@ export default {
 
     },
     mounted() {
-        // 在生成海报前清理小程序缓存（只清理旧文件，不清理当前文件）
+       // 在生成海报前清理小程序缓存
         this.clearTempFiles()
+        // 延迟再次清理，确保清理完成
+        setTimeout(() => {
+            this.clearTempFiles()
+        }, 500)
     },
     beforeDestroy() {
-        // 组件销毁前清理canvas资源
+         // 组件销毁前清理canvas资源
         this.cleanupCanvas()
+        // 清理旧海报文件，只保留最新的
+        this.cleanupOldPosterFiles()
     },
     methods: {
         // 国际化翻译函数
         t(key) {
             return i18nT(key)
         },
-        // 清理临时文件（支持小程序和APP）
+               // 清理临时文件（支持小程序和APP）
         clearTempFiles() {
             try {
                 // #ifdef MP-WEIXIN
@@ -256,23 +262,11 @@ export default {
                             fs.readdir({
                                 dirPath: userDataPath,
                                 success: (res) => {
-                                    // 获取当前正在使用的文件名（如果有）
-                                    let currentFileName = ''
-                                    if (this.currentPosterPath) {
-                                        // 从路径中提取文件名，例如 wxfile://usr/1770194437452.jpeg -> 1770194437452.jpeg
-                                        const pathParts = this.currentPosterPath.split('/')
-                                        currentFileName = pathParts[pathParts.length - 1]
-                                    }
-
-                                    // 清理所有图片文件（jpg, png等），但排除当前正在使用的文件
+                                    // 清理所有图片文件（jpg, png等），清理更多文件
                                     const imageExts = ['.jpg', '.jpeg', '.png', '.gif']
                                     const imageFiles = res.files
                                         .filter(file => {
                                             const ext = file.substring(file.lastIndexOf('.'))
-                                            // 排除当前正在使用的文件
-                                            if (currentFileName && file === currentFileName) {
-                                                return false
-                                            }
                                             return imageExts.includes(ext.toLowerCase())
                                         })
                                         .sort()
@@ -302,108 +296,70 @@ export default {
                 // #endif
 
                 // #ifdef APP-PLUS
-                // 清理APP临时文件目录（更激进的清理策略 - 清理所有旧文件）
+                // 清理APP临时文件目录
                 try {
                     const tempDirPath = '_doc/uniapp_temp'
-                    // 获取当前正在使用的文件名（如果有）
-                    let currentFileName = ''
-                    if (this.currentPosterPath) {
-                        // 从路径中提取文件名
-                        const pathParts = this.currentPosterPath.split('/')
-                        currentFileName = pathParts[pathParts.length - 1]
-                    }
-
                     // 使用 plus.io 读取目录
                     plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
                         // 检查是否是目录
                         if (dirEntry.isDirectory) {
                             const reader = dirEntry.createReader()
-                            // 递归读取所有文件（readEntries可能需要多次调用）
-                            const allEntries = []
-                            const readAllEntries = () => {
-                                reader.readEntries((entries) => {
-                                    if (entries.length > 0) {
-                                        allEntries.push(...entries)
-                                        // 继续读取
-                                        readAllEntries()
-                                    } else {
-                                        // 读取完成，清理所有图片文件，但排除当前文件
-                                        const imageFiles = allEntries
-                                            .filter(entry => {
-                                                const name = entry.name || ''
-                                                // 排除当前正在使用的文件
-                                                if (currentFileName && name === currentFileName) {
-                                                    return false
-                                                }
-                                                return /\.(jpg|jpeg|png|gif)$/i.test(name)
-                                            })
+                            reader.readEntries((entries) => {
+                                // 过滤图片文件并按时间排序
+                                const imageFiles = entries
+                                    .filter(entry => {
+                                        const name = entry.name || ''
+                                        return /\.(jpg|jpeg|png|gif)$/i.test(name)
+                                    })
+                                    .sort((a, b) => {
+                                        // 按修改时间排序，旧的在前
+                                        const aTime = a.lastModifiedDate || 0
+                                        const bTime = b.lastModifiedDate || 0
+                                        return aTime - bTime
+                                    })
+                                    .slice(0, 20) // 清理更多旧文件（20个）
 
-                                        let cleaned = 0
-                                        const totalFiles = imageFiles.length
-
-                                        if (totalFiles === 0) {
-                                            console.log('APP临时目录中没有图片文件')
-                                            return
-                                        }
-
-                                        console.log(`准备清理 ${totalFiles} 个APP临时文件`)
-
-                                        imageFiles.forEach(fileEntry => {
-                                            fileEntry.remove(() => {
-                                                cleaned++
-                                                console.log(`已清理APP临时文件 ${cleaned}/${totalFiles}:`, fileEntry.name)
-                                                // 如果清理完成，尝试强制垃圾回收
-                                                if (cleaned === totalFiles) {
-                                                    setTimeout(() => {
-                                                        // 尝试强制垃圾回收（如果可用）
-                                                        if (global.gc) {
-                                                            global.gc()
-                                                        }
-                                                    }, 100)
-                                                }
-                                            }, (err) => {
-                                                cleaned++
-                                                // 忽略删除失败
-                                                if (cleaned === totalFiles) {
-                                                    setTimeout(() => {
-                                                        if (global.gc) {
-                                                            global.gc()
-                                                        }
-                                                    }, 100)
-                                                }
-                                            })
-                                        })
-                                    }
-                                }, (err) => {
-                                    // 读取目录失败，忽略（可能是空目录）
-                                    console.log('读取APP目录失败:', err)
+                                imageFiles.forEach(fileEntry => {
+                                    fileEntry.remove(() => {
+                                        console.log('已清理APP临时文件:', fileEntry.name)
+                                    }, (err) => {
+                                        // 忽略删除失败
+                                        console.log('删除文件失败:', err)
+                                    })
                                 })
-                            }
-                            readAllEntries()
+                            }, (err) => {
+                                // 读取目录失败，忽略
+                                console.log('读取目录失败:', err)
+                            })
                         }
                     }, (err) => {
-                        // 目录不存在，尝试创建目录（如果失败则忽略，不影响主流程）
-                        if (err && err.code === 1) {
-                            // 文件没有发现，尝试创建目录
-                            try {
-                                plus.io.resolveLocalFileSystemURL('_doc', (docEntry) => {
-                                    docEntry.getDirectory('uniapp_temp', { create: true, exclusive: false }, () => {
-                                        // 目录创建成功，不需要清理
-                                        console.log('APP临时目录创建成功')
-                                    }, () => {
-                                        // 创建失败，忽略
-                                        console.log('APP临时目录创建失败')
-                                    })
-                                }, () => {
-                                    // 解析_doc失败，忽略
-                                    console.log('解析_doc目录失败')
+                        // 解析路径失败，尝试使用文件系统管理器
+                        try {
+                            const fs = uni.getFileSystemManager()
+                            if (fs) {
+                                fs.readdir({
+                                    dirPath: tempDirPath,
+                                    success: (res) => {
+                                        const imageFiles = res.files
+                                            .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file))
+                                            .sort()
+                                            .slice(0, 10)
+
+                                        imageFiles.forEach(file => {
+                                            fs.unlink({
+                                                filePath: `${tempDirPath}/${file}`,
+                                                success: () => {
+                                                    console.log('已清理APP临时文件:', file)
+                                                },
+                                                fail: () => { }
+                                            })
+                                        })
+                                    },
+                                    fail: () => { }
                                 })
-                            } catch (e) {
-                                // 创建目录失败，忽略（不影响主流程）
-                                console.log('创建APP临时目录异常:', e)
                             }
-                        } else {
-                            console.log('解析APP临时文件目录失败:', err)
+                        } catch (e) {
+                            console.log('清理APP临时文件异常:', e)
                         }
                     })
                 } catch (e) {
@@ -414,16 +370,116 @@ export default {
                 console.log('清理临时文件失败:', e)
             }
         },
+        // 清理旧海报文件，只保留最新的
+        cleanupOldPosterFiles() {
+            try {
+                const currentPath = this.path; // 当前最新的文件路径
+                
+                // #ifdef MP-WEIXIN
+                // 小程序端清理
+                const fs = uni.getFileSystemManager();
+                if (fs) {
+                    fs.getSavedFileList({
+                        success: (res) => {
+                            const fileList = res.fileList || [];
+                            if (fileList.length > 0) {
+                                // 按创建时间排序，最新的在前
+                                const sortedFiles = fileList.sort((a, b) => (b.createTime || 0) - (a.createTime || 0));
+                                
+                                // 找到当前文件
+                                const currentFile = sortedFiles.find(file => file.filePath === currentPath);
+                                
+                                // 要保留的文件：如果当前文件存在则保留它，否则保留最新的一个
+                                const fileToKeep = currentFile || sortedFiles[0];
+                                
+                                // 删除除了要保留的文件之外的所有文件
+                                sortedFiles.forEach((file) => {
+                                    if (file.filePath !== fileToKeep.filePath) {
+                                        fs.removeSavedFile({
+                                            filePath: file.filePath,
+                                            success: () => {
+                                                console.log('已清理旧海报文件:', file.filePath);
+                                            },
+                                            fail: () => {
+                                                // 忽略删除失败
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        },
+                        fail: () => {
+                            // 获取文件列表失败，忽略
+                        }
+                    });
+                }
+                // #endif
+                
+                // #ifdef APP-PLUS
+                // APP端清理
+                if (typeof plus !== 'undefined' && plus.io) {
+                    const tempDirPath = '_doc/uniapp_temp';
+                    plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
+                        if (dirEntry.isDirectory) {
+                            const reader = dirEntry.createReader();
+                            const allEntries = [];
+                            
+                            const readAllEntries = () => {
+                                reader.readEntries((entries) => {
+                                    if (entries.length > 0) {
+                                        allEntries.push(...entries);
+                                        readAllEntries();
+                                    } else {
+                                        // 读取完成，清理旧文件
+                                        const imageFiles = allEntries.filter(entry => {
+                                            const name = entry.name || '';
+                                            return /\.(jpg|jpeg|png|gif)$/i.test(name);
+                                        });
+                                        
+                                        if (imageFiles.length > 0) {
+                                            // 如果当前文件存在，只保留它；否则保留最新的一个
+                                            const currentFile = imageFiles.find(entry => {
+                                                const fullPath = `${tempDirPath}/${entry.name}`;
+                                                return fullPath === currentPath || entry.name === currentPath.split('/').pop();
+                                            });
+                                            
+                                            imageFiles.forEach(fileEntry => {
+                                                // 如果不是当前文件，删除它
+                                                if (!currentFile || fileEntry.name !== currentFile.name) {
+                                                    fileEntry.remove(() => {
+                                                        console.log('已清理旧海报文件:', fileEntry.name);
+                                                    }, () => {
+                                                        // 忽略删除失败
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                }, () => {
+                                    // 读取失败，忽略
+                                });
+                            };
+                            readAllEntries();
+                        }
+                    }, () => {
+                        // 目录不存在，忽略
+                    });
+                }
+                // #endif
+            } catch (e) {
+                console.log('清理旧海报文件异常:', e);
+            }
+        },
         // 清理canvas资源
         cleanupCanvas() {
             try {
                 const painter = this.$refs.painter
                 if (painter) {
                     // 清理canvas上下文
-                    if (painter.canvas) {
+                    if (painter.canvas && typeof painter.canvas.getContext === 'function') {
                         try {
                             const ctx = painter.canvas.getContext('2d')
-                            if (ctx) {
+                            if (ctx && typeof ctx.clearRect === 'function') {
                                 ctx.clearRect(0, 0, painter.canvas.width || 0, painter.canvas.height || 0)
                             }
                         } catch (e) {
@@ -431,7 +487,7 @@ export default {
                         }
                     }
                     // 清理旧的canvas上下文（非2d）
-                    if (painter.ctx && painter.ctx.clearRect) {
+                    if (painter.ctx && typeof painter.ctx.clearRect === 'function') {
                         try {
                             painter.ctx.clearRect(0, 0, painter.canvasWidth || 0, painter.canvasHeight || 0)
                         } catch (e) {
@@ -460,16 +516,10 @@ export default {
             console.log('海报生成成功，路径:', filePath)
             if (filePath) {
                 this.path = filePath
-                // 保存当前海报路径，清理时排除
-                this.currentPosterPath = filePath
                 this.$emit('success', filePath)
                 // 延迟清理，确保图片已加载和显示
                 setTimeout(() => {
                     this.cleanupCanvas()
-                    // 生成成功后延迟清理临时文件，但排除当前文件
-                    setTimeout(() => {
-                        this.clearTempFiles()
-                    }, 3000) // 延迟3秒，确保图片已完全加载
                 }, 2000)
             } else {
                 console.error('海报路径为空')
@@ -480,13 +530,13 @@ export default {
         handleImageError(e) {
             console.error('图片加载失败:', e)
             uni.showToast({
-                title: this.t('lovePoster.imageLoadFailed'),
+                title: '图片加载失败，请重试',
                 icon: 'none',
                 duration: 2000
             })
         },
         // 处理生成失败
-        handleFail(error) {
+          handleFail(error) {
             console.error('海报生成失败:', error)
             this.cleanupCanvas()
 

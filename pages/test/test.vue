@@ -291,7 +291,7 @@
         <template #content>
             <view class="content">
                 <view class="num">{{ $t('poster.analyzingPercent') }}{{ progress }}{{ $t('poster.analyzingPercentUnit')
-                    }}</view>
+                }}</view>
                 <view class="progress-wrapper">
                     <view class="custom-progress">
                         <view class="progress-track">
@@ -359,8 +359,8 @@
         <view class="tishi2 tishi1">
             <view>{{ $t('loveCourt.inviteMessageTitle') }}</view>
             <textarea :placeholder="$t('loveCourt.invitePlaceholder')" v-model="send_word"></textarea>
-            <view class="btn">
-                <button open-type="share" hover-class="none">{{ $t('loveCourt.goInvite') }}</button>
+            <view class="btn" @click="copy1">
+                <button open-type="share" hover-class="none">复制链接去邀请</button>
             </view>
             <view class="cancel" @click="invite = false">{{ $t('loveCourt.cancel') }}</view>
         </view>
@@ -525,6 +525,23 @@ export default {
             });
 
         },
+        copy1() {
+            this.updatalove()
+            const nickname = JSON.parse(uni.getStorageSync('userInfo')).username
+            const code = encodeURIComponent(JSON.stringify(this.invitation_code));
+            const query = `?invitation_code=${code}&speak=${this.send_word}&nickname=${nickname}`
+            const end = aesEncrypt(query)
+            uni.setClipboardData({
+                data: end,
+                success: function () {
+                    uni.showToast({
+                        title: t('common.copySuccess'),
+                        icon: 'none'
+                    });
+                }
+            });
+        },
+
         handleEncrypt() {
             const encryptedData = uni.getStorageSync('openId') + '@' + this.md5
             const end = aesEncrypt(encryptedData)
@@ -1018,14 +1035,14 @@ export default {
         },
         //支付小法庭
         lovepaywx1() {
-              let that = this
+            let that = this
             let params = {
                 description: that.lovepay.description,
                 openId: uni.getStorageSync('openId'),
                 productId: that.lovepay.id,
                 posterId: that.poster_id
             }
-          
+
             iosOrder(params).then(res => {
                 let paymentData = res.data
                 console.log('反水数据', res.data)
@@ -1064,13 +1081,13 @@ export default {
                                 })
                             },
                             fail: (err) => {
-                                            //取消支付
-                                            uni.showToast({
-                                                title: t('proPoster.payFailed'),
-                                                icon: 'none'
-                                            })
-                                            that.showDelPopup3 = false
-                                            that.cancelpay()
+                                //取消支付
+                                uni.showToast({
+                                    title: t('proPoster.payFailed'),
+                                    icon: 'none'
+                                })
+                                that.showDelPopup3 = false
+                                that.cancelpay()
                             }
                         })
 
@@ -1082,7 +1099,7 @@ export default {
                             errorMsg = t('mbti.orderInfoFailed');
                         }
                         uni.showToast({ title: errorMsg, icon: 'none' });
-                           that.showDelPopup3 = false
+                        that.showDelPopup3 = false
                     });
                 }, function (e) {
                     console.error('获取支付通道失败:', e);

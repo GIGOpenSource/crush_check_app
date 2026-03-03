@@ -8,6 +8,34 @@ const normalizeLoose = (v) => {
   return s
 }
 
+const DISABLE_UNTIL_KEY = 'clipboard_paste_denied_until'
+let lastCheckAt = 0
+
+const getDisabledUntil = () => {
+  const v = Number(uni.getStorageSync(DISABLE_UNTIL_KEY) || 0)
+  return Number.isFinite(v) ? v : 0
+}
+
+const setDisabledForMs = (ms) => {
+  const until = Date.now() + ms
+  uni.setStorageSync(DISABLE_UNTIL_KEY, until)
+  return until
+}
+
+const isPasteDeniedError = (err) => {
+  const msg = (err && (err.errMsg || err.message)) ? String(err.errMsg || err.message) : String(err || '')
+  const m = msg.toLowerCase()
+  // 不同端的报错不一致，这里做宽松匹配
+  return (
+    m.includes('deny') ||
+    m.includes('denied') ||
+    m.includes('not allow') ||
+    m.includes('not authorized') ||
+    m.includes('auth') ||
+    m.includes('permission')
+  )
+}
+
 const getCurrentRoute = () => {
   try {
     const pages = typeof getCurrentPages === 'function' ? getCurrentPages() : []
@@ -26,6 +54,23 @@ const getCurrentRoute = () => {
  */
 export const checkClipboardInvite = () =>
   new Promise((resolve) => {
+    // 节流：避免 App onShow + 全局页面 onShow 同时触发
+    const now = Date.now()
+    if (now - lastCheckAt < 1200) return resolve({ hit: false, action: 'throttle' })
+    lastCheckAt = now
+
+    // 在 loveCourt 页/登录页不读取剪贴板，避免反复弹“允许粘贴”系统提示
+    const currentRoute = getCurrentRoute()
+    if (currentRoute === 'pagesA/loveCourt/index' || currentRoute === 'pages/login/login') {
+      return resolve({ hit: false, action: 'skip_current_page' })
+    }
+
+    // 用户点了“不允许粘贴”后，短时间内不再触发读取，避免反复弹窗
+    const disabledUntil = getDisabledUntil()
+    if (disabledUntil && now < disabledUntil) {
+      return resolve({ hit: false, action: 'cooldown' })
+    }
+
     uni.getClipboardData({
       success: (res) => {
         let inview = ''
@@ -59,7 +104,14 @@ export const checkClipboardInvite = () =>
         })
         return resolve({ hit: true, action: 'to_loveCourt' })
       },
-      fail: () => resolve({ hit: false, action: 'fail' })
+      fail: (err) => {
+        // iOS 点“不允许粘贴”通常会走 fail，这里进入冷却，避免每次页面显示都弹窗
+        if (isPasteDeniedError(err)) {
+          setDisabledForMs(10 * 60 * 1000) // 10分钟
+          return resolve({ hit: false, action: 'paste_denied' })
+        }
+        return resolve({ hit: false, action: 'fail' })
+      }
     })
   })
 
