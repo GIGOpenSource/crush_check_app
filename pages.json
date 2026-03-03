@@ -196,6 +196,14 @@
 						"disableScroll": false,
 						"navigationStyle": "custom"
 					}
+				},{
+					"path": "constellation/join",
+					"style": {
+						"navigationBarTitleText": "CrushCheck",
+						"enablePullDownRefresh": false,
+						"disableScroll": false,
+						"navigationStyle": "custom"
+					}
 				}
 			]
 		}

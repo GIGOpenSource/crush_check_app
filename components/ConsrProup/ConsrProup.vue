@@ -13,7 +13,7 @@
       params.data_of_birth_time
       || '选择生日' }}</view>
     <view class="birth">选择出生地</view>
-    <view class="birth step" :class="{'status':status}">下一步</view>
+    <view class="birth step" :class="{'status':status}" @click="submit">下一步</view>
     <up-datetime-picker :show="show" v-model="value1" mode="datetime" :maxDate="maxDate" @confirm="confirm"
       @cancel="show = false"></up-datetime-picker>
   </view>
@@ -72,6 +72,10 @@ const gettime = (time) => {
   const seconds = date.getSeconds().toString().padStart(2, '0');
   const formattedDate = `${year}年${month}月${day}日 ${hours}:${minutes}`;
   return formattedDate
+}
+
+const submit = () => {
+  emits("submit");
 }
 </script>
 

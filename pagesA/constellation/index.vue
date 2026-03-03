@@ -9,13 +9,17 @@
          
       </view>
        <!-- 组件 -->
-          <ConsrProup/>
+          <ConsrProup @submit="step"/>
     </view>
   </view>
 </template>
 
 <script setup>
 import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
+//提交
+const step = () => {
+  
+}
 </script>
 
 <style lang="scss" scoped>
