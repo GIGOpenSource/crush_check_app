@@ -1,6 +1,6 @@
 <template>
     <view class="page">
-    <view class="look" @click="path('look')">{{ t('loveCourt.viewMaterials') }}</view>
+        <view class="look" @click="path('look')">{{ t('loveCourt.viewMaterials') }}</view>
         <view class="top">
             <text class="title">{{ t('loveCourt.title') }}</text>
         </view>
@@ -9,7 +9,7 @@
                 <view class="loading-spinner"></view>
                 <text>{{ t('loveCourt.posterGenerating') }}</text>
             </view>
-            <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" :info="details"/>
+            <Loveposter @success="handlePosterSuccess" @fail="handlePosterFail" :info="details" />
         </view>
         <view class="bottom">
             <view class="border">
@@ -18,6 +18,7 @@
                 <view class="back" @click="path('back')">{{ t('loveCourt.backHome') }}</view>
             </view>
         </view>
+         <InvitationFriend :show="friend" @close="friend = false" :imageUrl="posterImg" :downloadUrl="posterImg" />
     </view>
 </template>
 
@@ -27,7 +28,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getPosterDetails } from '@/api/index.js'
 import { onLoad, onUnload } from '@dcloudio/uni-app'
-
+import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue'
 const { t } = useI18n()
 const posterImg = ref('');
 const posterError = ref(false);
@@ -54,6 +55,7 @@ const handlePosterSuccess = (filePath) => {
     if (filePath) {
         posterImg.value = filePath
         posterError.value = false
+        cleanupOldTempFiles()
     } else {
         console.error('海报路径为空')
         posterError.value = true
@@ -61,39 +63,39 @@ const handlePosterSuccess = (filePath) => {
 }
 // 仅保留：页面卸载时全量清理文件（兼容目录不存在/无文件的情况）
 const cleanupOldTempFiles = async () => {
-  try {
-    const fs = wx.getFileSystemManager();
-    
-    // 核心容错：获取文件列表失败时直接返回，不中断流程
-    let fileList = [];
     try {
-      const fileListRes = await new Promise((resolve, reject) => {
-        fs.getSavedFileList({ success: resolve, fail: reject });
-      });
-      fileList = fileListRes.fileList || [];
-    } catch (err) {
-      // 目录不存在/无文件时，打印提示并跳过删除步骤
-      console.log('无已保存文件，无需清理：', err.errMsg);
-      return;
-    }
+        const fs = wx.getFileSystemManager();
 
-    // 遍历删除所有文件（有文件才执行）
-    if (fileList.length > 0) {
-      for (const file of fileList) {
+        // 核心容错：获取文件列表失败时直接返回，不中断流程
+        let fileList = [];
         try {
-          await new Promise((resolve, reject) => {
-            fs.unlink({ filePath: file.filePath, success: resolve, fail: reject });
-          });
-          console.log(`清理文件成功：${file.filePath}`);
+            const fileListRes = await new Promise((resolve, reject) => {
+                fs.getSavedFileList({ success: resolve, fail: reject });
+            });
+            fileList = fileListRes.fileList || [];
         } catch (err) {
-          console.warn(`清理单个文件失败（忽略）：${file.filePath}`);
+            // 目录不存在/无文件时，打印提示并跳过删除步骤
+            console.log('无已保存文件，无需清理：', err.errMsg);
+            return;
         }
-      }
-      console.log('所有文件清理完成');
+
+        // 遍历删除所有文件（有文件才执行）
+        if (fileList.length > 0) {
+            for (const file of fileList) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        fs.unlink({ filePath: file.filePath, success: resolve, fail: reject });
+                    });
+                    console.log(`清理文件成功：${file.filePath}`);
+                } catch (err) {
+                    console.warn(`清理单个文件失败（忽略）：${file.filePath}`);
+                }
+            }
+            console.log('所有文件清理完成');
+        }
+    } catch (err) {
+        console.error('文件清理流程异常（不影响页面）：', err.errMsg);
     }
-  } catch (err) {
-    console.error('文件清理流程异常（不影响页面）：', err.errMsg);
-  }
 };
 
 const handlePosterFail = (error) => {
@@ -104,33 +106,19 @@ const path = (type) => {
     if (type == 'share') {
         if (!posterImg.value) {
             uni.showToast({
-                title: t('loveCourt.posterNotReady'),
+                title: t('mbti.posterNotReady'),
                 icon: 'none',
                 duration: 2000
             })
             return
         }
-        const inviterOpenId = uni.getStorageSync("openId") || "";
-        const query = `?scene=${inviterOpenId}`
-        wx.showShareImageMenu({
-            path: posterImg.value,
-            entrancePath: `/pages/index/index${query}`,
-            complete: (res) => {
-                if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                    // share_fail()
-
-                } else {
-                    // share_success()
-
-                }
-            }
-        })
+       friend.value = true
     } else if (type == 'again') {
         uni.redirectTo({ url: '/pagesA/loveCourt/index' })
     } else if (type == 'back') {
         uni.switchTab({ url: '/pages/index/index' })
-    } else if(type == 'look'){
-        uni.navigateTo({ url: '/pagesA/loveCourt/materail?id='+id.value })
+    } else if (type == 'look') {
+        uni.navigateTo({ url: '/pagesA/loveCourt/materail?id=' + id.value })
     }
 }
 onUnload(() => {
@@ -147,7 +135,8 @@ onUnload(() => {
     width: 100%;
     text-align: center;
 }
-.look{
+
+.look {
     position: absolute;
     top: 135rpx;
     right: 60rpx;
@@ -155,6 +144,7 @@ onUnload(() => {
     color: rgba(255, 255, 255, 0.5);
     z-index: 999;
 }
+
 .content {
     box-sizing: border-box;
     border: 0.5rpx solid #FFFFFF;
@@ -202,6 +192,7 @@ onUnload(() => {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
