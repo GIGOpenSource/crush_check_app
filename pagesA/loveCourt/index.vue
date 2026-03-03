@@ -80,7 +80,7 @@
             <view>{{ t('loveCourt.inviteMessageTitle') }}</view>
             <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word"></textarea>
             <view class="btn" @click="copy">
-                <button open-type="share" hover-class="none">复制链接去邀请</button>
+                <button open-type="share" hover-class="none">{{ t('mbti.clickCopy') }}</button>
             </view>
             <view class="cancel" @click="invite = false">{{ t('loveCourt.cancel') }}</view>
         </view>
