@@ -209,8 +209,17 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 })
 onLoad((e) => {
-    inviteName.value = e.nickname
-    content.value = e.speak
+    console.log('eeeee',e)
+    const normalizeDisplay = (v) => {
+        if (v == null) return ''
+        const s = String(v).trim()
+        if (!s) return ''
+        const lower = s.toLowerCase()
+        if (lower === 'undefined' || lower === 'null') return ''
+        return s
+    }
+    inviteName.value = normalizeDisplay(e.nickname) || t('loveCourt.userNickname')
+    content.value = normalizeDisplay(e.speak) || t('loveCourt.defaultSummons')
     invitation_code.value = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
     if (e.invitation_code) {
         invited.value = true

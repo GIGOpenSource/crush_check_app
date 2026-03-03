@@ -14,7 +14,7 @@ import {
 import {
 	getSystemContent
 } from "@/api/login.js";
-import { aesDecrypt } from '@/utils/crypto.js';
+import { checkClipboardInvite } from '@/utils/clipboardInvite.js';
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -43,28 +43,12 @@ onShow(() => {
 		uni.setStorageSync('version', res.data[0].version)
 	})
 	app_show()
-	uni.getClipboardData({
-		success: (res) => {
-			console.log(res,'rrrrr')
-			let inview = aesDecrypt(res.data || '')
-			console.log(inview, '111')
-			if (!uni.getStorageSync('token')) {
-				uni.navigateTo({
-					url: '/pages/login/login'
-				})
-			} else {
-				uni.redirectTo({
-					url: `/pagesA/loveCourt/index${inview}`
-				})
-			}
-		},
-		fail: (err) => {
-			console.log('getClipboardData fail', err)
-		}
-	})
+	checkClipboardInvite()
 })
 onHide(() => {
 	app_hide()
+	// 切到别的 App 再回来：允许同一邀请码再次触发
+	uni.removeStorageSync('last_loveCourt_invite_query')
 })
 onLaunch(() => {
 	app_launch()

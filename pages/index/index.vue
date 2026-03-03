@@ -78,6 +78,7 @@ const path = (url) => {
 
 }
 onLoad((e) => {
+	console.log('我来看看')
 	if (e.scene) {
 		uni.setStorageSync("inviter_openid", e.scene);
 		if (!uni.getStorageSync('token')) {
