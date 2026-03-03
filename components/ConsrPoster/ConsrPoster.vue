@@ -4,13 +4,79 @@
         <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx"
             height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.95" :pixel-ratio="3">
             <l-painter-view
-                css="width: 100%; height: 100%;color: #000;background: #ffffff;font-size: 26rpx;padding: 20rpx 20rpx;box-sizing: border-box;">
-                <l-painter-view css="width: 100%;border-radius: 10rpx; padding: 20rpx 0; box-sizing: border-box;">
-                    <!-- 类型 -->
-                    <l-painter-view css="display: flex;justify-content: space-between;">
-                    1111
+                css="width: 100%; height: 100%;color: #ffffff;background: #2b2a38;font-size: 26rpx;box-sizing: border-box;">
+                <l-painter-view css="height: 100%;width: 100%;border-radius: 10rpx; box-sizing: border-box;">
+                    <!-- 星座 -->
+                    <l-painter-view
+                        css="padding:80rpx 0 30rpx 0;background: linear-gradient(180deg, #534D90 0%, rgba(43, 40, 72, 0) 100%);width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;justify-content: space-around;">
+                        <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
+                            <l-painter-image src="/static/constellation/banner.png"
+                                css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
+                          <l-painter-text css="font-size: 22rpx;" text="魔羯座"></l-painter-text>
+                        </l-painter-view>
+                        <l-painter-text text="VS" css="margin: 0 10rpx;font-size: 30rpx;"></l-painter-text>
+                        <l-painter-view>
+                           <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
+                            <l-painter-image src="/static/constellation/banner.png"
+                                css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
+                          <l-painter-text css="font-size: 22rpx;" text="射手座"></l-painter-text>
+                        </l-painter-view>
+                        </l-painter-view>
                     </l-painter-view>
-              
+                    <l-painter-view
+                        css="background: #2b2a38;border: 0.5px solid #FFFFFF;border-radius: 25rpx;padding:20rpx;box-sizing: border-box;height:100%">
+                        <!-- 分数 -->
+                        <l-painter-view
+                            css="padding:30rpx 0;display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            <l-painter-view css="display: flex; align-items: flex-end;margin-bottom: 20rpx;">
+                                <l-painter-text :text="'97'"
+                                    css="font-size: 48rpx;margin-right: 5rpx;font-weight: bold;"></l-painter-text>
+                                <l-painter-text :text="'分'" css="display:block;margin-bottom: 5rpx;"></l-painter-text>
+                            </l-painter-view>
+                            <l-painter-text :text="'天作之和有的一对儿'"></l-painter-text>
+                        </l-painter-view>
+                        <!-- 缘份分析 -->
+                        <l-painter-view
+                            css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                            <l-painter-text text="缘份分析" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                        </l-painter-view>
+                        <l-painter-view
+                            css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            <l-painter-text :text="'缘份分析缘份分析'"></l-painter-text>
+                        </l-painter-view>
+                        <!-- 恋爱建议 -->
+                        <l-painter-view
+                            css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                            <l-painter-text text="恋爱建议" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                        </l-painter-view>
+                        <l-painter-view
+                            css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            <l-painter-text :text="'恋爱建议恋爱建议'"></l-painter-text>
+                        </l-painter-view>
+                        <!-- 注意事项 -->
+                        <l-painter-view
+                            css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                            <l-painter-text text="注意事项" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-view
+                                css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
+                        </l-painter-view>
+                        <l-painter-view
+                            css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            <l-painter-text :text="'注意事项注意事项注意事项'"></l-painter-text>
+                        </l-painter-view>
+                    </l-painter-view>
+
+
 
                 </l-painter-view>
             </l-painter-view>
@@ -102,7 +168,7 @@ export default {
                                         const pathParts = this.currentPosterPath.split('/')
                                         currentFileName = pathParts[pathParts.length - 1]
                                     }
-                                    
+
                                     // 清理所有图片文件（jpg, png等），但排除当前正在使用的文件
                                     const imageExts = ['.jpg', '.jpeg', '.png', '.gif']
                                     const imageFiles = res.files
@@ -151,7 +217,7 @@ export default {
                         const pathParts = this.currentPosterPath.split('/')
                         currentFileName = pathParts[pathParts.length - 1]
                     }
-                    
+
                     // 使用 plus.io 读取目录
                     plus.io.resolveLocalFileSystemURL(tempDirPath, (dirEntry) => {
                         // 检查是否是目录
@@ -176,17 +242,17 @@ export default {
                                                 }
                                                 return /\.(jpg|jpeg|png|gif)$/i.test(name)
                                             })
-                                        
+
                                         let cleaned = 0
                                         const totalFiles = imageFiles.length
-                                        
+
                                         if (totalFiles === 0) {
                                             console.log('APP临时目录中没有图片文件')
                                             return
                                         }
-                                        
+
                                         console.log(`准备清理 ${totalFiles} 个APP临时文件`)
-                                        
+
                                         imageFiles.forEach(fileEntry => {
                                             fileEntry.remove(() => {
                                                 cleaned++
@@ -381,6 +447,7 @@ image {
     height: 100%;
     border-radius: 15rpx;
 
+  
 
 
 

@@ -185,7 +185,7 @@ const share = () => {
 
 .center {
     width: 100%;
-    height: 80vh;
+    height: 90vh;
     overflow-y: scroll;
     padding: 20rpx;
     box-sizing: border-box;
