@@ -629,6 +629,21 @@ WeChatで「Crush Check」ミニプログラムを検索し、私の招待コー
     viewNow: '今すぐ見る',
     paymentNotAvailable: '一時的に支払いできません',
     otherPaying: '相手が支払い中です'
+  },
+  lovePoster: {
+    title: '愛の裁判所判決書',
+    caseNumber: '案号：',
+    partyA: 'A：',
+    partyB: 'B：',
+    presidingJudge: '裁判長：',
+    openCourtTime: '開廷時間：',
+    analysisTitle: '問題原因分析：',
+    proportionTitle: '問題割合：',
+    verdictTitle: '最終判決：',
+    resolutionTitle: '和解方案：',
+    judgeAdviceTitle: '裁判官の建議：',
+    verdictTime: '判決時間：',
+    imageLoadFailed: '画像の読み込みに失敗しました。再試行してください'
   }
 }
 

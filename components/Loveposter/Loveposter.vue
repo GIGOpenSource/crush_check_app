@@ -11,8 +11,8 @@
                     <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
                         <l-painter-text
                             css="display: block;margin:20rpx 0;width:100%;text-align: center;font-size: 30rpx;font-weight:bolder"
-                            text="爱的裁判所判决书"></l-painter-text>
-                        <l-painter-text :text="'案号：' + (info.business_data?.other_data.case_number || '--')"
+                            :text="t('lovePoster.title')"></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.caseNumber') + (info.business_data?.other_data.case_number || '--')"
                             css="font-size: 24rpx;"></l-painter-text>
                     </l-painter-view>
                     <!-- 对手信息 -->
@@ -20,27 +20,27 @@
                         <l-painter-view
                             css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
                             <l-painter-view css="display: flex; flex-direction: row;margin-bottom: 20rpx;">
-                                <l-painter-text :text="'A：' + (info.business_data?.self_data?.nickname || '')"
+                                <l-painter-text :text="t('lovePoster.partyA') + (info.business_data?.self_data?.nickname || '')"
                                     css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
-                                <l-painter-text :text="'B：' + (info.business_data?.other_data?.nickname || '')"
+                                <l-painter-text :text="t('lovePoster.partyB') + (info.business_data?.other_data?.nickname || '')"
                                     css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
                             </l-painter-view>
-                            <l-painter-text :text="'审判长：' + info.content?.presiding_judge"
+                            <l-painter-text :text="t('lovePoster.presidingJudge') + (info.content?.presiding_judge || '')"
                                 css="color: rgba(255,255,255,0.9); margin-bottom: 20rpx;"></l-painter-text>
-                            <l-painter-text :text="'开庭时间：' + (info.content?.open_court_time || '')"
+                            <l-painter-text :text="t('lovePoster.openCourtTime') + (info.content?.open_court_time || '')"
                                 css="color: rgba(255,255,255,0.9);"></l-painter-text>
                         </l-painter-view>
                     </l-painter-view>
                     <!-- 问题原因分析 -->
                     <l-painter-view css="display: flex;flex-direction: column;height: 100%;">
-                        <l-painter-text text="问题原因分析："></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.analysisTitle')"></l-painter-text>
                     </l-painter-view>
                      <l-painter-view  css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
                         <l-painter-text :text="info.content?.analysis || ''"></l-painter-text>
                     </l-painter-view>
                     <!-- 问题占比 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
-                        <l-painter-text text="问题占比："></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.proportionTitle')"></l-painter-text>
                         <!-- 占比条：上方名称 + 中间双色条 + 下方百分比 -->
                         <l-painter-view
                             css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 40rpx 40rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
@@ -70,7 +70,7 @@
                     </l-painter-view>
                     <!-- 最终判决 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;height: 100%;">
-                        <l-painter-text text="最终判决："></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.verdictTitle')"></l-painter-text>
                     </l-painter-view>
                     <l-painter-view
                         css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
@@ -78,7 +78,7 @@
                     </l-painter-view>
                     <!-- 和解方案 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;height: 100%;">
-                        <l-painter-text text="和解方案："></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.resolutionTitle')"></l-painter-text>
                     </l-painter-view>
                     <l-painter-view
                         css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
@@ -86,7 +86,7 @@
                     </l-painter-view>
                     <!-- 法官建议 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 20rpx;">
-                        <l-painter-text text="法官建议："></l-painter-text>
+                        <l-painter-text :text="t('lovePoster.judgeAdviceTitle')"></l-painter-text>
                     </l-painter-view>
                     <l-painter-view
                         css="width: 100%;height: 100%;display: block;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323e">
@@ -95,7 +95,7 @@
                     <!-- 判决时间 -->
                     <l-painter-view css="display: flex;flex-direction: column;margin-top: 30rpx;align-items: center;">
                         <l-painter-text css="color: rgba(255, 255, 255, 0.5);"
-                            :text="'判决时间：' + verdictTimeText"></l-painter-text>
+                            :text="t('lovePoster.verdictTime') + verdictTimeText"></l-painter-text>
                     </l-painter-view>
 
                 </l-painter-view>
@@ -480,7 +480,7 @@ export default {
         handleImageError(e) {
             console.error('图片加载失败:', e)
             uni.showToast({
-                title: '图片加载失败，请重试',
+                title: this.t('lovePoster.imageLoadFailed'),
                 icon: 'none',
                 duration: 2000
             })

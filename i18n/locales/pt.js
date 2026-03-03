@@ -629,6 +629,21 @@ Pesquise o Mini Programa "Crush Check" no WeChat, insira meu código de convite:
     viewNow: 'Ver Agora',
     paymentNotAvailable: 'O pagamento não está disponível temporariamente',
     otherPaying: 'A outra parte está pagando'
+  },
+  lovePoster: {
+    title: 'Veredicto do Tribunal do Amor',
+    caseNumber: 'N.º do caso: ',
+    partyA: 'A: ',
+    partyB: 'B: ',
+    presidingJudge: 'Juiz presidente: ',
+    openCourtTime: 'Horário de abertura: ',
+    analysisTitle: 'Análise de causas: ',
+    proportionTitle: 'Proporção: ',
+    verdictTitle: 'Veredicto final: ',
+    resolutionTitle: 'Plano de conciliação: ',
+    judgeAdviceTitle: 'Conselho do juiz: ',
+    verdictTime: 'Data do veredicto: ',
+    imageLoadFailed: 'Falha ao carregar a imagem, tente novamente'
   }
 }
 

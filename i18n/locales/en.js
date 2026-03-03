@@ -630,5 +630,20 @@ Search "Crush Check" Mini Program on WeChat, enter my invitation code: {inviteCo
     viewNow: 'View Now',
     paymentNotAvailable: 'Payment is temporarily unavailable',
     otherPaying: 'The other party is paying'
+  },
+  lovePoster: {
+    title: 'Love Court Verdict',
+    caseNumber: 'Case No.: ',
+    partyA: 'A: ',
+    partyB: 'B: ',
+    presidingJudge: 'Presiding Judge: ',
+    openCourtTime: 'Court Time: ',
+    analysisTitle: 'Cause Analysis: ',
+    proportionTitle: 'Proportion: ',
+    verdictTitle: 'Verdict: ',
+    resolutionTitle: 'Settlement: ',
+    judgeAdviceTitle: 'Judge\'s Advice: ',
+    verdictTime: 'Verdict Time: ',
+    imageLoadFailed: 'Image load failed, please retry'
   }
 }

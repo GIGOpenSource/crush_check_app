@@ -633,5 +633,20 @@ export default {
     viewNow: '立即查看',
     paymentNotAvailable: '暂时不可支付',
     otherPaying: '对方正在支付中'
+  },
+  lovePoster: {
+    title: '爱的裁判所判决书',
+    caseNumber: '案号：',
+    partyA: 'A：',
+    partyB: 'B：',
+    presidingJudge: '审判长：',
+    openCourtTime: '开庭时间：',
+    analysisTitle: '问题原因分析：',
+    proportionTitle: '问题占比：',
+    verdictTitle: '最终判决：',
+    resolutionTitle: '和解方案：',
+    judgeAdviceTitle: '法官建议：',
+    verdictTime: '判决时间：',
+    imageLoadFailed: '图片加载失败，请重试'
   }
 }

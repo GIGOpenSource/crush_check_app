@@ -630,6 +630,21 @@ export default {
     viewNow: '지금 보기',
     paymentNotAvailable: '일시적으로 결제할 수 없습니다',
     otherPaying: '상대방이 결제 중입니다'
+  },
+  lovePoster: {
+    title: '사랑 재판소 판결서',
+    caseNumber: '사건번호：',
+    partyA: 'A：',
+    partyB: 'B：',
+    presidingJudge: '재판장：',
+    openCourtTime: '개정 시간：',
+    analysisTitle: '문제 원인 분석：',
+    proportionTitle: '문제 비율：',
+    verdictTitle: '최종 판결：',
+    resolutionTitle: '화해 방안：',
+    judgeAdviceTitle: '판사 조언：',
+    verdictTime: '판결 시간：',
+    imageLoadFailed: '이미지 로드 실패, 다시 시도해 주세요'
   }
 }
 
