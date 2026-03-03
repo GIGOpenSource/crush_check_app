@@ -209,29 +209,20 @@ onMounted(() => {
     statusBarHeight.value = (systemInfo.statusBarHeight || 0) * pxToRpx
 })
 onLoad((e) => {
-    console.log('eeeee',e)
-    const normalizeDisplay = (v) => {
-        if (v == null) return ''
-        const s = String(v).trim()
-        if (!s) return ''
-        const lower = s.toLowerCase()
-        if (lower === 'undefined' || lower === 'null') return ''
-        return s
-    }
-    inviteName.value = normalizeDisplay(e.nickname) || t('loveCourt.userNickname')
-    content.value = normalizeDisplay(e.speak) || t('loveCourt.defaultSummons')
+   inviteName.value = e.nickname == 'null' ? t('loveCourt.userNickname') : e.nickname
+    content.value = e.speak  == 'undefined' ? t('loveCourt.defaultSummons') : e.speak
     invitation_code.value = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
     if (e.invitation_code) {
         invited.value = true
         params.value.invitation_code = e.invitation_code ? JSON.parse(decodeURIComponent(e.invitation_code)) : ''
         posterIdFromInvite.value = true
-
+        
     }
-    if (!invitation_code.value) {
+    if(!invitation_code.value){
         fetchDrafts()
     }
     getSystemContent('trial_agreement').then(res => {
-        console.log(res, 'reeeee')
+        console.log(res,'reeeee')
         userAgreementContent.value = res.data[0].trial_agreement
     })
 })
@@ -489,6 +480,9 @@ const copy = () => {
             });
         }
     });
+    uni.setStorageSync('lastend', end)
+
+
 }
 onShareAppMessage(() => {
     btnInvite('share')

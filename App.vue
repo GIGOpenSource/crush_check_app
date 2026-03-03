@@ -14,7 +14,9 @@ import {
 import {
 	getSystemContent
 } from "@/api/login.js";
-import { checkClipboardInvite } from '@/utils/clipboardInvite.js';
+const pasteLock = ref(false)
+const lastend = ref(uni.getStorageSync('lastend') || '')
+import { aesDecrypt } from '@/utils/crypto.js';
 // 格式化时间为 yyyy-MM-dd HH:mm:ss
 const formatDateTime = (date = new Date()) => {
 	const year = date.getFullYear()
@@ -38,17 +40,58 @@ const params = ref({
 	eventTime: formatDateTime(),
 	pageName: '首页'
 })
+// 粘贴读取剪贴板
+const readClipboard = () => {
+	console.log('lastend.value',lastend.value,'lastend.value')
+	
+	// if (pasteLock.value) return
+	// pasteLock.value = true
+
+	uni.getClipboardData({
+		showToast: false, 
+		success: (res) => {
+			const content = res.data
+			console.log('CONENT',content)
+			if(lastend.value == content) return
+			let inview = aesDecrypt(content) || ''
+			const pages = typeof getCurrentPages === 'function' ? getCurrentPages() : []
+			const current = pages && pages.length ? pages[pages.length - 1] : null
+			const routes = current?.route || ''
+			if (inview.includes('invitation_code') && routes !== 'pagesA/loveCourt/index') {
+				if (!uni.getStorageSync('token')) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
+				} else {
+					uni.redirectTo({
+						url: `/pagesA/loveCourt/index${inview}`
+					})
+				 uni.setClipboardData({
+                    data: '', 
+                    showToast: false 
+                });
+				uni.removeStorageSync('lastend')
+				}
+			}
+
+
+		},
+		fail: (err) => {
+			 uni.setClipboardData({
+                    data: '', 
+                    showToast: false 
+                });
+		},
+	})
+}
 onShow(() => {
 	getSystemContent().then(res => {
 		uni.setStorageSync('version', res.data[0].version)
 	})
 	app_show()
-	checkClipboardInvite()
 })
 onHide(() => {
 	app_hide()
-	// 切到别的 App 再回来：允许同一邀请码再次触发
-	uni.removeStorageSync('last_loveCourt_invite_query')
 })
 onLaunch(() => {
 	app_launch()
@@ -87,12 +130,7 @@ const app_show = () => {
 			savedLanguage = 'en'
 		}
 	}
-	console.log(systemInfo.includes('zh'), '1111')
-	console.log(savedLanguage, 'savedLanguage')
 	setLocale(savedLanguage);
-
-
-	// 延迟设置 tabBar，确保国际化已加载
 	setTimeout(() => {
 		setTabBarI18n()
 	}, 300)
@@ -139,6 +177,12 @@ const setTabBarI18n = () => {
 		}
 	}
 }
+uni.onAppShow(() => {
+	lastend.value = uni.getStorageSync('lastend')
+	console.log('XIXI');
+
+	readClipboard()
+})
 </script>
 
 <style lang="scss">

@@ -27,7 +27,6 @@ export function createApp() {
   // 任意页面显示时都检查剪贴板（全局）
   app.mixin({
     onShow() {
-      checkClipboardInvite()
     }
   })
   return {

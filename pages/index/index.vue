@@ -57,6 +57,7 @@ const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
+	uni.removeStorageSync('lastend')
 	if (!uni.getStorageSync('token')) {
 		if (url == '/pagesA/loveCourt/index') {
 			uni.navigateTo({
