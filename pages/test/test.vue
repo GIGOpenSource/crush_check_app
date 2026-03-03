@@ -323,7 +323,7 @@
         </template>
     </IndexProup>
     <MbtiProup :show="mbtishow" @close="mbtishow = false" :moneyType="posterType" @pay="wxpay"></MbtiProup>
-     <up-popup :show="showDelPopup3" mode="center">
+    <up-popup :show="showDelPopup3" mode="center">
         <view class="del-popup-content" style="height:320rpx">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="title" style="color:#000">{{ $t('answerBook.unlockAnalysis') }}</view>
@@ -375,10 +375,10 @@ import { t } from '@/i18n/index.js';
 import { aesEncrypt, md5Encrypt, generateTimestampMD5 } from '@/utils/crypto.js';
 import { getcode } from '@/api/mbti.js'
 import MbtiProup from '@/components/MbtiProup/MbtiProup.vue';
-import { iosOrder,ios_receipt,getProducts } from '@/api/index.js'
+import { iosOrder, ios_receipt, getProducts } from '@/api/index.js'
 
 import { host } from '@/config/config.js';
-import { saveLoveCourtRecord, payStatus,cancelpayStatus } from '@/api/loveCourt.js'
+import { saveLoveCourtRecord, payStatus, cancelpayStatus } from '@/api/loveCourt.js'
 export default {
     components: {
         IndexProup,
@@ -399,7 +399,7 @@ export default {
             progress: 0, // 进度百分比
             progressTimer: null, // 进度条定时器
 
-             showProgress1: false, // 显示进度条弹窗
+            showProgress1: false, // 显示进度条弹窗
             progress1: 0, // 进度百分比
             progressTimer1: null, // 进度条定时器
 
@@ -417,7 +417,7 @@ export default {
             poster_id: '',
             mbtishow: false,
             posterType: '',
-             lovepay: '',//恋爱小法庭支付
+            lovepay: '',//恋爱小法庭支付
             send_word: '',
             invite: false
 
@@ -503,7 +503,7 @@ export default {
                 color: "#66BB6A",
                 type: "mbti",
             },
-             {
+            {
                 label: t('loveCourt.title'),
                 type: "trial_case",
             },
@@ -787,7 +787,7 @@ export default {
                 return this.$t('poster.generatingStatus');
             } else if (status === "error") {
                 return this.$t('poster.generatingFailed');
-            }else if (status == 'paying') {
+            } else if (status == 'paying') {
                 return this.$t('poster.paying')
             }
             return "";
@@ -981,7 +981,7 @@ export default {
                     return;
                 }
                 this.previewImage(item, index);
-            }else if (item.status == 'error' && type == 'trial_case') {
+            } else if (item.status == 'error' && type == 'trial_case') {
                 this.lovedeep()
             } else if (item.status == 'error' && (type == 'social' || type == 'physical')) {
                 this.handleRetryClick(item)
@@ -992,10 +992,10 @@ export default {
                 })
             }
         },
-         //退出
-        handexit(){
-             this.showProgress1 = false
-             this.fetchPosterList(true)
+        //退出
+        handexit() {
+            this.showProgress1 = false
+            this.fetchPosterList(true)
         },
         //检查支付状态
         lovepaywx() {
@@ -1018,49 +1018,84 @@ export default {
         },
         //支付小法庭
         lovepaywx1() {
+              let that = this
             let params = {
-                description: this.lovepay.description,
+                description: that.lovepay.description,
                 openId: uni.getStorageSync('openId'),
-                productId: this.lovepay.id,
-                posterId: this.poster_id
+                productId: that.lovepay.id,
+                posterId: that.poster_id
             }
-            createOrder(params).then(res => {
-                let that = this
-                uni.requestPayment({
-                    "provider": "wxpay",
-                    ...res.data,
-                    "signType": "RSA",
-                    "package": `${res.data.prepayid}`,
-                    "nonceStr": res.data.noncestr,
-                    success(res) {
-                        //支付成功
-                        that.lovedeep()
-                        uni.showToast({
-                            title: t('proPoster.paySuccess'),
-                            icon: 'none'
-                        })
-                        that.showDelPopup3 = false
-
-
-                    },
-                    fail(e) {
-                        //取消支付
-                        uni.showToast({
-                            title: t('proPoster.payFailed'),
-                            icon: 'none'
-                        })
-                        that.showDelPopup3 = false
-                        that.cancelpay()
+          
+            iosOrder(params).then(res => {
+                let paymentData = res.data
+                console.log('反水数据', res.data)
+                plus.payment.getChannels(function (channels) {
+                    let iapChannel = channels.find(c => c.id === 'appleiap');
+                    console.log('iapChannel', iapChannel)
+                    if (!iapChannel) {
+                        uni.showToast({ title: t('mbti.applePayChannelNotFound'), icon: 'none' });
+                        return;
                     }
-                })
+                    iapChannel.requestProduct([paymentData.productid], function (res) {
+                        console.log('IAP 商品信息', res);
+                        uni.requestPayment({
+                            provider: 'appleiap',
+                            orderInfo: {
+                                productid: res[0].productid,
+                                quantity: 1,
+                                username: paymentData.username,
+                                manualFinishTransaction: false,
+                                paymentDiscount: '否'
+                            },
+                            success: (e) => {
+                                e.payment.username = paymentData.username;
+                                ios_receipt(e).then(res => {
+                                    //支付成功
+                                    that.lovedeep()
+                                    uni.showToast({
+                                        title: t('proPoster.paySuccess'),
+                                        icon: 'none'
+                                    })
+                                    that.showDelPopup3 = false
+
+
+                                }).catch(err => {
+                                    console.log('获取用户信息失败', err)
+                                })
+                            },
+                            fail: (err) => {
+                                            //取消支付
+                                            uni.showToast({
+                                                title: t('proPoster.payFailed'),
+                                                icon: 'none'
+                                            })
+                                            that.showDelPopup3 = false
+                                            that.cancelpay()
+                            }
+                        })
+
+                    }, function (err) {
+                        console.error('IAP 商品信息获取失败:', err);
+                        // 根据错误码显示不同的提示
+                        let errorMsg = t('mbti.productInfoFailed');
+                        if (err && (err.code === -100 || err.errCode === -100)) {
+                            errorMsg = t('mbti.orderInfoFailed');
+                        }
+                        uni.showToast({ title: errorMsg, icon: 'none' });
+                           that.showDelPopup3 = false
+                    });
+                }, function (e) {
+                    console.error('获取支付通道失败:', e);
+                    uni.showToast({ title: t('mbti.paymentChannelFailed'), icon: 'none' });
+                });
 
             })
         },
         //取消支付
-        cancelpay(){
-              cancelpayStatus(this.invitation_code).then(res => {
+        cancelpay() {
+            cancelpayStatus(this.invitation_code).then(res => {
                 console.log(res)
-              })
+            })
         },
         //小法庭深度
         lovedeep() {
@@ -1178,13 +1213,13 @@ export default {
             if (moneyType == 'ios_vip') {
                 delete params.posterId
             }
-            console.log('pas',params)
+            console.log('pas', params)
             iosOrder(params).then(res => {
                 let paymentData = res.data
-                console.log('反水数据',res.data)
+                console.log('反水数据', res.data)
                 plus.payment.getChannels(function (channels) {
                     let iapChannel = channels.find(c => c.id === 'appleiap');
-                    console.log('iapChannel',iapChannel)
+                    console.log('iapChannel', iapChannel)
                     if (!iapChannel) {
                         uni.showToast({ title: t('mbti.applePayChannelNotFound'), icon: 'none' });
                         return;
@@ -1665,6 +1700,7 @@ export default {
         border-radius: 10rpx;
     }
 }
+
 .poster-page {
     min-height: 100vh;
     background: #12111f;

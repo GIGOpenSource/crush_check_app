@@ -684,7 +684,7 @@ const del = () => {
     .del {
         position: absolute;
         right: 20rpx;
-        top:205rpx;
+        top:235rpx;
         color: rgba(255, 255, 255, 0.5);
     }
 }

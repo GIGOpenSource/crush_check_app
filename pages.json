@@ -123,35 +123,40 @@
 	"subPackages": [
 		{
 			"root": "pagesA",
-			"pages": [{
+			"pages": [
+				{
 					"path": "tarotcards/qusetion",
 					"style": {
 						"enablePullDownRefresh": false,
 						"disableScroll": false,
 						"navigationStyle": "custom"
 					}
-				},{
+				},
+				{
 					"path": "tarotcards/result",
 					"style": {
 						"navigationBarTitleText": "塔罗牌",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "tarotcards/choose",
 					"style": {
 						"navigationBarTitleText": "塔罗牌",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "mbti/index",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "mbti/dati",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
@@ -159,28 +164,33 @@
 						"disableScroll": false,
 						"navigationStyle": "custom"
 					}
-				},{
+				},
+				{
 					"path": "mbti/poster",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "loveCourt/index",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
-						"enablePullDownRefresh": false,
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "loveCourt/materail",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},{
+				},
+				{
 					"path": "loveCourt/poster",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",

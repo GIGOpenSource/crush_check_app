@@ -57,7 +57,25 @@ const { t } = useI18n();
 
 const path = (url) => {
 	uni.removeStorageSync('question');
-	uni.navigateTo({ url })
+	 if(!uni.getStorageSync('token')){
+		if(url == '/pagesA/loveCourt/index'){
+			uni.navigateTo({
+				url:'/pages/login/login'
+			})
+		}else{
+			if(url == '/pagesA/loveCourt/index'){
+				uni.redirectTo({
+					url:'/pagesA/loveCourt/index'
+				})
+			}else{
+                uni.navigateTo({ url })
+			}
+            
+		}
+	 }else{
+		uni.navigateTo({ url })
+	 }
+	
 }
 onLoad((e) => {
 	if (e.scene) {
