@@ -27,7 +27,7 @@
                         css="background: #2b2a38;border: 0.5px solid #FFFFFF;border-radius: 25rpx;padding:20rpx;box-sizing: border-box;height:100%">
                         <!-- 分数 -->
                         <l-painter-view
-                            css="padding:30rpx 0;display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            css="padding:40rpx 0;display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
                             <l-painter-view css="display: flex; align-items: flex-end;margin-bottom: 20rpx;">
                                 <l-painter-text :text="'97'"
                                     css="font-size: 48rpx;margin-right: 5rpx;font-weight: bold;"></l-painter-text>
@@ -59,7 +59,7 @@
                         </l-painter-view>
                         <l-painter-view
                             css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
-                            <l-painter-text :text="'恋爱建议恋爱建议'"></l-painter-text>
+                            <l-painter-text :text="'恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议'"></l-painter-text>
                         </l-painter-view>
                         <!-- 注意事项 -->
                         <l-painter-view
@@ -71,8 +71,8 @@
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
                         </l-painter-view>
                         <l-painter-view
-                            css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
-                            <l-painter-text :text="'注意事项注意事项注意事项'"></l-painter-text>
+                            css="width: 100%;margin: 20rpx 0; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
+                            <l-painter-text :text="'注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项'"></l-painter-text>
                         </l-painter-view>
                     </l-painter-view>
 

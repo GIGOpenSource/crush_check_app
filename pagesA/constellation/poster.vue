@@ -184,6 +184,7 @@ const share = () => {
 }
 
 .center {
+    background: #2b2a38;
     width: 100%;
     height: 90vh;
     overflow-y: scroll;
