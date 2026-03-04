@@ -20,7 +20,7 @@
             </view>
             <view class="content">
                 <view class="input"><input type="text" v-model="params.nickname"
-                        :placeholder="t('loveCourt.placeholderNickname')" placeholder-style="color:#ffffff;"></view>
+                        :placeholder="t('loveCourt.placeholderNickname')" placeholder-style="color:#ffffff;" maxlength="6"></view>
                 <view>
                     <textarea v-model="params.event_description" :placeholder="t('loveCourt.placeholderEvent')"
                         placeholder-style="color:#ffffff;" auto-height maxlength="1000"></textarea>
@@ -78,7 +78,7 @@
     <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
         <view class="tishi tishi1">
             <view>{{ t('loveCourt.inviteMessageTitle') }}</view>
-            <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word"></textarea>
+            <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word" maxlength="300"></textarea>
             <view class="btn" @click="copy">
                 <button open-type="share" hover-class="none">{{ t('mbti.clickCopy') }}</button>
             </view>
@@ -270,16 +270,23 @@ const addImage = () => {
             // }
             // photo_upload_start()
             const uploadPromises = res.tempFilePaths.map((filePath, index) => {
+                let params1 = {
+					type: 'img',
+					file_name: filePath,
+				}
+				const systemInfo = uni.getSystemInfoSync();
+				if (systemInfo.platform === 'android') {
+					console.log('Android设备');
+					params.file = filePath
+				} else if (systemInfo.platform === 'ios') {
+					console.log('iOS设备');
+				}
                 return new Promise((resolve, reject) => {
                     uni.uploadFile({
                         url: host + '/upload/',
                         filePath: filePath,
                         name: 'file',
-                        formData: {
-                            type: 'img',
-                            file: filePath,
-                            file_name: filePath,
-                        },
+                        formData: params1,
                         success: (uploadFileRes) => {
                             try {
                                 let images = JSON.parse(uploadFileRes.data).data.url
