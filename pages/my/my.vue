@@ -31,9 +31,10 @@
                   }}</text>
                 </view>
               </picker>
+               <text class="xingzuo" v-if="userInfo.star_sign_info?.sun_sign">{{ userInfo.star_sign_info?.sun_sign }}</text>
             </view>
             <view>
-              <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
+                <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
             </view>
           </view>
         </template>
@@ -1424,6 +1425,14 @@ page {
 </style>
 
 <style scoped lang="scss">
+.xingzuo{
+  background: linear-gradient(111deg, #9159E1 34%, #C7AFFD 108%);
+  color: #fff;
+  padding: 2rpx 15rpx;
+  border-radius: 15rpx;
+  padding-bottom: 5rpx;
+  font-size: 24rpx;
+}
 .my-page {
   min-height: 100vh;
   padding: 48rpx 30rpx 60rpx;
@@ -1524,8 +1533,10 @@ page {
 }
 
 .gender-text {
-  font-size: 24rpx;
-  color: rgba(255, 255, 255, 0.7);
+  // font-size: 24rpx;
+  // color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+  margin-right: 10rpx;
 }
 
 .profile-id {

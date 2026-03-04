@@ -130,7 +130,7 @@ const choose = () => {
     if(!token){
         uni.navigateTo({ url: '/pages/login/login' })
     }else{
-        if(userinfo.xingzuo){
+        if(userinfo.star_sign_info?.id){
             show.value = true
         }else{
             uni.navigateTo({
