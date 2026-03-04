@@ -34,6 +34,7 @@ const posterImg = ref('');
 const posterError = ref(false);
 const details = ref({});
 const id = ref('')
+const friend = ref(false)
 onLoad((e) => {
     if (e.id) {
         getPosterDetails(e.id).then(res => {

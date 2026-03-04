@@ -419,7 +419,8 @@ export default {
             posterType: '',
             lovepay: '',//恋爱小法庭支付
             send_word: '',
-            invite: false
+            invite: false,
+            showDelPopup3:false
 
         };
     },
@@ -588,6 +589,16 @@ export default {
                 })
             })
         },
+          // 将 ISO 时间格式化为 YYYY-MM-DD（如 2026-02-26T11:01:18.547649+08:00 -> 2026-02-26）
+        formatDateOnly(isoString) {
+            if (!isoString) return '';
+            const d = new Date(isoString);
+            if (isNaN(d.getTime())) return isoString;
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        },
         // 获取海报列表
         async fetchPosterList(reset = false) {
             if (this.loading) return Promise.resolve();
@@ -644,10 +655,16 @@ export default {
                     });
 
                     // 为每个项目添加 isActive 属性
-                    const formattedResults = results.map((item) => ({
-                        ...item,
-                        isActive: this.isSelectAll && !this.isType, // 如果全选状态且处于管理模式，新数据也选中
-                    }));
+                      const formattedResults = results.map((item) => {
+                        const next = {
+                            ...item,
+                            isActive: this.isSelectAll && !this.isType, // 如果全选状态且处于管理模式，新数据也选中
+                        };
+                        if (item.last_used_time) {
+                            next.last_used_time = this.formatDateOnly(item.last_used_time);
+                        }
+                        return next;
+                    });
 
                     if (reset) {
                         this.posterList = formattedResults;
@@ -1705,6 +1722,109 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.pcontent {
+    width: 500rpx;
+    padding: 40rpx 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0;
+
+    .num {
+        font-size: 26rpx;
+        margin: 20rpx 0;
+        color: #000;
+        margin-top: 30rpx !important;
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        // margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 90%;
+        border-radius: 80rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+    }
+
+    .tip {
+        font-size: 24rpx;
+    }
+
+}
+
+.progress-wrapper {
+    width: 70%;
+    margin: 0 auto;
+    // margin-bottom: 20rpx;
+}
+
+.custom-progress {
+    width: 100%;
+}
+
+.progress-track {
+    position: relative;
+    width: 100%;
+    height: 50rpx;
+    background-color: #ffffff;
+    border-radius: 40rpx;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #C084FC 0%, #9333EA 100%);
+    background-image: repeating-linear-gradient(-45deg,
+            #C084FC 0rpx,
+            #D4A5F8 3rpx,
+            #9333EA 7rpx,
+            #9333EA 7rpx,
+            #D4A5F8 10rpx,
+            #C084FC 10rpx,
+            #C084FC 10rpx,
+            #D4A5F8 13rpx,
+            #9333EA 17rpx,
+            #9333EA 17rpx,
+            #D4A5F8 20rpx,
+            #C084FC 20rpx);
+    border-radius: 40rpx;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.del-popup-actions {
+    width: 100%;
+
+    .btn11 {
+        width: 100%;
+        background: #b370ff;
+        height: 90rpx;
+        margin-top: 30rpx;
+        line-height: 90rpx;
+        border-radius: 90rpx;
+    }
+}
+
+.del-popup-content .icon {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: -100rpx;
+    color: #000;
+    cursor: pointer;
+
+    &.icon-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
 .trial_case {
     display: flex;
     justify-content: space-between;
@@ -1720,6 +1840,7 @@ export default {
 }
 
 .poster-page {
+
     min-height: 100vh;
     background: #12111f;
     box-sizing: border-box;
@@ -1903,7 +2024,6 @@ export default {
     .right {
         width: 70%;
         font-size: 36rpx !important;
-        padding-left: 20rpx;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -2043,7 +2163,7 @@ export default {
 .del-popup-content {
     position: relative;
     width: 560rpx;
-    padding: 160rpx 40rpx 48rpx;
+    padding: 120rpx 40rpx 48rpx;
     box-sizing: border-box;
     border-radius: 36rpx;
     background: linear-gradient(0deg, #ffffff 39%, #aea5fe 100%);
@@ -2162,15 +2282,15 @@ export default {
 }
 
 .mbti1 {
-    width: 148rpx !important;
-    // height: 180rpx !important;
+    width: 150rpx !important;
+    // height: 150rpx !important;
     margin-right: 10rpx;
     margin-left: 20rpx !important;
 
 }
 
 .mbti {
-    width: 150rpx !important;
+    width: 155rpx !important;
     // height: 150rpx !important;
     margin-left: 20rpx !important;
     margin-top: 60rpx;
@@ -2441,6 +2561,100 @@ export default {
         text-align: center;
         font-size: 32rpx;
         font-weight: 500;
+    }
+
+    .disagree-btn {
+        margin-top: 20rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        width: 100%;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 28rpx;
+    }
+}
+
+
+.tishi1 {
+    padding: 40rpx 30rpx;
+    // padding-bottom: 0;
+
+    textarea,
+    .content1 {
+        width: 100%;
+        background: #F0F0F0;
+        margin: 20rpx 0;
+        border-radius: 20rpx;
+        padding: 20rpx;
+        box-sizing: border-box;
+    }
+}
+
+.tishi2 {
+    width: 600rpx;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40rpx 45rpx;
+    box-sizing: border-box;
+    max-height: 80vh;
+    padding-bottom: 20rpx;
+
+    .title {
+        font-weight: bold;
+        font-size: 36rpx;
+        margin-bottom: 30rpx;
+        text-align: center;
+        width: 100%;
+    }
+
+    .agreement-content {
+        width: 100%;
+        max-height: 600rpx;
+        margin-bottom: 20rpx;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .richtext-content {
+        width: 100%;
+        font-size: 28rpx;
+        line-height: 1.8;
+        // color: rgba(0, 0, 0, 0.85);
+        word-wrap: break-word;
+    }
+
+    .loading,
+    .empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40rpx 0;
+        font-size: 28rpx;
+        color: rgba(0, 0, 0, 0.55);
+    }
+
+    .btn {
+        background: #B370FF;
+        color: #fff;
+        margin-top: 20rpx;
+        height: 90rpx;
+        line-height: 90rpx;
+        width: 100%;
+        border-radius: 90rpx;
+        text-align: center;
+        font-size: 32rpx;
+        font-weight: 500;
+
+        button {
+            background: transparent;
+            color: #FFF;
+        }
+    }
+
+    .cancel {
+        margin-top: 20rpx;
     }
 
     .disagree-btn {

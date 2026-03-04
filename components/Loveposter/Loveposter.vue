@@ -1,7 +1,7 @@
 <template>
     <view>
         <image v-if="path" :src="path" mode="widthFix" @load="success" @error="handleImageError"></image>
-        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="700rpx"
+        <l-painter ref="painter" @success="handleSuccess" @fail="handleFail" hidden path-type="url" width="690rpx"
             height="100%" :canvas-id="canvasId" isCanvasToTempFilePath file-type="jpg" :quality="0.95" :pixel-ratio="3">
             <l-painter-view
                 css="width: 100%; height: 100%;color: #fff;background:#2a2935;font-size: 26rpx;box-sizing: border-box; padding: 20rpx;">
@@ -588,15 +588,8 @@ export default {
 
 <style lang="scss">
 image {
-
     width: 100%;
     height: 100%;
     border-radius: 15rpx;
-
-
-
-
-
-
 }
 </style>
