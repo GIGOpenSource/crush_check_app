@@ -970,7 +970,7 @@ export default {
                             });
                         } else if (item.business_data.generate_status == 'waiting_generate') {
                             console.log('等待生成中')
-                            getProducts('trial_case').then(res => {
+                            getProducts('ios_trial_case').then(res => {
                                 this.lovepay = res.data.results[0]
                                 this.showDelPopup3 = true
                             })
