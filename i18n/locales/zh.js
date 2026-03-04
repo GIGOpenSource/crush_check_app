@@ -244,6 +244,7 @@ export default {
     noExpire: '暂无到期'
   },
    poster: {
+    paying: '对方支付中',
     title: '历史海报',
     recentTest: '最近测试',
     selectAll: '全选',

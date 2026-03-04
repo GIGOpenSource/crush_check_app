@@ -243,6 +243,7 @@ export default {
     noExpire: 'No expiration date'
   },
  poster: {
+   paying: 'The other party is paying',
     title: 'History Posters',
     recentTest: 'Recent Tests',
     selectAll: 'Select All',

@@ -243,6 +243,7 @@ export default {
     noExpire: '만료일 없음'
   },
    poster: {
+     paying: '상대방이 결제 중',
     title: '히스토리 포스터',
     recentTest: '최근 테스트',
     selectAll: '전체 선택',

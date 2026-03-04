@@ -241,6 +241,7 @@ export default {
     noExpire: 'Sem data de expiração'
   },
  poster: {
+  paying: 'A outra parte está pagando',
     title: 'Pôsteres Históricos',
     recentTest: 'Testes Recentes',
     selectAll: 'Selecionar Tudo',

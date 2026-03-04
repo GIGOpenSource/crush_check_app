@@ -242,6 +242,7 @@ export default {
     noExpire: '有効期限なし'
   },
    poster: {
+    paying: '相手が支払い中',
     title: '履歴ポスター',
     recentTest: '最近のテスト',
     selectAll: 'すべて選択',

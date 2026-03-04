@@ -2,8 +2,8 @@
     "name" : "CrushCheck",
     "appid" : "__UNI__52A3010",
     "description" : "CrushCheck",
-    "versionName" : "1.0.2",
-    "versionCode" : 121,
+    "versionName" : "1.0.3",
+    "versionCode" : 131,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
