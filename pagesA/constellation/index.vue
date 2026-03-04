@@ -81,11 +81,13 @@ const step = (params) => {
     margin: 20vh auto;
     margin-left: 50%;
     transform: translateX(-50%);
-    margin-bottom: 13vh;
+    margin-bottom: 16vh;
   }
   .titlecon{
     color: #fff !important;
     margin-left: 40rpx;
+    margin-bottom: 60rpx;
+
     .t1{
        font-size: 38rpx;
        margin-bottom: 10rpx;

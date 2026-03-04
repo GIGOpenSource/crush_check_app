@@ -14,3 +14,9 @@ export const getinfo = () => {
 export const startDaily = () => {
 	return getRequest('/get_daily_star/',{})
 }
+
+//双人匹配
+export const doubleMatch = (params) => {
+	return postRequest('/query_star_sgin_match/',params)
+}
+

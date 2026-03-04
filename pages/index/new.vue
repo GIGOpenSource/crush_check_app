@@ -3,7 +3,7 @@
         <view class="top">
             <view class="title">
                 <view>我的星座：{{ info.star_sign || '--' }}</view>
-                <view class="choose"> 选择你的星座 <text>{{ '>' }}</text> </view>
+                <view class="choose" @click="choose"> 选择他的星座 <text>{{ '>' }}</text> </view>
             </view>
             <view class="totay">
                 <text>今日心情：</text>
@@ -31,12 +31,21 @@
             </view>
         </view>
     </view>
+    <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
+       <ConsrProup title="输入对方信息" btnText="立即测试匹配度" @submit="step"></ConsrProup>
+    </up-popup>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { startDaily } from '@/api/constellation.js'
 import { onShow } from '@dcloudio/uni-app'
+import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
+import { doubleMatch } from '@/api/constellation.js'
+import { timestampToIsoUtc } from '@/utils/utctTime.js'
+import {getUserInfo} from "@/api/login.js";
+const show = ref(false)
+const userinfo = ref({})
 const info = ref({
     star_sign:'',
     mood_score:'',
@@ -100,9 +109,45 @@ const getDaily = () => {
         processlist.value[4].percent = info.value.contact_score
     })
 }
+
+//匹配
+const step = (params) => {
+    console.log(params,'params')
+     params.other_birth_datetime = timestampToIsoUtc(params.time)
+     params.other_gender = params.user_gender
+     delete params.time
+     delete params.user_gender
+     delete params.data_of_birth_time
+     doubleMatch(params).then(res => {
+         show.value = false
+     })
+}
+
+//选择
+const choose = () => {
+    let token = uni.getStorageSync('token')
+    let userinfo = userinfo.value
+    if(!token){
+        uni.navigateTo({ url: '/pages/login/login' })
+    }else{
+        if(userinfo.xingzuo){
+            show.value = true
+        }else{
+            uni.navigateTo({
+                url:'/pagesA/constellation/index'
+            })
+        }
+    }
+    show.value = true
+}
 onShow(() => {
     if (!uni.getStorageSync('token')) return
     getDaily()
+    getUserInfo(uni.getStorageSync('openId')).then(res => {
+        console.log('111')
+        userinfo.value =  res.data
+        uni.setStorageSync('userInfo',JSON.stringify(res.data))
+    })
 })
 
 
@@ -153,7 +198,6 @@ onShow(() => {
     .desc {
         font-size: 26rpx;
         margin-top: 30rpx;
-        margin-bottom: 50rpx;
     }
 
     .process {

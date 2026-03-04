@@ -1,6 +1,6 @@
 <template>
   <view class="wrapper">
-    <view class="title">选择性别：</view>
+    <view class="title" :class="{'center':title == '输入对方信息'}">{{ title }}</view>
     <view class="sex">
       <view v-for="(item, index) in sex" :key="index" @click="choosesex(index)"
         :class="{ 'girl': params.user_gender == 'female' && index == 0, 'boy': params.user_gender == 'male' && index == 1 }">
@@ -13,7 +13,7 @@
       params.data_of_birth_time
       || '选择生日' }}</view>
     <!-- <view class="birth">选择出生地</view> -->
-    <view class="birth step" :class="{ 'status': status }" @click="submit">下一步</view>
+    <view class="birth step" :class="{ 'status': status }" @click="submit">{{ btnText }}</view>
     <up-datetime-picker :show="show" v-model="value1" mode="datetime" :maxDate="maxDate" @confirm="confirm"
       @cancel="show = false"></up-datetime-picker>
   </view>
@@ -21,6 +21,14 @@
 
 <script setup>
 const props = defineProps({
+  title:{
+    type:String,
+    default: '选择性别：'
+  },
+  btnText:{
+    type:String,
+    default: '下一步'
+  }
 })
 const emits = defineEmits(["submit"])
 import { ref, reactive, computed } from 'vue'
@@ -91,8 +99,9 @@ const submit = () => {
   color: #999999;
   background: #fff;
   border-radius: 20rpx 20rpx 0 0;
-  margin-top: 30rpx;
-  padding: 60rpx 30rpx;
+  // margin-top: 30rpx;
+  padding: 40rpx 30rpx;
+  padding-bottom: 60rpx;
   box-sizing: border-box;
 
   .title {
@@ -162,5 +171,9 @@ const submit = () => {
 .status {
   background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
   color: #fff;
+ 
+}
+.center{
+   text-align: center;
 }
 </style>
