@@ -7,6 +7,13 @@
 				"enablePullDownRefresh": false,
 				"disableScroll": false
 			}
+		},{
+			"path": "pages/index/new",
+			"style": {
+				"navigationBarTitleText": "CrushCheck",
+				"enablePullDownRefresh": false,
+				"disableScroll": false
+			}
 		},
 		{
 			"path": "pages/test/test",
