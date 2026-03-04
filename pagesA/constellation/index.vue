@@ -16,9 +16,47 @@
 
 <script setup>
 import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
+import { timestampToIsoUtc } from '@/utils/utctTime.js'
+import { create } from '@/api/constellation.js'
+import {
+	onLoad
+} from '@dcloudio/uni-app'
+import { ref } from 'vue'
+const latitude = ref('39.90667')
+const longitude = ref('116.39750')
+onLoad(() => {
+  getLocationFn();
+});
+
+const getLocationFn = () =>{
+  uni.getLocation({
+    type: 'wgs84',
+    altitude: false,
+    success:  (res) =>{
+      latitude.value = res.latitude
+      longitude.value = res.longitude
+    },
+    fail: function (err) {
+      uni.showToast({
+        title: '获取位置失败',
+        icon: 'none'
+      });
+    }
+  });
+}
 //提交 
-const step = () => {
-  
+const step = (params) => {
+   console.log(params,'parabgsb')
+    params.latitude = latitude.value
+    params.longitude = longitude.value
+    params.data_of_birth_time = timestampToIsoUtc(params.time)
+   delete params.time
+    if(!uni.getStorageSync('token')) return uni.navigateTo({ url: '/pages/login/login' }) 
+    create(params).then(res => {
+       uni.redirectTo({
+        url:'/pagesA/constellation/join'
+       })
+    })
 }
 </script>
 

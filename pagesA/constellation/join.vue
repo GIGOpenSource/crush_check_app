@@ -7,13 +7,26 @@
          <view class="t1">你是...</view>
          <view class="list" v-for="(item,index) in list" :key="index">{{ item }}</view>
       </view>
-    <view class="btn">进入APP</view>
+    <view class="btn" @click="btn">查看运势</view>
     </view>
   </view>
 </template>
 
 <script setup>
-const list = ['太阳双鱼','月亮水瓶','上升双子']
+import { ref,onMounted } from 'vue'
+const list = ref(['太阳双鱼','月亮水瓶','上升双子'])
+import { getinfo } from '@/api/constellation.js'
+onMounted(() => {
+  getinfo().then(res =>{
+    let data = res.data.results[0]
+     list.value[0] ='太阳' +  data.sun_sign.slice(0,2)
+     list.value[1] ='月亮' +  data.moon_sign.slice(0,2)
+     list.value[2] = '上升' + data.asc_sign.slice(0,2)
+  })
+})
+const btn = () => {
+  uni.switchTab({ url: '/pages/index/index ' })
+}
 </script>
 
 <style lang="scss" scoped>

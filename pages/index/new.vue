@@ -2,14 +2,14 @@
     <view class="page">
         <view class="top">
             <view class="title">
-                <view>我的星座：</view>
+                <view>我的星座：{{ info.star_sign || '--' }}</view>
                 <view class="choose"> 选择你的星座 <text>{{ '>' }}</text> </view>
             </view>
             <view class="totay">
                 <text>今日心情：</text>
-                <text><text class="num">82</text>分</text>
+                <text><text class="num">{{ info.mood_score || '0' }}</text>分</text>
             </view>
-            <view class="desc">今天有点不知道自己为何而奋斗，缺少动力.</view>
+            <view class="desc" v-if="info.encourage_sentence">{{ info.encourage_sentence }}</view>
             <view class="process">
                 <view v-for="(item, index) in processlist" class="processlist" :key="index">
                     <view class="jindu" :style="`height:${item.percent * 2}rpx`"></view>
@@ -26,7 +26,7 @@
                 </view>
                 <view class="desc1">{{ item.desc }}</view>
                 <view class="status-badge">
-                  <text class="status-badge-text">HOT</text>
+                    <text class="status-badge-text">HOT</text>
                 </view>
             </view>
         </view>
@@ -34,7 +34,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { startDaily } from '@/api/constellation.js'
+import { onShow } from '@dcloudio/uni-app'
+const info = ref({
+    star_sign:'',
+    mood_score:'',
+    encourage_sentence:'',
+    love_score:'',
+    wealth_score:'',
+    career_score:'',
+    study_score:'',
+    contact_score:''
+
+})
 const processlist = ref([{
     percent: 100,
     name: '爱情'
@@ -75,6 +88,23 @@ const tarbarlist = ref([
         desc: '根据通用测试问题配置模板，配置完成倒序'
     },
 ])
+//每日心情
+const getDaily = () => {
+    startDaily().then(res => {
+        console.log(res, 'rrrrr')
+        info.value = res.data
+        processlist.value[0].percent = info.value.love_score
+        processlist.value[1].percent = info.value.wealth_score
+        processlist.value[2].percent = info.value.career_score
+        processlist.value[3].percent = info.value.study_score
+        processlist.value[4].percent = info.value.contact_score
+    })
+}
+onShow(() => {
+    if (!uni.getStorageSync('token')) return
+    getDaily()
+})
+
 
 </script>
 
@@ -177,51 +207,53 @@ const tarbarlist = ref([
         box-sizing: border-box;
         border: 0.5px solid rgba(255, 255, 255, 0.3);
         justify-content: center;
-        padding:0 40rpx;
+        padding: 0 40rpx;
         margin-bottom: 20rpx;
         position: relative;
-         overflow: hidden;
-    
-        .top1{
+        overflow: hidden;
+
+        .top1 {
             display: flex;
             align-items: center;
             vertical-align: middle;
         }
-        .desc1{
+
+        .desc1 {
             font-size: 26rpx;
             margin-top: 15rpx;
         }
     }
-     .status-badge {
-            position: absolute;
-            top: 30rpx;
-            right: 25rpx;
-            width: 165rpx;
-            padding: 6rpx 0;
-            text-align: center;
-            // background: #FFBB25; //黄色
-           background: #FF4E4E;
-            transform: translate(40%, -20%) rotate(45deg);
-            transform-origin: center;
-            z-index: 3;
-            text-align: center;
-            overflow: hidden;
-            box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 
-            &--error {
-                background: rgba(255, 77, 77, 0.85);
-                cursor: pointer;
-            }
+    .status-badge {
+        position: absolute;
+        top: 30rpx;
+        right: 25rpx;
+        width: 165rpx;
+        padding: 6rpx 0;
+        text-align: center;
+        // background: #FFBB25; //黄色
+        background: #FF4E4E;
+        transform: translate(40%, -20%) rotate(45deg);
+        transform-origin: center;
+        z-index: 3;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
 
-            .status-badge-text {
-                color: fff;
-                font-size: 26rpx;
-                font-weight: 500;
-                transform: rotate(360deg);
-                display: block;
-                white-space: nowrap;
-                line-height: 1.2;
-            }
+        &--error {
+            background: rgba(255, 77, 77, 0.85);
+            cursor: pointer;
         }
+
+        .status-badge-text {
+            color: fff;
+            font-size: 26rpx;
+            font-weight: 500;
+            transform: rotate(360deg);
+            display: block;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+    }
 }
 </style>

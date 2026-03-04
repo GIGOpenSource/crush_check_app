@@ -3,7 +3,7 @@
     <view class="title">选择性别：</view>
     <view class="sex">
       <view v-for="(item, index) in sex" :key="index" @click="choosesex(index)"
-        :class="{ 'girl': params.user_gender == 0 && index == 0, 'boy': params.user_gender == 1 && index == 1 }">
+        :class="{ 'girl': params.user_gender == 'female' && index == 0, 'boy': params.user_gender == 'male' && index == 1 }">
         <image :src="$getImg(params.user_gender == index ? item.current : item.images)" />
         <text>{{ item.name }}</text>
       </view>
@@ -12,8 +12,8 @@
     <view class="birth" @click="show = true" :class="{ 'jiacu': params.data_of_birth_time }">{{
       params.data_of_birth_time
       || '选择生日' }}</view>
-    <view class="birth">选择出生地</view>
-    <view class="birth step" :class="{'status':status}" @click="submit">下一步</view>
+    <!-- <view class="birth">选择出生地</view> -->
+    <view class="birth step" :class="{ 'status': status }" @click="submit">下一步</view>
     <up-datetime-picker :show="show" v-model="value1" mode="datetime" :maxDate="maxDate" @confirm="confirm"
       @cancel="show = false"></up-datetime-picker>
   </view>
@@ -22,23 +22,24 @@
 <script setup>
 const props = defineProps({
 })
-import { ref, reactive ,computed} from 'vue'
+const emits = defineEmits(["submit"])
+import { ref, reactive, computed } from 'vue'
 const sex = [{
   name: '女生',
   images: 'constellation/girl',
   current: 'constellation/girl-current',
-  type: 0
+  type: 'female'
 }, {
   name: '男生',
   images: 'constellation/boy',
   current: 'constellation/boy-current',
-  type: 1
+  type: 'male'
 }]
 const params = reactive(
   {
     user_gender: -1,
     data_of_birth_time: '',
-    area: '11'
+    time:'' //时间戳
   })
 const show = ref(false);
 const value1 = ref(Date.now());
@@ -47,17 +48,17 @@ const maxDate = ref(Date.now()) //最大时间
 const confirm = (e) => {
   value1.value = e.value
   params.data_of_birth_time = gettime(e.value)
+  params.time = e.value
   show.value = false
 }
 //选择性别
 const choosesex = (index) => {
-  params.user_gender = index
-  console.log(params.user_gender, 'params.user_gender')
+  params.user_gender = sex[index].type
 }
 
 //计算属性
 const status = computed(() => {
-    return params.user_gender && params.data_of_birth_time && params.area
+  return params.user_gender && params.data_of_birth_time
 })
 
 
@@ -75,7 +76,11 @@ const gettime = (time) => {
 }
 
 const submit = () => {
-  emits("submit");
+  if (!status) return uni.showToast({
+    title: '请完善信息',
+    icon: 'none'
+  })
+  emits("submit", params);
 }
 </script>
 
@@ -153,8 +158,9 @@ const submit = () => {
   border-radius: 90rpx;
   margin-top: 80rpx;
 }
-.status{
-   background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
-   color: #fff;
+
+.status {
+  background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
+  color: #fff;
 }
 </style>
