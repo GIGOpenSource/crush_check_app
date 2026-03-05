@@ -89,9 +89,9 @@ const getDaily = () => {
         processlist.value[2].percent = data.career_score || 0
         processlist.value[3].percent = data.study_score || 0
         processlist.value[4].percent = data.contact_score || 0
-        info.value.star_sign = data.star_sign
-        info.value.mood_score = data.mood_score
-        info.value.encourage_sentence = data.encourage_sentence
+        info.value.star_sign = data.star_sign || ''
+        info.value.mood_score = data.mood_score || ''
+        info.value.encourage_sentence = data.encourage_sentence || ''
 
     })
 }
