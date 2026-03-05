@@ -10,14 +10,14 @@
                     <l-painter-view
                         css="padding:80rpx 0 30rpx 0;background: linear-gradient(180deg, #534D90 0%, rgba(43, 40, 72, 0) 100%);width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;justify-content: space-around;">
                         <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
-                            <l-painter-image src="/static/constellation/banner.png"
+                            <l-painter-image :src="info?.user_constellation_url || '/static/index/yq2.png'"
                                 css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
                           <l-painter-text css="font-size: 22rpx;" :text="info.user_zodiac_code"></l-painter-text>
                         </l-painter-view>
                         <l-painter-text text="VS" css="margin: 0 10rpx;font-size: 30rpx;"></l-painter-text>
                         <l-painter-view>
                            <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
-                            <l-painter-image src="/static/constellation/banner.png"
+                            <l-painter-image :src="info?.other_constellation_url || '/static/index/yq2.png'"
                                 css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
                           <l-painter-text css="font-size: 22rpx;" :text="info.other_zodiac_code"></l-painter-text>
                         </l-painter-view>

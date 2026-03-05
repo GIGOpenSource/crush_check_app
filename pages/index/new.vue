@@ -3,7 +3,7 @@
         <view class="top">
             <view class="title">
                 <view>我的星座：{{ info.star_sign || '--' }}</view>
-                <view class="choose" @click="choose"> 选择他的星座 <text>{{ '>' }}</text> </view>
+                <view class="choose" @click="choose"> {{ info.star_sign == '' ? '选择你的星座':'选择他的星座' }} <text>{{ '>' }}</text> </view>
             </view>
             <view class="totay">
                 <text>今日心情：</text>
@@ -12,7 +12,7 @@
             <view class="desc" v-if="info.encourage_sentence">{{ info.encourage_sentence }}</view>
             <view class="process">
                 <view v-for="(item, index) in processlist" class="processlist" :key="index">
-                    <view class="jindu" :style="`height:${item.percent * 2}rpx`"></view>
+                    <view class="jindu" :style="item.percent ? `height:${item.percent * 2}rpx`: `height:200rpx`"></view>
                     <view class="name">{{ item.name }}</view>
                     <view class="percent">{{ item.percent }}</view>
                 </view>
@@ -47,7 +47,7 @@ const show = ref(false)
 const userinfo = ref({})
 const info = ref({
     star_sign:'',
-    mood_score:'',
+    mood_score:0,
     encourage_sentence:'',
     love_score:'',
     wealth_score:'',
@@ -57,21 +57,21 @@ const info = ref({
 
 })
 const processlist = ref([{
-    percent: 100,
+    percent: 0,
     name: '爱情'
     ,
 }, {
-    percent: 78,
+    percent: 0,
     name: '财富'
 }, {
-    percent: 50
+    percent: 0
     ,
     name: '事业'
 }, {
-    percent: 60,
+    percent: 0,
     name: '学习'
 }, {
-    percent: 40,
+    percent: 0,
     name: '人脉'
 }]) //星座
 
@@ -99,7 +99,6 @@ const tarbarlist = ref([
 //每日心情
 const getDaily = () => {
     startDaily().then(res => {
-        console.log(res, 'rrrrr')
         info.value = res.data
         processlist.value[0].percent = info.value.love_score
         processlist.value[1].percent = info.value.wealth_score
@@ -135,15 +134,12 @@ const choose = () => {
             })
         }
     }
-    show.value = true
 }
 onShow(() => {
     if (!uni.getStorageSync('token')) return
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
-        console.log('111')
         userinfo.value = res.data
-        console.log(userinfo.value,'userinfo.value')
         uni.setStorageSync('userInfo',JSON.stringify(res.data))
     })
 })
