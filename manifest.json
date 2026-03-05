@@ -26,7 +26,8 @@
             "Camera" : {},
             "OAuth" : {},
             "Share" : {},
-            "Payment" : {}
+            "Payment" : {},
+            "Geolocation" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -92,7 +93,16 @@
                         "appid" : "wxa1b9e2d76d5a2ca8",
                         "UniversalLinks" : "https://www.crashcheck.net/uni-universallinks/__UNI__52A3010/"
                     }
-                }
+                },
+                "geolocation" : {
+                    "amap" : {
+                        "name" : "amap_13104120248CXuAsVBDV",
+                        "__platform__" : [ "ios" ],
+                        "appkey_ios" : "8ee4eec7e89be881a1dd9f422127ac87",
+                        "appkey_android" : ""
+                    }
+                },
+                "maps" : {}
             },
             "icons" : {
                 "android" : {
