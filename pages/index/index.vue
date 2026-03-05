@@ -10,27 +10,30 @@
             </view>
             <view class="totay">
                 <text>{{ t('start.todayMood') }}</text>
-                 <text><text class="num">{{ info.mood_score || '0' }}</text>{{ t('start.score') }}</text>
+                <text><text class="num">{{ info.mood_score || '0' }}</text>{{ t('start.score') }}</text>
             </view>
             <view class="desc" v-if="info.encourage_sentence">{{ info.encourage_sentence }}</view>
             <view class="process">
                 <view v-for="(item, index) in processlist" class="processlist" :key="index">
-                    <view class="jindu" :style="item.percent ? `height:${item.percent * 2}rpx` : `height:200rpx`"></view>
+                    <view class="jindu" :style="item.percent ? `height:${item.percent * 2}rpx` : `height:200rpx`">
+                    </view>
                     <view class="name">{{ item.name }}</view>
-                    <view class="percent">{{ item.percent || 0}}</view>
+                    <view class="percent">{{ item.percent || 0 }}</view>
                 </view>
             </view>
         </view>
         <view class="tarbarlist">
             <view v-for="(item, index) in tarbarlist" :key="index" class="list">
-                <view class="top1">
-                    <view>{{ item.title }}</view>
-                    <image :src="$getImg('constellation/back')" mode="scaleToFill" />
-                </view>
-                <view class="desc1">{{ item.desc }}</view>
-                <view class="status-badge">
-                      <text class="status-badge-text">{{ t('start.hot') }}</text>
-                </view>
+                <block v-if="item.is_enabled">
+                    <view class="top1">
+                        <view>{{ item.name }}</view>
+                        <image :src="$getImg('constellation/back')" mode="scaleToFill" />
+                    </view>
+                    <view class="desc1">{{ item.description }}</view>
+                    <view class="status-badge hot" :class="{ 'new': item.tag_text == 'NEW' }">
+                        <text class="status-badge-text">{{ item.tag_text }}</text>
+                    </view>
+                </block>
             </view>
         </view>
     </view>
@@ -40,13 +43,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted ,watch} from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { startDaily } from '@/api/constellation.js'
 import { onShow, onLoad } from '@dcloudio/uni-app'
 import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
 import { timestampToIsoUtc } from '@/utils/utctTime.js'
 import { getUserInfo, getSystemContent } from "@/api/login.js";
-
+import { signlist } from '@/api/constellation.js'
 import {
     share
 } from '@/api/index.js'
@@ -59,63 +62,30 @@ const info = ref({
     star_sign: '',
     mood_score: 0,
     encourage_sentence: '',
-    love_score: '',
-    wealth_score: '',
-    career_score: '',
-    study_score: '',
-    contact_score: ''
-
 })
 const processlist = ref([
-  { percent: 0, name: t('start.love') },    // 爱情 → 国际化
-  { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
-  { percent: 0, name: t('start.career') },  // 事业 → 国际化
-  { percent: 0, name: t('start.study') },   // 学习 → 国际化
-  { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
+    { percent: 0, name: t('start.love') },    // 爱情 → 国际化
+    { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
+    { percent: 0, name: t('start.career') },  // 事业 → 国际化
+    { percent: 0, name: t('start.study') },   // 学习 → 国际化
+    { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
 ])
-// watch(
-//   () => t('start.love'), // 监听语言变化
-//   () => {
-//     processlist.value = [
-//       { percent: 0, name: t('start.love') },
-//       { percent: 0, name: t('start.wealth') },
-//       { percent: 0, name: t('start.career') },
-//       { percent: 0, name: t('start.study') },
-//       { percent: 0, name: t('start.contacts') }
-//     ]
-//   }
-// )
 
-const tarbarlist = ref([
-    {
-        title: '答案之书',
-        desc: '闭眼默念问题，随机翻页得答案'
-    }, {
-        title: '塔罗牌',
-        desc: '78张牌占卜命运、情感与选择'
-    }, {
-        title: 'MBTI',
-        desc: '16型人格测试，剖析你 的内在性格'
-    }, {
-        title: '恋爱法庭',
-        desc: 'AI分析，模拟审判解决恋爱纠纷'
-    }, {
-        title: '鉴渣',
-        desc: '鉴定自己的说话方式和资料，像不像渣男渣女'
-    }, {
-        title: '其他测试',
-        desc: '根据通用测试问题配置模板，配置完成倒序'
-    },
-])
+const tarbarlist = ref([])
 //每日心情
 const getDaily = () => {
     startDaily().then(res => {
-        let info = res.data
-        processlist.value[0].percent = info.love_score || 0
-        processlist.value[1].percent = info.wealth_score || 0
-        processlist.value[2].percent = info.career_score || 0
-        processlist.value[3].percent = info.study_score || 0
-        processlist.value[4].percent = info.contact_score || 0
+        let data = res.data
+         
+        processlist.value[0].percent = data.love_score || 0
+        processlist.value[1].percent = data.wealth_score || 0
+        processlist.value[2].percent = data.career_score || 0
+        processlist.value[3].percent = data.study_score || 0
+        processlist.value[4].percent = data.contact_score || 0
+        info.value.star_sign = data.star_sign
+        info.value.mood_score = data.mood_score
+        info.value.encourage_sentence = data.encourage_sentence
+
     })
 }
 
@@ -170,14 +140,22 @@ const path = (url) => {
 
 }
 
+//获取列表
+const getlist = () => {
+    signlist().then(res => {
+        tarbarlist.value = res.data.results
+    })
+}
+
 onShow(() => {
-   processlist.value = [
-  { percent: 0, name: t('start.love') },    // 爱情 → 国际化
-  { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
-  { percent: 0, name: t('start.career') },  // 事业 → 国际化
-  { percent: 0, name: t('start.study') },   // 学习 → 国际化
-  { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
-]
+    processlist.value = [
+        { percent: 0, name: t('start.love') },    // 爱情 → 国际化
+        { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
+        { percent: 0, name: t('start.career') },  // 事业 → 国际化
+        { percent: 0, name: t('start.study') },   // 学习 → 国际化
+        { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
+    ]
+    getlist()
     if (!uni.getStorageSync('token')) return
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
@@ -287,7 +265,7 @@ onLoad((e) => {
 .tarbarlist {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
     margin-top: 30rpx;
 
@@ -311,6 +289,7 @@ onLoad((e) => {
         margin-bottom: 20rpx;
         position: relative;
         overflow: hidden;
+        margin-right: 25rpx;
 
         .top1 {
             display: flex;
@@ -324,6 +303,10 @@ onLoad((e) => {
         }
     }
 
+    .list:nth-of-type(2n) {
+        margin-right: 0 !important;
+    }
+
     .status-badge {
         position: absolute;
         top: 30rpx;
@@ -331,19 +314,12 @@ onLoad((e) => {
         width: 165rpx;
         padding: 6rpx 0;
         text-align: center;
-        // background: #FFBB25; //黄色
-        background: #FF4E4E;
         transform: translate(40%, -20%) rotate(45deg);
         transform-origin: center;
         z-index: 3;
         text-align: center;
         overflow: hidden;
         box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
-
-        &--error {
-            background: rgba(255, 77, 77, 0.85);
-            cursor: pointer;
-        }
 
         .status-badge-text {
             color: fff;
@@ -354,6 +330,15 @@ onLoad((e) => {
             white-space: nowrap;
             line-height: 1.2;
         }
+
+    }
+
+    .hot {
+        background: #FF4E4E;
+    }
+
+    .new {
+        background: #FFBB25; //黄色
     }
 }
 </style>

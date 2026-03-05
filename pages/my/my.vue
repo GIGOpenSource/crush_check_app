@@ -394,12 +394,12 @@ export default {
 
     },
     step(params) {
+      this.show = false
       params.latitude = this.latitude
       params.longitude = this.longitude
       params.data_of_birth_time = timestampToIsoUtc(params.time)
       delete params.time
       create(params).then(res => {
-        this.show = false
         getUserInfo(uni.getStorageSync('openId')).then(result => {
           this.userInfo = result.data
           uni.setStorageSync('userInfo', JSON.stringify(result.data))

@@ -20,3 +20,8 @@ export const doubleMatch = (params) => {
 	return postRequest('/query_star_sgin_match/',params)
 }
 
+//获取首页列表
+export const signlist = () => {
+	return getRequest('/project_item/',{})
+}
+

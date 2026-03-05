@@ -67,7 +67,7 @@ const confirm = (e) => {
 }
 //选择性别
 const choosesex = (index) => {
-  params.user_gender = sex[index].type
+  params.user_gender = sex.value[index].type
 }
 
 //计算属性
