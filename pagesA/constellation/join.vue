@@ -27,7 +27,7 @@ onMounted(() => {
   })
 })
 const btn = () => {
-  uni.switchTab({ url: '/pages/index/index ' })
+  uni.switchTab({ url: '/pages/index/index' })
 }
 </script>
 
