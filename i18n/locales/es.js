@@ -667,6 +667,9 @@ Busca el Mini Programa "Crush Check" en WeChat, ingresa mi código de invitació
       completeInfo: 'Por favor, complete la información',
       year: ' año',
       month: ' mes',
-      day: ' día'
+      day: ' día',
+      loveAdvice: 'Consejos de amor',
+      precautions: 'Precauciones',
+      fateAnalysis: 'Análisis del destino'
   }
 }

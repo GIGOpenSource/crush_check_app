@@ -676,6 +676,9 @@ Search "Crush Check" Mini Program on WeChat, enter my invitation code: {inviteCo
       completeInfo: 'Please complete the information',
       year: ' yr',
       month: ' mo',
-      day: ' dy'
+      day: ' dy',
+     loveAdvice: 'Love Advice',
+      precautions: 'Precautions',
+      fateAnalysis: 'Fate Analysis'
   }
 }

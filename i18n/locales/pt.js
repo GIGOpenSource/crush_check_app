@@ -676,7 +676,10 @@ Pesquise o Mini Programa "Crush Check" no WeChat, insira meu código de convite:
       completeInfo: 'Por favor, complete as informações',
       year: ' ano',
       month: ' mês',
-      day: ' dia'
+      day: ' dia',
+      loveAdvice: 'Conselhos de amor',
+      precautions: 'Precauções',
+      fateAnalysis: 'Análise do destino'
   }
 }
 

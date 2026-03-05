@@ -675,7 +675,10 @@ WeChatで「Crush Check」ミニプログラムを検索し、私の招待コー
       completeInfo: '情報を補完してください',
       year: '年',
       month: '月',
-      day: '日'
+      day: '日',
+      loveAdvice: '恋愛のアドバイス',
+      precautions: '注意点',
+      fateAnalysis: '縁の分析'
   }
 }
 

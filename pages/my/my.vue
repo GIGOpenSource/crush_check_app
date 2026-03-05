@@ -33,7 +33,7 @@
               <!-- </picker> -->
               <text
                 :class="{ 'xingzuo1': userInfo.star_sign_info?.id, 'xingzuo2': !userInfo.star_sign_info?.id }">{{
-                 userInfo.star_sign_info?.sun_sign ? userInfo.star_sign_info.sun_sign : '请选择星座'}}</text>
+                 userInfo.star_sign_info?.sun_sign ? userInfo.star_sign_info.sun_sign : $t('start.chooseYourConstellation')}}</text>
             </view>
             <view>
               <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>

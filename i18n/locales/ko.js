@@ -677,7 +677,10 @@ export default {
       completeInfo: '정보를 완성해주세요',
       year: '년',
       month: '월',
-      day: '일'
+      day: '일',
+        loveAdvice: '연애 조언',
+      precautions: '주의사항',
+      fateAnalysis: '인연 분석'
 
   }
 }

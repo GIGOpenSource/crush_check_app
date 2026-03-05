@@ -682,6 +682,9 @@ export default {
       // 日期格式
       year: '年',
       month: '月',
-      day: '日'
+      day: '日',
+      loveAdvice: '恋爱建议',
+      precautions: '注意事项',
+      fateAnalysis: '缘份分析'
   }
 }

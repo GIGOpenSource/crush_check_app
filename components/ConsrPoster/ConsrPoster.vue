@@ -31,7 +31,7 @@
                             <l-painter-view css="display: flex; align-items: flex-end;margin-bottom: 20rpx;">
                                 <l-painter-text :text="info.match_template?.score"
                                     css="font-size: 48rpx;margin-right: 5rpx;font-weight: bold;"></l-painter-text>
-                                <l-painter-text :text="'分'" css="display:block;margin-bottom: 5rpx;"></l-painter-text>
+                                <l-painter-text :text="t('start.score')" css="display:block;margin-bottom: 5rpx;"></l-painter-text>
                             </l-painter-view>
                             <l-painter-text :text="info.match_template?.comment"></l-painter-text>
                         </l-painter-view>
@@ -40,7 +40,7 @@
                             css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
-                            <l-painter-text text="缘份分析" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-text :text="t('start.fateAnalysis')" css="margin: 0 10rpx;"></l-painter-text>
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
                         </l-painter-view>
@@ -53,7 +53,7 @@
                             css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
-                            <l-painter-text text="恋爱建议" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-text :text="t('start.loveAdvice')" css="margin: 0 10rpx;"></l-painter-text>
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
                         </l-painter-view>
@@ -66,7 +66,7 @@
                             css="margin-top: 30rpx;width: 100%;text-align: center;display: flex;align-items: center;justify-content: center;">
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
-                            <l-painter-text text="注意事项" css="margin: 0 10rpx;"></l-painter-text>
+                            <l-painter-text :text="t('start.precautions')" css="margin: 0 10rpx;"></l-painter-text>
                             <l-painter-view
                                 css="display: block;width:60rpx;height: 1rpx;background: #fff;border: 1rpx solid #fff;"></l-painter-view>
                         </l-painter-view>
