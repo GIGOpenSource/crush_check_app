@@ -25,10 +25,14 @@
                                 <l-painter-text :text="t('lovePoster.partyB') + (info.business_data?.other_data?.nickname || '')"
                                     css="color: rgba(255,255,255,0.9);display:block;width:50%"></l-painter-text>
                             </l-painter-view>
-                            <l-painter-text :text="t('lovePoster.presidingJudge') + (info.content?.presiding_judge || '')"
-                                css="color: rgba(255,255,255,0.9); margin-bottom: 20rpx;"></l-painter-text>
-                            <l-painter-text :text="t('lovePoster.openCourtTime') + (info.content?.open_court_time || '')"
-                                css="color: rgba(255,255,255,0.9);"></l-painter-text>
+							<l-painter-view>
+								 <l-painter-text :text="t('lovePoster.presidingJudge') + (info.content?.presiding_judge || '')"
+								     css="color: rgba(255,255,255,0.9); margin-bottom: 20rpx;"></l-painter-text>
+							</l-painter-view>
+                            <l-painter-view>
+								 <l-painter-text :text="t('lovePoster.openCourtTime') + (info.content?.open_court_time || '')"
+								     css="color: rgba(255,255,255,0.9);"></l-painter-text>
+							</l-painter-view>
                         </l-painter-view>
                     </l-painter-view>
                     <!-- 问题原因分析 -->
