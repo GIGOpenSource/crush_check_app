@@ -23,8 +23,8 @@
             </view>
         </view>
         <view class="tarbarlist">
-            <view v-for="(item, index) in tarbarlist" :key="index" class="list">
-                <block v-if="item.is_enabled">
+            <block v-for="(item, index) in tarbarlist" :key="index">
+                <view class="list" @click="path(routeslist[item.english_name])" v-if="item.is_enabled">
                     <view class="top1">
                         <view>{{ item.name }}</view>
                         <image :src="$getImg('constellation/back')" mode="scaleToFill" />
@@ -33,8 +33,8 @@
                     <view class="status-badge hot" :class="{ 'new': item.tag_text == 'NEW' }">
                         <text class="status-badge-text">{{ item.tag_text }}</text>
                     </view>
-                </block>
-            </view>
+                </view>
+            </block>
         </view>
     </view>
     <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
@@ -70,13 +70,20 @@ const processlist = ref([
     { percent: 0, name: t('start.study') },   // 学习 → 国际化
     { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
 ])
-
+const routeslist = {
+    crush_check: '/pages/index/opeare',
+    answer_book: '/pages/index/answer',
+    MBTI: '/pagesA/mbti/index',
+    trial_case: '/pagesA/loveCourt/index',
+    tarot_card: '/pagesA/tarotcards/qusetion',
+    other_test: ''
+}
 const tarbarlist = ref([])
 //每日心情
 const getDaily = () => {
     startDaily().then(res => {
         let data = res.data
-         
+
         processlist.value[0].percent = data.love_score || 0
         processlist.value[1].percent = data.wealth_score || 0
         processlist.value[2].percent = data.career_score || 0
