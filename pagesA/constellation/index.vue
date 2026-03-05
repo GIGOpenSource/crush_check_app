@@ -65,6 +65,9 @@ const step = (params) => {
 <style lang="scss" scoped>
 .page {
   position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .banner {

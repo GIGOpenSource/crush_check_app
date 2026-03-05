@@ -2,7 +2,10 @@
     <view class="page">
         <view class="top">
             <view class="title">
-                <view>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</view>
+                <view class="titleleft" @click="tiaozhuan">
+                    <text>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</text>
+                    <image :src="$getImg('constellation/back')"  v-if="info.star_sign"/>
+                </view>
                 <view class="choose" @click="choose">
                     {{ info.star_sign == '' ? t('start.chooseYourConstellation') : t('start.chooseHisConstellation') }}
                     <text>{{ '>' }}</text>
@@ -154,6 +157,14 @@ const getlist = () => {
     })
 }
 
+const tiaozhuan = () => {
+    if (!uni.getStorageSync('token')) return
+    if(!info.value.star_sign) return
+      uni.redirectTo({
+        url:'/pagesA/constellation/join'
+       })
+}
+
 onShow(() => {
     processlist.value = [
         { percent: 0, name: t('start.love') },    // 爱情 → 国际化
@@ -225,6 +236,15 @@ onLoad((e) => {
                 margin-left: 5rpx;
             }
         }
+        .titleleft{
+            display: flex;
+            align-items: center;
+        }
+    }
+     image {
+        width: 35rpx;
+        height: 35rpx;
+        margin-left: 10rpx;
     }
 
     .totay {

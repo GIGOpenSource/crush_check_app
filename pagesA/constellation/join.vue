@@ -20,7 +20,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 onMounted(() => {
   getinfo().then(res =>{
-    let data = res.data.results[0]
+    let data = res.data
      list.value[0] =t('start.sun') +  data.sun_sign.slice(0,2)
      list.value[1] = t('start.moon') +  data.moon_sign.slice(0,2)
      list.value[2] = t('start.asc') + data.asc_sign.slice(0,2)
