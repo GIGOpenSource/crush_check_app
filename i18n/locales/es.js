@@ -636,5 +636,37 @@ Busca el Mini Programa "Crush Check" en WeChat, ingresa mi código de invitació
     judgeAdviceTitle: 'Consejo del juez: ',
     verdictTime: 'Fecha del veredicto: ',
     imageLoadFailed: 'Error al cargar la imagen, inténtelo de nuevo'
+  },
+   start:{
+      t1: 'Tú eres...',
+    btnText: 'Consultar la suerte',
+    sun: 'Sol',
+    moon: 'Luna',
+    asc: 'Ascendente',
+     baseInfo: 'Ingrese información básica',
+      openCrushCheck: 'Abrir CrushCheck',
+       myConstellation: 'Mi Constelación：',
+      chooseYourConstellation: 'Elige tu constelación',
+      chooseHisConstellation: 'Elige su constelación',
+      todayMood: 'Estado de ánimo hoy：',
+      score: ' pts',
+      inputHisInfo: 'Ingrese su información',
+      testMatchDegree: 'Probar grado de coincidencia ahora',
+      hot: 'CALIENTE',
+       // 西班牙语翻译
+      love: 'Amor',
+      wealth: 'Riqueza',
+      career: 'Carrera',
+      study: 'Estudio',
+      contacts: 'Contactos',
+       chooseBirthday: 'Elegir cumpleaños',
+       chooseGender: 'Elegir género：',
+      nextStep: 'Siguiente paso',
+      female: 'Mujer',
+      male: 'Hombre',
+      completeInfo: 'Por favor, complete la información',
+      year: ' año',
+      month: ' mes',
+      day: ' día'
   }
 }

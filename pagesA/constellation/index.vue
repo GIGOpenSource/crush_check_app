@@ -4,8 +4,8 @@
     <view class="conent">
       <image :src="$getImg('constellation/logo')" mode="widthFix" class="logo" />
       <view class="titlecon">
-         <view class="t1">输入基本信息</view>
-          <view class="t2">开启CrushCheck</view>
+        <view class="t1">{{ t('start.baseInfo') }}</view>
+          <view class="t2">{{ t('start.openCrushCheck') }}</view>
          
       </view>
        <!-- 组件 -->
@@ -22,6 +22,8 @@ import {
 	onLoad
 } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const latitude = ref('39.90667')
 const longitude = ref('116.39750')
 onLoad(() => {
@@ -38,7 +40,7 @@ const getLocationFn = () =>{
     },
     fail: function (err) {
       uni.showToast({
-        title: '获取位置失败',
+       title: t('start.getLocationFail'),
         icon: 'none'
       });
     }

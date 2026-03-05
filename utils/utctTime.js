@@ -16,7 +16,7 @@ export const parseUTCToDateTime = (utcStr) => {
     if (!utcStr) return '';
   const date = new Date(utcStr);
   const pad = (num) => num.toString().padStart(2, '0');
-  return `${date.getUTCFullYear()}年${pad(date.getUTCMonth() + 1)}月${pad(date.getUTCDate())}日 ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+  return `${date.getUTCFullYear()}${t('start.year')}${pad(date.getUTCMonth() + 1)}${t('start.month')}${pad(date.getUTCDate())}${t('start.day')} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
 };
 
 export const convertUTCToTimestamp = (utcStr) => {

@@ -2,19 +2,22 @@
     <view class="page">
         <view class="top">
             <view class="title">
-                <view>我的星座：{{ info.star_sign || '--' }}</view>
-                <view class="choose" @click="choose"> {{ info.star_sign == '' ? '选择你的星座':'选择他的星座' }} <text>{{ '>' }}</text> </view>
+                <view>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</view>
+                <view class="choose" @click="choose">
+                    {{ info.star_sign == '' ? t('start.chooseYourConstellation') : t('start.chooseHisConstellation') }}
+                    <text>{{ '>' }}</text>
+                </view>
             </view>
             <view class="totay">
-                <text>今日心情：</text>
-                <text><text class="num">{{ info.mood_score || '0' }}</text>分</text>
+                <text>{{ t('start.todayMood') }}</text>
+                 <text><text class="num">{{ info.mood_score || '0' }}</text>{{ t('start.score') }}</text>
             </view>
             <view class="desc" v-if="info.encourage_sentence">{{ info.encourage_sentence }}</view>
             <view class="process">
                 <view v-for="(item, index) in processlist" class="processlist" :key="index">
-                    <view class="jindu" :style="item.percent ? `height:${item.percent * 2}rpx`: `height:200rpx`"></view>
+                    <view class="jindu" :style="item.percent ? `height:${item.percent * 2}rpx` : `height:200rpx`"></view>
                     <view class="name">{{ item.name }}</view>
-                    <view class="percent">{{ item.percent }}</view>
+                    <view class="percent">{{ item.percent || 0}}</view>
                 </view>
             </view>
         </view>
@@ -26,26 +29,26 @@
                 </view>
                 <view class="desc1">{{ item.desc }}</view>
                 <view class="status-badge">
-                    <text class="status-badge-text">HOT</text>
+                      <text class="status-badge-text">{{ t('start.hot') }}</text>
                 </view>
             </view>
         </view>
     </view>
     <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
-       <ConsrProup title="输入对方信息" btnText="立即测试匹配度" @submit="step"></ConsrProup>
+        <ConsrProup :title="t('start.inputHisInfo')" :btnText="t('start.testMatchDegree')" @submit="step"></ConsrProup>
     </up-popup>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted ,watch} from 'vue'
 import { startDaily } from '@/api/constellation.js'
-import { onShow,onLoad } from '@dcloudio/uni-app'
+import { onShow, onLoad } from '@dcloudio/uni-app'
 import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
 import { timestampToIsoUtc } from '@/utils/utctTime.js'
-import {getUserInfo,getSystemContent} from "@/api/login.js";
+import { getUserInfo, getSystemContent } from "@/api/login.js";
 
 import {
-	share
+    share
 } from '@/api/index.js'
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
@@ -53,34 +56,35 @@ const show = ref(false)
 const userinfo = ref({})
 const version = ref('') //审核开关
 const info = ref({
-    star_sign:'',
-    mood_score:0,
-    encourage_sentence:'',
-    love_score:'',
-    wealth_score:'',
-    career_score:'',
-    study_score:'',
-    contact_score:''
+    star_sign: '',
+    mood_score: 0,
+    encourage_sentence: '',
+    love_score: '',
+    wealth_score: '',
+    career_score: '',
+    study_score: '',
+    contact_score: ''
 
 })
-const processlist = ref([{
-    percent: 0,
-    name: '爱情'
-    ,
-}, {
-    percent: 0,
-    name: '财富'
-}, {
-    percent: 0
-    ,
-    name: '事业'
-}, {
-    percent: 0,
-    name: '学习'
-}, {
-    percent: 0,
-    name: '人脉'
-}]) //星座
+const processlist = ref([
+  { percent: 0, name: t('start.love') },    // 爱情 → 国际化
+  { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
+  { percent: 0, name: t('start.career') },  // 事业 → 国际化
+  { percent: 0, name: t('start.study') },   // 学习 → 国际化
+  { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
+])
+// watch(
+//   () => t('start.love'), // 监听语言变化
+//   () => {
+//     processlist.value = [
+//       { percent: 0, name: t('start.love') },
+//       { percent: 0, name: t('start.wealth') },
+//       { percent: 0, name: t('start.career') },
+//       { percent: 0, name: t('start.study') },
+//       { percent: 0, name: t('start.contacts') }
+//     ]
+//   }
+// )
 
 const tarbarlist = ref([
     {
@@ -106,93 +110,100 @@ const tarbarlist = ref([
 //每日心情
 const getDaily = () => {
     startDaily().then(res => {
-        info.value = res.data
-        processlist.value[0].percent = info.value.love_score
-        processlist.value[1].percent = info.value.wealth_score
-        processlist.value[2].percent = info.value.career_score
-        processlist.value[3].percent = info.value.study_score
-        processlist.value[4].percent = info.value.contact_score
+        let info = res.data
+        processlist.value[0].percent = info.love_score || 0
+        processlist.value[1].percent = info.wealth_score || 0
+        processlist.value[2].percent = info.career_score || 0
+        processlist.value[3].percent = info.study_score || 0
+        processlist.value[4].percent = info.contact_score || 0
     })
 }
 
 //匹配
 const step = (params) => {
-     params.other_birth_datetime = timestampToIsoUtc(params.time)
-     params.other_gender = params.user_gender
-     show.value = false
-     delete params.time
-     delete params.user_gender
-     delete params.data_of_birth_time
-     uni.navigateTo({ url: '/pagesA/constellation/poster?params='+JSON.stringify(params) })
+    params.other_birth_datetime = timestampToIsoUtc(params.time)
+    params.other_gender = params.user_gender
+    show.value = false
+    delete params.time
+    delete params.user_gender
+    delete params.data_of_birth_time
+    uni.navigateTo({ url: '/pagesA/constellation/poster?params=' + JSON.stringify(params) })
 }
 
 //选择
 const choose = () => {
     let token = uni.getStorageSync('token')
     // let userinfo = userinfo.value
-    if(!token){
+    if (!token) {
         uni.navigateTo({ url: '/pages/login/login' })
-    }else{
-        if(userinfo.value.star_sign_info?.id){
+    } else {
+        if (userinfo.value.star_sign_info?.id) {
             show.value = true
-        }else{
+        } else {
             uni.navigateTo({
-                url:'/pagesA/constellation/index'
+                url: '/pagesA/constellation/index'
             })
         }
     }
 }
 
 const path = (url) => {
-	uni.removeStorageSync('question');
-	 if(!uni.getStorageSync('token')){
-		if(url == '/pagesA/loveCourt/index'){
-			uni.navigateTo({
-				url:'/pages/login/login'
-			})
-		}else{
-			if(url == '/pagesA/loveCourt/index'){
-				uni.redirectTo({
-					url:'/pagesA/loveCourt/index'
-				})
-			}else{
+    uni.removeStorageSync('question');
+    if (!uni.getStorageSync('token')) {
+        if (url == '/pagesA/loveCourt/index') {
+            uni.navigateTo({
+                url: '/pages/login/login'
+            })
+        } else {
+            if (url == '/pagesA/loveCourt/index') {
+                uni.redirectTo({
+                    url: '/pagesA/loveCourt/index'
+                })
+            } else {
                 uni.navigateTo({ url })
-			}
-            
-		}
-	 }else{
-		uni.navigateTo({ url })
-	 }
-	
+            }
+
+        }
+    } else {
+        uni.navigateTo({ url })
+    }
+
 }
 
 onShow(() => {
+   processlist.value = [
+  { percent: 0, name: t('start.love') },    // 爱情 → 国际化
+  { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
+  { percent: 0, name: t('start.career') },  // 事业 → 国际化
+  { percent: 0, name: t('start.study') },   // 学习 → 国际化
+  { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
+]
     if (!uni.getStorageSync('token')) return
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
         userinfo.value = res.data
-        uni.setStorageSync('userInfo',JSON.stringify(res.data))
+        uni.setStorageSync('userInfo', JSON.stringify(res.data))
     })
-     //开关
+    //开关
     getSystemContent().then(res => {
-		version.value = res.data[0].version
-	})
+        version.value = res.data[0].version
+    })
 })
 onLoad((e) => {
-	if (e.scene) {
-		uni.setStorageSync("inviter_openid", e.scene);
-		if (!uni.getStorageSync('token')) {
-			uni.navigateTo({
-				url: "/pages/login/login"
-			})
-			return
-		}
-		share({
-			shareId: e.scene,
-		}).then((res) => {
-			console.log(res, "share record");
-		});
-	}
+    if (e.scene) {
+        uni.setStorageSync("inviter_openid", e.scene);
+        if (!uni.getStorageSync('token')) {
+            uni.navigateTo({
+                url: "/pages/login/login"
+            })
+            return
+        }
+        share({
+            shareId: e.scene,
+        }).then((res) => {
+            console.log(res, "share record");
+        });
+    }
 })
 
 

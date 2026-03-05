@@ -32,8 +32,8 @@
               </view>
               <!-- </picker> -->
               <text
-                :class="{ 'xingzuo1': userInfo.star_sign_info?.sun_sign, 'xingzuo2': !userInfo.star_sign_info?.sun_sign }">{{
-                  userInfo.star_sign_info?.sun_sign }}</text>
+                :class="{ 'xingzuo1': userInfo.star_sign_info?.id, 'xingzuo2': !userInfo.star_sign_info?.id }">{{
+                 userInfo.star_sign_info?.sun_sign ? userInfo.star_sign_info.sun_sign : '请选择星座'}}</text>
             </view>
             <view>
               <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
@@ -201,7 +201,7 @@
   </up-popup>
   <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
     <block v-if="show">
-      <ConsrProup @submit="step" btnText="保存" :data1="xingzuodata"></ConsrProup>
+      <ConsrProup @submit="step" :btnText="$t('common.save')" :data1="xingzuodata"></ConsrProup>
     </block>
   </up-popup>
 </template>
@@ -379,9 +379,9 @@ export default {
           this.show = true
 
         },
-        fail: function (err) {
+        fail: (err) =>{
           uni.showToast({
-            title: '获取位置失败',
+            title: this.$t('start.getLocationFail'),
             icon: 'none'
           });
         }

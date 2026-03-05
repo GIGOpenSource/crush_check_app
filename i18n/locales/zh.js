@@ -648,5 +648,40 @@ export default {
     judgeAdviceTitle: '法官建议：',
     verdictTime: '判决时间：',
     imageLoadFailed: '图片加载失败，请重试'
+  },
+  start:{
+    t1: '你是...',
+    btnText: '查看运势',
+    sun: '太阳',
+    moon: '月亮',
+    asc: '上升',
+     baseInfo: '输入基本信息',
+      openCrushCheck: '开启CrushCheck',
+      getLocationFail: '获取位置失败',
+      myConstellation: '我的星座：',
+      chooseYourConstellation: '选择你的星座',
+      chooseHisConstellation: '选择他的星座',
+      todayMood: '今日心情：',
+      score: '分',
+      inputHisInfo: '输入对方信息',
+      testMatchDegree: '立即测试匹配度',
+      hot: 'HOT',
+        love: '爱情',
+      wealth: '财富',
+      career: '事业',
+      study: '学习',
+      contacts: '人脉',
+        chooseBirthday: '选择生日',
+        // 性别相关
+      chooseGender: '选择性别：',
+      nextStep: '下一步',
+      female: '女生',
+      male: '男生',
+      // 提示文案
+      completeInfo: '请完善信息',
+      // 日期格式
+      year: '年',
+      month: '月',
+      day: '日'
   }
 }

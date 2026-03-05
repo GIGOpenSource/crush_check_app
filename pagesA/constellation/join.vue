@@ -4,10 +4,10 @@
     <view class="conent">
       <image :src="$getImg('constellation/logo')" mode="widthFix" class="logo" />
       <view class="titlecon">
-         <view class="t1">你是...</view>
+         <view class="t1">{{ t('start.t1') }}</view>
          <view class="list" v-for="(item,index) in list" :key="index">{{ item }}</view>
       </view>
-    <view class="btn" @click="btn">查看运势</view>
+   <view class="btn" @click="btn">{{ t('start.btnText') }}</view>
     </view>
   </view>
 </template>
@@ -16,12 +16,14 @@
 import { ref,onMounted } from 'vue'
 const list = ref(['太阳双鱼','月亮水瓶','上升双子'])
 import { getinfo } from '@/api/constellation.js'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 onMounted(() => {
   getinfo().then(res =>{
     let data = res.data.results[0]
-     list.value[0] ='太阳' +  data.sun_sign.slice(0,2)
-     list.value[1] ='月亮' +  data.moon_sign.slice(0,2)
-     list.value[2] = '上升' + data.asc_sign.slice(0,2)
+     list.value[0] =t('start.sun') +  data.sun_sign.slice(0,2)
+     list.value[1] = t('start.moon') +  data.moon_sign.slice(0,2)
+     list.value[2] = t('start.asc') + data.asc_sign.slice(0,2)
   })
 })
 const btn = () => {

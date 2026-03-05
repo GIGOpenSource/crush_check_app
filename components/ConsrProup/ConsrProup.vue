@@ -1,6 +1,6 @@
 <template>
   <view class="wrapper">
-    <view class="title" :class="{'center':title == '输入对方信息'}">{{ title }}</view>
+    <view class="title" :class="{ 'center': title == t('start.inputHisInfo') }">{{ title || t('start.chooseGender')}}</view>
     <view class="sex">
       <view v-for="(item, index) in sex" :key="index" @click="choosesex(index)"
         :class="{ 'girl': params.user_gender == 'female' && index == 0, 'boy': params.user_gender == 'male' && index == 1 }">
@@ -10,49 +10,51 @@
 
     </view>
     <view class="birth" @click="show = true" :class="{ 'jiacu': params.data_of_birth_time }">{{
-      params.data_of_birth_time
-      || '选择生日' }}</view>
+      params.data_of_birth_time || t('start.chooseBirthday')
+      }}</view>
     <!-- <view class="birth">选择出生地</view> -->
-    <view class="birth step" :class="{ 'status': status }" @click="submit">{{ btnText }}</view>
+    <view class="birth step" :class="{ 'status': status }" @click="submit">{{ btnText || t('start.nextStep')}}</view>
     <up-datetime-picker :show="show" v-model="params.time" mode="datetime" :maxDate="maxDate" @confirm="confirm"
       @cancel="show = false" :minDate="minDate"></up-datetime-picker>
   </view>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 const props = defineProps({
-  title:{
-    type:String,
-    default: '选择性别：'
+  title: {
+    type: String,
+    default: '' // 替换：选择性别：
   },
-  btnText:{
-    type:String,
-    default: '下一步'
+  btnText: {
+    type: String,
+     default: '' // 替换：下一步
   },
-  data1:{
-    type:Object,
-    default:()=>({})
+  data1: {
+    type: Object,
+    default: () => ({})
   }
 })
 const emits = defineEmits(["submit"])
-import { ref, reactive, computed,onMounted } from 'vue'
+import { ref, reactive, computed, onMounted,watch } from 'vue'
 
-const sex = [{
-  name: '女生',
+const sex = ref([{
+  name: t('start.female'), // 替换：女生
   images: 'constellation/girl',
   current: 'constellation/girl-current',
   type: 'female'
 }, {
-  name: '男生',
+  name: t('start.male'), // 替换：男生
   images: 'constellation/boy',
   current: 'constellation/boy-current',
   type: 'male'
-}]
+}])
 const params = reactive(
   {
     user_gender: -1,
     data_of_birth_time: '',
-    time:Date.now() //时间戳
+    time: Date.now() //时间戳
   })
 const show = ref(false);
 const maxDate = ref(Date.now()) //最大时间
@@ -83,24 +85,40 @@ const gettime = (time) => {
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   const seconds = date.getSeconds().toString().padStart(2, '0');
-  const formattedDate = `${year}年${month}月${day}日 ${hours}:${minutes}`;
+  const formattedDate = `${year}${t('start.year')}${month}${t('start.month')}${day}${t('start.day')} ${hours}:${minutes}`;
   return formattedDate
 }
 
 const submit = () => {
   if (!status) return uni.showToast({
-    title: '请完善信息',
+    title: t('start.completeInfo'),
     icon: 'none'
   })
   emits("submit", params);
 }
 
 onMounted(() => {
-   console.log("onMounted触发了：", props.data1); // 先确认是否执行
-  if(props.data1?.user_gender){
-   Object.assign(params, props.data1);
+  console.log(222)
+  if (props.data1?.user_gender) {
+    Object.assign(params, props.data1);
   }
 })
+watch(
+  () => t('start.female'),
+  () => {
+    sex.value = [{
+      name: t('start.female'),
+      images: 'constellation/girl',
+      current: 'constellation/girl-current',
+      type: 'female'
+    }, {
+      name: t('start.male'),
+      images: 'constellation/boy',
+      current: 'constellation/boy-current',
+      type: 'male'
+    }]
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -182,9 +200,10 @@ onMounted(() => {
 .status {
   background: linear-gradient(270deg, #9452FF 0%, #B370FF 100%);
   color: #fff;
- 
+
 }
-.center{
-   text-align: center;
+
+.center {
+  text-align: center;
 }
 </style>

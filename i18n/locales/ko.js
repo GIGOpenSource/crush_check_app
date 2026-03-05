@@ -645,6 +645,40 @@ export default {
     judgeAdviceTitle: '판사 조언：',
     verdictTime: '판결 시간：',
     imageLoadFailed: '이미지 로드 실패, 다시 시도해 주세요'
+  },
+   start:{
+    t1: '당신은...',
+    btnText: '운세 확인',
+    sun: '태양',
+    moon: '달',
+    asc: '상승',
+    baseInfo: '기본 정보 입력',
+      openCrushCheck: 'CrushCheck 열기',
+      getLocationFail: '위치 가져오기 실패',
+      myConstellation: '내 별자리：',
+      chooseYourConstellation: '당신의 별자리 선택',
+      chooseHisConstellation: '그의 별자리 선택',
+      todayMood: '오늘의 기분：',
+      score: '점',
+      inputHisInfo: '상대방 정보 입력',
+      testMatchDegree: '매치도 즉시 테스트',
+      hot: '핫',
+      // 韩语翻译
+      love: '사랑',
+      wealth: '재산',
+      career: '직업',
+      study: '학습',
+      contacts: '인맥',
+     chooseBirthday: '생일 선택',
+      chooseGender: '성별 선택：',
+      nextStep: '다음 단계',
+      female: '여성',
+      male: '남성',
+      completeInfo: '정보를 완성해주세요',
+      year: '년',
+      month: '월',
+      day: '일'
+
   }
 }
 

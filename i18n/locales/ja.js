@@ -644,6 +644,38 @@ WeChatで「Crush Check」ミニプログラムを検索し、私の招待コー
     judgeAdviceTitle: '裁判官の建議：',
     verdictTime: '判決時間：',
     imageLoadFailed: '画像の読み込みに失敗しました。再試行してください'
+  },
+  start:{
+     t1: 'あなたは...',
+    btnText: '運勢を確認',
+    sun: '太陽',
+    moon: '月',
+    baseInfo: '基本情報を入力',
+      openCrushCheck: 'CrushCheckを開く',
+      getLocationFail: '位置情報の取得に失敗しました',
+       myConstellation: '私の星座：',
+      chooseYourConstellation: 'あなたの星座を選ぶ',
+      chooseHisConstellation: '彼の星座を選ぶ',
+      todayMood: '今日の気分：',
+      score: '点',
+      inputHisInfo: '相手の情報を入力',
+      testMatchDegree: '一致度をすぐにテスト',
+      hot: 'ホット',
+      // 日语翻译
+      love: '恋愛',
+      wealth: '富',
+      career: '仕事',
+      study: '学習',
+      contacts: '人脈',
+      chooseBirthday: '誕生日を選ぶ',
+      chooseGender: '性別を選択：',
+      nextStep: '次のステップ',
+      female: '女性',
+      male: '男性',
+      completeInfo: '情報を補完してください',
+      year: '年',
+      month: '月',
+      day: '日'
   }
 }
 
