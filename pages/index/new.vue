@@ -41,7 +41,6 @@ import { ref, onMounted } from 'vue'
 import { startDaily } from '@/api/constellation.js'
 import { onShow } from '@dcloudio/uni-app'
 import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
-import { doubleMatch } from '@/api/constellation.js'
 import { timestampToIsoUtc } from '@/utils/utctTime.js'
 import {getUserInfo} from "@/api/login.js";
 const show = ref(false)
@@ -112,25 +111,23 @@ const getDaily = () => {
 
 //匹配
 const step = (params) => {
-    console.log(params,'params')
      params.other_birth_datetime = timestampToIsoUtc(params.time)
      params.other_gender = params.user_gender
+     show.value = false
      delete params.time
      delete params.user_gender
      delete params.data_of_birth_time
-     doubleMatch(params).then(res => {
-         show.value = false
-     })
+     uni.navigateTo({ url: '/pagesA/constellation/poster?params='+JSON.stringify(params) })
 }
 
 //选择
 const choose = () => {
     let token = uni.getStorageSync('token')
-    let userinfo = userinfo.value
+    // let userinfo = userinfo.value
     if(!token){
         uni.navigateTo({ url: '/pages/login/login' })
     }else{
-        if(userinfo.star_sign_info?.id){
+        if(userinfo.value.star_sign_info?.id){
             show.value = true
         }else{
             uni.navigateTo({
@@ -145,7 +142,8 @@ onShow(() => {
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
         console.log('111')
-        userinfo.value =  res.data
+        userinfo.value = res.data
+        console.log(userinfo.value,'userinfo.value')
         uni.setStorageSync('userInfo',JSON.stringify(res.data))
     })
 })

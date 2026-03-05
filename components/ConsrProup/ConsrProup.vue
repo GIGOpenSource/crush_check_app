@@ -15,7 +15,7 @@
     <!-- <view class="birth">选择出生地</view> -->
     <view class="birth step" :class="{ 'status': status }" @click="submit">{{ btnText }}</view>
     <up-datetime-picker :show="show" v-model="value1" mode="datetime" :maxDate="maxDate" @confirm="confirm"
-      @cancel="show = false"></up-datetime-picker>
+      @cancel="show = false" :minDate="minDate"></up-datetime-picker>
   </view>
 </template>
 
@@ -52,6 +52,7 @@ const params = reactive(
 const show = ref(false);
 const value1 = ref(Date.now());
 const maxDate = ref(Date.now()) //最大时间
+const minDate = -315648000000
 //选择时间
 const confirm = (e) => {
   value1.value = e.value

@@ -6,7 +6,7 @@
                 <view class="loading-spinner"></view>
                 <text>{{ t('mbti.posterGenerating') }}</text>
             </view>
-            <ConsrPoster @success="handlePosterSuccess" @fail="handlePosterFail" />
+            <ConsrPoster @success="handlePosterSuccess" @fail="handlePosterFail" :info="details"/>
         </view>
         <view class="bottom">
             <view class="btns">
@@ -22,13 +22,9 @@ import { ref, onUnmounted, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ConsrPoster from '@/components/ConsrPoster/ConsrPoster.vue';
 import { onLoad, onUnload } from '@dcloudio/uni-app'
-import { getPosterDetails } from '@/api/index.js'
-import { getTemplate } from '@/api/mbti.js'
+import { doubleMatch } from '@/api/constellation.js'
 const { t } = useI18n()
-const src = ref('')
-const type = ref('')
 const details = ref({})
-const userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 const posterImg = ref('')
 const posterError = ref(false)
 
@@ -75,14 +71,9 @@ onUnload(() => {
 
 
 onLoad((e) => {
-
-
-    // if (e.id) {
-    //     getPosterDetails(e.id).then(res => {
-    //         details.value = res.data
-    //     })
-    // }
-
+ doubleMatch(JSON.parse(e.params)).then(res => {
+    details.value = res.data
+ })
 
 })
 

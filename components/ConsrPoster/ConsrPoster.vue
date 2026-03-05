@@ -12,14 +12,14 @@
                         <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
                             <l-painter-image src="/static/constellation/banner.png"
                                 css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
-                          <l-painter-text css="font-size: 22rpx;" text="魔羯座"></l-painter-text>
+                          <l-painter-text css="font-size: 22rpx;" :text="info.user_zodiac_code"></l-painter-text>
                         </l-painter-view>
                         <l-painter-text text="VS" css="margin: 0 10rpx;font-size: 30rpx;"></l-painter-text>
                         <l-painter-view>
                            <l-painter-view css="display: flex;flex-direction: column;align-items: center;">
                             <l-painter-image src="/static/constellation/banner.png"
                                 css="width: 80rpx; height: 80rpx;margin-bottom: 15rpx;border-radius: 10rpx;"></l-painter-image>
-                          <l-painter-text css="font-size: 22rpx;" text="射手座"></l-painter-text>
+                          <l-painter-text css="font-size: 22rpx;" :text="info.other_zodiac_code"></l-painter-text>
                         </l-painter-view>
                         </l-painter-view>
                     </l-painter-view>
@@ -29,11 +29,11 @@
                         <l-painter-view
                             css="padding:40rpx 0;display: flex;flex-direction: column;align-items: center;justify-content: center;width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
                             <l-painter-view css="display: flex; align-items: flex-end;margin-bottom: 20rpx;">
-                                <l-painter-text :text="'97'"
+                                <l-painter-text :text="info.match_template?.score"
                                     css="font-size: 48rpx;margin-right: 5rpx;font-weight: bold;"></l-painter-text>
                                 <l-painter-text :text="'分'" css="display:block;margin-bottom: 5rpx;"></l-painter-text>
                             </l-painter-view>
-                            <l-painter-text :text="'天作之和有的一对儿'"></l-painter-text>
+                            <l-painter-text :text="info.match_template?.comment"></l-painter-text>
                         </l-painter-view>
                         <!-- 缘份分析 -->
                         <l-painter-view
@@ -46,7 +46,7 @@
                         </l-painter-view>
                         <l-painter-view
                             css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
-                            <l-painter-text :text="'缘份分析缘份分析'"></l-painter-text>
+                            <l-painter-text :text="info.match_template?.fate_analysis"></l-painter-text>
                         </l-painter-view>
                         <!-- 恋爱建议 -->
                         <l-painter-view
@@ -59,7 +59,7 @@
                         </l-painter-view>
                         <l-painter-view
                             css="width: 100%;height: 100%;margin-top: 20rpx; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
-                            <l-painter-text :text="'恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议恋爱建议'"></l-painter-text>
+                            <l-painter-text :text="info.match_template?.love_advice"></l-painter-text>
                         </l-painter-view>
                         <!-- 注意事项 -->
                         <l-painter-view
@@ -72,7 +72,7 @@
                         </l-painter-view>
                         <l-painter-view
                             css="width: 100%;margin: 20rpx 0; border: 0.5px solid rgba(255, 255, 255, 0.17);padding: 20rpx;box-sizing: border-box;border-radius: 20rpx;background:#33323d">
-                            <l-painter-text :text="'注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项注意事项'"></l-painter-text>
+                            <l-painter-text :text="info.match_template?.attention_notes"></l-painter-text>
                         </l-painter-view>
                     </l-painter-view>
 
