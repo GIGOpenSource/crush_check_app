@@ -52,10 +52,10 @@
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <!-- <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
+            <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
                {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
                   t('tarot_result_ai_interpret') }}
-            </view> -->
+            </view>
          </view>
          <view class="title" v-if="details.child_list[0]?.content.summary">
             <rich-text :nodes="details.child_list[0]?.content.summary"></rich-text>
@@ -290,11 +290,11 @@ const submit = () => {
 
 const clicks = (index) => {
   current.value = index
-  if(index == 1 && details.value.child_list.length == 0) {
-     tarotcardnswer({ parent_id: id.value}).then(res => {
-        getdetails()
-     })
-  }
+//   if(index == 1 && details.value.child_list.length == 0) {
+//      tarotcardnswer({ parent_id: id.value}).then(res => {
+//         getdetails()
+//      })
+//   }
 }
 </script>
 
