@@ -4,7 +4,7 @@
             <view class="title">
                 <view class="titleleft" @click="tiaozhuan">
                     <text>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</text>
-                    <image :src="$getImg('constellation/back')"  v-if="info.star_sign"/>
+                    <image :src="$getImg('constellation/back')" v-if="info.star_sign" />
                 </view>
                 <view class="choose" @click="choose">
                     {{ info.star_sign == '' ? t('start.chooseYourConstellation') : t('start.chooseHisConstellation') }}
@@ -159,10 +159,10 @@ const getlist = () => {
 
 const tiaozhuan = () => {
     if (!uni.getStorageSync('token')) return
-    if(!info.value.star_sign) return
-      uni.redirectTo({
-        url:'/pagesA/constellation/join'
-       })
+    if (!info.value.star_sign) return
+    uni.redirectTo({
+        url: '/pagesA/constellation/join'
+    })
 }
 
 onShow(() => {
@@ -174,7 +174,12 @@ onShow(() => {
         { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
     ]
     getlist()
-    if (!uni.getStorageSync('token')) return
+    if (!uni.getStorageSync('token')) {
+        info.value.star_sign = ''
+        info.value.mood_score = ''
+        info.value.encourage_sentence = ''
+        return
+    }
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
         userinfo.value = res.data
@@ -236,12 +241,14 @@ onLoad((e) => {
                 margin-left: 5rpx;
             }
         }
-        .titleleft{
+
+        .titleleft {
             display: flex;
             align-items: center;
         }
     }
-     image {
+
+    image {
         width: 35rpx;
         height: 35rpx;
         margin-left: 10rpx;
