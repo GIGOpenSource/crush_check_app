@@ -691,6 +691,42 @@ export default {
     judgeAdviceTitle: 'Conselho do juiz: ',
     verdictTime: 'Data do veredicto: ',
     imageLoadFailed: 'Falha ao carregar a imagem, tente novamente'
+  },
+   start:{
+     t1: 'Você é...',
+    btnText: 'Ver a sorte',
+    sun: 'Sol',
+    moon: 'Lua',
+    asc: 'Ascendente',
+    baseInfo: 'Insira informações básicas',
+      openCrushCheck: 'Abrir CrushCheck',
+      getLocationFail: 'Falha ao obter localização',
+      myConstellation: 'Minha Constelação：',
+      chooseYourConstellation: 'Escolha sua constelação',
+      chooseHisConstellation: 'Escolha a constelação dele',
+      todayMood: 'Humor de hoje：',
+      score: ' pts',
+      inputHisInfo: 'Insira suas informações',
+      testMatchDegree: 'Testar grau de correspondência agora',
+      hot: 'QUENTE',
+      // 葡萄牙语翻译
+      love: 'Amor',
+      wealth: 'Riqueza',
+      career: 'Carreira',
+      study: 'Estudo',
+      contacts: 'Contatos',
+      chooseBirthday: 'Escolher aniversário',
+      chooseGender: 'Escolher gênero：',
+      nextStep: 'Próximo passo',
+      female: 'Feminino',
+      male: 'Masculino',
+      completeInfo: 'Por favor, complete as informações',
+      year: ' ano',
+      month: ' mês',
+      day: ' dia',
+      loveAdvice: 'Conselhos de amor',
+      precautions: 'Precauções',
+      fateAnalysis: 'Análise do destino'
   }
 }
 

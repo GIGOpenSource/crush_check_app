@@ -17,10 +17,10 @@
           <view class="profile-info">
             <input class="nickname-input" type="nickname" :value="userInfo.username || ''"
               :placeholder="$t('my.nickname')" @blur="onNicknameBlur" @confirm="onNicknameConfirm" />
-            <view class="gender-section">
-              <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
+            <view class="gender-section" @click="updataXingzuo">
+              <!-- <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
                 :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')" @change="handleGenderChange"
-                @tap.stop @click.stop>
+                @tap.stop @click.stop> -->
                 <view class="gender-picker">
                   <text class="gender-text">{{
                     userInfo.user_gender !== null &&
@@ -29,7 +29,10 @@
                       : $t('my.selectGender')
                   }}</text>
                 </view>
-              </picker>
+              <!-- </picker> -->
+               <text
+                :class="{ 'xingzuo1': userInfo.star_sign_info?.id, 'xingzuo2': !userInfo.star_sign_info?.id }">{{
+                 userInfo.star_sign_info?.sun_sign ? userInfo.star_sign_info.sun_sign : $t('start.chooseYourConstellation')}}</text>
             </view>
             <view>
               <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
@@ -225,6 +228,11 @@
       </scroll-view>
     </view>
   </up-popup>
+<up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
+    <block v-if="show">
+      <ConsrProup @submit="step" :btnText="$t('common.save')" :data1="xingzuodata"></ConsrProup>
+    </block>
+  </up-popup>
 </template>
 
 <script>
@@ -246,6 +254,9 @@ import InvitationFriend from '@/components/InvitationFriend/InvitationFriend.vue
 import { t } from '@/i18n/index.js';
 import { ref } from 'vue'
 import { host } from '@/config/config.js'
+import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
+import { parseUTCToDateTime, convertUTCToTimestamp, timestampToIsoUtc } from '@/utils/utctTime.js'
+import { create } from '@/api/constellation.js'
 export default {
   components: {
     IndexProup,
@@ -254,6 +265,10 @@ export default {
   mixins: [pageStayMixin],
   data() {
     return {
+      show: false,
+      xingzuodata: {},
+       latitude: '39.90667',
+      longitude: '116.39750',
       choose2: false,
       mouth: {},
       viplist: [
@@ -417,6 +432,49 @@ export default {
   },
   // #endif
   methods: {
+       //修改星座
+    updataXingzuo() {
+      uni.getLocation({
+        type: 'wgs84',
+        altitude: false,
+        success: (res) => {
+          console.log(res, 'rr111')
+          this.latitude = res.latitude
+          this.longitude = res.longitude
+          this.show = true
+
+        },
+        fail: (err) =>{
+          uni.showToast({
+            title: this.$t('start.getLocationFail'),
+            icon: 'none'
+          });
+        }
+      });
+      this.xingzuodata = {
+        user_gender: this.userInfo.user_gender,
+        data_of_birth_time: parseUTCToDateTime(this.userInfo.star_sign_info?.data_of_birth_time),
+        time: convertUTCToTimestamp(this.userInfo.star_sign_info?.data_of_birth_time),
+      }
+
+    },
+    step(params) {
+      this.show = false
+      params.latitude = this.latitude
+      params.longitude = this.longitude
+      params.data_of_birth_time = timestampToIsoUtc(params.time)
+      delete params.time
+      create(params).then(res => {
+        getUserInfo(uni.getStorageSync('openId')).then(result => {
+          this.userInfo = result.data
+          uni.setStorageSync('userInfo', JSON.stringify(result.data))
+        })
+      })
+      .catch(err => {
+        this.show = false
+      })
+
+    },
     closeom() {
       this.vipProup = false
     },
@@ -1482,6 +1540,26 @@ page {
 </style>
 
 <style scoped lang="scss">
+.xingzuo1 {
+  background: linear-gradient(111deg, #9159E1 34%, #C7AFFD 108%);
+  color: #fff;
+  padding: 2rpx 15rpx;
+  border-radius: 15rpx;
+  padding-bottom: 5rpx;
+  font-size: 24rpx;
+}
+
+.xingzuo2 {
+  background: #EEEEEE;
+  color: #fff;
+  padding: 2rpx 15rpx;
+  border-radius: 15rpx;
+  padding-bottom: 5rpx;
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 8rpx;
+}
+
 .radio2 {
   margin-top: 30rpx;
   font-size: 24rpx;
