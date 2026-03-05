@@ -14,7 +14,7 @@
       || '选择生日' }}</view>
     <!-- <view class="birth">选择出生地</view> -->
     <view class="birth step" :class="{ 'status': status }" @click="submit">{{ btnText }}</view>
-    <up-datetime-picker :show="show" v-model="value1" mode="datetime" :maxDate="maxDate" @confirm="confirm"
+    <up-datetime-picker :show="show" v-model="params.time" mode="datetime" :maxDate="maxDate" @confirm="confirm"
       @cancel="show = false" :minDate="minDate"></up-datetime-picker>
   </view>
 </template>
@@ -28,10 +28,15 @@ const props = defineProps({
   btnText:{
     type:String,
     default: '下一步'
+  },
+  data1:{
+    type:Object,
+    default:()=>({})
   }
 })
 const emits = defineEmits(["submit"])
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed,onMounted } from 'vue'
+
 const sex = [{
   name: '女生',
   images: 'constellation/girl',
@@ -47,15 +52,13 @@ const params = reactive(
   {
     user_gender: -1,
     data_of_birth_time: '',
-    time:'' //时间戳
+    time:Date.now() //时间戳
   })
 const show = ref(false);
-const value1 = ref(Date.now());
 const maxDate = ref(Date.now()) //最大时间
 const minDate = -315648000000
 //选择时间
 const confirm = (e) => {
-  value1.value = e.value
   params.data_of_birth_time = gettime(e.value)
   params.time = e.value
   show.value = false
@@ -91,6 +94,13 @@ const submit = () => {
   })
   emits("submit", params);
 }
+
+onMounted(() => {
+   console.log("onMounted触发了：", props.data1); // 先确认是否执行
+  if(props.data1?.user_gender){
+   Object.assign(params, props.data1);
+  }
+})
 </script>
 
 <style lang="scss" scoped>

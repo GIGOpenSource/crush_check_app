@@ -20,7 +20,7 @@
         </view>
         <view class="content">
             <view class="input"><input type="text" v-model="params.nickname" :placeholder="t('loveCourt.placeholderNickname')"
-                    placeholder-style="color:#ffffff;"></view>
+                    placeholder-style="color:#ffffff;" maxlength="6"></view>
             <view>
                 <textarea v-model="params.event_description" :placeholder="t('loveCourt.placeholderEvent')"
                     placeholder-style="color:#ffffff;"  auto-height maxlength="1000"></textarea>
@@ -77,7 +77,7 @@
     <up-popup :show="invite" @close="invite = false" @open="invite = true" mode="center">
         <view class="tishi tishi1">
             <view>{{ t('loveCourt.inviteMessageTitle') }}</view>
-            <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word"></textarea>
+            <textarea :placeholder="t('loveCourt.invitePlaceholder')" v-model="params.send_word" maxlength="300"></textarea>
             <view class="btn">
                 <button open-type="share" hover-class="none">{{ t('loveCourt.goInvite') }}</button>
             </view>

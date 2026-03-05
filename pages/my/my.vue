@@ -18,23 +18,25 @@
           <view class="profile-info">
             <input class="nickname-input" type="nickname" :value="userInfo.username || ''"
               :placeholder="$t('my.nickname')" @blur="onNicknameBlur" @confirm="onNicknameConfirm" />
-            <view class="gender-section">
-              <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
+            <view class="gender-section" @click="updataXingzuo">
+              <!-- <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
                 :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')"
-                @change="handleGenderChange" @tap.stop @click.stop>
-                <view class="gender-picker">
-                  <text class="gender-text">{{
-                    userInfo.user_gender !== null &&
-                      userInfo.user_gender !== undefined
-                      ? getGenderText(userInfo.user_gender)
-                      : $t('my.selectGender')
-                  }}</text>
-                </view>
-              </picker>
-               <text class="xingzuo" v-if="userInfo.star_sign_info?.sun_sign">{{ userInfo.star_sign_info?.sun_sign }}</text>
+                @change="handleGenderChange" @tap.stop @click.stop> -->
+              <view class="gender-picker">
+                <text class="gender-text">{{
+                  userInfo.user_gender !== null &&
+                    userInfo.user_gender !== undefined
+                    ? getGenderText(userInfo.user_gender)
+                    : $t('my.selectGender')
+                }}</text>
+              </view>
+              <!-- </picker> -->
+              <text
+                :class="{ 'xingzuo1': userInfo.star_sign_info?.sun_sign, 'xingzuo2': !userInfo.star_sign_info?.sun_sign }">{{
+                  userInfo.star_sign_info?.sun_sign }}</text>
             </view>
             <view>
-                <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
+              <text class="profile-id" v-if="isLoggedIn && userInfo.id">ID: {{ userInfo.id }}</text>
             </view>
           </view>
         </template>
@@ -72,7 +74,8 @@
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
         <text class="invite-subtitle">{{ inviteProgressText }}</text>
       </view>
-      <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''" @click="handleInviteClick">
+      <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''"
+        @click="handleInviteClick">
         {{ $t('my.invite') }}
       </button>
     </view>
@@ -121,8 +124,8 @@
       <view class="functions-card">
         <view class="function-list">
           <template v-for="(item, index) in functionList" :key="index">
-            <button v-if="item.type === 'share'" class="function-item share-button" :open-type="isLoggedIn ? 'share' : ''" hover-class="none"
-              @click="ensureShare">
+            <button v-if="item.type === 'share'" class="function-item share-button"
+              :open-type="isLoggedIn ? 'share' : ''" hover-class="none" @click="ensureShare">
               <text class="function-text">{{ item.label }}</text>
               <text class="arrow-icon">›</text>
             </button>
@@ -196,6 +199,11 @@
       <view class="qr-code-popup-close" @click="saveQrCodeToAlbum">{{ $t('my.saveToAlbum') }}</view>
     </view>
   </up-popup>
+  <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
+    <block v-if="show">
+      <ConsrProup @submit="step" btnText="保存" :data1="xingzuodata"></ConsrProup>
+    </block>
+  </up-popup>
 </template>
 
 <script>
@@ -213,7 +221,9 @@ import { trackUmengEvent } from "@/utils/umeng.js";
 import { pageStayMixin } from "@/utils/pageStayMixin.js";
 import IndexProup from '@/components/IndexProup/IndexProup.vue';
 import { t } from '@/i18n/index.js';
-
+import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
+import { parseUTCToDateTime, convertUTCToTimestamp, timestampToIsoUtc } from '@/utils/utctTime.js'
+import { create } from '@/api/constellation.js'
 export default {
   components: {
     IndexProup
@@ -221,6 +231,8 @@ export default {
   mixins: [pageStayMixin],
   data() {
     return {
+      show: false,
+      xingzuodata: {},
       pageName: '',
       isLoggedIn: false,
       userInfo: {
@@ -252,13 +264,15 @@ export default {
       showProgress: false, // 显示进度条弹窗
       progress: 0, // 进度百分比
       progressTimer: null, // 进度条定时器
+      latitude: '39.90667',
+      longitude: '116.39750'
     };
   },
   onLoad() {
-   
+
   },
   onShow() {
-     this.functionList = [
+    this.functionList = [
       { label: this.$t('my.rechargeHistory'), type: "recharge", url: "/pages/my/recharge" },
       { label: this.$t('my.share'), type: "share" },
       { label: this.$t('my.settings'), type: "settings" },
@@ -344,15 +358,58 @@ export default {
   onShareAppMessage(res) {
     const inviterOpenId =
       this.userInfo.open_id || uni.getStorageSync("openId") || "";
-      const query = `?scene=${inviterOpenId}`
-   return {
-		title: t('index.shareTitle'), // 分享标题
-		path: `/pages/index/index${query}`, // 分享路径携带个人ID
-		imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
-	};
+    const query = `?scene=${inviterOpenId}`
+    return {
+      title: t('index.shareTitle'), // 分享标题
+      path: `/pages/index/index${query}`, // 分享路径携带个人ID
+      imageUrl: "/static/index/yq.png", // 分享图片，不设置则使用默认截图
+    };
   },
   // #endif
   methods: {
+    //修改星座
+    updataXingzuo() {
+      uni.getLocation({
+        type: 'wgs84',
+        altitude: false,
+        success: (res) => {
+          console.log(res, 'rr')
+          this.latitude = res.latitude
+          this.longitude = res.longitude
+          this.show = true
+
+        },
+        fail: function (err) {
+          uni.showToast({
+            title: '获取位置失败',
+            icon: 'none'
+          });
+        }
+      });
+      this.xingzuodata = {
+        user_gender: this.userInfo.user_gender,
+        data_of_birth_time: parseUTCToDateTime(this.userInfo.star_sign_info?.data_of_birth_time),
+        time: convertUTCToTimestamp(this.userInfo.star_sign_info?.data_of_birth_time),
+      }
+
+    },
+    step(params) {
+      params.latitude = this.latitude
+      params.longitude = this.longitude
+      params.data_of_birth_time = timestampToIsoUtc(params.time)
+      delete params.time
+      create(params).then(res => {
+        this.show = false
+        getUserInfo(uni.getStorageSync('openId')).then(result => {
+          this.userInfo = result.data
+          uni.setStorageSync('userInfo', JSON.stringify(result.data))
+        })
+      })
+      .catch(err => {
+        this.show = false
+      })
+
+    },
     checkLoginStatus() {
       // 检查是否有token来判断登录状态
       const token = uni.getStorageSync("token");
@@ -517,9 +574,9 @@ export default {
 
       if (!this.isLoggedIn) {
         // 跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
       } else {
         // 可以跳转到个人资料编辑页面
         // uni.navigateTo({
@@ -531,9 +588,9 @@ export default {
       // 处理解锁按钮点击
       if (!this.isLoggedIn) {
         // 未登录，跳转到登录页面
-       uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
         return;
       }
 
@@ -548,7 +605,7 @@ export default {
           const vipProduct = results.find(
             (product) => product.product_type === "vip"
           );
-          console.log(vipProduct,'vipProductvipProduct')
+          console.log(vipProduct, 'vipProductvipProduct')
 
           if (vipProduct) {
             console.log("找到VIP产品:", vipProduct);
@@ -717,7 +774,7 @@ export default {
     handleHistoryClick() {
       // 处理历史海报点击
       console.log("查看历史海报");
-      
+
       // 检查登录状态，如果未登录则跳转到登录页面
       if (!this.isLoggedIn) {
         uni.navigateTo({
@@ -725,7 +782,7 @@ export default {
         });
         return;
       }
-      
+
       uni.navigateTo({
         url: "/pages/my/poster",
       });
@@ -758,7 +815,7 @@ export default {
         });
         return;
       }
-      
+
       // 如果状态是已完成，跳转到详情页
       if (item.status === "done") {
         if (item.id) {
@@ -826,7 +883,7 @@ export default {
     handleFunctionClick(item) {
       // 处理功能项点击
       console.log("点击功能:", item);
-      
+
       switch (item.type) {
         case "language":
           // 跳转到语言设置页面（不需要登录）
@@ -886,7 +943,7 @@ export default {
         });
         return;
       }
-      
+
       // 调用友盟统计事件
       trackUmengEvent("click_invite", {
         userId: this.userInfo?.id || "",
@@ -925,9 +982,9 @@ export default {
       });
 
       if (!this.isLoggedIn) {
-      uni.navigateTo({
-					url: "/pages/login/login"
-				})
+        uni.navigateTo({
+          url: "/pages/login/login"
+        })
         return;
       }
       // #ifdef MP-WEIXIN
@@ -1419,13 +1476,14 @@ export default {
 page {
   background: #12111f !important;
 }
-.u-safe-bottom{
-		height: 0 !important;
-	}
+
+.u-safe-bottom {
+  height: 0 !important;
+}
 </style>
 
 <style scoped lang="scss">
-.xingzuo{
+.xingzuo1 {
   background: linear-gradient(111deg, #9159E1 34%, #C7AFFD 108%);
   color: #fff;
   padding: 2rpx 15rpx;
@@ -1433,6 +1491,17 @@ page {
   padding-bottom: 5rpx;
   font-size: 24rpx;
 }
+
+.xingzuo2 {
+  background: #EEEEEE;
+  color: #fff;
+  padding: 2rpx 15rpx;
+  border-radius: 15rpx;
+  padding-bottom: 5rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
 .my-page {
   min-height: 100vh;
   padding: 48rpx 30rpx 60rpx;
@@ -1607,7 +1676,7 @@ page {
 }
 
 .vip-title-icon {
-width: 44rpx;
+  width: 44rpx;
   height: 36rpx;
   margin-left: 20rpx;
 }
@@ -2146,7 +2215,7 @@ width: 44rpx;
   color: #a0a0a0;
   margin-top: 15rpx;
   width: 90%;
-		text-align: center;
+  text-align: center;
 }
 
 .qr-code-popup {

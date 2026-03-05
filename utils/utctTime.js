@@ -11,3 +11,17 @@ export const timestampToIsoUtc = (timestamp, customMs = 988) => {
     return '';
   }
 };
+
+export const parseUTCToDateTime = (utcStr) => {
+    if (!utcStr) return '';
+  const date = new Date(utcStr);
+  const pad = (num) => num.toString().padStart(2, '0');
+  return `${date.getUTCFullYear()}年${pad(date.getUTCMonth() + 1)}月${pad(date.getUTCDate())}日 ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+};
+
+export const convertUTCToTimestamp = (utcStr) => {
+ if (!utcStr) return { seconds: '', milliseconds: '' };
+      const date = new Date(utcStr);
+      const milliseconds = date.getTime();
+      return milliseconds
+};
