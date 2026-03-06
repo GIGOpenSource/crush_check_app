@@ -1,6 +1,6 @@
 <template>
     <view class="page">
-        <view class="top">
+        <view class="top" v-if="version == 1">
             <view class="title">
                 <view class="titleleft" @click="tiaozhuan">
                     <text>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</text>
