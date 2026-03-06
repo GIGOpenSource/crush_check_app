@@ -197,7 +197,7 @@
 						"enablePullDownRefresh": false,
 						"disableScroll": false
 					}
-				},,{
+				},{
 					"path": "constellation/index",
 					"style": {
 						"navigationBarTitleText": "CrushCheck",

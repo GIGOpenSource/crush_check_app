@@ -31,20 +31,20 @@ onLoad(() => {
 });
 
 const getLocationFn = () =>{
-  uni.getLocation({
-    type: 'wgs84',
-    altitude: false,
-    success:  (res) =>{
-      latitude.value = res.latitude
-      longitude.value = res.longitude
-    },
-    fail: function (err) {
-      uni.showToast({
-       title: t('start.getLocationFail'),
-        icon: 'none'
-      });
-    }
-  });
+  // uni.getLocation({
+  //   type: 'wgs84',
+  //   altitude: false,
+  //   success:  (res) =>{
+  //     latitude.value = res.latitude
+  //     longitude.value = res.longitude
+  //   },
+  //   fail: function (err) {
+  //     uni.showToast({
+  //      title: t('start.getLocationFail'),
+  //       icon: 'none'
+  //     });
+  //   }
+  // });
 }
 //提交 
 const step = (params) => {
@@ -65,6 +65,9 @@ const step = (params) => {
 <style lang="scss" scoped>
 .page {
   position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .banner {
