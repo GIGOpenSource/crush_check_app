@@ -167,8 +167,10 @@ const tiaozhuan = () => {
     })
 }
 onShow(() => { 
-//    let file = await localPathToFile('_doc/uniapp_temp_1773033339729/canvas/17730340254541.jpg')
-//     console.log('转换后的File对象：', file);
+       //开关
+    getSystemContent().then(res => {
+        version.value = res.data[0].version
+    })
     processlist.value = [
         { percent: 0, name: t('start.love') },    // 爱情 → 国际化
         { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
@@ -182,10 +184,6 @@ onShow(() => {
     getUserInfo(uni.getStorageSync('openId')).then(res => {
         userinfo.value = res.data
         uni.setStorageSync('userInfo', JSON.stringify(res.data))
-    })
-    //开关
-    getSystemContent().then(res => {
-        version.value = res.data[0].version
     })
 })
 onLoad((e) => {
