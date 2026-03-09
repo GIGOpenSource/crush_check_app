@@ -13,10 +13,18 @@ export const timestampToIsoUtc = (timestamp, customMs = 988) => {
 };
 
 export const parseUTCToDateTime = (utcStr) => {
-    if (!utcStr) return '';
-  const date = new Date(utcStr);
-  const pad = (num) => num.toString().padStart(2, '0');
-  return `${date.getUTCFullYear()}${t('start.year')}${pad(date.getUTCMonth() + 1)}${t('start.month')}${pad(date.getUTCDate())}${t('start.day')} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+  if (!utcStr) return '';
+  try {
+    const date = new Date(utcStr);
+    const milliseconds = date.getTime();
+    if (isNaN(milliseconds)) return '';
+    const localDate = new Date(milliseconds);
+    const pad = (num) => num.toString().padStart(2, '0');
+    return `${localDate.getFullYear()}${t('start.year')}${pad(localDate.getMonth() + 1)}${t('start.month')}${pad(localDate.getDate())}${t('start.day')} ${pad(localDate.getHours())}:${pad(localDate.getMinutes())}`;
+  } catch (error) {
+    console.error('UTC解析失败：', error);
+    return '';
+  }
 };
 
 export const convertUTCToTimestamp = (utcStr) => {

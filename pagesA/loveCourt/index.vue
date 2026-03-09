@@ -745,10 +745,12 @@ const del = () => {
         text-align: center;
         font-size: 32rpx;
         font-weight: 500;
+        overflow: hidden;
 
         button {
             background: transparent;
             color: #FFF;
+            border: none !important;
         }
     }
 

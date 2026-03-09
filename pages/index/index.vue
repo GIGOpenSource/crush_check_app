@@ -166,6 +166,10 @@ const tiaozhuan = () => {
 }
 
 onShow(() => {
+      //开关
+    getSystemContent().then(res => {
+        version.value = res.data[0].version
+    })
     processlist.value = [
         { percent: 0, name: t('start.love') },    // 爱情 → 国际化
         { percent: 0, name: t('start.wealth') },  // 财富 → 国际化
@@ -185,10 +189,7 @@ onShow(() => {
         userinfo.value = res.data
         uni.setStorageSync('userInfo', JSON.stringify(res.data))
     })
-    //开关
-    getSystemContent().then(res => {
-        version.value = res.data[0].version
-    })
+  
 })
 onLoad((e) => {
     if (e.scene) {
