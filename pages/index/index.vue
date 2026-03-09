@@ -179,6 +179,7 @@ onShow(() => {
         { percent: 0, name: t('start.contacts') } // 人脉 → 国际化
     ]
     getlist()
+    console.log(11)
     if (!uni.getStorageSync('token')) return
     getDaily()
     getUserInfo(uni.getStorageSync('openId')).then(res => {
