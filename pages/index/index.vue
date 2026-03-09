@@ -1,8 +1,11 @@
 <template>
     <view class="page">
         <view class="top">
-            <view class="title">
-                <view>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</view>
+             <view class="title">
+                <view class="titleleft" @click="tiaozhuan">
+                    <text>{{ t('start.myConstellation') }}{{ info.star_sign || '--' }}</text>
+                    <image :src="$getImg('constellation/back')" v-if="info.star_sign" />
+                </view>
                 <view class="choose" @click="choose">
                     {{ info.star_sign == '' ? t('start.chooseYourConstellation') : t('start.chooseHisConstellation') }}
                     <text>{{ '>' }}</text>
@@ -225,6 +228,17 @@ onLoad((e) => {
                 margin-left: 5rpx;
             }
         }
+
+        .titleleft {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    image {
+        width: 35rpx;
+        height: 35rpx;
+        margin-left: 10rpx;
     }
 
     .totay {
