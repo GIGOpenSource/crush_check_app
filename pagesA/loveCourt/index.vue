@@ -748,7 +748,7 @@ const del = () => {
         overflow: hidden;
 
         button {
-            background: transparent;////
+            background: transparent;////////
             color: #FFF;
             border: none !important;
         }
