@@ -456,6 +456,7 @@ export default {
         data_of_birth_time: parseUTCToDateTime(this.userInfo.star_sign_info?.data_of_birth_time),
         time: convertUTCToTimestamp(this.userInfo.star_sign_info?.data_of_birth_time),
       }
+      console.log('this.xingzuodata',this.xingzuodata)
 
     },
     step(params) {
@@ -464,6 +465,7 @@ export default {
       params.longitude = this.longitude
       params.data_of_birth_time = timestampToIsoUtc(params.time)
       delete params.time
+      console.log('para,s',params)
       create(params).then(res => {
         getUserInfo(uni.getStorageSync('openId')).then(result => {
           this.userInfo = result.data
