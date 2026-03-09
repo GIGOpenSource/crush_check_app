@@ -156,7 +156,13 @@ const getlist = () => {
         tarbarlist.value = res.data.results
     })
 }
-
+const tiaozhuan = () => {
+    if (!uni.getStorageSync('token')) return
+    if (!info.value.star_sign) return
+    uni.redirectTo({
+        url: '/pagesA/constellation/join'
+    })
+}
 onShow(() => {
     processlist.value = [
         { percent: 0, name: t('start.love') },    // 爱情 → 国际化

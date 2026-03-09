@@ -1547,6 +1547,7 @@ page {
   border-radius: 15rpx;
   padding-bottom: 5rpx;
   font-size: 24rpx;
+  margin-left: 8rpx;
 }
 
 .xingzuo2 {
