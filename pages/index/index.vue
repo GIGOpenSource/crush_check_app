@@ -39,6 +39,7 @@
                 </view>
             </block>
         </view>
+        <!-- <tarbar></tarbar> -->
     </view>
     <up-popup :show="show" mode="bottom" @close="show = false" @open="show = true">
         <ConsrProup :title="t('start.inputHisInfo')" :btnText="t('start.testMatchDegree')" @submit="step"></ConsrProup>
@@ -53,6 +54,7 @@ import ConsrProup from '@/components/ConsrProup/ConsrProup.vue'
 import { timestampToIsoUtc } from '@/utils/utctTime.js'
 import { getUserInfo, getSystemContent } from "@/api/login.js";
 import { signlist } from '@/api/constellation.js'
+import tarbar from '@/components/tarbar/tarbar.vue'
 import {
     share
 } from '@/api/index.js'
