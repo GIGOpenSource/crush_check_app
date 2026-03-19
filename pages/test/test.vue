@@ -106,7 +106,7 @@
                             <view class="details" style="margin-top: 20rpx;"
                                 v-if="item.prompt_template.template_type == 'answer'">
                                 <text style="font-weight: 100;">{{ $t('poster.answerLabel') }}</text>
-                                "{{ item.mbti_list[0] || $t('poster.defaultAnswer') }}"
+                                "{{ item.content || $t('poster.defaultAnswer') }}"
                                 <text v-if="isType" class="look">{{ $t('poster.viewAnswer') }} {{ '>>' }}</text>
                             </view>
                             <view class="details" style="margin-top: 20rpx;" v-else>
