@@ -176,7 +176,7 @@ export default {
     unlockVip: '無制限プレミアムレポートのロック解除',
     reportRemaining: '残りのレポート',
     unlimited: '無制限',
-    inviteTitle: '新しい友達を招待してプレミアムレポートを1つロック解除',
+    inviteTitle: '友達 1 人を招待して MBTI プロフェッショナル版をアンロック',
     invite: '招待',
     inviteProgress: '招待済み',
     inviteProgressUnit: '人',
