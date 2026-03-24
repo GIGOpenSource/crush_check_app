@@ -75,11 +75,11 @@
 
 
 				</view>
-				<view class="notice" v-if="!flag">
+				<view class="notice" v-if="!flag" style="width:600rpx;">
 					<view class="title">{{ $t('index.selectCorrectType') }}</view>
 					<!-- <view class="con">{{ $t('index.fileTypeTip1') }}</view> -->
-					<view class="con">{{ $t('index.fileTypeTip1') }}</view>
-					<view class="con">{{ $t('index.fileTypeTip2') }}</view>
+					<view class="con" style="font-size: 26rpx;line-height: 45rpx">{{ $t('index.fileTypeTip1') }}</view>
+					<view class="con" style="font-size: 26rpx;line-height: 45rpx">{{ $t('index.fileTypeTip2') }}</view>
 					<!-- <view class="con">{{ $t('index.fileTypeTip4') }}</view> -->
 					<view class="btn" @click="show = false">{{ $t('index.iKnow') }}</view>
 				</view>

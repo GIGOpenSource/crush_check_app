@@ -72,7 +72,11 @@
       <image class="invite-icon" :src="$getImg('my/yaoqing')" mode="aspectFit"></image>
       <view class="invite-info">
         <text class="invite-title">{{ $t('my.inviteTitle') }}</text>
-        <text class="invite-subtitle">{{ inviteProgressText }}</text>
+        <text class="invite-subtitle">
+        {{ inviteProgressText }} 
+        <!-- 已邀请X人，可使用X次报告 -->
+        
+        </text>
       </view>
       <button class="invite-action" hover-class="none" :open-type="isLoggedIn ? 'share' : ''"
         @click="handleInviteClick">
@@ -339,7 +343,7 @@ export default {
     inviteProgressText() {
       const invited = Number(this.userInfo.share_success_count || 0);
       const safeInvited = Number.isNaN(invited) ? 0 : invited;
-      return `${this.$t('my.inviteProgress')}${safeInvited}${this.$t('my.inviteProgressUnit')}`;
+      return `${this.$t('my.inviteProgress')}${safeInvited}${this.$t('my.inviteProgressUnit')}，${this.$t('my.usered')}${safeInvited}${this.$t('my.report')}`;
     },
     rewardPopupMainText() {
       const count = Math.max(Number(this.userInfo.allow_count) || 0, 0);
