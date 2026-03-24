@@ -404,7 +404,7 @@ export default {
     inviteProgressText() {
       const invited = Number(this.userInfo.share_success_count || 0);
       const safeInvited = Number.isNaN(invited) ? 0 : invited;
-      return `${this.$t('my.inviteProgress')}${safeInvited}${this.$t('my.inviteProgressUnit')}`;
+       return `${this.$t('my.inviteProgress')}${safeInvited}${this.$t('my.inviteProgressUnit')}，${this.$t('my.usered')}${safeInvited}${this.$t('my.report')}`;
     },
     rewardPopupMainText() {
       const count = Math.max(Number(this.userInfo.allow_count) || 0, 0);
