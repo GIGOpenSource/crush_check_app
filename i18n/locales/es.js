@@ -178,7 +178,7 @@ export default {
     unlockVip: 'Desbloquear Informes Premium Ilimitados',
     reportRemaining: 'Informes Restantes',
     unlimited: 'Ilimitado',
-    inviteTitle: 'Invita a Nuevos Amigos para Desbloquear un Informe Premium',
+    inviteTitle: 'Invita a 1 amigo para desbloquear la versión profesional de MBTI',
     invite: 'Invitar',
     inviteProgress: 'Invitados',
     inviteProgressUnit: 'personas',

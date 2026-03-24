@@ -188,7 +188,7 @@ export default {
     unlockVip: '무제한 프리미엄 보고서 잠금 해제',
     reportRemaining: '남은 보고서',
     unlimited: '무제한',
-    inviteTitle: '새 친구를 초대하여 프리미엄 보고서 1개 잠금 해제',
+    inviteTitle: '친구 1명 초대하여 MBTI 프로페셔널 버전 잠금 해제',
     invite: '초대',
     inviteProgress: '초대됨',
     inviteProgressUnit: '명',

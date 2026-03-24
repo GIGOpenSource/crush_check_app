@@ -189,7 +189,7 @@ export default {
     unlockVip: '解锁无限高级报告',
     reportRemaining: '报告剩余次数',
     unlimited: '无限',
-    inviteTitle: '邀请新伙伴解锁一次高级报告',
+    inviteTitle: '邀1位好友解锁 MBTI专业版',
     invite: '邀请',
     inviteProgress: '已邀请',
     inviteProgressUnit: '人',
