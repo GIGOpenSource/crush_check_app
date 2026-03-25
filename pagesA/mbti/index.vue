@@ -22,6 +22,12 @@
             </view>
         </view>
     </view>
+    <!-- 加入测试 -->
+    <image
+        :src="$getImg('again/join')"
+        mode="scaleToFill"
+        class="join"
+    />
     <!-- 选择测试弹窗 -->
     <IndexProup :show="ceshiproup" @close="ceshiproup = false">
         <template #content>
@@ -73,6 +79,7 @@
             </view>
         </view>
     </up-popup>
+
 </template>
 
 <script setup>
@@ -385,7 +392,13 @@ rich-text {
     font-weight: 300;
     overflow-y: scroll;
 }
-
+.join{
+   position: absolute;
+   right: 40rpx;
+   top: 40%;
+   width: 140rpx;
+   height: 140rpx;
+}
 .titlecon {
     display: flex;
     flex-direction: column;
