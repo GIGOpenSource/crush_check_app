@@ -85,7 +85,7 @@
         </view>
         <view class="bottom">
             <view class="t1">{{ t('tarot_draw_prompt') }}</view>
-            <view class="card-stack-container">
+            <view class="card-stack-container" @touchstart="onTouchStart" @touchmove="onTouchMove"  @touchend="onTouchEnd">
                 <view class="card-item" v-for="(item, index) in list" :key="index" :style="cardStyle(index)"
                     @click="choose(index)" :class="{ 'card-hidden': item.isSelected }">
                     <view class="img-box">
@@ -234,24 +234,58 @@ const cardRect = computed(() => {
     return { cardWidth, overlap }
 })
 
-// 计算卡牌样式
-function cardStyle(index) {
-    const { cardWidth, overlap } = cardRect.value
-    const dist = Math.abs(index - TOP_INDEX)
-    const scaleY = 1 - dist * 0.04
-    const isDown = index > TOP_INDEX
-    const yOffset = isDown ? (index - TOP_INDEX) * 10 : 0
-    const x = index == 0 ? 0 : index * (cardWidth - overlap)
+// 滑动角度（核心：转动扇形）
+const rotateOffset = ref(0)
+let startX = 0
 
-    return {
-        width: `${cardWidth}rpx`,
-        left: `${x}rpx`,
-        top: isDown ? `${yOffset}rpx` : '0',
-        bottom: isDown ? 'auto' : '0',
-        transform: `scaleY(${scaleY})`,
-        transformOrigin: isDown ? 'top center' : 'bottom center',
-        zIndex: index
-    }
+// 新的弧形扇形配置（适配第二张图效果）
+const config = {
+     cardWidth: 150,       // 超级窄，只露一点点边
+  cardHeight: 260,
+  totalCards:20,
+  arcRadius: 200,      // 半径超级小，牌挤在一起
+   startAngle: -45,  // 从 -22 改到 -35，增大左侧角度
+  endAngle:70,      // 从 22 改到 35，增大右侧角度
+}
+
+// ✅ 关键：弧形扇形计算（极坐标定位）
+function cardStyle(index) {
+  // 计算每张牌在弧形上的角度
+  const angleStep = (config.endAngle - config.startAngle) / (config.totalCards - 1)
+  const baseAngle = config.startAngle + index * angleStep
+  const realAngle = baseAngle + rotateOffset.value // 加上滑动偏移
+
+  // 极坐标转笛卡尔坐标（计算x,y位置）
+  const radian = (realAngle * Math.PI) / 180
+  const x = config.arcRadius * Math.sin(radian) // 水平位置
+  const y = config.arcRadius * (1 - Math.cos(radian)) // 垂直位置（让牌底部对齐）
+
+  return {
+    width: `${config.cardWidth}rpx`,
+    height: `${config.cardHeight}rpx`,
+    // 弧形定位 + 自身旋转（让牌面沿弧形切线方向）
+    transform: `translate(${x}rpx, ${y}rpx) rotate(${realAngle}deg)`,
+    transformOrigin: 'bottom center', // 固定底部旋转
+    transition: 'transform 0.3s ease-out',
+    zIndex: 100, // 中间牌层级最高
+    left: '50%', // 容器水平居中
+    marginLeft: `-${config.cardWidth/2}rpx`, // 居中修正
+  }
+}
+
+// 滑动控制（保持原有逻辑，仅调整灵敏度）
+function onTouchStart(e) {
+  startX = e.touches[0].clientX
+}
+
+function onTouchMove(e) {
+  const moveX = e.touches[0].clientX
+  const diff = startX - moveX
+  rotateOffset.value = -diff * 0.12 // 稍提高灵敏度
+}
+
+function onTouchEnd() {
+  rotateOffset.value = Math.round(rotateOffset.value / 5) * 5 // 吸附感调整
 }
 
 
@@ -268,7 +302,8 @@ function cardStyle(index) {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 300; //
+    font-weight: 300; 
+    overflow: hidden;
 }
 
 .title {
@@ -409,12 +444,12 @@ function cardStyle(index) {
 
 
 .bottom {
-    position: fixed;
-    left: -10rpx;
-    bottom: -260rpx;
+    position: absolute;
+    left: 20rpx;
+    bottom: 0rpx;
     width: 100%;
-    height: 600rpx;
     font-size: 22rpx;
+
 
     .t1 {
         text-align: center;
@@ -424,32 +459,38 @@ function cardStyle(index) {
         color: rgba(255, 255, 255, 0.52);
     }
 
-    .card-stack-container {
-        position: relative;
-        width: 750rpx;
-        height: 100%;
-        margin: 50rpx auto;
-
-        .card-item {
-            position: absolute;
-            top: 0;
-            height: 280rpx;
-            border-radius: 6rpx;
-
-            .img-box {
-                width: 150rpx;
-                height: 100%;
-
-                .card-img {
-                    width: 110%;
-                    height: 100%;
-                }
-            }
-
-        }
-    }
+      .card-stack-container {
+  position: relative;
+  width: 750rpx;
+  height: 320rpx;
+  margin: 40rpx auto;
+  overflow: visible;
 }
 
+.card-item {
+  position: absolute;
+  top: 0;
+  height: 280rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3); /* 增强立体感 */
+  transform-origin: bottom center;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: transform; /* GPU加速，更丝滑 */
+}
+
+.img-box {
+  width: 150rpx;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12rpx;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+}
 .card-hidden {
     opacity: 0;
     pointer-events: none;
