@@ -25,7 +25,7 @@
                         <text>{{ item }}</text>
                     </view>
                 </view>
-                <view class="btn">立即升级</view>
+                <view class="btn" @click="path">立即升级</view>
                 <view class="title">邀请1人解锁本次</view>
             </view>
             <view class="icon" @click="handleClose"> <up-icon name="close-circle" color="#ffffff" size="30"></up-icon></view>
@@ -51,6 +51,9 @@ const handleClose = () => {
     emits("update:show", false);
 }
 const list = ['鉴渣', '爱的裁判所', 'MBTI', '塔罗牌', '答案之书']
+const path = () => {
+    uni.navigateTo({ url: '/pagesA/vip/index' })
+}
 </script>
 
 <style lang="scss" scoped>

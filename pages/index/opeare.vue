@@ -145,7 +145,7 @@
 							<text>{{ item }}</text>
 						</view>
 					</view>
-					<view class="bottom" @click="pay">{{ mouth.price }}{{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view>
+					<!-- <view class="bottom" @click="pay">{{ mouth.price }}{{ $t('index.perMonth') }} {{ $t('index.openNow') }}</view> -->
 				</view>
 			</view>
 		</up-popup>
@@ -409,7 +409,7 @@ const handleInviteClick = () => {
 }
 const vipprice = () => {
 	getProducts('vip').then(res => {
-		mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+		mouth.value = res.data.results[0]
 		console.log(mouth.value, 'mouthmouth')
 	})
 }
@@ -627,9 +627,12 @@ const updateImages = () => {
 							file_name: filePath,
 						},
 						success: (uploadFileRes) => {
+							console.log(uploadFileRes,'uploadFileResuploadFileRes')
 							try {
 								let images = JSON.parse(uploadFileRes.data).data.url
+								console.log(images,'imagesimages')
 								imagesList.value.push(images)
+								console.log(imagesList.value,'imagesList.value')
 								uploadProgress.value = ((index + 1) / res.tempFilePaths.length) * 100
 								resolve(images)
 

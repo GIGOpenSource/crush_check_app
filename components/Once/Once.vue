@@ -8,9 +8,12 @@
                     <view class="content">
                         <view class="t1">单次付费可享</view>
                         <view class="t3">无需开通会员</view>
-                        <view class="t4">鉴渣海报+报告秒解锁 <image :src="$getImg('again/gantan')" mode="scaleToFill" /></view>
-                        <view class="t2">限时价格<text>29.9元</text>，原价9.9元</view>
-                         <view class="btn">立即体验</view>
+                        <view class="t4">{{ title }} <image :src="$getImg('again/gantan')" mode="scaleToFill" /></view>
+                        <view class="t2">限时价格<text>{{price.limit_price}}元</text> 
+                        <!-- <text>，</text> 原价{{price.price}}元 -->
+                        
+                        </view>
+                         <view class="btn" @click="btn">立即体验</view>
                     </view>
                 </view>
                
@@ -26,7 +29,15 @@
 const props = defineProps({
     show: {
         type: Boolean,
-        default: true
+        default: false
+    },
+    title:{
+         type: String,
+        default: ''
+    },
+    price:{
+        type:Object,
+        default: ()=>({})
     }
 })
 const emits = defineEmits(["update:show", "close"])
@@ -36,6 +47,9 @@ const handleClose = () => {
     }
     emits("close");
     emits("update:show", false);
+}
+const btn = () => {
+     emits("pay");
 }
 </script>
 

@@ -45,21 +45,24 @@
             </view>
         </template>
     </IndexProup>
-
+    <!-- 新增 -->
     <!-- 解锁本次报告 -->
-    <up-popup :show="showDelPopup2" mode="center">
+    <!-- <up-popup :show="showDelPopup2" mode="center">
         <view class="del-popup-content">
             <image class="del-popup-icon" :src="$getImg('my/gantanhao')"></image>
             <view class="title">{{ t('answerBook.unlockAnalysis') }}</view>
-            <view class="del-popup-actions">
+            <view class="del-popup-actions"> 
                 <view @click="pay">{{ mouth.price }}{{ t('answerBook.payNow') }}</view>
-                <!-- <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view> -->
+                 <view @click="watchAdInPopup">{{ t('answerBook.watchAdUnlock') }}</view>
             </view>
             <view class="icon" @click="showDelPopup2 = false">
                 <up-icon name="close-circle" color="#ffffff" size="30"></up-icon>
             </view>
         </view>
-    </up-popup>
+    </up-popup> -->
+    <Once :show="showDelPopup2" title="答案分析秒解锁" :price="mouth" @pay="pay" @close="close"></Once>
+    <Limittime :show="showDelPopup3" @close="close1"></Limittime>
+    <Viptime :show="showDelPopup4"  @close="close2" @dingyue="dingyue"></Viptime>
     <!-- <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
         <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
             @close="onadclose" @error="onaderror">
@@ -90,6 +93,9 @@ const progress = ref(0)
 const progressTimer = ref(null)
 const mouth = ref({})
 const showDelPopup2 = ref(false)
+// 新增
+const showDelPopup3 = ref(false)
+const showDelPopup4 = ref(false)
 const userinfo = ref({ allow_count: 0 })
 const showAdInPopup = ref(false) // 弹窗内是否显示广告
 const pendingChooseParams = ref(null) // 存储待执行的choose参数
@@ -212,13 +218,34 @@ const aidetails = () => {
                 icon: 'none'
             })
         } else if (!status) {
-            showDelPopup2.value = true
+            // 新增
+            let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
+            if(userinfo.vip_level == 'null' || !userinfo.vip_level){
+                  showDelPopup2.value = true
+            }else{
+                submit()
+            }
         }
 
     })
 
     return
 
+}
+// 新增
+const close = () => {
+    showDelPopup2.value = false
+    showDelPopup3.value = true
+}
+const close1 = () => {
+    showDelPopup3.value = false 
+}
+const close2 = () => {
+    showDelPopup4.value = false 
+}
+const dingyue = () =>{
+    showDelPopup4.value = true
+      uni.redirectTo({ url: 'pagesA/vip/index' })
 }
 const submit = () => {
     details.value.children_status = 'waiting'
@@ -302,7 +329,6 @@ const handleProgressClose = () => {
 }
 // 支付
 const pay = () => {
-    console.log(isdetails.value, 'isdetails.valueisdetails.value')
     createOrder({
         description: mouth.value.description,
         openId: uni.getStorageSync('openId'),

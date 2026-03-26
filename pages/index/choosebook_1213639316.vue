@@ -100,9 +100,11 @@ const getLatestUserInfo = () => {
     }
     return null
 }
-
-// 检查是否需要看广告
+     
+// 检查是否需要看广告 
+// 新增
 const needWatchAd = async () => {
+    return false
     const latestUserInfo = getLatestUserInfo()
     if (latestUserInfo && latestUserInfo.is_vip) {
         return false
@@ -126,7 +128,7 @@ onMounted(() => {
         })
     })
     getProducts('vip').then(res => {
-        mouth.value = res.data.results.filter(item => item.product_type == 'vip')[0]
+        mouth.value = res.data.results[0]
     })
 })
 
