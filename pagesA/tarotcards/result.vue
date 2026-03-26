@@ -8,22 +8,29 @@
       <view class="cards">
          <view class="left">
             <view class="one" v-if="details.parse_type == 'once_single_card'">
-               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill"
+                  :style="{ transform: item.is_reversed == 1 ? 'rotate(180deg)' : '' }" />
             </view>
             <view class="three" v-if="details.parse_type == 'once_three_card'">
-               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
+               <image v-for="(item, index) in details.tarot_cards_list" :src="item.image_url" mode="scaleToFill"
+                  :style="{ transform: item.is_reversed == 1 ? 'rotate(180deg)' : '' }" />
             </view>
             <view class="fire" v-if="details.parse_type == 'once_multi_card'">
                <view class="img1">
-                  <image :src="details.tarot_cards_list[2].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[2].image_url == 1 ? 'rotate(180deg)' : ''}"/>
+                  <image :src="details.tarot_cards_list[2].image_url" mode="scaleToFill"
+                     :style="{ transform: details.tarot_cards_list[2].image_url == 1 ? 'rotate(180deg)' : '' }" />
                </view>
                <view>
-                  <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
-                  <image :src="details.tarot_cards_list[3].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
-                  <image :src="details.tarot_cards_list[1].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
+                  <image :src="details.tarot_cards_list[0].image_url" mode="scaleToFill"
+                     :style="{ transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : '' }" />
+                  <image :src="details.tarot_cards_list[3].image_url" mode="scaleToFill"
+                     :style="{ transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : '' }" />
+                  <image :src="details.tarot_cards_list[1].image_url" mode="scaleToFill"
+                     :style="{ transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : '' }" />
                </view>
                <view class="img1">
-                  <image :src="details.tarot_cards_list[4].image_url" mode="scaleToFill" :style="{transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : ''}"/>
+                  <image :src="details.tarot_cards_list[4].image_url" mode="scaleToFill"
+                     :style="{ transform: details.tarot_cards_list[0].image_url == 1 ? 'rotate(180deg)' : '' }" />
                </view>
             </view>
          </view>
@@ -40,7 +47,8 @@
          <view v-for="(item, index) in details.tarot_cards_list" :key="index" class="list">
             <view class="left">
                <view class="num" style="color:#fff">{{ '0' + (index + 1) }}</view>
-               <image :src="item.image_url" mode="scaleToFill" :style="{transform: item.is_reversed == 1 ? 'rotate(180deg)' : ''}"/>
+               <image :src="item.image_url" mode="scaleToFill"
+                  :style="{ transform: item.is_reversed == 1 ? 'rotate(180deg)' : '' }" />
                <view class="right">
                   <view class="t2">{{ item.name }} <text
                         :style="item.is_reversed == 0 ? 'color: #00AEFF;' : 'color: #FF0000;'">{{ item.is_reversed == 0
@@ -52,15 +60,17 @@
       </view>
       <view class="text" v-if="current == 1">
          <view class="mengceng" v-if="!details.child_list[0]?.content.summary">
-            <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
+            <!-- <view class="pay" @click="pay" v-if="details.children_status == 'error' || !details.children_status">
                {{ t('tarot_result_pay') }}{{ object.price }}{{ t('tarot_result_pay_unit') }} {{
                   t('tarot_result_ai_interpret') }}
-            </view>
+            </view> -->
          </view>
          <view class="title" v-if="details.child_list[0]?.content.summary">
             <rich-text :nodes="details.child_list[0]?.content.summary"></rich-text>
          </view>
-         <view class="title1" v-else>对于工作中期待的事情能否成功，圣杯7正位暗示目前成功可能面临一些挑战。你所期待的成功可能更多还停留在美好的幻想层面，与现实存在一定差距。建议你认真分析工作中的实际状况，梳理出实现期待的具体步骤，不要被不切实际的想法左右。要以务实的态度去努力，逐步靠近目标，这样才更有可能收获成功。</view>
+         <view class="title1" v-else>
+            对于工作中期待的事情能否成功，圣杯7正位暗示目前成功可能面临一些挑战。你所期待的成功可能更多还停留在美好的幻想层面，与现实存在一定差距。建议你认真分析工作中的实际状况，梳理出实现期待的具体步骤，不要被不切实际的想法左右。要以务实的态度去努力，逐步靠近目标，这样才更有可能收获成功。
+         </view>
       </view>
    </view>
    <view style="height: 130rpx;"></view>
@@ -95,6 +105,10 @@
          </view>
       </template>
    </IndexProup>
+   <!-- 新增 -->
+   <Once :show="showDelPopup3" title="塔罗分析秒解锁" :price="object" @pay="pay" @close="close"></Once>
+   <Limittime :show="showDelPopup4" @close="close1" :price="object" @pay="pay"></Limittime>
+   <Viptime :show="showDelPopup5" @close="close2" @dingyue="dingyue"></Viptime>
 </template>
 
 <script setup>
@@ -114,8 +128,13 @@ const shadowStyle = reactive({
    backgroundImage: "none",
    paddingTop: "0",
    marginTop: "20rpx",
-   maxHeight:'100rpx'
+   maxHeight: '100rpx'
 });
+// 新增
+const showDelPopup3 = ref(false)
+const showDelPopup4 = ref(false)
+const showDelPopup5 = ref(false)
+
 const progress = ref(0)
 const showProgress = ref(false)
 const progressTimer = ref(null)
@@ -159,33 +178,33 @@ const share1 = () => {
       showDelPopup2.value = true
 }
 const share = () => {
-     const inviterOpenId = uni.getStorageSync("openId") || "";
-            const query = `?scene=${inviterOpenId}`
-            wx.showShareImageMenu({
-               path: posterImg.value,
-               entrancePath: `/pages/index/index${query}`,
-               complete: (res) => {
-                  if (res.errMsg == 'showShareImageMenu:fail cancel') {
-                     // share_fail()
-                     show.value = false
-                     showDelPopup2.value = false
-                  } else {
-                     // share_success()
-                     show.value = false
-                     showDelPopup2.value = false
-                  }
-               }
-            })
+   const inviterOpenId = uni.getStorageSync("openId") || "";
+   const query = `?scene=${inviterOpenId}`
+   wx.showShareImageMenu({
+      path: posterImg.value,
+      entrancePath: `/pages/index/index${query}`,
+      complete: (res) => {
+         if (res.errMsg == 'showShareImageMenu:fail cancel') {
+            // share_fail()
+            show.value = false
+            showDelPopup2.value = false
+         } else {
+            // share_success()
+            show.value = false
+            showDelPopup2.value = false
+         }
+      }
+   })
 }
 const handleProgressClose = () => {
-    // 清除进度条定时器
-    if (progressTimer.value) {
-        clearInterval(progressTimer.value)
-        progressTimer.value = null
-    }
-    showProgress.value = false
-    progress.value = 0
-    getdetails()
+   // 清除进度条定时器
+   if (progressTimer.value) {
+      clearInterval(progressTimer.value)
+      progressTimer.value = null
+   }
+   showProgress.value = false
+   progress.value = 0
+   getdetails()
 }
 const pay = () => {
    createOrder({
@@ -244,7 +263,7 @@ const submit = () => {
       progress.value++
    }, 20)
    let params = { parent_id: id.value }
-   console.log(params,'oaiajush')
+   console.log(params, 'oaiajush')
    uni.request({
       url: host + '/tarotcard/generate_tarotcard_deep/',
       data: params,
@@ -265,6 +284,13 @@ const submit = () => {
             setTimeout(() => {
                showProgress.value = false
             }, 500)
+            //新增
+            setTimeout(() => {
+               let info = JSON.parse(uni.getStorageSync('userInfo'))
+               if ((info.vip_level == 'null' || !info.vip_level ) && details.value.view_count == 1) {
+                  showDelPopup5.value = true
+               }
+            }, 2000)
          } else {
             showProgress.value = false
             progress.value = 0
@@ -288,14 +314,41 @@ const submit = () => {
 // 	}
 // }
 
+
+//新增
 const clicks = (index) => {
-  current.value = index
-//   if(index == 1 && details.value.child_list.length == 0) {
-//      tarotcardnswer({ parent_id: id.value}).then(res => {
-//         getdetails()
-//      })
-//   }
+
+   //   if(index == 1 && details.value.child_list.length == 0) {
+   //      tarotcardnswer({ parent_id: id.value}).then(res => {
+   //         getdetails()
+   //      })
+   //   }
+
+   //普通会员
+   let info = JSON.parse(uni.getStorageSync('userInfo'))
+   if (info.vip_level == 'null' || !info.vip_level) {
+      if (!details.value.child_list[0]?.content.summary) {
+         showDelPopup3.value = true
+      } else {
+         current.value = index
+      }
+   }else{
+       current.value = index
+   }
+
 }
+//新增
+const close = () => {
+   showDelPopup3.value = false
+   showDelPopup4.value = true
+}
+const close1 = () => {
+   showDelPopup4.value = false
+}
+const close2 = () => {
+   showDelPopup5.value = false
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -431,6 +484,7 @@ const clicks = (index) => {
    // height: 56vh;
    // overflow-y: scroll;
 }
+
 .pcontent {
    width: 420rpx;
    height: 250rpx;
@@ -504,6 +558,7 @@ const clicks = (index) => {
    color: #000;
    font-weight: 100;
 }
+
 .list {
    display: flex;
    justify-content: space-between;

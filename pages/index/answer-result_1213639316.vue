@@ -61,7 +61,7 @@
         </view>
     </up-popup> -->
     <Once :show="showDelPopup2" title="答案分析秒解锁" :price="mouth" @pay="pay" @close="close"></Once>
-    <Limittime :show="showDelPopup3" @close="close1"></Limittime>
+    <Limittime :show="showDelPopup3" @close="close1" :price="mouth" @pay="pay"></Limittime>
     <Viptime :show="showDelPopup4"  @close="close2" @dingyue="dingyue"></Viptime>
     <!-- <view v-if="showAdInPopup && pageReady" class="ad-popup-wrapper">
         <ad-rewarded-video adpid="1213639316" :loadnext="true" v-slot:default="{ loading, error }" @load="onadload"
@@ -312,7 +312,11 @@ const submit = () => {
                 //新增
                 
                   setTimeout(() => {
-                     showDelPopup4.value = true
+                    
+                     let info = JSON.parse(uni.getStorageSync('userInfo'))
+                     if((info.vip_level == 'null' || !info.vip_level) && details.value.view_count == 1){
+                         showDelPopup4.value = true
+                     }
                 }, 2000)
             } else {
                 showProgress.value = false
