@@ -20,7 +20,7 @@
           </view>
           <view class="moneyType">
                <view class="mouth" @click="flag = 0">
-                    <view class="m1">
+                    <view :class="flag == 0 ? 'current m1' : 'm1'">
                          <view class="title">月付</view>
                          <view class="xian">
                               <text class="fu">￥</text>
@@ -31,15 +31,16 @@
                     <view class="m2">限时优惠</view>
                </view>
                <view class="year" @click="flag = 1">
-                    <view class="m1">
+                    <view class="add">限时加赠</view>
+                    <view :class="flag == 1 ? 'current m1' : 'm1'">
                          <view class="title">年付</view>
                          <view class="xian">
                               <text class="fu">￥</text>
                               <text>{{ year.price }}/年</text>
                          </view>
-                         <view class="origin">节省￥{{ Number(mouth.price * 12 - year.price).toFixed(2) }}</view>
+                         <view class="origin1">节省￥{{ Number(mouth.price * 12 - year.price).toFixed(2) }}</view>
                     </view>
-                    <view class="m2">免费试用1周</view>
+                    <view class="m2">开通即可多享一周权益</view>
                </view>
           </view>
           <view class="share">
@@ -47,11 +48,15 @@
                     <view class="title" :style="item.bg">{{ item.title }}</view>
                     <view>{{ item.t1 }}</view>
                     <view class="t4"><up-icon name="checkbox-mark" color="#13B108" size="20"></up-icon> <text>{{ item.t2
-                    }}</text></view>
+                              }}</text></view>
                     <view>{{ item.t3 || '' }}</view>
                     <view class="t4" v-if="item.t4"><up-icon name="checkbox-mark" color="#13B108"
                               size="20"></up-icon><text>{{ item.t4 || '' }}</text></view>
                </view>
+          </view>
+          <view class="read">
+               <radio value="r1" :checked="choose" style="transform:scale(0.7);" color="#B370FF"
+                    @click="choose = !choose" />本人已阅读并同意 <text style="color:#B370FF">《会员充值服务知情同意协议》</text>
           </view>
           <view class="btn" @click="pay">{{ btnText }}</view>
           <view class="btntile">除非在当前订阅结束前至少24小时内取消，否则订阅将自动续订。</view>
@@ -59,9 +64,10 @@
 </template>
 
 <script setup>
-import { ref, watch,computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+const choose = ref(false)
 import {
      getProducts,
      createOrder
@@ -69,6 +75,7 @@ import {
 import {
      getUserInfo
 } from '@/api/login.js'
+import icon from 'uview-plus/components/u-icon/icon'
 const viptype = ['白银会员', '黄金会员']
 const current = ref(0) //白银，黄金
 const flag = ref(0) //月付，年付
@@ -133,38 +140,45 @@ const list = ref([{
      bg: 'background: linear-gradient(0deg, rgba(230, 230, 230, 0.3) 0%, rgba(149, 141, 154, 0.3) 60%);'
 }])
 const btnText = computed(() => {
-     if(current.value == 0){
-          return userinfo.value.vip_level == 'silver' ? '续费':'订阅'
-     }else if(current.value == 1){
-          return userinfo.value.vip_level == 'gold' ? '续费':'订阅'
+     if (current.value == 0) {
+          return userinfo.value.vip_level == 'silver' ? '续费' : '订阅'
+     } else if (current.value == 1) {
+          return userinfo.value.vip_level == 'gold' ? '续费' : '订阅'
      }
 })
 watch(
-  () => [current.value, flag.value],
-  async ([newCurrent, newFlag]) => {
-    try {
-      if (newCurrent === 1) {
-        list.value[6].t2 = '无限次';
-        list.value[6].t4 = '无限次';
-      }
+     () => [current.value, flag.value],
+     async ([newCurrent, newFlag]) => {
+          try {
+               if (newCurrent === 1) {
+                    list.value[6].t2 = '无限次';
+                    list.value[6].t4 = '无限次';
+               }
 
-      const prefix = newCurrent === 0 ? 'silver_vip' : 'gold_vip';
-      const [mouthRes, yearRes] = await Promise.all([
-        getProducts(`${prefix}_month`),
-        getProducts(`${prefix}_years`)
-      ]);
-      mouth.value = mouthRes?.data?.results?.[0] || {};
-      year.value = yearRes?.data?.results?.[0] || {};
-      currentParams.value = newFlag === 0 ? mouth.value : year.value;
-      console.log(newFlag,'ewFlag')
-    } catch (err) {
-      console.error('会员数据加载失败：', err);
-    }
-  },
-  { immediate: true }
+               const prefix = newCurrent === 0 ? 'silver_vip' : 'gold_vip';
+               const [mouthRes, yearRes] = await Promise.all([
+                    getProducts(`${prefix}_month`),
+                    getProducts(`${prefix}_years`)
+               ]);
+               mouth.value = mouthRes?.data?.results?.[0] || {};
+               year.value = yearRes?.data?.results?.[0] || {};
+               currentParams.value = newFlag === 0 ? mouth.value : year.value;
+               console.log(newFlag, 'ewFlag')
+          } catch (err) {
+               console.error('会员数据加载失败：', err);
+          }
+     },
+     { immediate: true }
 );
 //支付
 const pay = () => {
+     if(!choose.value){
+          uni.showToast({
+               title:'请阅读会员充值服务',
+               icon:'none'
+          })
+          return
+     }
      createOrder({
           description: currentParams.value.description,
           openId: uni.getStorageSync('openId'),
@@ -286,7 +300,9 @@ const pay = () => {
      .moneyType {
           display: flex;
           justify-content: space-between;
-          margin: 20rpx 0;
+          padding: 20rpx 0;
+          padding-top: 30rpx;
+          position: relative;
 
           .mouth,
           .year {
@@ -299,7 +315,8 @@ const pay = () => {
 
                .m1 {
                     width: 100%;
-                    background: linear-gradient(182deg, #AEA5FE 1%, #FFFFFF 66%);
+                    // 
+                    background: linear-gradient(182deg, rgba(172, 167, 220, 0.8) 1%, rgba(255, 255, 255, 0.8) 60%); //默认颜色
                     color: #333333;
                     padding: 30rpx 0 20rpx 30rpx;
 
@@ -330,24 +347,28 @@ const pay = () => {
           }
 
           .year {
-               border: 1px solid #8D8D8F;
 
-               .m1 {
-                    background: linear-gradient(182deg, #8D8D8F 1%, #FFFFFF 66%);
-
-                    .xian {
-                         color: #53505B;
-                    }
-
-                    .origin {
-                         margin-left: 40% !important;
-                    }
-
+               .origin1 {
+                    text-decoration: underline;
+                    font-size: 24rpx;
                }
 
-               .m2 {
-                    background: #8D8D8F;
+               .add {
+                    position: absolute;
+                    right: 0;
+                    top: 0rpx;
+                    background: #BA9DE8;
+                    color: #fff;
+                    padding: 10rpx 30rpx;
+                    font-size: 28rpx;
+                    z-index: 9999;
+                    border-radius: 20rpx 20rpx 0 20rpx;
                }
+          }
+
+          .current {
+               background: linear-gradient(182deg, #AEA5FE 1%, #FFFFFF 66%) !important; //选中颜色
+
           }
      }
 
@@ -400,7 +421,8 @@ const pay = () => {
           line-height: 80rpx;
           border-radius: 80rpx;
           text-align: center;
-          margin-top: 40rpx;
+          margin-top: 10rpx;
+          
      }
 
      .btntile {
@@ -410,5 +432,10 @@ const pay = () => {
           padding-bottom: 40rpx;
           font-size: 24rpx;
      }
+}
+.read{
+     font-size: 26rpx;
+     margin-top: 40rpx;
+     text-align: center;
 }
 </style>
