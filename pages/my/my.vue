@@ -46,20 +46,24 @@
     <!-- 高级报告模块 -->
     <view class="vip-module">
       <view class="vip-content">
-        <text class="vip-tag">CrashCheck· VIP · {{ $t('my.monthlyCard') }}</text>
+      <!-- vip svip -->
+        <text class="vip-tag">CrushCheck·VIP </text>
         <view v-if="userInfo.is_vip" class="vip-header vip-header--member">
-          <text class="vip-title">{{ $t('my.vip') }}</text>
+        <!-- 普通会员 白银会员 黄金会员  -->
+          <text class="vip-title">普通会员</text>
           <text class="vip-expire">{{ vipExpireText }}{{ $t('my.vipExpire') }}</text>
         </view>
+        <!-- 普通会员 -->
         <view v-else class="vip-header">
-          <text class="vip-title vip-title--guest">{{ $t('my.unlockVip') }}</text>
+          <text class="vip-title vip-title--guest">普通会员</text>
           <image class="vip-title-icon" :src="$getImg('my/baogao')" mode="widthFix"></image>
         </view>
         <view class="vip-subtitle">
-          <text class="vip-subtitle-text">{{ $t('my.reportRemaining') }}</text>
-          <text class="vip-count" :class="{ infinity: reportRemainingText === $t('my.unlimited') }">
+        <text class="vip-subtitle-text">升级会员可享更多权益</text>
+          <!-- <text class="vip-subtitle-text">{{ $t('my.reportRemaining') }}</text> -->
+          <!-- <text class="vip-count" :class="{ infinity: reportRemainingText === $t('my.unlimited') }">
             {{ reportRemainingText }}
-          </text>
+          </text> -->
         </view>
       </view>
       <button class="vip-action" hover-class="none" @click.stop="handleUnlockCardClick">
