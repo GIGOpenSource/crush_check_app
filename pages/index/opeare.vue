@@ -130,6 +130,7 @@
 				</view>
 			</template>
 		</IndexProup>
+		<!-- 新增 -->
 		<!-- 会员拦截 -->
 		<up-popup :show="vipProup" @close="vipProup = false" mode="bottom" round="25" :closeable="true" :customStyle="{'background':'transparent'}">
 			<view class="vipProup">
@@ -149,6 +150,8 @@
 				</view>
 			</view>
 		</up-popup>
+		 <Once :show="showDelPopup2" title="鉴渣海报＋报告秒解锁" :price="mouth" @pay="pay" @close="close1"></Once>
+    <Limittime :show="showDelPopup3" @close="close2" :price="mouth" @pay="pay"></Limittime>
 	</view>
 </template>
 
@@ -182,6 +185,9 @@ import uma from '@/uma.js'
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
 import { getLocale } from '@/i18n/index.js'
+// 新增
+const showDelPopup2 = ref(false)
+const showDelPopup3 = ref(false)
 
 const { t } = useI18n()
 const vipProup = ref(false)
@@ -268,7 +274,6 @@ onShareAppMessage((res) => {
 	};
 })
 // #endif
-
 const welcomeIndex = ref(0)
 const handleWelcomeNext = () => {
 	if (welcomeIndex.value < welcomeSlides.value.length - 1) {
@@ -408,7 +413,7 @@ const handleInviteClick = () => {
 	}
 }
 const vipprice = () => {
-	getProducts('vip').then(res => {
+	getProducts('once').then(res => {
 		mouth.value = res.data.results[0]
 		console.log(mouth.value, 'mouthmouth')
 	})
@@ -436,18 +441,18 @@ const pay = () => {
 					icon: 'success'
 				})
 				pay_success()
-				const openId = uni.getStorageSync('openId')
-				getUserInfo(openId).then(userRes => {
-					if (userRes.code === 200 || userRes.code === 201) {
-						if (userRes.data) {
-							uni.setStorageSync('userInfo', JSON.stringify(userRes
-								.data))
-							console.log('用户信息更新成功', userRes.data)
-						}
-					}
-				}).catch(err => {
-					console.log('获取用户信息失败', err)
-				})
+				// const openId = uni.getStorageSync('openId')
+				// getUserInfo(openId).then(userRes => {
+				// 	if (userRes.code === 200 || userRes.code === 201) {
+				// 		if (userRes.data) {
+				// 			uni.setStorageSync('userInfo', JSON.stringify(userRes
+				// 				.data))
+				// 			console.log('用户信息更新成功', userRes.data)
+				// 		}
+				// 	}
+				// }).catch(err => {
+				// 	console.log('获取用户信息失败', err)
+				// })
 			},
 			fail(e) {
 				pay_fail()
@@ -459,6 +464,14 @@ const pay = () => {
 		})
 
 	})
+}
+// 新增
+const close1 = () => {
+   showDelPopup2.value = false
+    showDelPopup3.value = true
+}
+const close2 = () => {
+	showDelPopup3.value = false
 }
 const btn = () => {
 	let token = uni.getStorageSync('token')
@@ -475,7 +488,18 @@ const btn = () => {
 		return
 	}
 	let userInfo = JSON.parse(uni.getStorageSync('userInfo'))
-	if (!userInfo.is_vip) return vipProup.value = true
+	// 新增
+	if(userInfo.vip_level == 'silver'){//白银
+        if(count > 1){ //如果免费次数用完了
+			 showDelPopup2.value = true
+			 return
+		}
+	}
+	if(userInfo.vip_level == 'null' && !userInfo.vip_level){//普通会员
+      showDelPopup2.value = true
+	  return
+	}
+
 	show.value = true
 	flag.value = true
 	progress.value = 0

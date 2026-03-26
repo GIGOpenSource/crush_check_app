@@ -1,13 +1,15 @@
 <template>
 	<view class="page">
 		<!-- 海报生成组件（显示海报） -->
-		<view class="poster-container" :class="{ 'no-scroll': show }">
+		<!-- 新增 -->
+		<view class="poster-container">
 			<image :src="images" mode="widthFix" v-if="status == 2"></image>
 			<image :src="details.file_url" v-if="status == 1"></image>
 			<view class="lookbtn" v-if="status == 1" @click="getDeepReport">{{ $t('proPoster.viewDeepReport') }}</view>
 			<view class="bottomtitle" v-if="status == 1">{{ $t('proPoster.aiGeneratedTip') }}</view>
 			<!-- 深度报告蒙层 -->
-			<view class="mengceng" v-if="show">
+			<!-- 新增 -->
+			<view class="mengceng" v-if="false">
 				<!-- <view>{{ $t('proPoster.openMember') }}</view>
 				<view style="margin-bottom: 30rpx;">{{ $t('proPoster.unlimitedDeepReport') }}</view> -->
 				<!-- <view class="btn" @click="pay(1)">{{ mouth.price }}{{ $t('common.currencyUnit') }} {{
@@ -68,6 +70,8 @@
 						size="30"></up-icon></view>
 			</view>
 		</up-popup>
+		<!-- 新增 -->
+		<Viptime :show="showDelPopup4" @close="close2" @dingyue="dingyue"></Viptime>
 
 	</view>
 </template>
@@ -98,6 +102,15 @@ import IndexProup from '@/components/IndexProup/IndexProup.vue'
 import { usePageStay } from '@/utils/usePageStay.js'
 import { useI18n } from 'vue-i18n'
 const showDelPopup2 = ref(false)
+// 新增
+const showDelPopup4 = ref(false)
+const close2 = () => {
+	showDelPopup4.value = false
+}
+const dingyue = () => {
+	showDelPopup4.value = true
+	uni.navigateTo({ url: 'pagesA/vip/index' })
+}
 // 页面停留时长统计
 usePageStay('结果页')
 const userinfo = ref({ allow_count: 0 })
@@ -213,13 +226,22 @@ const getDeepReport = () => {
 			let userinfo = JSON.parse(uni.getStorageSync('userInfo'))
 			status.value = 2
 			show.value = true
-			if (userinfo.is_vip) {
-				getPosterDetails(id.value).then(res => {
-					details.value = res.data
-				})
-			} else {
-				show.value = true
-			}
+			// 新增
+			// if (userinfo.is_vip) {
+			// 	getPosterDetails(id.value).then(res => {
+			// 		details.value = res.data
+			// 	})
+			// } else {
+			// 	show.value = true
+			// }
+			getPosterDetails(id.value).then(res => {
+				details.value = res.data
+				if ((userinfo.vip_level == 'null' || !userinfo.vip_level) && res.data.view_count == 1) {
+					setTimeout(() => {
+						showDelPopup4.value = true
+					})
+				}
+			})
 		})
 		.catch(err => {
 			images.value = err.url
@@ -959,7 +981,7 @@ const click_invitecancel = () => {
 }
 </style>
 <style>
- .u-popup__content{
-        background: transparent !important;
-    }
+.u-popup__content {
+	background: transparent !important;
+}
 </style>
