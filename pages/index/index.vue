@@ -57,6 +57,7 @@ import {
     share
 } from '@/api/index.js'
 import { useI18n } from 'vue-i18n';
+import Once from '../../components/Once/Once.vue'
 const { t } = useI18n();
 const show = ref(false)
 const userinfo = ref({})
