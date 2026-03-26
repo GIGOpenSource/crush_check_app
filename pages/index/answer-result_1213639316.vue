@@ -245,7 +245,7 @@ const close2 = () => {
 }
 const dingyue = () =>{
     showDelPopup4.value = true
-      uni.redirectTo({ url: 'pagesA/vip/index' })
+      uni.navigateTo({ url: 'pagesA/vip/index' })
 }
 const submit = () => {
     details.value.children_status = 'waiting'
@@ -309,6 +309,11 @@ const submit = () => {
                     // 请求成功，清除等待状态（按钮会隐藏，但清除状态以防万一）
                     details.value.children_status = ''
                 }, 500)
+                //新增
+                
+                  setTimeout(() => {
+                     showDelPopup4.value = true
+                }, 2000)
             } else {
                 showProgress.value = false
                 progress.value = 0

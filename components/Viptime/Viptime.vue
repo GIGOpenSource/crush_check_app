@@ -7,7 +7,7 @@
                     <image :src="$getImg('again/b3')" mode="scaleToFill" />
                     <view class="content">
                         <view class="t1">会员限时优惠！</view>
-                        <view class="t2">低至<text>29.9元</text>解锁权益</view>
+                        <view class="t2">低至<text>{{prices.limit_price }}元</text>解锁权益</view>
                          <view class="btn" @click="btn">立即订阅</view>
                     </view>
                 </view>
@@ -21,12 +21,17 @@
 </template>
 
 <script setup>
+import { ref,onMounted } from 'vue'
+import {
+     getProducts
+} from '@/api/index.js'
 const props = defineProps({
     show: {
         type: Boolean,
         default: false
     }
 })
+const prices = ref({})
 const emits = defineEmits(["update:show", "close"])
 const handleClose = () => {
     if (!props.canClose) {
@@ -39,6 +44,11 @@ const btn = () => {
     emits("dingyue");
     emits("update:show", false);
 }
+onMounted(() => {
+    getProducts('silver_vip_month').then(res => {
+        prices.value = res.data.results[0]
+    })
+})
 </script>
 
 <style lang="scss" scoped>
