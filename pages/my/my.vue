@@ -16,8 +16,11 @@
             </image>
           </button>
           <view class="profile-info">
-            <input class="nickname-input" type="nickname" :value="userInfo.username || ''"
+           <view style="display: flex;">
+               <input class="nickname-input" type="nickname" :value="userInfo.username || ''"
               :placeholder="$t('my.nickname')" @blur="onNicknameBlur" @confirm="onNicknameConfirm" />
+              <!-- <image class="vip-title-icon" :src="$getImg(`again/${userInfo.vip_level}`)" mode="widthFix"></image> -->
+           </view>
             <view class="gender-section" @click="updataXingzuo">
               <!-- <picker mode="selector" :range="genderOptions" range-key="label" :value="genderIndex"
                 :cancel-text="$t('common.cancel')" :confirm-text="$t('common.confirm')"
@@ -47,16 +50,16 @@
     <view class="vip-module">
       <view class="vip-content">
       <!-- vip svip -->
-        <text class="vip-tag">CrushCheck·VIP </text>
+        <text class="vip-tag">CrushCheck·{{ vipptype2[userInfo.vip_level] }} </text>
         <view v-if="userInfo.is_vip" class="vip-header vip-header--member">
         <!-- 普通会员 白银会员 黄金会员  -->
-          <text class="vip-title">普通会员</text>
+          <text class="vip-title">{{ vipptype[userInfo.vip_level]}}</text>
           <text class="vip-expire">{{ vipExpireText }}{{ $t('my.vipExpire') }}</text>
         </view>
         <!-- 普通会员 -->
         <view v-else class="vip-header">
-          <text class="vip-title vip-title--guest">普通会员</text>
-          <image class="vip-title-icon" :src="$getImg('my/baogao')" mode="widthFix"></image>
+          <text class="vip-title vip-title--guest">{{ vipptype[userInfo.vip_level] }}</text>
+          <image class="vip-title-icon" :src="$getImg(`again/${userInfo.vip_level}`)" mode="widthFix"></image>
         </view>
         <view class="vip-subtitle">
         <text class="vip-subtitle-text">升级会员可享更多权益</text>
@@ -67,7 +70,8 @@
         </view>
       </view>
       <button class="vip-action" hover-class="none" @click.stop="handleUnlockCardClick">
-        {{ vipActionText }}
+        <!-- {{ vipActionText }} -->
+        去升级
       </button>
     </view>
 
@@ -273,7 +277,9 @@ export default {
       progress: 0, // 进度百分比
       progressTimer: null, // 进度条定时器
       latitude: '39.90667',
-      longitude: '116.39750'
+      longitude: '116.39750',
+      vipptype:{'null':'普通会员','silver':'白银会员','gold':'黄金会员'},
+      vipptype2:{'silver':'VIP','gold':'SVIP'}
     };
   },
   onLoad() {
@@ -601,7 +607,10 @@ export default {
         })
         return;
       }
-
+       uni.navigateTo({
+          url: "/pagesA/vip/index"
+        })
+      return
       try {
         // 获取产品列表
         const res = await getProductsList('vip');
