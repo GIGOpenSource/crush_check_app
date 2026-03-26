@@ -47,6 +47,7 @@
     </view>
 
     <!-- 高级报告模块 -->
+    <!-- 新增 -->
     <view class="vip-module">
       <view class="vip-content">
       <!-- vip svip -->

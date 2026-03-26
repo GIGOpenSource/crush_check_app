@@ -54,6 +54,8 @@
           </view>
         </view>
       </up-popup>
+      <!-- 新增 -->
+      <Viptime @close="close" :show="show" @dingyue="dingyue"/> 
     </view>
   </view>
 </template>
@@ -73,12 +75,14 @@ export default {
       pageName: '',
       isAgreed: false,
       phoneCode: "", // 保存手机号授权的code
+      show:false
     };
   },
   onLoad() {
     this.pageName = this.$t('login.title');
   },
   methods: {
+   
     toggleAgreement() {
       this.isAgreed = !this.isAgreed;
     },
@@ -250,15 +254,15 @@ export default {
         });
 
         // 延迟跳转，让用户看到成功提示
+        // 新增
         setTimeout(() => {
-          uni.navigateBack({
-            fail: () => {
-              // uni.switchTab({
-              //   url: "/pages/my/my",
-              // });
-              uni.navigateBack()
-            },
-          });
+         let info = JSON.parse(uni.getStorageSync('userInfo'))
+        
+         if(info.vip_level == 'null' || !info.vip_level){
+               this.show = true
+         }else{
+            uni.navigateBack()
+         }
         }, 1000);
       } catch (error) {
         console.error("登录流程失败:", error);
@@ -267,6 +271,15 @@ export default {
           icon: "none",
         });
       }
+    },
+    // 新增
+    dingyue(){
+      this.show = false
+        uni.redirectTo({ url: 'pagesA/vip/index' })
+    },
+    // 新增
+     close(){
+      uni.navigateBack()
     },
     handleSkipLogin() {
       // 暂不登录，返回上一页或跳转到首页

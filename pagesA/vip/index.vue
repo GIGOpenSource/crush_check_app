@@ -53,13 +53,13 @@
                               size="20"></up-icon><text>{{ item.t4 || '' }}</text></view>
                </view>
           </view>
-          <view class="btn" @click="pay">订阅{{ '(' + '￥' + currentParams.price + ')' }}</view>
+          <view class="btn" @click="pay">{{ btnText }}</view>
           <view class="btntile">除非在当前订阅结束前至少24小时内取消，否则订阅将自动续订。</view>
      </view>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch,computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 import {
@@ -72,10 +72,11 @@ import {
 const viptype = ['白银会员', '黄金会员']
 const current = ref(0) //白银，黄金
 const flag = ref(0) //月付，年付
-const userinfo = ref(uni.getStorageSync('userInfo'))
+const userinfo = ref(JSON.parse(uni.getStorageSync('userInfo')))
 const mouth = ref({})
 const year = ref({})
 const currentParams = ref({})
+
 const list = ref([{
      title: 'MBTI',
      t1: '单人简易版',
@@ -131,6 +132,13 @@ const list = ref([{
      t2: '1次/月',
      bg: 'background: linear-gradient(0deg, rgba(230, 230, 230, 0.3) 0%, rgba(149, 141, 154, 0.3) 60%);'
 }])
+const btnText = computed(() => {
+     if(current.value == 0){
+          return userinfo.value.vip_level == 'silver' ? '续费':'订阅'
+     }else if(current.value == 1){
+          return userinfo.value.vip_level == 'gold' ? '续费':'订阅'
+     }
+})
 watch(
   () => [current.value, flag.value],
   async ([newCurrent, newFlag]) => {

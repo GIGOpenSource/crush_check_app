@@ -8,7 +8,7 @@
                     <view class="content">
                         <view class="t1">会员限时优惠！</view>
                         <view class="t2">低至<text>29.9元</text>解锁权益</view>
-                         <view class="btn">立即订阅</view>
+                         <view class="btn" @click="btn">立即订阅</view>
                     </view>
                 </view>
                
@@ -24,7 +24,7 @@
 const props = defineProps({
     show: {
         type: Boolean,
-        default: true
+        default: false
     }
 })
 const emits = defineEmits(["update:show", "close"])
@@ -33,6 +33,10 @@ const handleClose = () => {
         return;
     }
     emits("close");
+    emits("update:show", false);
+}
+const btn = () => {
+    emits("dingyue");
     emits("update:show", false);
 }
 </script>
